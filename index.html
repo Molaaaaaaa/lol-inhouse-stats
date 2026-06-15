@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>내전 전적</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel2:#1c2330; --line:#283041;
+    --txt:#e6edf3; --dim:#8b97a7; --acc:#5b8cff; --good:#3fb950; --bad:#f85149;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px}
+  header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+    padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+  h1{font-size:18px;margin:0;font-weight:650}
+  select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    border-radius:8px;padding:7px 10px;font-size:14px}
+  .wrap{max-width:1100px;margin:0 auto;padding:18px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tab{padding:8px 14px;border:1px solid var(--line);border-radius:999px;
+    cursor:pointer;color:var(--dim);user-select:none}
+  .tab.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin-bottom:16px}
+  .card h2{font-size:15px;margin:0 0 10px}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;
+    letter-spacing:.03em}
+  tbody tr:hover{background:var(--panel2)}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .pos{color:var(--good)} .neg{color:var(--bad)}
+  .pill{display:inline-block;padding:1px 8px;border-radius:999px;background:var(--panel2);
+    border:1px solid var(--line);color:var(--dim);font-size:12px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+  .muted{color:var(--dim)}
+  .hidden{display:none}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+  .bar{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden;min-width:60px}
+  .bar>i{display:block;height:100%;background:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 내전 전적</h1>
+  <select id="guildSel" title="서버"></select>
+  <span id="meta" class="muted"></span>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-t="board">리더보드</div>
+    <div class="tab" data-t="elo">Elo</div>
+    <div class="tab" data-t="rank">랭킹</div>
+    <div class="tab" data-t="syn">시너지</div>
+    <div class="tab" data-t="player">플레이어</div>
+  </div>
+
+  <section id="board" class="view"></section>
+
+  <section id="elo" class="view hidden"></section>
+
+  <section id="rank" class="view hidden">
+    <div class="card">
+      <div class="row">
+        <span>지표</span>
+        <select id="metricSel">
+          <option value="dps15">DPS @15분</option>
+          <option value="dpm">총 DPM</option>
+          <option value="gold15">골드 @15분</option>
+          <option value="cs15">CS @15분</option>
+          <option value="kda">KDA</option>
+          <option value="vision">시야 점수</option>
+        </select>
+        <span class="muted" id="rankNote"></span>
+      </div>
+      <div id="rankTable"></div>
+    </div>
+  </section>
+
+  <section id="syn" class="view hidden"></section>
+
+  <section id="player" class="view hidden">
+    <div class="card">
+      <div class="row">
+        <span>플레이어</span>
+        <select id="playerSel"></select>
+      </div>
+      <div id="playerBody"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+let DATA = null;
+
+function pct(x){ return (x*100).toFixed(0)+'%'; }
+function table(rows, cols){
+  if(!rows || !rows.length) return '<p class="muted">데이터 없음</p>';
+  let h = '<table><thead><tr>' + cols.map(c=>`<th>${c.h}</th>`).join('') + '</tr></thead><tbody>';
+  for(const r of rows){
+    h += '<tr>' + cols.map(c=>{
+      let v = c.f ? c.f(r[c.k], r) : r[c.k];
+      const cls = c.num ? ' class="num"' : (c.cls? ' class="'+c.cls(r)+'"':'');
+      return `<td${cls}>${v==null?'':v}</td>`;
+    }).join('') + '</tr>';
+  }
+  return h + '</tbody></table>';
+}
+
+function renderBoard(){
+  $('#board').innerHTML =
+    `<div class="card"><h2>🏆 승률 리더보드</h2>` +
+    table(DATA.leaderboard, [
+      {h:'멤버',k:'discord_name'},
+      {h:'판',k:'games',num:1},
+      {h:'승',k:'wins',num:1},
+      {h:'승률',k:'winrate',num:1,f:pct},
+      {h:'KDA',k:'kda',num:1},
+      {h:'킬관여',k:'kp',num:1,f:pct},
+      {h:'DPM',k:'dpm',num:1},
+    ]) + `</div>`;
+}
+function renderElo(){
+  $('#elo').innerHTML = `<div class="card"><h2>📈 Elo</h2>` +
+    table(DATA.elo, [
+      {h:'멤버',k:'discord_name'},
+      {h:'Elo',k:'rating',num:1},
+      {h:'판',k:'games',num:1},
+    ]) + `</div>`;
+}
+function renderRank(){
+  const m = $('#metricSel').value;
+  const rows = (DATA.rankings[m]||[]);
+  const byLane = rows.length && ('lane' in rows[0]);
+  $('#rankNote').textContent = byLane ? '(라인별 분리)' : '';
+  const cols = [{h:'멤버',k:'discord_name'}];
+  if(byLane) cols.push({h:'라인',k:'lane'});
+  cols.push({h:'판',k:'games',num:1});
+  cols.push({h:'값',k:'value',num:1});
+  $('#rankTable').innerHTML = table(rows, cols);
+}
+function renderSyn(){
+  const rows = DATA.synergy||[];
+  $('#syn').innerHTML = `<div class="card"><h2>🤝 시너지 (empirical Bayes)</h2>` +
+    `<p class="muted">기대 대비 함께했을 때의 상승분. 소표본은 0으로 수축. + = 잘 맞음, − = 안 맞음</p>` +
+    table(rows, [
+      {h:'A',k:'na'},{h:'B',k:'nb'},
+      {h:'함께',k:'games',num:1},
+      {h:'함께승률',k:'winrate',num:1,f:pct},
+      {h:'기대',k:'expected',num:1,f:pct},
+      {h:'시너지',k:'synergy',num:1,
+        f:v=>(v>0?'+':'')+v.toFixed(3),
+        cls:r=>r.synergy>0?'pos':(r.synergy<0?'neg':'')},
+    ]) + `</div>`;
+}
+function renderPlayers(){
+  const sel = $('#playerSel');
+  sel.innerHTML = '';
+  const ids = Object.keys(DATA.players);
+  for(const id of ids){
+    const o = document.createElement('option');
+    o.value = id; o.textContent = DATA.players[id].name; sel.appendChild(o);
+  }
+  renderPlayerBody();
+}
+function renderPlayerBody(){
+  const id = $('#playerSel').value;
+  const p = DATA.players[id];
+  if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
+  const r = p.record;
+  const best = (p.partners_best||[]).map(x=>`${x.partner} <span class="${x.synergy>0?'pos':'neg'}">${(x.synergy>0?'+':'')+x.synergy.toFixed(3)}</span>`).join(', ')||'—';
+  const worst = (p.partners_worst||[]).map(x=>`${x.partner} <span class="${x.synergy>0?'pos':'neg'}">${(x.synergy>0?'+':'')+x.synergy.toFixed(3)}</span>`).join(', ')||'—';
+  $('#playerBody').innerHTML =
+    `<div class="row"><span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
+      <span class="pill">승률 ${pct(r.winrate)}</span>
+      <span class="pill">KDA ${r.kda}</span>
+      <span class="pill">킬관여 ${pct(r.kp)}</span></div>
+     <div class="grid2">
+       <div><h2>라인별</h2>${table(p.lanes,[
+          {h:'라인',k:'lane'},{h:'판',k:'games',num:1},
+          {h:'승률',k:'winrate',num:1,f:pct},{h:'KDA',k:'kda',num:1}])}</div>
+       <div><h2>챔피언</h2>${table(p.champions,[
+          {h:'챔프',k:'champion_name'},{h:'판',k:'games',num:1},
+          {h:'승률',k:'winrate',num:1,f:pct},{h:'KDA',k:'kda',num:1}])}</div>
+     </div>
+     <div class="grid2" style="margin-top:14px">
+       <div class="card"><h2>👍 시너지 좋은 파트너</h2><p>${best}</p></div>
+       <div class="card"><h2>👎 시너지 나쁜 파트너</h2><p>${worst}</p></div>
+     </div>`;
+}
+
+function renderAll(){
+  $('#meta').textContent = `${DATA.name} · ${DATA.leaderboard.length}명`;
+  renderBoard(); renderElo(); renderRank(); renderSyn(); renderPlayers();
+}
+
+async function loadGuild(gid){
+  const res = await fetch(`data/${gid}.json?t=`+Date.now());
+  DATA = await res.json();
+  renderAll();
+}
+
+// 탭 전환
+$('#tabs').addEventListener('click', e=>{
+  const t = e.target.closest('.tab'); if(!t) return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on', x===t));
+  document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
+  $('#'+t.dataset.t).classList.remove('hidden');
+});
+$('#metricSel').addEventListener('change', renderRank);
+$('#playerSel').addEventListener('change', renderPlayerBody);
+$('#guildSel').addEventListener('change', e=>loadGuild(e.target.value));
+
+(async function init(){
+  try{
+    const idx = await (await fetch('data/guilds.json?t='+Date.now())).json();
+    const sel = $('#guildSel');
+    if(!idx.length){ $('#meta').textContent='아직 데이터가 없습니다.'; return; }
+    for(const g of idx){
+      const o=document.createElement('option'); o.value=g.id;
+      o.textContent=`${g.name} (${g.players}명)`; sel.appendChild(o);
+    }
+    await loadGuild(idx[0].id);
+  }catch(err){
+    $('#meta').textContent='데이터 로드 실패: '+err;
+  }
+})();
+</script>
+</body>
+</html>
