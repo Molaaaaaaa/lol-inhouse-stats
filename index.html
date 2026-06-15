@@ -179,9 +179,9 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 const MEDAL=['🥇','🥈','🥉'];
 function renderBoard(){
-  const rows=(DATA.leaderboard||[]).map((r,i)=>({...r,_rank:i}));
+  const rows=(DATA.leaderboard||[]);
   renderTable($('#boardT'),rows,[
-    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._rank<3?MEDAL[r._rank]+' ':'')+v},
+    {k:'discord_name',h:'멤버',fmt:(v,r,idx)=>(idx<3?MEDAL[idx]+' ':'')+v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'ci_lower',h:'신뢰하한',num:1,fmt:v=>pct(v)},
