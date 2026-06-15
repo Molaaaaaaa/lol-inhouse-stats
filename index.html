@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>내전 전적</title>
+<link rel="icon" href="data:," />
 <style>
   :root{
     --bg:#0e1116; --panel:#161b22; --panel2:#1c2330; --line:#283041;
@@ -218,9 +219,14 @@ $('#guildSel').addEventListener('change', e=>loadGuild(e.target.value));
 
 (async function init(){
   try{
-    const idx = await (await fetch('data/guilds.json?t='+Date.now())).json();
+    const res = await fetch('data/guilds.json?t='+Date.now());
+    if(!res.ok){
+      $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)';
+      return;
+    }
+    const idx = await res.json();
     const sel = $('#guildSel');
-    if(!idx.length){ $('#meta').textContent='아직 데이터가 없습니다.'; return; }
+    if(!idx.length){ $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)'; return; }
     for(const g of idx){
       const o=document.createElement('option'); o.value=g.id;
       o.textContent=`${g.name} (${g.players}명)`; sel.appendChild(o);
