@@ -7,234 +7,362 @@
 <link rel="icon" href="data:," />
 <style>
   :root{
-    --bg:#0e1116; --panel:#161b22; --panel2:#1c2330; --line:#283041;
-    --txt:#e6edf3; --dim:#8b97a7; --acc:#5b8cff; --good:#3fb950; --bad:#f85149;
+    --bg:#0a0e14; --panel:#121821; --panel2:#1a2332; --line:#243044;
+    --txt:#e8eef6; --dim:#8a98ad; --acc:#0bc5d4; --acc2:#c8aa6e;
+    --good:#1bd96a; --mid:#d9b53f; --bad:#ef4f5a; --shadow:0 4px 18px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--txt);
-    font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px}
-  header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;
-    padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
-  h1{font-size:18px;margin:0;font-weight:650}
-  select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
-    border-radius:8px;padding:7px 10px;font-size:14px}
-  .wrap{max-width:1100px;margin:0 auto;padding:18px}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-  .tab{padding:8px 14px;border:1px solid var(--line);border-radius:999px;
-    cursor:pointer;color:var(--dim);user-select:none}
-  .tab.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
-    padding:14px 16px;margin-bottom:16px}
-  .card h2{font-size:15px;margin:0 0 10px}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#10202b 0%,var(--bg) 60%);
+    color:var(--txt);font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px;
+    line-height:1.55;min-height:100vh}
+  header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 22px;
+    border-bottom:1px solid var(--line);background:linear-gradient(180deg,#16202c,#0e141d);
+    box-shadow:var(--shadow)}
+  h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.3px}
+  h1 .g{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  select,button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    border-radius:9px;padding:7px 12px;font-size:14px;cursor:pointer;font-family:inherit}
+  button:hover,select:hover{border-color:var(--acc)}
+  .meta{color:var(--dim);font-size:12.5px;margin-left:auto;text-align:right}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+  .kpi{background:linear-gradient(160deg,var(--panel),#0e141d);border:1px solid var(--line);
+    border-radius:14px;padding:15px 17px;box-shadow:var(--shadow)}
+  .kpi .label{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .kpi .value{font-size:25px;font-weight:750;margin-top:6px}
+  .kpi .value.acc{color:var(--acc)}
+  .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  .tab{padding:8px 15px;border:1px solid var(--line);border-radius:999px;cursor:pointer;
+    color:var(--dim);user-select:none;transition:.12s}
+  .tab:hover{color:var(--txt)}
+  .tab.on{background:linear-gradient(90deg,var(--acc),#0a93a8);color:#04121a;border-color:transparent;font-weight:650}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .card h2{font-size:15px;margin:0 0 12px;font-weight:650}
+  .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
   table{width:100%;border-collapse:collapse}
-  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line)}
-  th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;
-    letter-spacing:.03em}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th.sortable{cursor:pointer;color:var(--dim);font-size:11.5px;text-transform:uppercase;
+    letter-spacing:.04em;font-weight:650;user-select:none}
+  th.sortable:hover{color:var(--acc)}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr{transition:.1s}
   tbody tr:hover{background:var(--panel2)}
-  td.num{text-align:right;font-variant-numeric:tabular-nums}
   .pos{color:var(--good)} .neg{color:var(--bad)}
-  .pill{display:inline-block;padding:1px 8px;border-radius:999px;background:var(--panel2);
-    border:1px solid var(--line);color:var(--dim);font-size:12px}
-  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-  .muted{color:var(--dim)}
-  .hidden{display:none}
+  .wr-h{color:var(--good);font-weight:650} .wr-m{color:var(--mid)} .wr-l{color:var(--bad)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--panel2);
+    border:1px solid var(--line);color:var(--dim);font-size:12px;margin:2px 3px 2px 0}
+  .pill.good{color:var(--good);border-color:#1bd96a55}
+  .pill.bad{color:var(--bad);border-color:#ef4f5a55}
+  .champ{width:22px;height:22px;border-radius:5px;vertical-align:middle;margin-right:7px;
+    border:1px solid var(--line)}
+  .barwrap{position:relative;display:flex;justify-content:flex-end;align-items:center;gap:8px}
+  .barwrap i{position:absolute;right:0;bottom:-3px;height:4px;border-radius:3px;
+    background:linear-gradient(90deg,#0a93a8,var(--acc));opacity:.55}
+  .muted{color:var(--dim)} .hidden{display:none}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
-  .bar{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden;min-width:60px}
-  .bar>i{display:block;height:100%;background:var(--acc)}
+  .mini{display:flex;align-items:center;gap:8px;margin:3px 0}
+  .mini .lane{width:64px;color:var(--dim);font-size:12px}
+  .mini .track{flex:1;height:9px;background:var(--panel2);border-radius:5px;overflow:hidden}
+  .mini .track>i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+  .match{border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:9px;
+    display:flex;align-items:center;gap:10px;background:var(--panel2)}
+  .team{flex:1;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+  .team.win{} .vs{color:var(--dim);font-weight:700;padding:0 4px}
+  .res{font-weight:700;border-radius:6px;padding:2px 8px;font-size:12px}
+  .res.w{background:#0bc5d422;color:var(--acc)} .res.l{background:#ef4f5a22;color:var(--bad)}
+  footer{color:var(--dim);font-size:12px;text-align:center;padding:24px}
+  .tooltip{cursor:help;border-bottom:1px dotted var(--dim)}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+  @media(max-width:480px){.wrap{padding:12px}.hide-sm{display:none}}
 </style>
 </head>
 <body>
 <header>
-  <h1>🎮 내전 전적</h1>
+  <h1>🎮 <span class="g">내전 전적</span></h1>
   <select id="guildSel" title="서버"></select>
-  <span id="meta" class="muted"></span>
+  <button id="refresh" title="새로고침">🔄</button>
+  <div class="meta" id="meta"></div>
 </header>
 
 <div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
   <div class="tabs" id="tabs">
-    <div class="tab on" data-t="board">리더보드</div>
-    <div class="tab" data-t="elo">Elo</div>
-    <div class="tab" data-t="rank">랭킹</div>
-    <div class="tab" data-t="syn">시너지</div>
-    <div class="tab" data-t="player">플레이어</div>
+    <div class="tab on" data-t="board">🏆 리더보드</div>
+    <div class="tab" data-t="rank">📊 랭킹</div>
+    <div class="tab" data-t="syn">🤝 시너지</div>
+    <div class="tab" data-t="champ">🧙 챔피언</div>
+    <div class="tab" data-t="matches">📜 경기</div>
+    <div class="tab" data-t="player">👤 플레이어</div>
+    <div class="tab" data-t="compare">⚖️ 비교</div>
   </div>
 
-  <section id="board" class="view"></section>
+  <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div>
+    <div class="muted" style="margin-top:8px;font-size:12px">정렬 = Wilson 신뢰하한(소표본 보정). 헤더 클릭으로 재정렬.</div></div></section>
 
-  <section id="elo" class="view hidden"></section>
-
-  <section id="rank" class="view hidden">
-    <div class="card">
-      <div class="row">
-        <span>지표</span>
-        <select id="metricSel">
-          <option value="dps15">DPS @15분</option>
-          <option value="dpm">총 DPM</option>
-          <option value="gold15">골드 @15분</option>
-          <option value="cs15">CS @15분</option>
-          <option value="kda">KDA</option>
-          <option value="vision">시야 점수</option>
-        </select>
-        <span class="muted" id="rankNote"></span>
-      </div>
-      <div id="rankTable"></div>
+  <section id="rank" class="view hidden"><div class="card">
+    <div class="row">
+      <span>지표</span>
+      <select id="metricSel"></select>
+      <span id="laneBtns"></span>
+      <span class="muted" id="rankNote"></span>
     </div>
+    <div id="rankT"></div>
+  </div></section>
+
+  <section id="syn" class="view hidden"><div class="card">
+    <h2>🤝 시너지 <span class="tooltip" title="기대(서로 없이 거둔 승률 평균) 대비 함께했을 때 상승분. empirical Bayes로 소표본은 0으로 수축. + 잘맞음 / − 안맞음">ⓘ</span></h2>
+    <div id="synT"></div></div></section>
+
+  <section id="champ" class="view hidden">
+    <div class="card"><h2>🧙 챔피언 메타 (서버 전체)</h2><div id="champT"></div></div>
+    <div class="card"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
   </section>
 
-  <section id="syn" class="view hidden"></section>
+  <section id="matches" class="view hidden"><div class="card"><h2>📜 최근 경기</h2><div id="matchT"></div></div></section>
 
-  <section id="player" class="view hidden">
-    <div class="card">
-      <div class="row">
-        <span>플레이어</span>
-        <select id="playerSel"></select>
-      </div>
-      <div id="playerBody"></div>
-    </div>
-  </section>
+  <section id="player" class="view hidden"><div class="card">
+    <div class="row"><span>플레이어</span><select id="playerSel"></select></div>
+    <div id="playerBody"></div></div></section>
+
+  <section id="compare" class="view hidden"><div class="card">
+    <div class="row"><select id="cmpA"></select><span class="vs">VS</span><select id="cmpB"></select></div>
+    <div id="cmpBody"></div></div></section>
 </div>
+<footer id="foot"></footer>
 
 <script>
 const $ = s => document.querySelector(s);
 let DATA = null;
+const pct = x => (x==null?0:x*100).toFixed(0)+'%';
+const sgn = x => (x>0?'+':'')+(+x).toFixed(3);
 
-function pct(x){ return (x*100).toFixed(0)+'%'; }
-function table(rows, cols){
-  if(!rows || !rows.length) return '<p class="muted">데이터 없음</p>';
-  let h = '<table><thead><tr>' + cols.map(c=>`<th>${c.h}</th>`).join('') + '</tr></thead><tbody>';
-  for(const r of rows){
-    h += '<tr>' + cols.map(c=>{
-      let v = c.f ? c.f(r[c.k], r) : r[c.k];
-      const cls = c.num ? ' class="num"' : (c.cls? ' class="'+c.cls(r)+'"':'');
-      return `<td${cls}>${v==null?'':v}</td>`;
-    }).join('') + '</tr>';
+function champImg(name){
+  if(!name || !DATA?.patch) return '';
+  const url = `https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/champion/${name}.png`;
+  return `<img class="champ" src="${url}" loading="lazy" decoding="async" onerror="this.style.display='none'" alt="">`;
+}
+function wrClass(w){ return w>0.55?'wr-h':(w<0.45?'wr-l':'wr-m'); }
+
+// --- 정렬 가능한 테이블 ---
+function renderTable(el, rows, cols, sortKey, sortDir){
+  if(!rows || !rows.length){ el.innerHTML='<p class="muted">데이터 없음</p>'; return; }
+  // 바 컬럼 최대값
+  const maxes={};
+  cols.forEach(c=>{ if(c.bar){ maxes[c.k]=Math.max(...rows.map(r=>+r[c.k]||0),0.0001); }});
+  let data=rows.slice();
+  if(sortKey){
+    data.sort((a,b)=>{ let x=a[sortKey],y=b[sortKey];
+      if(typeof x==='number'||typeof y==='number') return ((+x||0)-(+y||0))*sortDir;
+      return String(x).localeCompare(String(y))*sortDir; });
   }
-  return h + '</tbody></table>';
+  let h='<table><thead><tr>'+cols.map(c=>
+    `<th data-k="${c.k}" class="sortable ${c.num?'num':''}">${c.h}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
+  data.forEach((r,i)=>{
+    h+='<tr>'+cols.map(c=>{
+      let v=r[c.k];
+      let disp=c.fmt?c.fmt(v,r,i):(v==null?'':v);
+      if(c.img && r[c.img]) disp=champImg(r[c.img])+disp;
+      const cls=c.cls?c.cls(r):(c.num?'num':'');
+      if(c.bar){ const p=Math.max(0,Math.min(100,(+v/maxes[c.k])*100));
+        disp=`<div class="barwrap"><span>${disp}</span><i style="width:${p}%"></i></div>`; }
+      return `<td class="${cls}">${disp}</td>`;
+    }).join('')+'</tr>';
+  });
+  el.innerHTML=h+'</tbody></table>';
+  el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
+  });
 }
 
+const MEDAL=['🥇','🥈','🥉'];
 function renderBoard(){
-  $('#board').innerHTML =
-    `<div class="card"><h2>🏆 승률 리더보드</h2>` +
-    table(DATA.leaderboard, [
-      {h:'멤버',k:'discord_name'},
-      {h:'판',k:'games',num:1},
-      {h:'승',k:'wins',num:1},
-      {h:'승률',k:'winrate',num:1,f:pct},
-      {h:'KDA',k:'kda',num:1},
-      {h:'킬관여',k:'kp',num:1,f:pct},
-      {h:'DPM',k:'dpm',num:1},
-    ]) + `</div>`;
+  const rows=(DATA.leaderboard||[]).map((r,i)=>({...r,_rank:i}));
+  renderTable($('#boardT'),rows,[
+    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._rank<3?MEDAL[r._rank]+' ':'')+v},
+    {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'ci_lower',h:'신뢰하한',num:1,fmt:v=>pct(v)},
+    {k:'kda',h:'KDA',num:1},{k:'kp',h:'킬관여',num:1,fmt:pct},
+    {k:'dpm',h:'DPM',num:1,bar:1},
+  ],'ci_lower',-1);
 }
-function renderElo(){
-  $('#elo').innerHTML = `<div class="card"><h2>📈 Elo</h2>` +
-    table(DATA.elo, [
-      {h:'멤버',k:'discord_name'},
-      {h:'Elo',k:'rating',num:1},
-      {h:'판',k:'games',num:1},
-    ]) + `</div>`;
-}
+
+const METRICS=[['dps15','DPS@15'],['dpm','총 DPM'],['gold15','골드@15'],['cs15','CS@15'],
+  ['xp15','XP@15'],['gold_diff_15','골드차@15'],['cs_diff_15','CS차@15'],['xp_diff_15','XP차@15'],
+  ['dmg_share','딜 비중'],['gold_share','골드 비중'],['dmg_per_gold','골드효율'],
+  ['kda','KDA'],['kp','킬관여'],['vision','시야'],['multikills','멀티킬'],['first_blood_rate','퍼블률']];
+const SHARE=new Set(['dmg_share','gold_share','kp','first_blood_rate']);
+const LANES=[['','전체'],['TOP','탑'],['JUNGLE','정글'],['MIDDLE','미드'],['BOTTOM','바텀'],['UTILITY','서폿']];
+let curMetric='dps15', curLane='';
 function renderRank(){
-  const m = $('#metricSel').value;
-  const rows = (DATA.rankings[m]||[]);
-  const byLane = rows.length && ('lane' in rows[0]);
-  $('#rankNote').textContent = byLane ? '(라인별 분리)' : '';
-  const cols = [{h:'멤버',k:'discord_name'}];
-  if(byLane) cols.push({h:'라인',k:'lane'});
-  cols.push({h:'판',k:'games',num:1});
-  cols.push({h:'값',k:'value',num:1});
-  $('#rankTable').innerHTML = table(rows, cols);
+  let rows=(DATA.rankings[curMetric]||[]).slice();
+  const byLane=rows.length&&('lane' in rows[0]);
+  if(curLane && byLane) rows=rows.filter(r=>r.lane===curLane);
+  $('#rankNote').textContent=byLane?'(라인별 분리)':'';
+  $('#laneBtns').style.display=byLane?'':'none';
+  const isShare=SHARE.has(curMetric);
+  const isDiff=curMetric.includes('diff');
+  const cols=[{k:'discord_name',h:'멤버'}];
+  if(byLane) cols.push({k:'lane',h:'라인'});
+  cols.push({k:'games',h:'판',num:1});
+  cols.push({k:'value',h:'값',num:1,
+    fmt:v=>isShare?pct(v):(+v).toLocaleString(),
+    cls:isDiff?(r=>'num '+(r.value>0?'pos':(r.value<0?'neg':''))):null,
+    bar:isDiff?0:1});
+  renderTable($('#rankT'),rows,cols,'value',-1);
 }
+function buildRankControls(){
+  $('#metricSel').innerHTML=METRICS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('');
+  $('#metricSel').value=curMetric;
+  $('#laneBtns').innerHTML=LANES.map(([k,l])=>
+    `<button class="tab ${k===curLane?'on':''}" data-l="${k}" style="padding:5px 11px">${l}</button>`).join(' ');
+  $('#laneBtns').querySelectorAll('button').forEach(b=>b.onclick=()=>{curLane=b.dataset.l;buildRankControls();renderRank();});
+}
+
 function renderSyn(){
-  const rows = DATA.synergy||[];
-  $('#syn').innerHTML = `<div class="card"><h2>🤝 시너지 (empirical Bayes)</h2>` +
-    `<p class="muted">기대 대비 함께했을 때의 상승분. 소표본은 0으로 수축. + = 잘 맞음, − = 안 맞음</p>` +
-    table(rows, [
-      {h:'A',k:'na'},{h:'B',k:'nb'},
-      {h:'함께',k:'games',num:1},
-      {h:'함께승률',k:'winrate',num:1,f:pct},
-      {h:'기대',k:'expected',num:1,f:pct},
-      {h:'시너지',k:'synergy',num:1,
-        f:v=>(v>0?'+':'')+v.toFixed(3),
-        cls:r=>r.synergy>0?'pos':(r.synergy<0?'neg':'')},
-    ]) + `</div>`;
+  renderTable($('#synT'),DATA.synergy||[],[
+    {k:'na',h:'A'},{k:'nb',h:'B'},{k:'games',h:'함께',num:1},
+    {k:'winrate',h:'함께승률',num:1,fmt:pct},{k:'expected',h:'기대',num:1,fmt:pct},
+    {k:'synergy',h:'시너지',num:1,fmt:sgn,cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
+  ],'synergy',-1);
 }
-function renderPlayers(){
-  const sel = $('#playerSel');
-  sel.innerHTML = '';
-  const ids = Object.keys(DATA.players);
-  for(const id of ids){
-    const o = document.createElement('option');
-    o.value = id; o.textContent = DATA.players[id].name; sel.appendChild(o);
-  }
-  renderPlayerBody();
+function renderChamp(){
+  renderTable($('#champT'),DATA.champion_meta||[],[
+    {k:'champion_name',h:'챔피언',img:'champion_name'},
+    {k:'games',h:'판',num:1,bar:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1},
+  ],'games',-1);
+  renderTable($('#banT'),DATA.ban_meta||[],[
+    {k:'champion_name',h:'챔피언',img:'champion_name',fmt:(v,r)=>r.champion_kr||v},
+    {k:'bans',h:'밴 횟수',num:1,bar:1},
+  ],'bans',-1);
+}
+function renderMatches(){
+  const ms=DATA.recent_matches||[];
+  if(!ms.length){ $('#matchT').innerHTML='<p class="muted">경기 없음</p>'; return; }
+  $('#matchT').innerHTML=ms.map(m=>{
+    const d=new Date(m.ts).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const t=m.teams.map(tm=>{
+      const players=tm.players.map(p=>`${champImg(p.champ)}${p.name}`).join(' ');
+      return `<div class="team"><span class="res ${tm.win?'w':'l'}">${tm.win?'승':'패'}</span>${players}</div>`;
+    }).join('<span class="vs">vs</span>');
+    return `<div class="match"><span class="muted hide-sm" style="width:96px">${d}</span>${t}</div>`;
+  }).join('');
+}
+
+function fillPlayerSelect(sel){
+  const ids=Object.keys(DATA.players);
+  sel.innerHTML=ids.map(id=>`<option value="${id}">${DATA.players[id].name}</option>`).join('');
 }
 function renderPlayerBody(){
-  const id = $('#playerSel').value;
-  const p = DATA.players[id];
+  const p=DATA.players[$('#playerSel').value];
   if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
-  const r = p.record;
-  const best = (p.partners_best||[]).map(x=>`${x.partner} <span class="${x.synergy>0?'pos':'neg'}">${(x.synergy>0?'+':'')+x.synergy.toFixed(3)}</span>`).join(', ')||'—';
-  const worst = (p.partners_worst||[]).map(x=>`${x.partner} <span class="${x.synergy>0?'pos':'neg'}">${(x.synergy>0?'+':'')+x.synergy.toFixed(3)}</span>`).join(', ')||'—';
-  $('#playerBody').innerHTML =
-    `<div class="row"><span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
-      <span class="pill">승률 ${pct(r.winrate)}</span>
-      <span class="pill">KDA ${r.kda}</span>
-      <span class="pill">킬관여 ${pct(r.kp)}</span></div>
-     <div class="grid2">
-       <div><h2>라인별</h2>${table(p.lanes,[
-          {h:'라인',k:'lane'},{h:'판',k:'games',num:1},
-          {h:'승률',k:'winrate',num:1,f:pct},{h:'KDA',k:'kda',num:1}])}</div>
-       <div><h2>챔피언</h2>${table(p.champions,[
-          {h:'챔프',k:'champion_name'},{h:'판',k:'games',num:1},
-          {h:'승률',k:'winrate',num:1,f:pct},{h:'KDA',k:'kda',num:1}])}</div>
-     </div>
-     <div class="grid2" style="margin-top:14px">
-       <div class="card"><h2>👍 시너지 좋은 파트너</h2><p>${best}</p></div>
-       <div class="card"><h2>👎 시너지 나쁜 파트너</h2><p>${worst}</p></div>
-     </div>`;
+  const r=p.record, f=p.form||{};
+  const streak=f.streak?`<span class="pill ${f.dir==='W'?'good':'bad'}">${f.streak}${f.dir} 연속</span>`:'';
+  const roles=(p.role_dist||[]).map(x=>`<div class="mini"><span class="lane">${x.lane}</span>
+    <span class="track"><i style="width:${x.pct*100}%"></i></span><span class="muted">${x.games}판</span></div>`).join('')||'<span class="muted">-</span>';
+  const best=(p.partners_best||[]).map(x=>`${x.partner} <span class="pos">${sgn(x.synergy)}</span>`).join(', ')||'—';
+  const worst=(p.partners_worst||[]).map(x=>`${x.partner} <span class="neg">${sgn(x.synergy)}</span>`).join(', ')||'—';
+  let h=`<div class="row">
+    <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
+    <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
+    <span class="pill">KDA ${r.kda}</span><span class="pill">킬관여 ${pct(r.kp)}</span>
+    <span class="pill">DPM ${r.dpm}</span>${streak}</div>
+    <div class="grid2">
+      <div><h2>라인 분포</h2>${roles}</div>
+      <div><h2>라인별 전적</h2><div id="plLane"></div></div>
+    </div>
+    <div class="grid2" style="margin-top:6px">
+      <div><h2>챔피언</h2><div id="plChamp"></div></div>
+      <div><h2>최근 경기</h2><div id="plRecent"></div></div>
+    </div>
+    <div class="grid2" style="margin-top:6px">
+      <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
+      <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
+    </div>`;
+  $('#playerBody').innerHTML=h;
+  renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인'},{k:'games',h:'판',num:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},{k:'kda',h:'KDA',num:1}],'games',-1);
+  renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name'},
+    {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'kda',h:'KDA',num:1}],'games',-1);
+  renderTable($('#plRecent'),(p.recent_games||[]).map(g=>({...g,res:g.win?'승':'패'})),
+    [{k:'champion_name',h:'챔프',img:'champion_name'},{k:'lane',h:'라인'},
+     {k:'res',h:'결과',cls:r=>r.win?'pos':'neg'},{k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1}],null,-1);
+}
+
+function renderCompare(){
+  const a=DATA.players[$('#cmpA').value], b=DATA.players[$('#cmpB').value];
+  if(!a||!b){ $('#cmpBody').innerHTML='<p class="muted">선택하세요</p>'; return; }
+  // 함께/상대 정보는 synergy 테이블에서(같은 팀 기준)
+  const pair=(DATA.synergy||[]).find(s=>(s.na===a.name&&s.nb===b.name)||(s.na===b.name&&s.nb===a.name));
+  const ra=a.record, rb=b.record;
+  const row=(label,va,vb,fmt)=>`<tr>
+    <td class="num ${(+va>+vb)?'pos':''}">${fmt?fmt(va):va}</td>
+    <td class="muted" style="text-align:center;width:120px">${label}</td>
+    <td class="num ${(+vb>+va)?'pos':''}">${fmt?fmt(vb):vb}</td></tr>`;
+  $('#cmpBody').innerHTML=`
+    <table><thead><tr><th class="num">${a.name}</th><th style="text-align:center"></th><th class="num">${b.name}</th></tr></thead>
+    <tbody>
+      ${row('판수',ra.games,rb.games)}
+      ${row('승률',ra.winrate,rb.winrate,pct)}
+      ${row('KDA',ra.kda,rb.kda)}
+      ${row('킬관여',ra.kp,rb.kp,pct)}
+      ${row('DPM',ra.dpm,rb.dpm)}
+    </tbody></table>
+    <p class="muted" style="margin-top:10px">${pair?`함께 ${pair.games}판 · 함께 승률 ${pct(pair.winrate)} · 시너지 ${sgn(pair.synergy)}`:'함께한 기록(2판+) 없음'}</p>`;
+}
+
+function renderKpis(){
+  const s=DATA.summary||{}, ts=DATA.timestamp?new Date(DATA.timestamp).toLocaleString('ko-KR'):'-';
+  $('#kpis').innerHTML=[
+    ['총 경기',s.total_games??0,''],['평균 승률',pct(s.avg_winrate||0),'acc'],
+    ['플레이어',s.player_count??0,''],['업데이트',ts,'']
+  ].map(([l,v,c])=>`<div class="kpi"><div class="label">${l}</div><div class="value ${c}">${v}</div></div>`).join('');
 }
 
 function renderAll(){
-  $('#meta').textContent = `${DATA.name} · ${DATA.leaderboard.length}명`;
-  renderBoard(); renderElo(); renderRank(); renderSyn(); renderPlayers();
+  $('#meta').innerHTML=`<b>${DATA.name}</b> · 패치 ${DATA.patch||'-'}`;
+  renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
+  renderChamp(); renderMatches();
+  fillPlayerSelect($('#playerSel')); renderPlayerBody();
+  fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
+  const ids=Object.keys(DATA.players); if(ids[1]) $('#cmpB').value=ids[1];
+  renderCompare();
+  $('#foot').textContent=`내전 전적 · ${DATA.name}`;
 }
 
 async function loadGuild(gid){
-  const res = await fetch(`data/${gid}.json?t=`+Date.now());
-  DATA = await res.json();
-  renderAll();
+  const r=await fetch(`data/${gid}.json?t=`+Date.now());
+  DATA=await r.json(); renderAll();
 }
 
-// 탭 전환
-$('#tabs').addEventListener('click', e=>{
-  const t = e.target.closest('.tab'); if(!t) return;
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on', x===t));
+$('#tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t||!t.dataset.t) return;
+  document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.toggle('on',x===t));
   document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
   $('#'+t.dataset.t).classList.remove('hidden');
 });
-$('#metricSel').addEventListener('change', renderRank);
-$('#playerSel').addEventListener('change', renderPlayerBody);
-$('#guildSel').addEventListener('change', e=>loadGuild(e.target.value));
+$('#metricSel').addEventListener('change',e=>{curMetric=e.target.value;renderRank();});
+$('#playerSel').addEventListener('change',renderPlayerBody);
+$('#cmpA').addEventListener('change',renderCompare);
+$('#cmpB').addEventListener('change',renderCompare);
+$('#guildSel').addEventListener('change',e=>loadGuild(e.target.value));
+$('#refresh').addEventListener('click',()=>$('#guildSel').value&&loadGuild($('#guildSel').value));
 
 (async function init(){
   try{
-    const res = await fetch('data/guilds.json?t='+Date.now());
-    if(!res.ok){
-      $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)';
-      return;
-    }
-    const idx = await res.json();
-    const sel = $('#guildSel');
+    const res=await fetch('data/guilds.json?t='+Date.now());
+    if(!res.ok){ $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)'; return; }
+    const idx=await res.json();
     if(!idx.length){ $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)'; return; }
-    for(const g of idx){
-      const o=document.createElement('option'); o.value=g.id;
-      o.textContent=`${g.name} (${g.players}명)`; sel.appendChild(o);
-    }
+    $('#guildSel').innerHTML=idx.map(g=>`<option value="${g.id}">${g.name} (${g.players}명)</option>`).join('');
     await loadGuild(idx[0].id);
-  }catch(err){
-    $('#meta').textContent='데이터 로드 실패: '+err;
-  }
+  }catch(err){ $('#meta').textContent='데이터 로드 실패: '+err; }
 })();
 </script>
 </body>
