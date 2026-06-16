@@ -98,6 +98,7 @@
     <div class="tab" data-t="matches">📜 경기</div>
     <div class="tab" data-t="player">👤 플레이어</div>
     <div class="tab" data-t="compare">⚖️ 비교</div>
+    <div class="tab" data-t="balance">🧮 밸런스</div>
   </div>
 
   <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div>
@@ -144,6 +145,16 @@
   <section id="compare" class="view hidden"><div class="card">
     <div class="row"><select id="cmpA"></select><span class="vs">VS</span><select id="cmpB"></select></div>
     <div id="cmpBody"></div></div></section>
+
+  <section id="balance" class="view hidden"><div class="card">
+    <h2>🧮 팀 밸런스</h2>
+    <p class="muted">참가자를 체크(짝수 4~10명)하고 라인을 자동/지정 후 <b>팀 생성</b>. 단순 승률이 아니라
+      '누구를 이겼나'(Bradley-Terry) + 라인숙련 + 퍼포먼스 + 시너지를 반영한 실력 점수로 50:50에 맞춥니다.</p>
+    <div id="balPick"></div>
+    <div class="row" style="margin-top:12px"><button id="balGo">⚖️ 팀 생성</button>
+      <button id="balClear">초기화</button><span class="muted" id="balNote"></span></div>
+    <div id="balResult"></div>
+  </div></section>
 </div>
 <footer id="foot"></footer>
 
@@ -369,6 +380,69 @@ function renderCompare(){
     <p class="muted" style="margin-top:10px">${pair?`함께 ${pair.games}판 · 함께 승률 ${pct(pair.winrate)} · 시너지 ${sgn(pair.synergy)}`:'함께한 기록(2판+) 없음'}</p>`;
 }
 
+// --- 밸런서 (balance.py JS 포팅) ---
+const BAL_ROLES=['TOP','JUNGLE','MIDDLE','BOTTOM','UTILITY'];
+const LANE_KR={TOP:'탑',JUNGLE:'정글',MIDDLE:'미드',BOTTOM:'원딜',UTILITY:'서폿'};
+const OFF_PEN=0.8;
+function bStrength(did,lane){const r=(DATA.ratings||{})[did]||{};
+  if(lane&&r.lanes&&r.lanes[lane])return r.lanes[lane].strength;
+  const b=r.strength||0; return lane?b-OFF_PEN:b;}
+function* combos(a,k,s=0,acc=[]){if(acc.length===k){yield acc.slice();return;}
+  for(let i=s;i<a.length;i++){acc.push(a[i]);yield* combos(a,k,i+1,acc);acc.pop();}}
+function* perms(a){if(a.length<=1){yield a.slice();return;}
+  for(let i=0;i<a.length;i++){const r=a.slice(0,i).concat(a.slice(i+1));for(const p of perms(r))yield[a[i],...p];}}
+function bestRole(team,decl){let best=null;
+  for(const perm of perms(BAL_ROLES)){let tot=0,as={},ok=true;
+    for(let i=0;i<team.length;i++){const d=team[i],ro=perm[i];
+      if(decl[d]&&decl[d]!==ro){ok=false;break;} as[d]=ro; tot+=bStrength(d,ro);}
+    if(ok&&(!best||tot>best.tot))best={tot,assign:as};}
+  return best;}
+function jsBalance(players,decl){
+  players=players.filter(p=>(DATA.ratings||{})[p]); const n=players.length;
+  if(n<4||n%2)return{error:'짝수 4~10명을 선택하세요.'};
+  const half=n/2,useRoles=(half===5);
+  const sm={}; (DATA.synergy||[]).forEach(s=>sm[[s.na,s.nb].sort().join('|')]=s.synergy);
+  const synB=ids=>{let t=0;const nm=ids.map(d=>DATA.ratings[d].name);
+    for(let i=0;i<nm.length;i++)for(let j=i+1;j<nm.length;j++)t+=sm[[nm[i],nm[j]].sort().join('|')]||0;return t;};
+  let best=null;
+  for(const A of combos(players,half)){const sA0=new Set(A),B=players.filter(p=>!sA0.has(p));
+    let sA,sB,lA={},lB={};
+    if(useRoles){const ra=bestRole(A,decl),rb=bestRole(B,decl);if(!ra||!rb)continue;
+      sA=ra.tot;sB=rb.tot;lA=ra.assign;lB=rb.assign;}
+    else{A.forEach(d=>lA[d]=decl[d]||null);B.forEach(d=>lB[d]=decl[d]||null);
+      sA=A.reduce((t,d)=>t+bStrength(d,lA[d]),0);sB=B.reduce((t,d)=>t+bStrength(d,lB[d]),0);}
+    const sc=Math.abs(sA-sB)-0.5*(synB(A)+synB(B));
+    if(!best||sc<best.sc)best={sc,A,B,sA,sB,lA,lB};}
+  if(!best)return{error:'라인 지정이 충돌합니다.'};
+  const sig=x=>1/(1+Math.exp(-Math.max(-30,Math.min(30,x))));
+  const mk=(ids,ln)=>ids.map(d=>({name:DATA.ratings[d].name,lane:ln[d],
+    mmr:Math.round(1000+250*bStrength(d,ln[d])),
+    off:ln[d]&&!((DATA.ratings[d].lanes||{})[ln[d]])})).sort((a,b)=>BAL_ROLES.indexOf(a.lane)-BAL_ROLES.indexOf(b.lane));
+  const TA=mk(best.A,best.lA),TB=mk(best.B,best.lB);
+  return{teamA:TA,teamB:TB,pA:sig(best.sA-best.sB),
+    mmrA:TA.reduce((t,m)=>t+m.mmr,0),mmrB:TB.reduce((t,m)=>t+m.mmr,0)};}
+function renderBalancePicker(){
+  const R=DATA.ratings||{},ids=Object.keys(R);
+  if(!ids.length){$('#balPick').innerHTML='<p class="muted">레이팅 데이터가 없습니다 (내전이 쌓이면 활성화됩니다).</p>';return;}
+  const opts='<option value="">자동</option>'+BAL_ROLES.map(l=>`<option value="${l}">${LANE_KR[l]}</option>`).join('');
+  $('#balPick').innerHTML=ids.sort((a,b)=>R[b].mmr-R[a].mmr).map(id=>
+    `<label class="mini" style="gap:10px"><input type="checkbox" class="balChk" value="${id}">`+
+    `<span style="flex:1">${R[id].name} <span class="muted">(${R[id].games}판 · ${R[id].mmr})</span></span>`+
+    `<select class="balLane" data-id="${id}">${opts}</select></label>`).join('');
+}
+function runBalance(){
+  const chosen=[...document.querySelectorAll('.balChk:checked')].map(c=>c.value);
+  const decl={}; document.querySelectorAll('.balLane').forEach(s=>{if(s.value&&chosen.includes(s.dataset.id))decl[s.dataset.id]=s.value;});
+  $('#balNote').textContent=`${chosen.length}명 선택`;
+  const res=jsBalance(chosen,decl);
+  if(res.error){$('#balResult').innerHTML=`<p class="neg" style="margin-top:10px">${res.error}</p>`;return;}
+  const team=(t,label,mmr,col)=>`<div class="card"><h2>${col} ${label} <span class="muted">MMR 합 ${mmr}</span></h2>`+
+    t.map(m=>`<div class="mini"><span class="lane">${LANE_KR[m.lane]||'?'}</span>`+
+      `<span style="flex:1">${m.name}${m.off?' <span class="bad">⚠️오프롤</span>':''}</span>`+
+      `<span class="muted">${m.mmr}</span></div>`).join('')+`</div>`;
+  $('#balResult').innerHTML=`<div class="row" style="margin:12px 0"><span class="pill" style="font-size:15px">예측 승률 ${Math.round(res.pA*100)} : ${Math.round((1-res.pA)*100)}</span></div>`+
+    `<div class="grid2">`+team(res.teamA,'A팀',res.mmrA,'🔵')+team(res.teamB,'B팀',res.mmrB,'🔴')+`</div>`;
+}
 function renderKpis(){
   const s=DATA.summary||{}, ts=DATA.timestamp?new Date(DATA.timestamp).toLocaleString('ko-KR'):'-';
   $('#kpis').innerHTML=[
@@ -384,7 +458,7 @@ function renderAll(){
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players); if(ids[1]) $('#cmpB').value=ids[1];
-  renderCompare();
+  renderCompare(); renderBalancePicker();
   $('#foot').textContent=`내전 전적 · ${DATA.name}`;
 }
 
@@ -403,6 +477,9 @@ $('#metricSel').addEventListener('change',e=>{curMetric=e.target.value;renderRan
 $('#playerSel').addEventListener('change',renderPlayerBody);
 $('#cmpA').addEventListener('change',renderCompare);
 $('#cmpB').addEventListener('change',renderCompare);
+$('#balGo').addEventListener('click',runBalance);
+$('#balClear').addEventListener('click',()=>{document.querySelectorAll('.balChk').forEach(c=>c.checked=false);
+  document.querySelectorAll('.balLane').forEach(s=>s.value='');$('#balResult').innerHTML='';$('#balNote').textContent='';});
 $('#guildSel').addEventListener('change',e=>loadGuild(e.target.value));
 $('#refresh').addEventListener('click',()=>$('#guildSel').value&&loadGuild($('#guildSel').value));
 
