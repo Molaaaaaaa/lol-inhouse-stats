@@ -94,6 +94,7 @@
     <div class="tab" data-t="rank">📊 랭킹</div>
     <div class="tab" data-t="syn">🤝 시너지</div>
     <div class="tab" data-t="champ">🧙 챔피언</div>
+    <div class="tab" data-t="records">🏅 기록실</div>
     <div class="tab" data-t="matches">📜 경기</div>
     <div class="tab" data-t="player">👤 플레이어</div>
     <div class="tab" data-t="compare">⚖️ 비교</div>
@@ -112,15 +113,26 @@
     <div id="rankT"></div>
   </div></section>
 
-  <section id="syn" class="view hidden"><div class="card">
-    <h2>🤝 시너지 <span class="tooltip" title="기대(서로 없이 거둔 승률 평균) 대비 함께했을 때 상승분. empirical Bayes로 소표본은 0으로 수축. + 잘맞음 / − 안맞음">ⓘ</span></h2>
-    <div id="synT"></div></div></section>
+  <section id="syn" class="view hidden">
+    <div class="card"><h2>🤝 듀오 시너지 <span class="tooltip" title="기대(서로 없이 거둔 승률 평균) 대비 함께했을 때 상승분. empirical Bayes로 소표본은 0으로 수축. + 잘맞음 / − 안맞음">ⓘ</span></h2>
+      <div id="synT"></div></div>
+    <div class="card"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
+  </section>
 
   <section id="champ" class="view hidden">
     <div class="card"><h2>🧙 챔피언 메타 (서버 전체)</h2>
       <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
       <div id="champT"></div></div>
+    <div class="card"><h2>⚔️ 챔프 매치업 (같은 라인 맞대결)</h2><div id="champMatchT"></div></div>
     <div class="card"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
+  </section>
+
+  <section id="records" class="view hidden">
+    <div class="card"><h2>🏅 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
+    <div class="grid2">
+      <div class="card"><h2>👑 MVP 랭킹</h2><div id="mvpT"></div></div>
+      <div class="card"><h2>🔥 펜타킬</h2><div id="pentaT"></div></div>
+    </div>
   </section>
 
   <section id="matches" class="view hidden"><div class="card"><h2>📜 최근 경기</h2><div id="matchT"></div></div></section>
@@ -230,6 +242,25 @@ function renderSyn(){
     {k:'winrate',h:'함께승률',num:1,fmt:pct},{k:'expected',h:'기대',num:1,fmt:pct},
     {k:'synergy',h:'시너지',num:1,fmt:sgn,cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
   ],'synergy',-1);
+  renderTable($('#trioT'),DATA.trios||[],[
+    {k:'a',h:'A'},{k:'b',h:'B'},{k:'c',h:'C'},{k:'games',h:'함께',num:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct},
+    {k:'synergy',h:'시너지',num:1,fmt:sgn,cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
+  ],'synergy',-1);
+}
+function renderRecords(){
+  const r=DATA.records||{};
+  const card=(icon,label,o)=> o&&o.name? `<div class="kpi"><div class="label">${icon} ${label}</div>`+
+    `<div class="value" style="font-size:16px">${champImg(o.champ)}${o.name} <span class="muted">${o.value}</span></div></div>`:'';
+  const streak=(r.longest_streak&&r.longest_streak.name)?
+    `<div class="kpi"><div class="label">🔥 최장 연승</div><div class="value" style="font-size:16px">${r.longest_streak.name} <span class="muted">${r.longest_streak.value}연승</span></div></div>`:'';
+  $('#recCards').innerHTML=`<div class="kpis" style="grid-template-columns:repeat(2,1fr)">`+
+    card('⚔️','최고 KDA',r.best_kda)+card('💥','최다 딜',r.most_dmg)+
+    card('🌾','최다 CS@15',r.most_cs15)+streak+`</div>`;
+  renderTable($('#mvpT'),DATA.mvp||[],[{k:'name',h:'멤버'},
+    {k:'mvp',h:'MVP',num:1,bar:1},{k:'games',h:'판',num:1}],'mvp',-1);
+  const pentas=r.pentas||[];
+  $('#pentaT').innerHTML=pentas.length?pentas.map(p=>`${champImg(p.champ)}${p.name}`).join('<br>'):'<p class="muted">아직 없음</p>';
 }
 let champLane='';  // '' = 전체(챔프 합계), 그 외 = 라인별
 function buildChampLaneBtns(){
@@ -245,6 +276,10 @@ function renderChamp(){
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1});
   renderTable($('#champT'),rows,cols,'games',-1);
+  renderTable($('#champMatchT'),DATA.champion_matchups||[],[
+    {k:'champ',h:'챔프',img:'champ'},{k:'vs_champ',h:'상대',img:'vs_champ'},
+    {k:'lane',h:'라인'},{k:'games',h:'판',num:1,bar:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)}],'games',-1);
   renderTable($('#banT'),DATA.ban_meta||[],[
     {k:'champion_name',h:'챔피언',img:'champion_name',fmt:(v,r)=>r.champion_kr||v},
     {k:'bans',h:'밴 횟수',num:1,bar:1},
@@ -276,6 +311,9 @@ function renderPlayerBody(){
     <span class="track"><i style="width:${x.pct*100}%"></i></span><span class="muted">${x.games}판</span></div>`).join('')||'<span class="muted">-</span>';
   const best=(p.partners_best||[]).map(x=>`${x.partner} <span class="pos">${sgn(x.synergy)}</span>`).join(', ')||'—';
   const worst=(p.partners_worst||[]).map(x=>`${x.partner} <span class="neg">${sgn(x.synergy)}</span>`).join(', ')||'—';
+  const nv=p.nemesis_victim||{nemesis:[],victim:[]};
+  const nvf=arr=>(arr||[]).map(x=>`${champImg(x.vs_champ)}${x.vs_champ} ${pct(x.winrate)}`).join(', ')||'—';
+  const nemesis=nvf(nv.nemesis), victim=nvf(nv.victim);
   let h=`<div class="row">
     <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
     <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
@@ -292,6 +330,10 @@ function renderPlayerBody(){
     <div class="grid2" style="margin-top:6px">
       <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
       <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
+    </div>
+    <div class="grid2" style="margin-top:6px">
+      <div class="card"><h2>😈 천적 (자주 짐)</h2>${nemesis}</div>
+      <div class="card"><h2>🍚 밥 (자주 이김)</h2>${victim}</div>
     </div>`;
   $('#playerBody').innerHTML=h;
   renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인'},{k:'games',h:'판',num:1},
@@ -338,7 +380,7 @@ function renderKpis(){
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name}</b> · 패치 ${DATA.patch||'-'}`;
   renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
-  buildChampLaneBtns(); renderChamp(); renderMatches();
+  buildChampLaneBtns(); renderChamp(); renderRecords(); renderMatches();
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players); if(ids[1]) $('#cmpB').value=ids[1];
