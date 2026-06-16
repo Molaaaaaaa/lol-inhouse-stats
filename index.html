@@ -117,7 +117,9 @@
     <div id="synT"></div></div></section>
 
   <section id="champ" class="view hidden">
-    <div class="card"><h2>🧙 챔피언 메타 (서버 전체)</h2><div id="champT"></div></div>
+    <div class="card"><h2>🧙 챔피언 메타 (서버 전체)</h2>
+      <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
+      <div id="champT"></div></div>
     <div class="card"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
   </section>
 
@@ -229,13 +231,20 @@ function renderSyn(){
     {k:'synergy',h:'시너지',num:1,fmt:sgn,cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
   ],'synergy',-1);
 }
+let champLane='';  // '' = 전체(챔프 합계), 그 외 = 라인별
+function buildChampLaneBtns(){
+  $('#champLaneBtns').innerHTML=LANES.map(([k,l])=>
+    `<button class="tab ${k===champLane?'on':''}" data-l="${k}" style="padding:5px 11px">${l}</button>`).join(' ');
+  $('#champLaneBtns').querySelectorAll('button').forEach(b=>b.onclick=()=>{champLane=b.dataset.l;buildChampLaneBtns();renderChamp();});
+}
 function renderChamp(){
-  renderTable($('#champT'),DATA.champion_meta||[],[
-    {k:'champion_name',h:'챔피언',img:'champion_name'},
-    {k:'games',h:'판',num:1,bar:1},
+  const rows=champLane?(DATA.champion_meta_lane||[]).filter(r=>r.lane===champLane):(DATA.champion_meta||[]);
+  const cols=[{k:'champion_name',h:'챔피언',img:'champion_name'}];
+  if(champLane) cols.push({k:'lane',h:'라인'});
+  cols.push({k:'games',h:'판',num:1,bar:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
-    {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1},
-  ],'games',-1);
+    {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1});
+  renderTable($('#champT'),rows,cols,'games',-1);
   renderTable($('#banT'),DATA.ban_meta||[],[
     {k:'champion_name',h:'챔피언',img:'champion_name',fmt:(v,r)=>r.champion_kr||v},
     {k:'bans',h:'밴 횟수',num:1,bar:1},
@@ -288,6 +297,7 @@ function renderPlayerBody(){
   renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인'},{k:'games',h:'판',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},{k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name'},
+    {k:'lane',h:'라인'},
     {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plRecent'),(p.recent_games||[]).map(g=>({...g,res:g.win?'승':'패'})),
@@ -328,7 +338,7 @@ function renderKpis(){
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name}</b> · 패치 ${DATA.patch||'-'}`;
   renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
-  renderChamp(); renderMatches();
+  buildChampLaneBtns(); renderChamp(); renderMatches();
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players); if(ids[1]) $('#cmpB').value=ids[1];
