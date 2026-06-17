@@ -9,7 +9,7 @@
   :root{
     --bg:#0a0e14; --panel:#121821; --panel2:#1a2332; --line:#243044;
     --txt:#e8eef6; --dim:#8a98ad; --acc:#0bc5d4; --acc2:#c8aa6e;
-    --good:#1bd96a; --mid:#d9b53f; --bad:#ef4f5a; --shadow:0 4px 18px rgba(0,0,0,.35);
+    --good:#3aa0ee; --mid:#9aa6b2; --bad:#e8833a; --shadow:0 4px 18px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
   body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#10202b 0%,var(--bg) 60%);
@@ -51,10 +51,11 @@
   tbody tr:hover{background:var(--panel2)}
   .pos{color:var(--good)} .neg{color:var(--bad)}
   .wr-h{color:var(--good);font-weight:650} .wr-m{color:var(--mid)} .wr-l{color:var(--bad)}
+  .wr-h::after{content:' \25B2';font-size:.72em} .wr-l::after{content:' \25BC';font-size:.72em}
   .pill{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--panel2);
     border:1px solid var(--line);color:var(--dim);font-size:12px;margin:2px 3px 2px 0}
-  .pill.good{color:var(--good);border-color:#1bd96a55}
-  .pill.bad{color:var(--bad);border-color:#ef4f5a55}
+  .pill.good{color:var(--good);border-color:#3aa0ee55}
+  .pill.bad{color:var(--bad);border-color:#e8833a55}
   .champ{width:22px;height:22px;border-radius:5px;vertical-align:middle;margin-right:7px;
     border:1px solid var(--line)}
   .barwrap{position:relative;display:flex;justify-content:flex-end;align-items:center;gap:8px}
@@ -74,8 +75,23 @@
   .res.w{background:#0bc5d422;color:var(--acc)} .res.l{background:#ef4f5a22;color:var(--bad)}
   footer{color:var(--dim);font-size:12px;text-align:center;padding:24px}
   .tooltip{cursor:help;border-bottom:1px dotted var(--dim)}
+  .chart{width:100%;height:auto;display:block}
+  .clickable{cursor:pointer} .match.clickable:hover{border-color:var(--acc)}
+  .match-detail{border:1px solid var(--line);border-top:none;border-radius:0 0 11px 11px;
+    margin:-9px 0 9px;padding:6px 12px 10px;background:var(--panel)}
+  .heat{border-collapse:separate;border-spacing:2px;font-size:11px}
+  .heat .hh{color:var(--dim);font-size:10px;padding:1px 4px;white-space:nowrap;text-align:right}
+  .heat .hc{min-width:34px;height:24px;border-radius:4px;color:#04121a;font-weight:600;text-align:center;line-height:24px}
   @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
-  @media(max-width:480px){.wrap{padding:12px}.hide-sm{display:none}}
+  @media(max-width:480px){
+    .wrap{padding:12px}.hide-sm{display:none}
+    table thead{display:none}
+    table tbody tr{display:block;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;
+      padding:4px 10px;background:var(--panel2)}
+    table td{display:flex;justify-content:space-between;align-items:center;border:none;padding:4px 0;white-space:normal}
+    table td::before{content:attr(data-label);color:var(--dim);font-size:11px;margin-right:12px}
+    .heat,.heat td,.heat tr{display:revert} .heat td::before{content:none}
+  }
 </style>
 </head>
 <body>
@@ -118,6 +134,7 @@
     <div class="card"><h2>🤝 듀오 시너지 <span class="tooltip" title="기대(서로 없이 거둔 승률 평균) 대비 함께했을 때 상승분. empirical Bayes로 소표본은 0으로 수축. + 잘맞음 / − 안맞음">ⓘ</span></h2>
       <div id="synT"></div></div>
     <div class="card"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
+    <div class="card"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
   </section>
 
   <section id="champ" class="view hidden">
@@ -193,7 +210,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
       const cls=c.cls?c.cls(r):(c.num?'num':'');
       if(c.bar){ const p=Math.max(0,Math.min(100,(+v/maxes[c.k])*100));
         disp=`<div class="barwrap"><span>${disp}</span><i style="width:${p}%"></i></div>`; }
-      return `<td class="${cls}">${disp}</td>`;
+      return `<td class="${cls}" data-label="${c.h}">${disp}</td>`;
     }).join('')+'</tr>';
   });
   el.innerHTML=h+'</tbody></table>';
@@ -204,9 +221,11 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 const MEDAL=['🥇','🥈','🥉'];
 function renderBoard(){
-  const rows=(DATA.leaderboard||[]);
+  const mmrByName={}; Object.values(DATA.ratings||{}).forEach(r=>{mmrByName[r.name]=r.mmr;});
+  const rows=(DATA.leaderboard||[]).map(r=>({...r,mmr:mmrByName[r.discord_name]||0}));
   renderTable($('#boardT'),rows,[
     {k:'discord_name',h:'멤버',fmt:(v,r,idx)=>(idx<3?MEDAL[idx]+' ':'')+v},
+    {k:'mmr',h:'MMR',num:1,bar:1},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'ci_lower',h:'신뢰하한',num:1,fmt:v=>pct(v)},
@@ -217,6 +236,7 @@ function renderBoard(){
 
 const METRICS=[['dps15','DPS@15'],['dpm','총 DPM'],['gold15','골드@15'],['cs15','CS@15'],
   ['xp15','XP@15'],['gold_diff_15','골드차@15'],['cs_diff_15','CS차@15'],['xp_diff_15','XP차@15'],
+  ['gold25','골드@25'],['cs25','CS@25'],['gold_diff_25','골드차@25'],['cs_diff_25','CS차@25'],
   ['dmg_share','딜 비중'],['gold_share','골드 비중'],['dmg_per_gold','골드효율'],
   ['kda','KDA'],['kp','킬관여'],['vision','시야'],['multikills','멀티킬'],['first_blood_rate','퍼블률']];
 const SHARE=new Set(['dmg_share','gold_share','kp','first_blood_rate']);
@@ -258,6 +278,7 @@ function renderSyn(){
     {k:'winrate',h:'승률',num:1,fmt:pct},
     {k:'synergy',h:'시너지',num:1,fmt:sgn,cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
   ],'synergy',-1);
+  renderSynHeat();
 }
 function renderRecords(){
   const r=DATA.records||{};
@@ -299,14 +320,19 @@ function renderChamp(){
 function renderMatches(){
   const ms=DATA.recent_matches||[];
   if(!ms.length){ $('#matchT').innerHTML='<p class="muted">경기 없음</p>'; return; }
-  $('#matchT').innerHTML=ms.map(m=>{
+  $('#matchT').innerHTML=ms.map((m,idx)=>{
     const d=new Date(m.ts).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
     const t=m.teams.map(tm=>{
       const players=tm.players.map(p=>`${champImg(p.champ)}${p.name}`).join(' ');
       return `<div class="team"><span class="res ${tm.win?'w':'l'}">${tm.win?'승':'패'}</span>${players}</div>`;
     }).join('<span class="vs">vs</span>');
-    return `<div class="match"><span class="muted hide-sm" style="width:96px">${d}</span>${t}</div>`;
+    const has=m.timeline&&m.timeline.minutes&&m.timeline.minutes.length>1;
+    const detail=has?`<div class="match-detail hidden" data-d="${idx}">${goldChart(m.timeline)}</div>`:'';
+    return `<div class="match ${has?'clickable':''}" data-idx="${idx}"><span class="muted hide-sm" style="width:96px">${d}</span>${t}${has?'<span class="muted" title="골드 추이">📈</span>':''}</div>${detail}`;
   }).join('');
+  $('#matchT').querySelectorAll('.match.clickable').forEach(el=>el.onclick=()=>{
+    const d=$('#matchT').querySelector(`.match-detail[data-d="${el.dataset.idx}"]`); if(d) d.classList.toggle('hidden');
+  });
 }
 
 function fillPlayerSelect(sel){
@@ -318,8 +344,6 @@ function renderPlayerBody(){
   if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
   const r=p.record, f=p.form||{};
   const streak=f.streak?`<span class="pill ${f.dir==='W'?'good':'bad'}">${f.streak}${f.dir} 연속</span>`:'';
-  const roles=(p.role_dist||[]).map(x=>`<div class="mini"><span class="lane">${x.lane}</span>
-    <span class="track"><i style="width:${x.pct*100}%"></i></span><span class="muted">${x.games}판</span></div>`).join('')||'<span class="muted">-</span>';
   const best=(p.partners_best||[]).map(x=>`${x.partner} <span class="pos">${sgn(x.synergy)}</span>`).join(', ')||'—';
   const worst=(p.partners_worst||[]).map(x=>`${x.partner} <span class="neg">${sgn(x.synergy)}</span>`).join(', ')||'—';
   const nv=p.nemesis_victim||{nemesis:[],victim:[]};
@@ -331,13 +355,14 @@ function renderPlayerBody(){
     <span class="pill">KDA ${r.kda}</span><span class="pill">킬관여 ${pct(r.kp)}</span>
     <span class="pill">DPM ${r.dpm}</span>${streak}</div>
     <div class="grid2">
-      <div><h2>라인 분포</h2>${roles}</div>
-      <div><h2>라인별 전적</h2><div id="plLane"></div></div>
+      <div><h2>라인 분포</h2>${donut(p.role_dist)}</div>
+      <div><h2>능력치 (서버 최대 대비)</h2>${radar(r)}</div>
     </div>
     <div class="grid2" style="margin-top:6px">
+      <div><h2>라인별 전적</h2><div id="plLane"></div></div>
       <div><h2>챔피언</h2><div id="plChamp"></div></div>
-      <div><h2>최근 경기</h2><div id="plRecent"></div></div>
     </div>
+    <div style="margin-top:6px"><h2>최근 경기</h2><div id="plRecent"></div></div>
     <div class="grid2" style="margin-top:6px">
       <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
       <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
@@ -442,6 +467,61 @@ function runBalance(){
       `<span class="muted">${m.mmr}</span></div>`).join('')+`</div>`;
   $('#balResult').innerHTML=`<div class="row" style="margin:12px 0"><span class="pill" style="font-size:15px">예측 승률 ${Math.round(res.pA*100)} : ${Math.round((1-res.pA)*100)}</span></div>`+
     `<div class="grid2">`+team(res.teamA,'A팀',res.mmrA,'🔵')+team(res.teamB,'B팀',res.mmrB,'🔴')+`</div>`;
+}
+// --- SVG 차트 (라이브러리 없이 inline) ---
+const ROLE_COLOR={TOP:'#e8833a',JUNGLE:'#3aa0ee',MIDDLE:'#c8aa6e',BOTTOM:'#9b7ede',UTILITY:'#5ec8b0',UNKNOWN:'#9aa6b2'};
+function goldChart(tl){
+  if(!tl||!tl.minutes||tl.minutes.length<2) return '';
+  const W=520,H=140,pad=26,xs=tl.minutes,ys=tl.gold_diff;
+  const maxAbs=Math.max(1000,...ys.map(v=>Math.abs(v)));
+  const X=i=>pad+(W-2*pad)*(i/(xs.length-1));
+  const Y=v=>H/2-(v/maxAbs)*(H/2-pad);
+  const pts=ys.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  const labels=xs.map((m,i)=>`<text x="${X(i)}" y="${H-6}" fill="#8a98ad" font-size="10" text-anchor="middle">${m}'</text>`).join('');
+  const last=ys[ys.length-1];
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="골드 격차 추이">
+    <title>골드 격차 추이 (파랑=블루팀 우세, 주황=레드팀 우세)</title>
+    <line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#243044"/>
+    <polyline points="${pts}" fill="none" stroke="${last>=0?'#3aa0ee':'#e8833a'}" stroke-width="2"/>
+    ${labels}
+    <text x="${W-pad}" y="14" fill="${last>=0?'#3aa0ee':'#e8833a'}" font-size="11" text-anchor="end">최종 ${last>=0?'+':''}${last.toLocaleString()}G</text>
+  </svg>`;
+}
+function renderSynHeat(){
+  const el=$('#synHeat'); if(!el) return;
+  const syn=DATA.synergy||[]; const names=[...new Set(syn.flatMap(s=>[s.na,s.nb]))];
+  if(names.length<2){ el.innerHTML='<p class="muted">데이터 없음</p>'; return; }
+  const map={}; syn.forEach(s=>{map[s.na+'|'+s.nb]=s.synergy;map[s.nb+'|'+s.na]=s.synergy;});
+  const color=v=>{ if(v==null)return 'var(--panel2)'; const t=Math.max(-0.15,Math.min(0.15,v))/0.15;
+    return t>=0?`rgba(58,160,238,${(0.2+0.7*t).toFixed(2)})`:`rgba(232,131,58,${(0.2+0.7*-t).toFixed(2)})`; };
+  let h='<table class="heat"><tr><th class="hh"></th>'+names.map(n=>`<th class="hh">${n}</th>`).join('')+'</tr>';
+  for(const a of names){ h+=`<tr><td class="hh">${a}</td>`+names.map(b=>{
+    if(a===b) return '<td><div class="hc" style="background:var(--line)"></div></td>';
+    const v=map[a+'|'+b];
+    return `<td><div class="hc" title="${a}+${b}: ${v==null?'-':sgn(v)}" style="background:${color(v)}">${v==null?'':(v>0?'+':'')+v.toFixed(2)}</div></td>`;
+  }).join('')+'</tr>'; }
+  el.innerHTML=h+'</table><p class="muted" style="margin-top:8px;font-size:12px">파랑=좋은 궁합 / 주황=나쁜 궁합</p>';
+}
+function donut(dist){
+  if(!dist||!dist.length) return '<span class="muted">-</span>';
+  const R=46,r=27,cx=54,cy=54,tot=dist.reduce((t,x)=>t+x.games,0)||1; let a0=-Math.PI/2,seg='';
+  dist.forEach(x=>{const frac=x.games/tot,a1=a0+frac*2*Math.PI,L=frac>0.5?1:0;
+    const x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);
+    const xi=cx+r*Math.cos(a1),yi=cy+r*Math.sin(a1),xj=cx+r*Math.cos(a0),yj=cy+r*Math.sin(a0);
+    seg+=`<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 ${L} 1 ${x1.toFixed(1)} ${y1.toFixed(1)} L${xi.toFixed(1)} ${yi.toFixed(1)} A${r} ${r} 0 ${L} 0 ${xj.toFixed(1)} ${yj.toFixed(1)} Z" fill="${ROLE_COLOR[x.lane]||'#9aa6b2'}"><title>${LANE_KR[x.lane]||x.lane} ${x.games}판</title></path>`;
+    a0=a1;});
+  const legend=dist.map(x=>`<div class="mini"><span style="width:10px;height:10px;border-radius:2px;background:${ROLE_COLOR[x.lane]||'#9aa6b2'};display:inline-block"></span><span class="lane">${LANE_KR[x.lane]||x.lane}</span><span class="muted">${x.games}판</span></div>`).join('');
+  return `<div style="display:flex;gap:14px;align-items:center"><svg style="width:108px;height:108px;flex:none" viewBox="0 0 108 108" role="img" aria-label="라인 분포">${seg}</svg><div>${legend}</div></div>`;
+}
+function radar(rec){
+  const lb=DATA.leaderboard||[]; const mx=k=>Math.max(0.0001,...lb.map(r=>+r[k]||0));
+  const axes=[['승률',rec.winrate,1],['KDA',rec.kda,mx('kda')],['킬관여',rec.kp,1],['DPM',rec.dpm,mx('dpm')]];
+  const N=axes.length,cx=90,cy=84,R=58;
+  const pt=(i,f)=>{const a=-Math.PI/2+i*2*Math.PI/N;return [cx+R*f*Math.cos(a),cy+R*f*Math.sin(a)];};
+  let grid='';for(let g=1;g<=3;g++) grid+=`<polygon points="${axes.map((_,i)=>pt(i,g/3).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#243044"/>`;
+  const poly=axes.map((ax,i)=>pt(i,Math.max(0.05,Math.min(1,ax[1]/ax[2]))).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const labels=axes.map((ax,i)=>{const[x,y]=pt(i,1.22);return `<text x="${x.toFixed(0)}" y="${y.toFixed(0)}" fill="#8a98ad" font-size="10" text-anchor="middle">${ax[0]}</text>`;}).join('');
+  return `<svg style="max-width:180px;width:100%" viewBox="0 0 180 168" role="img" aria-label="능력치 레이더">${grid}<polygon points="${poly}" fill="rgba(58,160,238,.35)" stroke="#3aa0ee" stroke-width="2"/>${labels}</svg>`;
 }
 function renderKpis(){
   const s=DATA.summary||{}, ts=DATA.timestamp?new Date(DATA.timestamp).toLocaleString('ko-KR'):'-';
