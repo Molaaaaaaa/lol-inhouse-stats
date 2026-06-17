@@ -369,6 +369,7 @@ function renderPlayerBody(){
     <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
     <span class="pill">KDA ${r.kda}</span><span class="pill">킬관여 ${pct(r.kp)}</span>
     <span class="pill">DPM ${r.dpm}</span>${streak}</div>
+    ${(p.accounts&&p.accounts.length>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">🪪 계정 ${p.accounts.length}개(합산): ${p.accounts.join(', ')}</div>`:''}
     <div class="grid2">
       <div><h2>라인 분포</h2>${donut(p.role_dist)}</div>
       <div><h2>능력치 (서버 최대 대비)</h2>${radar(r)}</div>
