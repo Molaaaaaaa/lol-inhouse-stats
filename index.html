@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
+     인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
 <title>내전 전적</title>
 <link rel="icon" href="data:," />
 <style>
@@ -117,6 +120,7 @@
 </header>
 
 <div class="wrap">
+  <noscript><div class="card">이 페이지는 자바스크립트로 전적을 불러옵니다. 브라우저에서 JS를 허용해 주세요.</div></noscript>
   <div class="kpis" id="kpis"></div>
 
   <div class="tabs" id="tabs">
