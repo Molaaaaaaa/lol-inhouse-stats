@@ -195,8 +195,22 @@ let DATA = null;
 const pct = x => (x==null?0:x*100).toFixed(0)+'%';
 const sgn = x => (x>0?'+':'')+(+x).toFixed(3);
 
+// --- XSS 방어: 로드 직후 모든 문자열을 한 번에 이스케이프 ---
+// 이 페이지는 데이터를 innerHTML로 렌더하므로, 싱크마다 막는 대신 소스에서 차단한다.
+// (롤 닉네임은 라이엇이 제한하지만 Discord 서버명 등은 임의 문자가 가능)
+const ESC={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'};
+const esc = s => String(s).replace(/[&<>"'`]/g, c=>ESC[c]);
+function sanitize(v){
+  if(typeof v==='string') return esc(v);
+  if(Array.isArray(v)) return v.map(sanitize);
+  if(v && typeof v==='object'){ const o={}; for(const k of Object.keys(v)) o[k]=sanitize(v[k]); return o; }
+  return v;
+}
+const safeId = s => /^[A-Za-z0-9_-]{1,64}$/.test(String(s));  // 데이터 파일명/키 검증
+
 function champImg(name){
-  if(!name || !DATA?.patch) return '';
+  // ddragon 챔프 id는 영숫자만 — 그 외는 이미지 생략(URL 주입 방지)
+  if(!name || !DATA?.patch || !/^[A-Za-z0-9]+$/.test(name)) return '';
   const url = `https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/champion/${name}.png`;
   return `<img class="champ" src="${url}" loading="lazy" decoding="async" onerror="this.style.display='none'" alt="">`;
 }
@@ -257,7 +271,7 @@ const SHARE=new Set(['dmg_share','gold_share','kp','first_blood_rate']);
 const LANES=[['','전체'],['TOP','탑'],['JUNGLE','정글'],['MIDDLE','미드'],['BOTTOM','바텀'],['UTILITY','서폿']];
 let curMetric='dps15', curLane='';
 function renderRank(){
-  let rows=(DATA.rankings[curMetric]||[]).slice();
+  let rows=((DATA.rankings||{})[curMetric]||[]).slice();
   const byLane=rows.length&&('lane' in rows[0]);
   if(curLane && byLane) rows=rows.filter(r=>r.lane===curLane);
   $('#rankNote').textContent=byLane?'(라인별 분리)':'';
@@ -351,7 +365,7 @@ function renderMatches(){
 }
 
 function fillPlayerSelect(sel){
-  const ids=Object.keys(DATA.players);
+  const ids=Object.keys(DATA.players||{});
   sel.innerHTML=ids.map(id=>`<option value="${id}">${DATA.players[id].name}</option>`).join('');
 }
 function renderPlayerBody(){
@@ -601,14 +615,16 @@ function renderAll(){
   buildChampLaneBtns(); renderChamp(); renderRecords(); renderMatches();
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
-  const ids=Object.keys(DATA.players); if(ids[1]) $('#cmpB').value=ids[1];
+  const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
   renderCompare(); renderBalancePicker();
-  $('#foot').textContent=`내전 전적 · ${DATA.name}`;
+  $('#foot').innerHTML=`내전 전적 · ${DATA.name||''}`;   // DATA는 sanitize된 값
 }
 
 async function loadGuild(gid){
-  const r=await fetch(`data/${gid}.json?t=`+Date.now());
-  DATA=await r.json(); renderAll();
+  if(!safeId(gid)){ $('#meta').textContent='잘못된 데이터 식별자'; return; }
+  const r=await fetch(`data/${encodeURIComponent(gid)}.json?t=`+Date.now());
+  if(!r.ok){ $('#meta').textContent='데이터를 불러올 수 없습니다.'; return; }
+  DATA=sanitize(await r.json()); renderAll();
 }
 
 $('#tabs').addEventListener('click',e=>{
@@ -631,9 +647,9 @@ $('#refresh').addEventListener('click',()=>$('#guildSel').value&&loadGuild($('#g
   try{
     const res=await fetch('data/guilds.json?t='+Date.now());
     if(!res.ok){ $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)'; return; }
-    const idx=await res.json();
+    const idx=sanitize(await res.json()).filter(g=>safeId(g.id));
     if(!idx.length){ $('#meta').textContent='아직 데이터가 없습니다. (첫 내전이 기록되면 표시됩니다)'; return; }
-    $('#guildSel').innerHTML=idx.map(g=>`<option value="${g.id}">${g.name} (${g.players}명)</option>`).join('');
+    $('#guildSel').innerHTML=idx.map(g=>`<option value="${g.id}">${g.name} (${+g.players||0}명)</option>`).join('');
     await loadGuild(idx[0].id);
   }catch(err){ $('#meta').textContent='데이터 로드 실패: '+err; }
 })();
