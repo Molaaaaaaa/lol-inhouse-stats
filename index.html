@@ -577,15 +577,15 @@ function renderSynHeat(){
   let h='<table class="heat"><tr><th class="hh"></th>'+names.map(n=>`<th class="hh">${n}</th>`).join('')+'</tr>';
   for(const a of names){ h+=`<tr><td class="hh">${a}</td>`+names.map(b=>{
     if(a===b) return '<td><div class="hc" style="background:var(--line)"></div></td>';
-    const v=map[a+'|'+b];
+    const raw=map[a+'|'+b], v=(raw==null||isNaN(+raw))?null:+raw;
     return `<td><div class="hc" title="${a}+${b}: ${v==null?'-':sgn(v)}" style="background:${color(v)}">${v==null?'':(v>0?'+':'')+v.toFixed(2)}</div></td>`;
   }).join('')+'</tr>'; }
   el.innerHTML=h+'</table><p class="muted" style="margin-top:8px;font-size:12px">파랑=좋은 궁합 / 주황=나쁜 궁합</p>';
 }
 function donut(dist){
   if(!dist||!dist.length) return '<span class="muted">-</span>';
-  const R=46,r=27,cx=54,cy=54,tot=dist.reduce((t,x)=>t+x.games,0)||1; let a0=-Math.PI/2,seg='';
-  dist.forEach(x=>{const frac=x.games/tot,a1=a0+frac*2*Math.PI,L=frac>0.5?1:0;
+  const R=46,r=27,cx=54,cy=54,tot=dist.reduce((t,x)=>t+(+x.games||0),0)||1; let a0=-Math.PI/2,seg='';
+  dist.forEach(x=>{const frac=(+x.games||0)/tot,a1=a0+frac*2*Math.PI,L=frac>0.5?1:0;
     const x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);
     const xi=cx+r*Math.cos(a1),yi=cy+r*Math.sin(a1),xj=cx+r*Math.cos(a0),yj=cy+r*Math.sin(a0);
     seg+=`<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 ${L} 1 ${x1.toFixed(1)} ${y1.toFixed(1)} L${xi.toFixed(1)} ${yi.toFixed(1)} A${r} ${r} 0 ${L} 0 ${xj.toFixed(1)} ${yj.toFixed(1)} Z" fill="${ROLE_COLOR[x.lane]||'#9aa6b2'}"><title>${LANE_KR[x.lane]||x.lane} ${x.games}판</title></path>`;
@@ -605,7 +605,8 @@ function radar(rec){
   return `<svg style="max-width:180px;width:100%" viewBox="0 0 180 168" role="img" aria-label="능력치 레이더">${grid}<polygon points="${poly}" fill="rgba(58,160,238,.35)" stroke="#3aa0ee" stroke-width="2"/>${labels}</svg>`;
 }
 function renderKpis(){
-  const s=DATA.summary||{}, ts=DATA.timestamp?new Date(DATA.timestamp).toLocaleString('ko-KR'):'-';
+  const s=DATA.summary||{}, d=DATA.timestamp?new Date(DATA.timestamp):null;
+  const ts=(d&&!isNaN(d.getTime()))?d.toLocaleString('ko-KR'):'-';
   $('#kpis').innerHTML=[
     ['총 경기',s.total_games??0,''],['평균 승률',pct(s.avg_winrate||0),'acc'],
     ['플레이어',s.player_count??0,''],['업데이트',ts,'']
@@ -613,7 +614,7 @@ function renderKpis(){
 }
 
 function renderAll(){
-  $('#meta').innerHTML=`<b>${DATA.name}</b> · 패치 ${DATA.patch||'-'}`;
+  $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
   renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
   buildChampLaneBtns(); renderChamp(); renderRecords(); renderMatches();
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
