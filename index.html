@@ -349,9 +349,9 @@ function renderMatches(){
   const ms=DATA.recent_matches||[];
   if(!ms.length){ $('#matchT').innerHTML='<p class="muted">경기 없음</p>'; return; }
   $('#matchT').innerHTML=ms.map((m,idx)=>{
-    const d=new Date(m.ts).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    const t=m.teams.map(tm=>{
-      const players=tm.players.map(p=>`${champImg(p.champ)}${p.name}`).join(' ');
+    const d=m.ts?new Date(m.ts).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    const t=(m.teams||[]).map(tm=>{
+      const players=(tm.players||[]).map(p=>`${champImg(p.champ)}${p.name||''}`).join(' ');
       return `<div class="team"><span class="res ${tm.win?'w':'l'}">${tm.win?'승':'패'}</span>${players}</div>`;
     }).join('<span class="vs">vs</span>');
     const has=!!m.detail||(m.timeline&&m.timeline.minutes&&m.timeline.minutes.length>1);
@@ -369,9 +369,9 @@ function fillPlayerSelect(sel){
   sel.innerHTML=ids.map(id=>`<option value="${id}">${DATA.players[id].name}</option>`).join('');
 }
 function renderPlayerBody(){
-  const p=DATA.players[$('#playerSel').value];
+  const p=(DATA.players||{})[$('#playerSel').value];
   if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
-  const r=p.record, f=p.form||{};
+  const r=p.record||{}, f=p.form||{};
   const streak=f.streak?`<span class="pill ${f.dir==='W'?'good':'bad'}">${f.streak}${f.dir} 연속</span>`:'';
   const best=(p.partners_best||[]).map(x=>`${x.partner} <span class="pos">${sgn(x.synergy)}</span>`).join(', ')||'—';
   const worst=(p.partners_worst||[]).map(x=>`${x.partner} <span class="neg">${sgn(x.synergy)}</span>`).join(', ')||'—';
@@ -414,11 +414,12 @@ function renderPlayerBody(){
 }
 
 function renderCompare(){
-  const a=DATA.players[$('#cmpA').value], b=DATA.players[$('#cmpB').value];
+  const P=DATA.players||{};
+  const a=P[$('#cmpA').value], b=P[$('#cmpB').value];
   if(!a||!b){ $('#cmpBody').innerHTML='<p class="muted">선택하세요</p>'; return; }
   // 함께/상대 정보는 synergy 테이블에서(같은 팀 기준)
   const pair=(DATA.synergy||[]).find(s=>(s.na===a.name&&s.nb===b.name)||(s.na===b.name&&s.nb===a.name));
-  const ra=a.record, rb=b.record;
+  const ra=a.record||{}, rb=b.record||{};
   const row=(label,va,vb,fmt)=>`<tr>
     <td class="num ${(+va>+vb)?'pos':''}">${fmt?fmt(va):va}</td>
     <td class="muted" style="text-align:center;width:120px">${label}</td>
@@ -502,7 +503,8 @@ function runBalance(){
 const ROLE_COLOR={TOP:'#e8833a',JUNGLE:'#3aa0ee',MIDDLE:'#c8aa6e',BOTTOM:'#9b7ede',UTILITY:'#5ec8b0',UNKNOWN:'#9aa6b2'};
 function goldChart(tl){
   if(!tl||!tl.minutes||tl.minutes.length<2) return '';
-  const W=520,H=140,pad=26,xs=tl.minutes,ys=tl.gold_diff;
+  const W=520,H=140,pad=26,xs=tl.minutes,ys=(tl.gold_diff||[]).map(v=>+v||0);
+  if(ys.length<2) return '';
   const maxAbs=Math.max(1000,...ys.map(v=>Math.abs(v)));
   const X=i=>pad+(W-2*pad)*(i/(xs.length-1));
   const Y=v=>H/2-(v/maxAbs)*(H/2-pad);
@@ -518,14 +520,14 @@ function goldChart(tl){
   </svg>`;
 }
 function itemImg(id){
-  if(!id||!DATA.patch) return '<span class="itemslot"></span>';
+  if(!id||!DATA.patch||!/^\d+$/.test(String(id))) return '<span class="itemslot"></span>';
   return `<img class="itemslot" src="https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/item/${id}.png" loading="lazy" onerror="this.style.visibility='hidden'" alt="">`;
 }
 const OBJ_ICON={towers:'🏰',dragons:'🐉',barons:'👑',heralds:'🦅',grubs:'🐛'};
 function dmgBars(d){
-  const max=Math.max(1,...d.teams.flatMap(t=>t.players.map(p=>p.dmg)));
+  const max=Math.max(1,...d.teams.flatMap(t=>(t.players||[]).map(p=>+p.dmg||0)));
   const col=t=>t.team_id===100?'var(--good)':'var(--bad)';
-  const colH=t=>`<div class="dmgcol">`+t.players.slice().sort((a,b)=>b.dmg-a.dmg).map(p=>
+  const colH=t=>`<div class="dmgcol">`+(t.players||[]).slice().sort((a,b)=>b.dmg-a.dmg).map(p=>
     `<div class="dmgrow">${champImg(p.champ)}<span class="dmgnm">${p.name}</span>`+
     `<span class="dmgval">${(p.dmg/1000).toFixed(1)}K</span>`+
     `<div class="dmgbar"><i style="width:${(p.dmg/max*100).toFixed(0)}%;background:${col(t)}"></i></div></div>`).join('')+`</div>`;
@@ -540,7 +542,7 @@ function scoreboard(d){
   const head='<tr><th>플레이어</th><th class="num">KDA</th><th class="num">CS</th><th class="num">딜</th><th class="num">받은피해</th><th class="num">포탑</th><th class="num">시야</th><th class="num">골드</th><th>아이템</th></tr>';
   return `<div style="overflow-x:auto"><table class="sb"><thead>${head}</thead><tbody>`+
     d.teams.map(t=>`<tr class="sbteam"><td colspan="9">${t.team_id===100?'🔵 A팀':'🔴 B팀'} ${t.win?'(승)':'(패)'}</td></tr>`+
-      t.players.map(row).join('')).join('')+`</tbody></table></div>`;
+      (t.players||[]).map(row).join('')).join('')+`</tbody></table></div>`;
 }
 function matchDetailHTML(d){
   if(!d||!d.teams||d.teams.length<2) return goldChart((d&&d.timeline)||{});
@@ -593,7 +595,8 @@ function donut(dist){
 }
 function radar(rec){
   const lb=DATA.leaderboard||[]; const mx=k=>Math.max(0.0001,...lb.map(r=>+r[k]||0));
-  const axes=[['승률',rec.winrate,1],['KDA',rec.kda,mx('kda')],['킬관여',rec.kp,1],['DPM',rec.dpm,mx('dpm')]];
+  const axes=[['승률',+rec.winrate||0,1],['KDA',+rec.kda||0,mx('kda')],
+              ['킬관여',+rec.kp||0,1],['DPM',+rec.dpm||0,mx('dpm')]];
   const N=axes.length,cx=90,cy=84,R=58;
   const pt=(i,f)=>{const a=-Math.PI/2+i*2*Math.PI/N;return [cx+R*f*Math.cos(a),cy+R*f*Math.sin(a)];};
   let grid='';for(let g=1;g<=3;g++) grid+=`<polygon points="${axes.map((_,i)=>pt(i,g/3).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#243044"/>`;
@@ -627,12 +630,24 @@ async function loadGuild(gid){
   DATA=sanitize(await r.json()); renderAll();
 }
 
-$('#tabs').addEventListener('click',e=>{
-  const t=e.target.closest('.tab'); if(!t||!t.dataset.t) return;
-  document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.toggle('on',x===t));
+function activateTab(t){
+  if(!t||!t.dataset.t) return;
+  document.querySelectorAll('#tabs .tab').forEach(x=>{
+    const on=(x===t); x.classList.toggle('on',on); x.setAttribute('aria-selected',on);
+  });
   document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
-  $('#'+t.dataset.t).classList.remove('hidden');
+  const view=$('#'+t.dataset.t); if(view) view.classList.remove('hidden');
+}
+$('#tabs').addEventListener('click',e=>activateTab(e.target.closest('.tab')));
+// 키보드 접근성: 탭에 포커스 + Enter/Space로 전환
+document.querySelectorAll('#tabs .tab').forEach(t=>{
+  t.setAttribute('tabindex','0'); t.setAttribute('role','tab');
+  t.setAttribute('aria-selected', t.classList.contains('on'));
+  t.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); activateTab(t); }
+  });
 });
+$('#tabs').setAttribute('role','tablist');
 $('#metricSel').addEventListener('change',e=>{curMetric=e.target.value;renderRank();});
 $('#playerSel').addEventListener('change',renderPlayerBody);
 $('#cmpA').addEventListener('change',renderCompare);
