@@ -6,7 +6,7 @@
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
-<title>내전 전적</title>
+<title>내전 해체 분석기</title>
 <link rel="icon" href="data:," />
 <style>
   :root{
@@ -113,7 +113,7 @@
 </head>
 <body>
 <header>
-  <h1>🎮 <span class="g">내전 전적</span></h1>
+  <h1>🎮 <span class="g">내전 해체 분석기</span></h1>
   <select id="guildSel" title="서버"></select>
   <button id="refresh" title="새로고침">🔄</button>
   <div class="meta" id="meta"></div>
@@ -625,7 +625,7 @@ function renderAll(){
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
   renderCompare(); renderBalancePicker();
-  $('#foot').innerHTML=`내전 전적 · ${DATA.name||''}`;   // DATA는 sanitize된 값
+  $('#foot').innerHTML=`내전 해체 분석기 · ${DATA.name||''}`;   // DATA는 sanitize된 값
 }
 
 async function loadGuild(gid){
