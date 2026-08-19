@@ -1,0 +1,15 @@
+# Cloudflare Workers — 정적 사이트 배포 설정
+#
+# 이 저장소는 빌드가 필요 없는 순수 정적 사이트(index.html + data/*.json + riot.txt)다.
+# 워커 스크립트(main) 없이 [assets] 만 두면 Cloudflare가 정적 파일만 서빙한다.
+# 대시보드의 Build command 는 **비워두고**, Deploy command 는 `npx wrangler deploy`.
+#
+# ⚠️ riot.txt 는 반드시 루트(/riot.txt)에서 그대로 서빙돼야 한다 — 라이엇 도메인 검증용.
+
+name = "lol-inhouse-stats"
+compatibility_date = "2026-07-01"
+
+[assets]
+directory = "."
+# 없는 경로는 404 (SPA가 아니므로 index.html로 되돌리지 않는다)
+not_found_handling = "none"
