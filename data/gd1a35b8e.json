@@ -1,0 +1,8571 @@
+{
+ "guild_id": "gd1a35b8e",
+ "name": "우리 내전",
+ "patch": "16.16.1",
+ "timestamp": "2026-08-20T04:16:30+00:00",
+ "summary": {
+  "total_games": 7,
+  "player_count": 20,
+  "avg_winrate": 0.5
+ },
+ "leaderboard": [
+  {
+   "discord_name": "우체국집배원",
+   "games": 4,
+   "wins": 4.0,
+   "winrate": 1.0,
+   "ci_lower": 0.51,
+   "kda": 3.06,
+   "kp": 0.405,
+   "dpm": 693.4
+  },
+  {
+   "discord_name": "코 파",
+   "games": 6,
+   "wins": 5.0,
+   "winrate": 0.833,
+   "ci_lower": 0.436,
+   "kda": 7.45,
+   "kp": 0.632,
+   "dpm": 916.2
+  },
+  {
+   "discord_name": "주 암",
+   "games": 7,
+   "wins": 5.0,
+   "winrate": 0.714,
+   "ci_lower": 0.359,
+   "kda": 5.12,
+   "kp": 0.579,
+   "dpm": 774.0
+  },
+  {
+   "discord_name": "현 우",
+   "games": 2,
+   "wins": 2.0,
+   "winrate": 1.0,
+   "ci_lower": 0.342,
+   "kda": 1.94,
+   "kp": 0.386,
+   "dpm": 369.1
+  },
+  {
+   "discord_name": "조 C",
+   "games": 4,
+   "wins": 3.0,
+   "winrate": 0.75,
+   "ci_lower": 0.301,
+   "kda": 4.93,
+   "kp": 0.58,
+   "dpm": 636.7
+  },
+  {
+   "discord_name": "토 토",
+   "games": 4,
+   "wins": 3.0,
+   "winrate": 0.75,
+   "ci_lower": 0.301,
+   "kda": 4.18,
+   "kp": 0.53,
+   "dpm": 628.2
+  },
+  {
+   "discord_name": "용기사",
+   "games": 7,
+   "wins": 4.0,
+   "winrate": 0.571,
+   "ci_lower": 0.25,
+   "kda": 2.67,
+   "kp": 0.566,
+   "dpm": 530.0
+  },
+  {
+   "discord_name": "내 이름은 정준토",
+   "games": 1,
+   "wins": 1.0,
+   "winrate": 1.0,
+   "ci_lower": 0.207,
+   "kda": 2.33,
+   "kp": 0.226,
+   "dpm": 611.3
+  },
+  {
+   "discord_name": "도야짬뽕누룽지탕",
+   "games": 1,
+   "wins": 1.0,
+   "winrate": 1.0,
+   "ci_lower": 0.207,
+   "kda": 4.5,
+   "kp": 0.581,
+   "dpm": 978.5
+  },
+  {
+   "discord_name": "말든쓰",
+   "games": 1,
+   "wins": 1.0,
+   "winrate": 1.0,
+   "ci_lower": 0.207,
+   "kda": 5.5,
+   "kp": 0.355,
+   "dpm": 1119.8
+  },
+  {
+   "discord_name": "근 빅",
+   "games": 2,
+   "wins": 1.0,
+   "winrate": 0.5,
+   "ci_lower": 0.095,
+   "kda": 4.13,
+   "kp": 0.566,
+   "dpm": 374.1
+  },
+  {
+   "discord_name": "앙양맹",
+   "games": 7,
+   "wins": 2.0,
+   "winrate": 0.286,
+   "ci_lower": 0.082,
+   "kda": 5.52,
+   "kp": 0.557,
+   "dpm": 756.4
+  },
+  {
+   "discord_name": "굴농장에 굴서리",
+   "games": 4,
+   "wins": 1.0,
+   "winrate": 0.25,
+   "ci_lower": 0.046,
+   "kda": 1.63,
+   "kp": 0.471,
+   "dpm": 480.4
+  },
+  {
+   "discord_name": "광명시25살최문선",
+   "games": 5,
+   "wins": 1.0,
+   "winrate": 0.2,
+   "ci_lower": 0.036,
+   "kda": 2.34,
+   "kp": 0.412,
+   "dpm": 630.3
+  },
+  {
+   "discord_name": "팟 지",
+   "games": 7,
+   "wins": 1.0,
+   "winrate": 0.143,
+   "ci_lower": 0.026,
+   "kda": 2.29,
+   "kp": 0.569,
+   "dpm": 685.5
+  },
+  {
+   "discord_name": "Lotze",
+   "games": 2,
+   "wins": 0.0,
+   "winrate": 0.0,
+   "ci_lower": 0.0,
+   "kda": 2.77,
+   "kp": 0.4,
+   "dpm": 959.7
+  },
+  {
+   "discord_name": "몰 매",
+   "games": 2,
+   "wins": 0.0,
+   "winrate": 0.0,
+   "ci_lower": 0.0,
+   "kda": 2.62,
+   "kp": 0.65,
+   "dpm": 203.0
+  },
+  {
+   "discord_name": "도영 둘 도영도영",
+   "games": 2,
+   "wins": 0.0,
+   "winrate": 0.0,
+   "ci_lower": 0.0,
+   "kda": 1.52,
+   "kp": 0.467,
+   "dpm": 1096.0
+  },
+  {
+   "discord_name": "jekjek",
+   "games": 1,
+   "wins": 0.0,
+   "winrate": 0.0,
+   "ci_lower": 0.0,
+   "kda": 0.38,
+   "kp": 0.188,
+   "dpm": 834.0
+  },
+  {
+   "discord_name": "윙봉현",
+   "games": 1,
+   "wins": 0.0,
+   "winrate": 0.0,
+   "ci_lower": 0.0,
+   "kda": 2.2,
+   "kp": 0.688,
+   "dpm": 1023.2
+  }
+ ],
+ "elo": [
+  {
+   "discord_name": "코 파",
+   "rating": 1045.3,
+   "games": 6
+  },
+  {
+   "discord_name": "우체국집배원",
+   "rating": 1045.3,
+   "games": 4
+  },
+  {
+   "discord_name": "주 암",
+   "rating": 1033.3,
+   "games": 7
+  },
+  {
+   "discord_name": "현 우",
+   "rating": 1023.2,
+   "games": 2
+  },
+  {
+   "discord_name": "조 C",
+   "rating": 1022.1,
+   "games": 4
+  },
+  {
+   "discord_name": "토 토",
+   "rating": 1022.1,
+   "games": 4
+  },
+  {
+   "discord_name": "용기사",
+   "rating": 1013.1,
+   "games": 7
+  },
+  {
+   "discord_name": "내 이름은 정준토",
+   "rating": 1012.0,
+   "games": 1
+  },
+  {
+   "discord_name": "도야짬뽕누룽지탕",
+   "rating": 1012.0,
+   "games": 1
+  },
+  {
+   "discord_name": "말든쓰",
+   "rating": 1012.0,
+   "games": 1
+  },
+  {
+   "discord_name": "근 빅",
+   "rating": 1000.0,
+   "games": 2
+  },
+  {
+   "discord_name": "jekjek",
+   "rating": 988.0,
+   "games": 1
+  },
+  {
+   "discord_name": "윙봉현",
+   "rating": 988.0,
+   "games": 1
+  },
+  {
+   "discord_name": "굴농장에 굴서리",
+   "rating": 977.9,
+   "games": 4
+  },
+  {
+   "discord_name": "Lotze",
+   "rating": 976.8,
+   "games": 2
+  },
+  {
+   "discord_name": "도영 둘 도영도영",
+   "rating": 976.8,
+   "games": 2
+  },
+  {
+   "discord_name": "몰 매",
+   "rating": 976.8,
+   "games": 2
+  },
+  {
+   "discord_name": "앙양맹",
+   "rating": 966.7,
+   "games": 7
+  },
+  {
+   "discord_name": "광명시25살최문선",
+   "rating": 965.9,
+   "games": 5
+  },
+  {
+   "discord_name": "팟 지",
+   "rating": 942.7,
+   "games": 7
+  }
+ ],
+ "rankings": {
+  "dps15": [],
+  "dpm": [
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 1119.8
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 1095.95
+   },
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 1023.2
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 978.5
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 959.65
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 916.22
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 834.0
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 774.01
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 756.41
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 693.4
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 685.5
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 636.73
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 630.34
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 628.15
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 611.3
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 529.97
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 480.4
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 374.1
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 369.1
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 203.0
+   }
+  ],
+  "gold15": [],
+  "cs15": [],
+  "xp15": [],
+  "gold_diff_15": [],
+  "cs_diff_15": [],
+  "xp_diff_15": [],
+  "gold25": [],
+  "cs25": [],
+  "gold_diff_25": [],
+  "cs_diff_25": [],
+  "dmg_share": [
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 0.314
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 0.288
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 0.279
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 0.256
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 0.254
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 0.253
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 0.244
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 0.219
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 0.214
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 0.212
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 0.206
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 0.204
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 0.198
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 0.187
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 0.167
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 0.152
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 0.141
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 0.103
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 0.101
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 0.054
+   }
+  ],
+  "gold_share": [
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 0.265
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 0.254
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 0.244
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 0.226
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 0.221
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 0.219
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 0.213
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 0.212
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 0.211
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 0.209
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 0.207
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 0.188
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 0.184
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 0.175
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 0.169
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 0.168
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 0.162
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 0.162
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 0.157
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 0.141
+   }
+  ],
+  "dmg_per_gold": [
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 2.83
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 2.377
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 2.367
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 2.263
+   },
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 2.121
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 2.048
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 1.858
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 1.822
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 1.788
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 1.75
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 1.724
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 1.71
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 1.63
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 1.624
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 1.588
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 1.579
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 1.569
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 1.201
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 1.066
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 0.778
+   }
+  ],
+  "kda": [
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 7.45
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 5.52
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 5.5
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 5.12
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 4.93
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 4.5
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 4.18
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 4.13
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 3.06
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 2.77
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 2.67
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 2.62
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 2.34
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 2.33
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 2.29
+   },
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 2.2
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 1.94
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 1.63
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 1.52
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 0.38
+   }
+  ],
+  "kp": [
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 0.688
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 0.65
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 0.632
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 0.581
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 0.58
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 0.579
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 0.569
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 0.566
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 0.566
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 0.557
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 0.53
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 0.471
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 0.467
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 0.412
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 0.405
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 0.4
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 0.386
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 0.355
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 0.226
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 0.188
+   }
+  ],
+  "vision": [
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 128.5
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 114.5
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 70.75
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 62.14
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 56.0
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 43.83
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 42.0
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 35.0
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 34.43
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 32.5
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 32.14
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 32.0
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 32.0
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 28.75
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 27.0
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 24.5
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 24.0
+   },
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 24.0
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 23.4
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 14.0
+   }
+  ],
+  "multikills": [
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 0.0
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 0.0
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 0.0
+   }
+  ],
+  "first_blood_rate": [
+   {
+    "discord_name": "주 암",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "용기사",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "팟 지",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "앙양맹",
+    "games": 7,
+    "value": 0.0
+   },
+   {
+    "discord_name": "코 파",
+    "games": 6,
+    "value": 0.0
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "games": 5,
+    "value": 0.0
+   },
+   {
+    "discord_name": "우체국집배원",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "조 C",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "굴농장에 굴서리",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "토 토",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "근 빅",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "현 우",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "Lotze",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "몰 매",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "도영 둘 도영도영",
+    "games": 2,
+    "value": 0.0
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "윙봉현",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "말든쓰",
+    "games": 1,
+    "value": 0.0
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "games": 1,
+    "value": 0.0
+   }
+  ]
+ },
+ "synergy": [
+  {
+   "na": "주 암",
+   "nb": "코 파",
+   "games": 4,
+   "winrate": 1.0,
+   "expected": 0.417,
+   "lift": 0.583,
+   "synergy": 0.286
+  },
+  {
+   "na": "우체국집배원",
+   "nb": "주 암",
+   "games": 4,
+   "winrate": 1.0,
+   "expected": 0.667,
+   "lift": 0.333,
+   "synergy": 0.163
+  },
+  {
+   "na": "용기사",
+   "nb": "주 암",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.5,
+   "lift": 0.5,
+   "synergy": 0.162
+  },
+  {
+   "na": "조 C",
+   "nb": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.5,
+   "lift": 0.5,
+   "synergy": 0.162
+  },
+  {
+   "na": "조 C",
+   "nb": "주 암",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.55,
+   "lift": 0.45,
+   "synergy": 0.146
+  },
+  {
+   "na": "우체국집배원",
+   "nb": "코 파",
+   "games": 4,
+   "winrate": 1.0,
+   "expected": 0.75,
+   "lift": 0.25,
+   "synergy": 0.123
+  },
+  {
+   "na": "코 파",
+   "nb": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.625,
+   "lift": 0.375,
+   "synergy": 0.122
+  },
+  {
+   "na": "용기사",
+   "nb": "우체국집배원",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.7,
+   "lift": 0.3,
+   "synergy": 0.097
+  },
+  {
+   "na": "용기사",
+   "nb": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.7,
+   "lift": 0.3,
+   "synergy": 0.097
+  },
+  {
+   "na": "광명시25살최문선",
+   "nb": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.25,
+   "lift": 0.25,
+   "synergy": 0.081
+  },
+  {
+   "na": "우체국집배원",
+   "nb": "조 C",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.75,
+   "lift": 0.25,
+   "synergy": 0.081
+  },
+  {
+   "na": "우체국집배원",
+   "nb": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.75,
+   "lift": 0.25,
+   "synergy": 0.081
+  },
+  {
+   "na": "팟 지",
+   "nb": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.25,
+   "lift": 0.25,
+   "synergy": 0.081
+  },
+  {
+   "na": "주 암",
+   "nb": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.8,
+   "lift": 0.2,
+   "synergy": 0.065
+  },
+  {
+   "na": "팟 지",
+   "nb": "광명시25살최문선",
+   "games": 5,
+   "winrate": 0.2,
+   "expected": 0.1,
+   "lift": 0.1,
+   "synergy": 0.055
+  },
+  {
+   "na": "용기사",
+   "nb": "코 파",
+   "games": 4,
+   "winrate": 0.75,
+   "expected": 0.667,
+   "lift": 0.083,
+   "synergy": 0.041
+  },
+  {
+   "na": "코 파",
+   "nb": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 0.875,
+   "lift": 0.125,
+   "synergy": 0.041
+  },
+  {
+   "na": "주 암",
+   "nb": "토 토",
+   "games": 4,
+   "winrate": 0.75,
+   "expected": 0.708,
+   "lift": 0.042,
+   "synergy": 0.02
+  },
+  {
+   "na": "Lotze",
+   "nb": "도영 둘 도영도영",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.0,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "Lotze",
+   "nb": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.0,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "도영 둘 도영도영",
+   "nb": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.0,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "우체국집배원",
+   "nb": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "expected": 1.0,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "조 C",
+   "nb": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.5,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "코 파",
+   "nb": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.5,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "토 토",
+   "nb": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.5,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "토 토",
+   "nb": "팟 지",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.5,
+   "lift": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "na": "앙양맹",
+   "nb": "굴농장에 굴서리",
+   "games": 4,
+   "winrate": 0.25,
+   "expected": 0.292,
+   "lift": -0.042,
+   "synergy": -0.02
+  },
+  {
+   "na": "Lotze",
+   "nb": "팟 지",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.1,
+   "lift": -0.1,
+   "synergy": -0.032
+  },
+  {
+   "na": "앙양맹",
+   "nb": "조 C",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.6,
+   "lift": -0.1,
+   "synergy": -0.032
+  },
+  {
+   "na": "앙양맹",
+   "nb": "코 파",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.6,
+   "lift": -0.1,
+   "synergy": -0.032
+  },
+  {
+   "na": "팟 지",
+   "nb": "도영 둘 도영도영",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.1,
+   "lift": -0.1,
+   "synergy": -0.032
+  },
+  {
+   "na": "팟 지",
+   "nb": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.1,
+   "lift": -0.1,
+   "synergy": -0.032
+  },
+  {
+   "na": "주 암",
+   "nb": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.65,
+   "lift": -0.15,
+   "synergy": -0.049
+  },
+  {
+   "na": "앙양맹",
+   "nb": "용기사",
+   "games": 5,
+   "winrate": 0.4,
+   "expected": 0.5,
+   "lift": -0.1,
+   "synergy": -0.055
+  },
+  {
+   "na": "조 C",
+   "nb": "코 파",
+   "games": 4,
+   "winrate": 0.75,
+   "expected": 0.875,
+   "lift": -0.125,
+   "synergy": -0.061
+  },
+  {
+   "na": "Lotze",
+   "nb": "앙양맹",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.2,
+   "lift": -0.2,
+   "synergy": -0.065
+  },
+  {
+   "na": "앙양맹",
+   "nb": "도영 둘 도영도영",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.2,
+   "lift": -0.2,
+   "synergy": -0.065
+  },
+  {
+   "na": "앙양맹",
+   "nb": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.2,
+   "lift": -0.2,
+   "synergy": -0.065
+  },
+  {
+   "na": "주 암",
+   "nb": "광명시25살최문선",
+   "games": 3,
+   "winrate": 0.333,
+   "expected": 0.5,
+   "lift": -0.167,
+   "synergy": -0.07
+  },
+  {
+   "na": "주 암",
+   "nb": "팟 지",
+   "games": 3,
+   "winrate": 0.333,
+   "expected": 0.5,
+   "lift": -0.167,
+   "synergy": -0.07
+  },
+  {
+   "na": "토 토",
+   "nb": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.75,
+   "lift": -0.25,
+   "synergy": -0.081
+  },
+  {
+   "na": "용기사",
+   "nb": "조 C",
+   "games": 2,
+   "winrate": 0.5,
+   "expected": 0.8,
+   "lift": -0.3,
+   "synergy": -0.097
+  },
+  {
+   "na": "팟 지",
+   "nb": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.35,
+   "lift": -0.35,
+   "synergy": -0.114
+  },
+  {
+   "na": "앙양맹",
+   "nb": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.367,
+   "lift": -0.367,
+   "synergy": -0.119
+  },
+  {
+   "na": "광명시25살최문선",
+   "nb": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.417,
+   "lift": -0.417,
+   "synergy": -0.135
+  },
+  {
+   "na": "용기사",
+   "nb": "팟 지",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.5,
+   "lift": -0.5,
+   "synergy": -0.162
+  },
+  {
+   "na": "용기사",
+   "nb": "굴농장에 굴서리",
+   "games": 4,
+   "winrate": 0.25,
+   "expected": 0.625,
+   "lift": -0.375,
+   "synergy": -0.184
+  },
+  {
+   "na": "용기사",
+   "nb": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.0,
+   "expected": 0.567,
+   "lift": -0.567,
+   "synergy": -0.184
+  },
+  {
+   "na": "앙양맹",
+   "nb": "팟 지",
+   "games": 4,
+   "winrate": 0.0,
+   "expected": 0.5,
+   "lift": -0.5,
+   "synergy": -0.245
+  }
+ ],
+ "trios": [
+  {
+   "a": "우체국집배원",
+   "b": "주 암",
+   "c": "코 파",
+   "games": 4,
+   "winrate": 1.0,
+   "synergy": 0.173
+  },
+  {
+   "a": "조 C",
+   "b": "주 암",
+   "c": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.133
+  },
+  {
+   "a": "용기사",
+   "b": "주 암",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.119
+  },
+  {
+   "a": "조 C",
+   "b": "코 파",
+   "c": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.119
+  },
+  {
+   "a": "조 C",
+   "b": "주 암",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.11
+  },
+  {
+   "a": "주 암",
+   "b": "코 파",
+   "c": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.11
+  },
+  {
+   "a": "용기사",
+   "b": "우체국집배원",
+   "c": "주 암",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.095
+  },
+  {
+   "a": "용기사",
+   "b": "주 암",
+   "c": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.095
+  },
+  {
+   "a": "우체국집배원",
+   "b": "조 C",
+   "c": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.095
+  },
+  {
+   "a": "팟 지",
+   "b": "광명시25살최문선",
+   "c": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.095
+  },
+  {
+   "a": "우체국집배원",
+   "b": "조 C",
+   "c": "주 암",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.086
+  },
+  {
+   "a": "우체국집배원",
+   "b": "주 암",
+   "c": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.086
+  },
+  {
+   "a": "용기사",
+   "b": "우체국집배원",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.081
+  },
+  {
+   "a": "용기사",
+   "b": "코 파",
+   "c": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.081
+  },
+  {
+   "a": "우체국집배원",
+   "b": "조 C",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.071
+  },
+  {
+   "a": "우체국집배원",
+   "b": "코 파",
+   "c": "토 토",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.071
+  },
+  {
+   "a": "주 암",
+   "b": "코 파",
+   "c": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.062
+  },
+  {
+   "a": "용기사",
+   "b": "우체국집배원",
+   "c": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.057
+  },
+  {
+   "a": "토 토",
+   "b": "팟 지",
+   "c": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.048
+  },
+  {
+   "a": "우체국집배원",
+   "b": "주 암",
+   "c": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.038
+  },
+  {
+   "a": "앙양맹",
+   "b": "조 C",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.029
+  },
+  {
+   "a": "앙양맹",
+   "b": "코 파",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.029
+  },
+  {
+   "a": "우체국집배원",
+   "b": "코 파",
+   "c": "현 우",
+   "games": 2,
+   "winrate": 1.0,
+   "synergy": 0.024
+  },
+  {
+   "a": "주 암",
+   "b": "팟 지",
+   "c": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.019
+  },
+  {
+   "a": "주 암",
+   "b": "광명시25살최문선",
+   "c": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.019
+  },
+  {
+   "a": "주 암",
+   "b": "팟 지",
+   "c": "광명시25살최문선",
+   "games": 3,
+   "winrate": 0.333,
+   "synergy": 0.0
+  },
+  {
+   "a": "Lotze",
+   "b": "도영 둘 도영도영",
+   "c": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": 0.0
+  },
+  {
+   "a": "토 토",
+   "b": "팟 지",
+   "c": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.0
+  },
+  {
+   "a": "토 토",
+   "b": "광명시25살최문선",
+   "c": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": 0.0
+  },
+  {
+   "a": "용기사",
+   "b": "조 C",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.01
+  },
+  {
+   "a": "용기사",
+   "b": "코 파",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.01
+  },
+  {
+   "a": "Lotze",
+   "b": "팟 지",
+   "c": "도영 둘 도영도영",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.019
+  },
+  {
+   "a": "Lotze",
+   "b": "팟 지",
+   "c": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.019
+  },
+  {
+   "a": "팟 지",
+   "b": "도영 둘 도영도영",
+   "c": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.019
+  },
+  {
+   "a": "앙양맹",
+   "b": "용기사",
+   "c": "조 C",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.029
+  },
+  {
+   "a": "앙양맹",
+   "b": "용기사",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.029
+  },
+  {
+   "a": "주 암",
+   "b": "토 토",
+   "c": "팟 지",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.029
+  },
+  {
+   "a": "주 암",
+   "b": "토 토",
+   "c": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.029
+  },
+  {
+   "a": "Lotze",
+   "b": "앙양맹",
+   "c": "도영 둘 도영도영",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.038
+  },
+  {
+   "a": "Lotze",
+   "b": "앙양맹",
+   "c": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.038
+  },
+  {
+   "a": "앙양맹",
+   "b": "도영 둘 도영도영",
+   "c": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.038
+  },
+  {
+   "a": "조 C",
+   "b": "코 파",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.048
+  },
+  {
+   "a": "Lotze",
+   "b": "앙양맹",
+   "c": "팟 지",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.057
+  },
+  {
+   "a": "앙양맹",
+   "b": "팟 지",
+   "c": "도영 둘 도영도영",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.057
+  },
+  {
+   "a": "앙양맹",
+   "b": "팟 지",
+   "c": "몰 매",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.057
+  },
+  {
+   "a": "앙양맹",
+   "b": "조 C",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.067
+  },
+  {
+   "a": "주 암",
+   "b": "토 토",
+   "c": "근 빅",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.076
+  },
+  {
+   "a": "앙양맹",
+   "b": "팟 지",
+   "c": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.089
+  },
+  {
+   "a": "팟 지",
+   "b": "광명시25살최문선",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.098
+  },
+  {
+   "a": "앙양맹",
+   "b": "팟 지",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.105
+  },
+  {
+   "a": "용기사",
+   "b": "조 C",
+   "c": "코 파",
+   "games": 2,
+   "winrate": 0.5,
+   "synergy": -0.105
+  },
+  {
+   "a": "앙양맹",
+   "b": "광명시25살최문선",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.117
+  },
+  {
+   "a": "앙양맹",
+   "b": "용기사",
+   "c": "굴농장에 굴서리",
+   "games": 4,
+   "winrate": 0.25,
+   "synergy": -0.123
+  },
+  {
+   "a": "용기사",
+   "b": "팟 지",
+   "c": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.127
+  },
+  {
+   "a": "앙양맹",
+   "b": "용기사",
+   "c": "팟 지",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.133
+  },
+  {
+   "a": "용기사",
+   "b": "팟 지",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.143
+  },
+  {
+   "a": "앙양맹",
+   "b": "용기사",
+   "c": "광명시25살최문선",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.146
+  },
+  {
+   "a": "용기사",
+   "b": "광명시25살최문선",
+   "c": "굴농장에 굴서리",
+   "games": 2,
+   "winrate": 0.0,
+   "synergy": -0.156
+  }
+ ],
+ "mvp": [
+  {
+   "name": "코 파",
+   "mvp": 3,
+   "games": 6
+  },
+  {
+   "name": "앙양맹",
+   "mvp": 2,
+   "games": 7
+  },
+  {
+   "name": "근 빅",
+   "mvp": 1,
+   "games": 2
+  },
+  {
+   "name": "주 암",
+   "mvp": 1,
+   "games": 7
+  }
+ ],
+ "records": {
+  "best_kda": {
+   "name": "코 파",
+   "champ": "Karma",
+   "value": 25.0
+  },
+  "most_dmg": {
+   "name": "코 파",
+   "champ": "Ezreal",
+   "value": 54921
+  },
+  "longest_streak": {
+   "name": "주 암",
+   "value": 5
+  },
+  "pentas": []
+ },
+ "champion_matchups": [],
+ "champion_meta": [
+  {
+   "champion_name": "Nautilus",
+   "games": 4,
+   "winrate": 0.75,
+   "kda": 4.43,
+   "dpm": 507.1
+  },
+  {
+   "champion_name": "Sylas",
+   "games": 4,
+   "winrate": 0.25,
+   "kda": 6.93,
+   "dpm": 698.7
+  },
+  {
+   "champion_name": "Caitlyn",
+   "games": 3,
+   "winrate": 0.667,
+   "kda": 3.94,
+   "dpm": 829.0
+  },
+  {
+   "champion_name": "Lulu",
+   "games": 3,
+   "winrate": 0.667,
+   "kda": 2.8,
+   "dpm": 316.3
+  },
+  {
+   "champion_name": "Jayce",
+   "games": 3,
+   "winrate": 0.333,
+   "kda": 1.7,
+   "dpm": 843.9
+  },
+  {
+   "champion_name": "Yone",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 2.12,
+   "dpm": 670.2
+  },
+  {
+   "champion_name": "LeeSin",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 3.67,
+   "dpm": 703.3
+  },
+  {
+   "champion_name": "Taliyah",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 12.5,
+   "dpm": 1248.3
+  },
+  {
+   "champion_name": "KSante",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 2.31,
+   "dpm": 729.2
+  },
+  {
+   "champion_name": "Karma",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 13.5,
+   "dpm": 386.2
+  },
+  {
+   "champion_name": "Lillia",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 2.25,
+   "dpm": 637.8
+  },
+  {
+   "champion_name": "Viktor",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 3.6,
+   "dpm": 817.0
+  },
+  {
+   "champion_name": "Vi",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 1.18,
+   "dpm": 411.9
+  },
+  {
+   "champion_name": "Zeri",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 2.32,
+   "dpm": 1205.8
+  }
+ ],
+ "champion_meta_lane": [
+  {
+   "champion_name": "Caitlyn",
+   "lane": "BOTTOM",
+   "games": 3,
+   "winrate": 0.667,
+   "kda": 3.94,
+   "dpm": 829.0
+  },
+  {
+   "champion_name": "LeeSin",
+   "lane": "JUNGLE",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 3.67,
+   "dpm": 703.3
+  },
+  {
+   "champion_name": "Yone",
+   "lane": "MIDDLE",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 2.12,
+   "dpm": 670.2
+  },
+  {
+   "champion_name": "Nautilus",
+   "lane": "UTILITY",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 5.54,
+   "dpm": 332.2
+  },
+  {
+   "champion_name": "Taliyah",
+   "lane": "JUNGLE",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 12.5,
+   "dpm": 1248.3
+  },
+  {
+   "champion_name": "Sylas",
+   "lane": "JUNGLE",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 12.25,
+   "dpm": 852.9
+  },
+  {
+   "champion_name": "Lulu",
+   "lane": "UTILITY",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 3.45,
+   "dpm": 339.1
+  },
+  {
+   "champion_name": "Jayce",
+   "lane": "TOP",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 1.63,
+   "dpm": 832.1
+  },
+  {
+   "champion_name": "Karma",
+   "lane": "UTILITY",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 13.5,
+   "dpm": 386.2
+  },
+  {
+   "champion_name": "Zeri",
+   "lane": "BOTTOM",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 2.32,
+   "dpm": 1205.8
+  },
+  {
+   "champion_name": "Viktor",
+   "lane": "MIDDLE",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 3.6,
+   "dpm": 817.0
+  },
+  {
+   "champion_name": "Vi",
+   "lane": "JUNGLE",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 1.18,
+   "dpm": 411.9
+  },
+  {
+   "champion_name": "Ashe",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 5.4,
+   "dpm": 818.1
+  },
+  {
+   "champion_name": "Kassadin",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.0,
+   "dpm": 814.7
+  },
+  {
+   "champion_name": "Malphite",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 5.33,
+   "dpm": 585.4
+  },
+  {
+   "champion_name": "Ahri",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.5,
+   "dpm": 427.9
+  },
+  {
+   "champion_name": "Rakan",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.11,
+   "dpm": 292.7
+  },
+  {
+   "champion_name": "Maokai",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.17,
+   "dpm": 433.6
+  },
+  {
+   "champion_name": "Nautilus",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 6.0,
+   "dpm": 758.1
+  },
+  {
+   "champion_name": "Lulu",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 1.5,
+   "dpm": 270.6
+  },
+  {
+   "champion_name": "KSante",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.75,
+   "dpm": 805.8
+  },
+  {
+   "champion_name": "Naafiri",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.25,
+   "dpm": 755.2
+  },
+  {
+   "champion_name": "Syndra",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.0,
+   "dpm": 1410.3
+  },
+  {
+   "champion_name": "Ziggs",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.86,
+   "dpm": 1031.1
+  },
+  {
+   "champion_name": "Ezreal",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 4.14,
+   "dpm": 1579.7
+  },
+  {
+   "champion_name": "MonkeyKing",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.0,
+   "dpm": 292.0
+  },
+  {
+   "champion_name": "Orianna",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.38,
+   "dpm": 467.6
+  },
+  {
+   "champion_name": "Nasus",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 5.5,
+   "dpm": 1119.8
+  },
+  {
+   "champion_name": "Ambessa",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.0,
+   "dpm": 342.0
+  },
+  {
+   "champion_name": "Galio",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 10.0,
+   "dpm": 838.4
+  },
+  {
+   "champion_name": "Yunara",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.5,
+   "dpm": 881.0
+  },
+  {
+   "champion_name": "Varus",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 4.5,
+   "dpm": 1289.8
+  },
+  {
+   "champion_name": "Lux",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 8.5,
+   "dpm": 391.1
+  },
+  {
+   "champion_name": "Fizz",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.56,
+   "dpm": 828.1
+  },
+  {
+   "champion_name": "Thresh",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.33,
+   "dpm": 298.4
+  },
+  {
+   "champion_name": "Shyvana",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.0,
+   "dpm": 318.3
+  },
+  {
+   "champion_name": "MissFortune",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.67,
+   "dpm": 586.1
+  },
+  {
+   "champion_name": "Sylas",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.0,
+   "dpm": 245.6
+  },
+  {
+   "champion_name": "Sylas",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.22,
+   "dpm": 843.3
+  },
+  {
+   "champion_name": "Jayce",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.86,
+   "dpm": 867.5
+  },
+  {
+   "champion_name": "Anivia",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 3.67,
+   "dpm": 1051.8
+  },
+  {
+   "champion_name": "Rumble",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.0,
+   "dpm": 438.4
+  },
+  {
+   "champion_name": "Nautilus",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.64,
+   "dpm": 606.0
+  },
+  {
+   "champion_name": "Lucian",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.6,
+   "dpm": 803.6
+  },
+  {
+   "champion_name": "Milio",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 3.33,
+   "dpm": 165.1
+  },
+  {
+   "champion_name": "Aatrox",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.38,
+   "dpm": 834.0
+  },
+  {
+   "champion_name": "Blitzcrank",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.2,
+   "dpm": 122.0
+  },
+  {
+   "champion_name": "Leblanc",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.0,
+   "dpm": 695.9
+  },
+  {
+   "champion_name": "Viego",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.0,
+   "dpm": 511.2
+  },
+  {
+   "champion_name": "KSante",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.86,
+   "dpm": 652.5
+  },
+  {
+   "champion_name": "Kindred",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.0,
+   "dpm": 672.8
+  },
+  {
+   "champion_name": "Darius",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.6,
+   "dpm": 543.0
+  },
+  {
+   "champion_name": "Aphelios",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 5.0,
+   "dpm": 863.8
+  },
+  {
+   "champion_name": "Lillia",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.0,
+   "dpm": 326.9
+  },
+  {
+   "champion_name": "Seraphine",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.7,
+   "dpm": 684.2
+  },
+  {
+   "champion_name": "Tristana",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.89,
+   "dpm": 598.9
+  },
+  {
+   "champion_name": "Lillia",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 3.5,
+   "dpm": 948.6
+  }
+ ],
+ "ban_meta": [],
+ "recent_matches": [
+  {
+   "match_id": "OCR_900000000000000001_7",
+   "ts": 1787262120000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "굴농장에 굴서리",
+       "champ": "Naafiri"
+      },
+      {
+       "name": "조 C",
+       "champ": "Lulu"
+      },
+      {
+       "name": "용기사",
+       "champ": "KSante"
+      },
+      {
+       "name": "앙양맹",
+       "champ": "Varus"
+      },
+      {
+       "name": "코 파",
+       "champ": "Syndra"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "주 암",
+       "champ": "Kindred"
+      },
+      {
+       "name": "팟 지",
+       "champ": "Lillia"
+      },
+      {
+       "name": "토 토",
+       "champ": "MissFortune"
+      },
+      {
+       "name": "근 빅",
+       "champ": "Karma"
+      },
+      {
+       "name": "광명시25살최문선",
+       "champ": "Viktor"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_7",
+    "duration": 2167,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 29,
+      "deaths": 23,
+      "assists": 47,
+      "gold": 74469,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "코 파",
+        "champ": "Syndra",
+        "lane": "BOTTOM",
+        "k": 7,
+        "d": 7,
+        "a": 7,
+        "kda": 2.0,
+        "cs": 280,
+        "gold": 15318,
+        "dmg": 50937,
+        "dmg_taken": 23593,
+        "dmg_turret": 6966,
+        "vision": 34,
+        "items": []
+       },
+       {
+        "name": "용기사",
+        "champ": "KSante",
+        "lane": "JUNGLE",
+        "k": 5,
+        "d": 4,
+        "a": 6,
+        "kda": 2.75,
+        "cs": 235,
+        "gold": 14170,
+        "dmg": 29103,
+        "dmg_taken": 41120,
+        "dmg_turret": 5663,
+        "vision": 37,
+        "items": []
+       },
+       {
+        "name": "굴농장에 굴서리",
+        "champ": "Naafiri",
+        "lane": "TOP",
+        "k": 9,
+        "d": 4,
+        "a": 4,
+        "kda": 3.25,
+        "cs": 185,
+        "gold": 15025,
+        "dmg": 27276,
+        "dmg_taken": 38302,
+        "dmg_turret": 2601,
+        "vision": 31,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Varus",
+        "lane": "MIDDLE",
+        "k": 7,
+        "d": 4,
+        "a": 11,
+        "kda": 4.5,
+        "cs": 317,
+        "gold": 18345,
+        "dmg": 46584,
+        "dmg_taken": 22694,
+        "dmg_turret": 20775,
+        "vision": 46,
+        "items": []
+       },
+       {
+        "name": "조 C",
+        "champ": "Lulu",
+        "lane": "UTILITY",
+        "k": 1,
+        "d": 4,
+        "a": 19,
+        "kda": 5.0,
+        "cs": 43,
+        "gold": 11611,
+        "dmg": 15793,
+        "dmg_taken": 28647,
+        "dmg_turret": 3421,
+        "vision": 132,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 23,
+      "deaths": 29,
+      "assists": 32,
+      "gold": 68364,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "토 토",
+        "champ": "MissFortune",
+        "lane": "TOP",
+        "k": 5,
+        "d": 6,
+        "a": 5,
+        "kda": 1.67,
+        "cs": 209,
+        "gold": 13540,
+        "dmg": 21169,
+        "dmg_taken": 50183,
+        "dmg_turret": 10903,
+        "vision": 22,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "Lillia",
+        "lane": "JUNGLE",
+        "k": 6,
+        "d": 4,
+        "a": 8,
+        "kda": 3.5,
+        "cs": 302,
+        "gold": 15967,
+        "dmg": 34260,
+        "dmg_taken": 60293,
+        "dmg_turret": 207,
+        "vision": 42,
+        "items": []
+       },
+       {
+        "name": "광명시25살최문선",
+        "champ": "Viktor",
+        "lane": "MIDDLE",
+        "k": 6,
+        "d": 5,
+        "a": 5,
+        "kda": 2.2,
+        "cs": 291,
+        "gold": 14301,
+        "dmg": 35766,
+        "dmg_taken": 28105,
+        "dmg_turret": 2368,
+        "vision": 39,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "Kindred",
+        "lane": "BOTTOM",
+        "k": 5,
+        "d": 8,
+        "a": 3,
+        "kda": 1.0,
+        "cs": 248,
+        "gold": 14561,
+        "dmg": 24301,
+        "dmg_taken": 32960,
+        "dmg_turret": 7538,
+        "vision": 46,
+        "items": []
+       },
+       {
+        "name": "근 빅",
+        "champ": "Karma",
+        "lane": "UTILITY",
+        "k": 1,
+        "d": 6,
+        "a": 11,
+        "kda": 2.0,
+        "cs": 39,
+        "gold": 9995,
+        "dmg": 13192,
+        "dmg_taken": 31252,
+        "dmg_turret": 1214,
+        "vision": 134,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  },
+  {
+   "match_id": "OCR_900000000000000001_6",
+   "ts": 1787261700000,
+   "teams": [
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "용기사",
+       "champ": "Jayce"
+      },
+      {
+       "name": "굴농장에 굴서리",
+       "champ": "Vi"
+      },
+      {
+       "name": "조 C",
+       "champ": "Sylas"
+      },
+      {
+       "name": "코 파",
+       "champ": "Fizz"
+      },
+      {
+       "name": "앙양맹",
+       "champ": "Aphelios"
+      }
+     ]
+    },
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "광명시25살최문선",
+       "champ": "Yone"
+      },
+      {
+       "name": "주 암",
+       "champ": "Ziggs"
+      },
+      {
+       "name": "팟 지",
+       "champ": "LeeSin"
+      },
+      {
+       "name": "근 빅",
+       "champ": "Nautilus"
+      },
+      {
+       "name": "토 토",
+       "champ": "Malphite"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_6",
+    "duration": 1932,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": false,
+      "kills": 30,
+      "deaths": 41,
+      "assists": 43,
+      "gold": 66718,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "코 파",
+        "champ": "Fizz",
+        "lane": "MIDDLE",
+        "k": 6,
+        "d": 9,
+        "a": 8,
+        "kda": 1.56,
+        "cs": 197,
+        "gold": 13779,
+        "dmg": 26664,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 36,
+        "items": []
+       },
+       {
+        "name": "용기사",
+        "champ": "Jayce",
+        "lane": "TOP",
+        "k": 0,
+        "d": 9,
+        "a": 9,
+        "kda": 1.0,
+        "cs": 252,
+        "gold": 13312,
+        "dmg": 25931,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 30,
+        "items": []
+       },
+       {
+        "name": "굴농장에 굴서리",
+        "champ": "Vi",
+        "lane": "JUNGLE",
+        "k": 9,
+        "d": 11,
+        "a": 6,
+        "kda": 1.36,
+        "cs": 143,
+        "gold": 12189,
+        "dmg": 11600,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 34,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Aphelios",
+        "lane": "BOTTOM",
+        "k": 5,
+        "d": 3,
+        "a": 10,
+        "kda": 5.0,
+        "cs": 290,
+        "gold": 14882,
+        "dmg": 27815,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 26,
+        "items": []
+       },
+       {
+        "name": "조 C",
+        "champ": "Sylas",
+        "lane": "UTILITY",
+        "k": 10,
+        "d": 9,
+        "a": 10,
+        "kda": 2.22,
+        "cs": 40,
+        "gold": 12556,
+        "dmg": 27154,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 119,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": true,
+      "kills": 41,
+      "deaths": 30,
+      "assists": 65,
+      "gold": 68010,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "토 토",
+        "champ": "Malphite",
+        "lane": "TOP",
+        "k": 2,
+        "d": 3,
+        "a": 14,
+        "kda": 5.33,
+        "cs": 222,
+        "gold": 11862,
+        "dmg": 18850,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 48,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "LeeSin",
+        "lane": "JUNGLE",
+        "k": 15,
+        "d": 6,
+        "a": 11,
+        "kda": 4.33,
+        "cs": 179,
+        "gold": 15042,
+        "dmg": 30408,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 47,
+        "items": []
+       },
+       {
+        "name": "광명시25살최문선",
+        "champ": "Yone",
+        "lane": "MIDDLE",
+        "k": 5,
+        "d": 10,
+        "a": 14,
+        "kda": 1.9,
+        "cs": 191,
+        "gold": 11687,
+        "dmg": 23477,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 35,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "Ziggs",
+        "lane": "BOTTOM",
+        "k": 13,
+        "d": 7,
+        "a": 7,
+        "kda": 2.86,
+        "cs": 281,
+        "gold": 18018,
+        "dmg": 33203,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 22,
+        "items": []
+       },
+       {
+        "name": "근 빅",
+        "champ": "Nautilus",
+        "lane": "UTILITY",
+        "k": 6,
+        "d": 4,
+        "a": 19,
+        "kda": 6.25,
+        "cs": 28,
+        "gold": 11401,
+        "dmg": 12328,
+        "dmg_taken": 0,
+        "dmg_turret": 0,
+        "vision": 123,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  },
+  {
+   "match_id": "OCR_900000000000000001_5",
+   "ts": 1787261280000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "코 파",
+       "champ": "Lux"
+      },
+      {
+       "name": "조 C",
+       "champ": "Ahri"
+      },
+      {
+       "name": "토 토",
+       "champ": "Caitlyn"
+      },
+      {
+       "name": "주 암",
+       "champ": "MonkeyKing"
+      },
+      {
+       "name": "우체국집배원",
+       "champ": "Ambessa"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "굴농장에 굴서리",
+       "champ": "Blitzcrank"
+      },
+      {
+       "name": "광명시25살최문선",
+       "champ": "Sylas"
+      },
+      {
+       "name": "팟 지",
+       "champ": "Lillia"
+      },
+      {
+       "name": "앙양맹",
+       "champ": "Shyvana"
+      },
+      {
+       "name": "용기사",
+       "champ": "Rumble"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_5",
+    "duration": 1500,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 20,
+      "deaths": 11,
+      "assists": 25,
+      "gold": 34337,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "코 파",
+        "champ": "Lux",
+        "lane": "UTILITY",
+        "k": 3,
+        "d": 2,
+        "a": 14,
+        "kda": 8.5,
+        "cs": 29,
+        "gold": 6590,
+        "dmg": 9777,
+        "dmg_taken": 8291,
+        "dmg_turret": 4288,
+        "vision": 44,
+        "items": []
+       },
+       {
+        "name": "우체국집배원",
+        "champ": "Ambessa",
+        "lane": "TOP",
+        "k": 3,
+        "d": 2,
+        "a": 1,
+        "kda": 2.0,
+        "cs": 118,
+        "gold": 6053,
+        "dmg": 8549,
+        "dmg_taken": 12900,
+        "dmg_turret": 8143,
+        "vision": 12,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "MonkeyKing",
+        "lane": "JUNGLE",
+        "k": 3,
+        "d": 2,
+        "a": 3,
+        "kda": 3.0,
+        "cs": 126,
+        "gold": 6565,
+        "dmg": 7299,
+        "dmg_taken": 14400,
+        "dmg_turret": 6202,
+        "vision": 9,
+        "items": []
+       },
+       {
+        "name": "조 C",
+        "champ": "Ahri",
+        "lane": "MIDDLE",
+        "k": 3,
+        "d": 2,
+        "a": 2,
+        "kda": 2.5,
+        "cs": 149,
+        "gold": 6709,
+        "dmg": 10698,
+        "dmg_taken": 7794,
+        "dmg_turret": 215,
+        "vision": 15,
+        "items": []
+       },
+       {
+        "name": "토 토",
+        "champ": "Caitlyn",
+        "lane": "BOTTOM",
+        "k": 8,
+        "d": 3,
+        "a": 5,
+        "kda": 4.33,
+        "cs": 130,
+        "gold": 8420,
+        "dmg": 13075,
+        "dmg_taken": 7213,
+        "dmg_turret": 12704,
+        "vision": 8,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 11,
+      "deaths": 20,
+      "assists": 15,
+      "gold": 28116,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "용기사",
+        "champ": "Rumble",
+        "lane": "TOP",
+        "k": 2,
+        "d": 2,
+        "a": 2,
+        "kda": 2.0,
+        "cs": 115,
+        "gold": 5670,
+        "dmg": 10960,
+        "dmg_taken": 10814,
+        "dmg_turret": 590,
+        "vision": 16,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Shyvana",
+        "lane": "JUNGLE",
+        "k": 1,
+        "d": 3,
+        "a": 5,
+        "kda": 2.0,
+        "cs": 90,
+        "gold": 5536,
+        "dmg": 7957,
+        "dmg_taken": 12416,
+        "dmg_turret": 4474,
+        "vision": 7,
+        "items": []
+       },
+       {
+        "name": "광명시25살최문선",
+        "champ": "Sylas",
+        "lane": "MIDDLE",
+        "k": 3,
+        "d": 4,
+        "a": 1,
+        "kda": 1.0,
+        "cs": 82,
+        "gold": 5472,
+        "dmg": 6139,
+        "dmg_taken": 14989,
+        "dmg_turret": 448,
+        "vision": 13,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "Lillia",
+        "lane": "UTILITY",
+        "k": 4,
+        "d": 6,
+        "a": 2,
+        "kda": 1.0,
+        "cs": 111,
+        "gold": 7259,
+        "dmg": 8172,
+        "dmg_taken": 9913,
+        "dmg_turret": 5501,
+        "vision": 32,
+        "items": []
+       },
+       {
+        "name": "굴농장에 굴서리",
+        "champ": "Blitzcrank",
+        "lane": "UTILITY",
+        "k": 1,
+        "d": 5,
+        "a": 5,
+        "kda": 1.2,
+        "cs": 13,
+        "gold": 4179,
+        "dmg": 3051,
+        "dmg_taken": 10573,
+        "dmg_turret": 1893,
+        "vision": 32,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  },
+  {
+   "match_id": "OCR_900000000000000001_4",
+   "ts": 1787260860000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "코 파",
+       "champ": "Karma"
+      },
+      {
+       "name": "토 토",
+       "champ": "Ashe"
+      },
+      {
+       "name": "우체국집배원",
+       "champ": "Jayce"
+      },
+      {
+       "name": "조 C",
+       "champ": "Galio"
+      },
+      {
+       "name": "주 암",
+       "champ": "Taliyah"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "앙양맹",
+       "champ": "Nautilus"
+      },
+      {
+       "name": "굴농장에 굴서리",
+       "champ": "Seraphine"
+      },
+      {
+       "name": "광명시25살최문선",
+       "champ": "Darius"
+      },
+      {
+       "name": "팟 지",
+       "champ": "Tristana"
+      },
+      {
+       "name": "용기사",
+       "champ": "KSante"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_4",
+    "duration": 1740,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 42,
+      "deaths": 20,
+      "assists": 96,
+      "gold": 65367,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "코 파",
+        "champ": "Karma",
+        "lane": "UTILITY",
+        "k": 4,
+        "d": 1,
+        "a": 21,
+        "kda": 25.0,
+        "cs": 43,
+        "gold": 9557,
+        "dmg": 11806,
+        "dmg_taken": 6906,
+        "dmg_turret": 2332,
+        "vision": 95,
+        "items": []
+       },
+       {
+        "name": "우체국집배원",
+        "champ": "Jayce",
+        "lane": "TOP",
+        "k": 12,
+        "d": 8,
+        "a": 6,
+        "kda": 2.25,
+        "cs": 191,
+        "gold": 12478,
+        "dmg": 24906,
+        "dmg_taken": 102263,
+        "dmg_turret": 239,
+        "vision": 31,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "Taliyah",
+        "lane": "JUNGLE",
+        "k": 14,
+        "d": 3,
+        "a": 24,
+        "kda": 12.67,
+        "cs": 246,
+        "gold": 16011,
+        "dmg": 31220,
+        "dmg_taken": 174484,
+        "dmg_turret": 120199,
+        "vision": 31,
+        "items": []
+       },
+       {
+        "name": "조 C",
+        "champ": "Galio",
+        "lane": "MIDDLE",
+        "k": 7,
+        "d": 3,
+        "a": 23,
+        "kda": 10.0,
+        "cs": 199,
+        "gold": 12928,
+        "dmg": 24314,
+        "dmg_taken": 7090,
+        "dmg_turret": 7464,
+        "vision": 17,
+        "items": []
+       },
+       {
+        "name": "토 토",
+        "champ": "Ashe",
+        "lane": "BOTTOM",
+        "k": 5,
+        "d": 5,
+        "a": 22,
+        "kda": 5.4,
+        "cs": 202,
+        "gold": 14393,
+        "dmg": 23725,
+        "dmg_taken": 153555,
+        "dmg_turret": 7464,
+        "vision": 20,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 18,
+      "deaths": 42,
+      "assists": 25,
+      "gold": 50309,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "용기사",
+        "champ": "KSante",
+        "lane": "TOP",
+        "k": 6,
+        "d": 7,
+        "a": 7,
+        "kda": 1.86,
+        "cs": 153,
+        "gold": 10073,
+        "dmg": 18922,
+        "dmg_taken": 122039,
+        "dmg_turret": 239,
+        "vision": 33,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Nautilus",
+        "lane": "MIDDLE",
+        "k": 2,
+        "d": 11,
+        "a": 5,
+        "kda": 0.64,
+        "cs": 158,
+        "gold": 9618,
+        "dmg": 17575,
+        "dmg_taken": 96765,
+        "dmg_turret": 4769,
+        "vision": 22,
+        "items": []
+       },
+       {
+        "name": "광명시25살최문선",
+        "champ": "Darius",
+        "lane": "JUNGLE",
+        "k": 7,
+        "d": 5,
+        "a": 1,
+        "kda": 1.6,
+        "cs": 203,
+        "gold": 11663,
+        "dmg": 15748,
+        "dmg_taken": 115095,
+        "dmg_turret": 70216,
+        "vision": 17,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "Tristana",
+        "lane": "BOTTOM",
+        "k": 3,
+        "d": 9,
+        "a": 5,
+        "kda": 0.89,
+        "cs": 171,
+        "gold": 11814,
+        "dmg": 17367,
+        "dmg_taken": 41412,
+        "dmg_turret": 7965,
+        "vision": 21,
+        "items": []
+       },
+       {
+        "name": "굴농장에 굴서리",
+        "champ": "Seraphine",
+        "lane": "UTILITY",
+        "k": 0,
+        "d": 10,
+        "a": 7,
+        "kda": 0.7,
+        "cs": 47,
+        "gold": 7141,
+        "dmg": 19842,
+        "dmg_taken": 4590,
+        "dmg_turret": 13473,
+        "vision": 71,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  },
+  {
+   "match_id": "OCR_900000000000000001_3",
+   "ts": 1787174040000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "용기사",
+       "champ": "Nautilus"
+      },
+      {
+       "name": "코 파",
+       "champ": "Ezreal"
+      },
+      {
+       "name": "주 암",
+       "champ": "LeeSin"
+      },
+      {
+       "name": "우체국집배원",
+       "champ": "Kassadin"
+      },
+      {
+       "name": "현 우",
+       "champ": "Lulu"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "팟 지",
+       "champ": "Leblanc"
+      },
+      {
+       "name": "앙양맹",
+       "champ": "Viego"
+      },
+      {
+       "name": "Lotze",
+       "champ": "Anivia"
+      },
+      {
+       "name": "몰 매",
+       "champ": "Lulu"
+      },
+      {
+       "name": "도영 둘 도영도영",
+       "champ": "Zeri"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_3",
+    "duration": 2086,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 35,
+      "deaths": 31,
+      "assists": 62,
+      "gold": 72416,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "코 파",
+        "champ": "Ezreal",
+        "lane": "BOTTOM",
+        "k": 20,
+        "d": 7,
+        "a": 9,
+        "kda": 4.14,
+        "cs": 233,
+        "gold": 21822,
+        "dmg": 54921,
+        "dmg_taken": 0,
+        "dmg_turret": 23786,
+        "vision": 18,
+        "items": []
+       },
+       {
+        "name": "우체국집배원",
+        "champ": "Kassadin",
+        "lane": "TOP",
+        "k": 5,
+        "d": 6,
+        "a": 7,
+        "kda": 2.0,
+        "cs": 234,
+        "gold": 12819,
+        "dmg": 28323,
+        "dmg_taken": 0,
+        "dmg_turret": 8550,
+        "vision": 36,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "LeeSin",
+        "lane": "JUNGLE",
+        "k": 7,
+        "d": 6,
+        "a": 11,
+        "kda": 3.0,
+        "cs": 246,
+        "gold": 15300,
+        "dmg": 16068,
+        "dmg_taken": 0,
+        "dmg_turret": 3973,
+        "vision": 28,
+        "items": []
+       },
+       {
+        "name": "현 우",
+        "champ": "Lulu",
+        "lane": "MIDDLE",
+        "k": 2,
+        "d": 6,
+        "a": 7,
+        "kda": 1.5,
+        "cs": 216,
+        "gold": 11528,
+        "dmg": 9408,
+        "dmg_taken": 0,
+        "dmg_turret": 5969,
+        "vision": 28,
+        "items": []
+       },
+       {
+        "name": "용기사",
+        "champ": "Nautilus",
+        "lane": "UTILITY",
+        "k": 1,
+        "d": 6,
+        "a": 28,
+        "kda": 4.83,
+        "cs": 35,
+        "gold": 10947,
+        "dmg": 9788,
+        "dmg_taken": 0,
+        "dmg_turret": 848,
+        "vision": 110,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 30,
+      "deaths": 35,
+      "assists": 48,
+      "gold": 63021,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "Lotze",
+        "champ": "Anivia",
+        "lane": "TOP",
+        "k": 5,
+        "d": 3,
+        "a": 6,
+        "kda": 3.67,
+        "cs": 274,
+        "gold": 13455,
+        "dmg": 36566,
+        "dmg_taken": 0,
+        "dmg_turret": 8818,
+        "vision": 25,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Viego",
+        "lane": "JUNGLE",
+        "k": 8,
+        "d": 7,
+        "a": 6,
+        "kda": 2.0,
+        "cs": 182,
+        "gold": 12334,
+        "dmg": 17771,
+        "dmg_taken": 0,
+        "dmg_turret": 2895,
+        "vision": 36,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "Leblanc",
+        "lane": "MIDDLE",
+        "k": 6,
+        "d": 6,
+        "a": 6,
+        "kda": 2.0,
+        "cs": 154,
+        "gold": 10155,
+        "dmg": 24193,
+        "dmg_taken": 0,
+        "dmg_turret": 4580,
+        "vision": 95,
+        "items": []
+       },
+       {
+        "name": "도영 둘 도영도영",
+        "champ": "Zeri",
+        "lane": "BOTTOM",
+        "k": 11,
+        "d": 9,
+        "a": 11,
+        "kda": 2.44,
+        "cs": 250,
+        "gold": 18314,
+        "dmg": 48265,
+        "dmg_taken": 0,
+        "dmg_turret": 5528,
+        "vision": 36,
+        "items": []
+       },
+       {
+        "name": "몰 매",
+        "champ": "Lulu",
+        "lane": "UTILITY",
+        "k": 0,
+        "d": 10,
+        "a": 19,
+        "kda": 1.9,
+        "cs": 22,
+        "gold": 8763,
+        "dmg": 8377,
+        "dmg_taken": 0,
+        "dmg_turret": 400,
+        "vision": 95,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  },
+  {
+   "match_id": "OCR_900000000000000001_2",
+   "ts": 1787173620000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "용기사",
+       "champ": "Rakan"
+      },
+      {
+       "name": "우체국집배원",
+       "champ": "Nautilus"
+      },
+      {
+       "name": "현 우",
+       "champ": "Orianna"
+      },
+      {
+       "name": "주 암",
+       "champ": "Taliyah"
+      },
+      {
+       "name": "코 파",
+       "champ": "Yunara"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "도영 둘 도영도영",
+       "champ": "Lucian"
+      },
+      {
+       "name": "앙양맹",
+       "champ": "Sylas"
+      },
+      {
+       "name": "팟 지",
+       "champ": "Caitlyn"
+      },
+      {
+       "name": "Lotze",
+       "champ": "Jayce"
+      },
+      {
+       "name": "몰 매",
+       "champ": "Milio"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_2",
+    "duration": 2040,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 37,
+      "deaths": 30,
+      "assists": 92,
+      "gold": 73676,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "코 파",
+        "champ": "Yunara",
+        "lane": "TOP",
+        "k": 3,
+        "d": 6,
+        "a": 18,
+        "kda": 3.5,
+        "cs": 323,
+        "gold": 16722,
+        "dmg": 29953,
+        "dmg_taken": 27032,
+        "dmg_turret": 6750,
+        "vision": 36,
+        "items": []
+       },
+       {
+        "name": "우체국집배원",
+        "champ": "Nautilus",
+        "lane": "TOP",
+        "k": 10,
+        "d": 4,
+        "a": 14,
+        "kda": 6.0,
+        "cs": 249,
+        "gold": 15417,
+        "dmg": 25775,
+        "dmg_taken": 34493,
+        "dmg_turret": 8627,
+        "vision": 36,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "Taliyah",
+        "lane": "JUNGLE",
+        "k": 16,
+        "d": 3,
+        "a": 21,
+        "kda": 12.33,
+        "cs": 245,
+        "gold": 19424,
+        "dmg": 48275,
+        "dmg_taken": 43314,
+        "dmg_turret": 2000,
+        "vision": 56,
+        "items": []
+       },
+       {
+        "name": "현 우",
+        "champ": "Orianna",
+        "lane": "UTILITY",
+        "k": 6,
+        "d": 8,
+        "a": 13,
+        "kda": 2.38,
+        "cs": 187,
+        "gold": 12079,
+        "dmg": 15900,
+        "dmg_taken": 22679,
+        "dmg_turret": 1218,
+        "vision": 26,
+        "items": []
+       },
+       {
+        "name": "용기사",
+        "champ": "Rakan",
+        "lane": "UTILITY",
+        "k": 2,
+        "d": 9,
+        "a": 26,
+        "kda": 3.11,
+        "cs": 34,
+        "gold": 10034,
+        "dmg": 9951,
+        "dmg_taken": 28994,
+        "dmg_turret": 1772,
+        "vision": 112,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 30,
+      "deaths": 37,
+      "assists": 47,
+      "gold": 65159,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "Lotze",
+        "champ": "Jayce",
+        "lane": "BOTTOM",
+        "k": 6,
+        "d": 7,
+        "a": 7,
+        "kda": 1.86,
+        "cs": 282,
+        "gold": 14629,
+        "dmg": 29494,
+        "dmg_taken": 26104,
+        "dmg_turret": 7721,
+        "vision": 40,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Sylas",
+        "lane": "JUNGLE",
+        "k": 12,
+        "d": 8,
+        "a": 8,
+        "kda": 2.5,
+        "cs": 188,
+        "gold": 13763,
+        "dmg": 28325,
+        "dmg_taken": 46975,
+        "dmg_turret": 0,
+        "vision": 45,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "Caitlyn",
+        "lane": "BOTTOM",
+        "k": 9,
+        "d": 6,
+        "a": 9,
+        "kda": 3.0,
+        "cs": 257,
+        "gold": 14526,
+        "dmg": 33508,
+        "dmg_taken": 31217,
+        "dmg_turret": 7353,
+        "vision": 41,
+        "items": []
+       },
+       {
+        "name": "도영 둘 도영도영",
+        "champ": "Lucian",
+        "lane": "MIDDLE",
+        "k": 1,
+        "d": 10,
+        "a": 5,
+        "kda": 0.6,
+        "cs": 264,
+        "gold": 12892,
+        "dmg": 27323,
+        "dmg_taken": 26608,
+        "dmg_turret": 3759,
+        "vision": 28,
+        "items": []
+       },
+       {
+        "name": "몰 매",
+        "champ": "Milio",
+        "lane": "UTILITY",
+        "k": 2,
+        "d": 6,
+        "a": 18,
+        "kda": 3.33,
+        "cs": 33,
+        "gold": 9349,
+        "dmg": 5614,
+        "dmg_taken": 22373,
+        "dmg_turret": 0,
+        "vision": 134,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  },
+  {
+   "match_id": "OCR_900000000000000001_1",
+   "ts": 1786914000000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "앙양맹",
+       "champ": "Sylas"
+      },
+      {
+       "name": "도야짬뽕누룽지탕",
+       "champ": "Caitlyn"
+      },
+      {
+       "name": "용기사",
+       "champ": "Maokai"
+      },
+      {
+       "name": "말든쓰",
+       "champ": "Nasus"
+      },
+      {
+       "name": "내 이름은 정준토",
+       "champ": "Yone"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "팟 지",
+       "champ": "Thresh"
+      },
+      {
+       "name": "주 암",
+       "champ": "Vi"
+      },
+      {
+       "name": "jekjek",
+       "champ": "Aatrox"
+      },
+      {
+       "name": "윙봉현",
+       "champ": "Zeri"
+      },
+      {
+       "name": "광명시25살최문선",
+       "champ": "Viktor"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "OCR_900000000000000001_1",
+    "duration": 1752,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 31,
+      "deaths": 16,
+      "assists": 46,
+      "gold": 65238,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "내 이름은 정준토",
+        "champ": "Yone",
+        "lane": "MIDDLE",
+        "k": 2,
+        "d": 3,
+        "a": 5,
+        "kda": 2.33,
+        "cs": 251,
+        "gold": 10989,
+        "dmg": 17851,
+        "dmg_taken": 25387,
+        "dmg_turret": 5738,
+        "vision": 32,
+        "items": []
+       },
+       {
+        "name": "말든쓰",
+        "champ": "Nasus",
+        "lane": "TOP",
+        "k": 7,
+        "d": 2,
+        "a": 4,
+        "kda": 5.5,
+        "cs": 256,
+        "gold": 14449,
+        "dmg": 32698,
+        "dmg_taken": 38406,
+        "dmg_turret": 13270,
+        "vision": 14,
+        "items": []
+       },
+       {
+        "name": "앙양맹",
+        "champ": "Sylas",
+        "lane": "JUNGLE",
+        "k": 10,
+        "d": 1,
+        "a": 12,
+        "kda": 22.0,
+        "cs": 204,
+        "gold": 13885,
+        "dmg": 25484,
+        "dmg_taken": 30689,
+        "dmg_turret": 2261,
+        "vision": 43,
+        "items": []
+       },
+       {
+        "name": "도야짬뽕누룽지탕",
+        "champ": "Caitlyn",
+        "lane": "BOTTOM",
+        "k": 10,
+        "d": 4,
+        "a": 8,
+        "kda": 4.5,
+        "cs": 270,
+        "gold": 16577,
+        "dmg": 28573,
+        "dmg_taken": 15421,
+        "dmg_turret": 8834,
+        "vision": 35,
+        "items": []
+       },
+       {
+        "name": "용기사",
+        "champ": "Maokai",
+        "lane": "UTILITY",
+        "k": 2,
+        "d": 6,
+        "a": 17,
+        "kda": 3.17,
+        "cs": 48,
+        "gold": 9338,
+        "dmg": 12660,
+        "dmg_taken": 22978,
+        "dmg_turret": 886,
+        "vision": 97,
+        "items": []
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 16,
+      "deaths": 31,
+      "assists": 23,
+      "gold": 53246,
+      "objectives": {
+       "towers": 0,
+       "dragons": 0,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 0
+      },
+      "bans": [],
+      "players": [
+       {
+        "name": "jekjek",
+        "champ": "Aatrox",
+        "lane": "TOP",
+        "k": 1,
+        "d": 8,
+        "a": 2,
+        "kda": 0.38,
+        "cs": 206,
+        "gold": 8604,
+        "dmg": 24353,
+        "dmg_taken": 39214,
+        "dmg_turret": 940,
+        "vision": 24,
+        "items": []
+       },
+       {
+        "name": "주 암",
+        "champ": "Vi",
+        "lane": "JUNGLE",
+        "k": 2,
+        "d": 8,
+        "a": 6,
+        "kda": 1.0,
+        "cs": 192,
+        "gold": 10412,
+        "dmg": 13533,
+        "dmg_taken": 39214,
+        "dmg_turret": 0,
+        "vision": 49,
+        "items": []
+       },
+       {
+        "name": "광명시25살최문선",
+        "champ": "Viktor",
+        "lane": "MIDDLE",
+        "k": 3,
+        "d": 1,
+        "a": 2,
+        "kda": 5.0,
+        "cs": 272,
+        "gold": 11983,
+        "dmg": 18796,
+        "dmg_taken": 35308,
+        "dmg_turret": 12554,
+        "vision": 13,
+        "items": []
+       },
+       {
+        "name": "윙봉현",
+        "champ": "Zeri",
+        "lane": "BOTTOM",
+        "k": 8,
+        "d": 5,
+        "a": 3,
+        "kda": 2.2,
+        "cs": 262,
+        "gold": 14084,
+        "dmg": 29878,
+        "dmg_taken": 16409,
+        "dmg_turret": 2605,
+        "vision": 24,
+        "items": []
+       },
+       {
+        "name": "팟 지",
+        "champ": "Thresh",
+        "lane": "UTILITY",
+        "k": 2,
+        "d": 9,
+        "a": 10,
+        "kda": 1.33,
+        "cs": 26,
+        "gold": 8163,
+        "dmg": 8712,
+        "dmg_taken": 27543,
+        "dmg_turret": 758,
+        "vision": 114,
+        "items": []
+       }
+      ]
+     }
+    ],
+    "timeline": {}
+   },
+   "timeline": {}
+  }
+ ],
+ "ratings": {
+  "p1": {
+   "name": "Lotze",
+   "games": 2,
+   "strength": -0.481,
+   "mmr": 880,
+   "lanes": {
+    "BOTTOM": {
+     "strength": -0.681,
+     "mmr": 830
+    },
+    "TOP": {
+     "strength": -0.681,
+     "mmr": 830
+    }
+   },
+   "main_lane": "BOTTOM",
+   "playable": [
+    "BOTTOM",
+    "TOP"
+   ]
+  },
+  "p2": {
+   "name": "jekjek",
+   "games": 1,
+   "strength": -0.892,
+   "mmr": 777,
+   "lanes": {
+    "TOP": {
+     "strength": -1.092,
+     "mmr": 727
+    }
+   },
+   "main_lane": "TOP",
+   "playable": [
+    "TOP"
+   ]
+  },
+  "p11": {
+   "name": "앙양맹",
+   "games": 7,
+   "strength": -0.06,
+   "mmr": 985,
+   "lanes": {
+    "JUNGLE": {
+     "strength": -0.16,
+     "mmr": 960
+    },
+    "BOTTOM": {
+     "strength": -0.26,
+     "mmr": 935
+    },
+    "MIDDLE": {
+     "strength": -0.06,
+     "mmr": 985
+    }
+   },
+   "main_lane": "JUNGLE",
+   "playable": [
+    "JUNGLE",
+    "MIDDLE",
+    "BOTTOM"
+   ]
+  },
+  "p12": {
+   "name": "용기사",
+   "games": 7,
+   "strength": -0.001,
+   "mmr": 1000,
+   "lanes": {
+    "TOP": {
+     "strength": -0.201,
+     "mmr": 950
+    },
+    "UTILITY": {
+     "strength": 0.199,
+     "mmr": 1050
+    },
+    "JUNGLE": {
+     "strength": 0.199,
+     "mmr": 1050
+    }
+   },
+   "main_lane": "TOP",
+   "playable": [
+    "TOP",
+    "UTILITY",
+    "JUNGLE"
+   ]
+  },
+  "p13": {
+   "name": "우체국집배원",
+   "games": 4,
+   "strength": 0.34,
+   "mmr": 1085,
+   "lanes": {
+    "TOP": {
+     "strength": 0.54,
+     "mmr": 1135
+    }
+   },
+   "main_lane": "TOP",
+   "playable": [
+    "TOP"
+   ]
+  },
+  "p14": {
+   "name": "윙봉현",
+   "games": 1,
+   "strength": -0.283,
+   "mmr": 929,
+   "lanes": {
+    "BOTTOM": {
+     "strength": -0.483,
+     "mmr": 879
+    }
+   },
+   "main_lane": "BOTTOM",
+   "playable": [
+    "BOTTOM"
+   ]
+  },
+  "p15": {
+   "name": "조 C",
+   "games": 4,
+   "strength": 0.351,
+   "mmr": 1088,
+   "lanes": {
+    "UTILITY": {
+     "strength": 0.351,
+     "mmr": 1088
+    },
+    "MIDDLE": {
+     "strength": 0.551,
+     "mmr": 1138
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY",
+    "MIDDLE"
+   ]
+  },
+  "p16": {
+   "name": "주 암",
+   "games": 7,
+   "strength": 0.365,
+   "mmr": 1091,
+   "lanes": {
+    "JUNGLE": {
+     "strength": 0.485,
+     "mmr": 1121
+    },
+    "BOTTOM": {
+     "strength": 0.365,
+     "mmr": 1091
+    }
+   },
+   "main_lane": "JUNGLE",
+   "playable": [
+    "JUNGLE",
+    "BOTTOM"
+   ]
+  },
+  "p17": {
+   "name": "코 파",
+   "games": 6,
+   "strength": 0.613,
+   "mmr": 1153,
+   "lanes": {
+    "UTILITY": {
+     "strength": 0.813,
+     "mmr": 1203
+    },
+    "TOP": {
+     "strength": 0.813,
+     "mmr": 1203
+    },
+    "BOTTOM": {
+     "strength": 0.813,
+     "mmr": 1203
+    },
+    "MIDDLE": {
+     "strength": 0.413,
+     "mmr": 1103
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY",
+    "BOTTOM",
+    "TOP",
+    "MIDDLE"
+   ]
+  },
+  "p18": {
+   "name": "토 토",
+   "games": 4,
+   "strength": 0.288,
+   "mmr": 1072,
+   "lanes": {
+    "BOTTOM": {
+     "strength": 0.488,
+     "mmr": 1122
+    },
+    "TOP": {
+     "strength": 0.288,
+     "mmr": 1072
+    }
+   },
+   "main_lane": "BOTTOM",
+   "playable": [
+    "BOTTOM",
+    "TOP"
+   ]
+  },
+  "p19": {
+   "name": "팟 지",
+   "games": 7,
+   "strength": -0.33,
+   "mmr": 918,
+   "lanes": {
+    "MIDDLE": {
+     "strength": -0.53,
+     "mmr": 868
+    },
+    "UTILITY": {
+     "strength": -0.53,
+     "mmr": 868
+    },
+    "BOTTOM": {
+     "strength": -0.53,
+     "mmr": 868
+    },
+    "JUNGLE": {
+     "strength": -0.33,
+     "mmr": 918
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY",
+    "BOTTOM",
+    "JUNGLE",
+    "MIDDLE"
+   ]
+  },
+  "p20": {
+   "name": "현 우",
+   "games": 2,
+   "strength": 0.141,
+   "mmr": 1035,
+   "lanes": {
+    "UTILITY": {
+     "strength": 0.341,
+     "mmr": 1085
+    },
+    "MIDDLE": {
+     "strength": 0.341,
+     "mmr": 1085
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY",
+    "MIDDLE"
+   ]
+  },
+  "p3": {
+   "name": "광명시25살최문선",
+   "games": 5,
+   "strength": -0.362,
+   "mmr": 909,
+   "lanes": {
+    "MIDDLE": {
+     "strength": -0.462,
+     "mmr": 884
+    },
+    "JUNGLE": {
+     "strength": -0.562,
+     "mmr": 859
+    }
+   },
+   "main_lane": "MIDDLE",
+   "playable": [
+    "MIDDLE",
+    "JUNGLE"
+   ]
+  },
+  "p4": {
+   "name": "굴농장에 굴서리",
+   "games": 4,
+   "strength": -0.378,
+   "mmr": 906,
+   "lanes": {
+    "TOP": {
+     "strength": -0.178,
+     "mmr": 956
+    },
+    "UTILITY": {
+     "strength": -0.578,
+     "mmr": 856
+    },
+    "JUNGLE": {
+     "strength": -0.578,
+     "mmr": 856
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY",
+    "TOP",
+    "JUNGLE"
+   ]
+  },
+  "p5": {
+   "name": "근 빅",
+   "games": 2,
+   "strength": 0.051,
+   "mmr": 1013,
+   "lanes": {
+    "UTILITY": {
+     "strength": 0.051,
+     "mmr": 1013
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY"
+   ]
+  },
+  "p6": {
+   "name": "내 이름은 정준토",
+   "games": 1,
+   "strength": 0.079,
+   "mmr": 1020,
+   "lanes": {
+    "MIDDLE": {
+     "strength": 0.279,
+     "mmr": 1070
+    }
+   },
+   "main_lane": "MIDDLE",
+   "playable": [
+    "MIDDLE"
+   ]
+  },
+  "p7": {
+   "name": "도야짬뽕누룽지탕",
+   "games": 1,
+   "strength": 0.632,
+   "mmr": 1158,
+   "lanes": {
+    "BOTTOM": {
+     "strength": 0.832,
+     "mmr": 1208
+    }
+   },
+   "main_lane": "BOTTOM",
+   "playable": [
+    "BOTTOM"
+   ]
+  },
+  "p8": {
+   "name": "도영 둘 도영도영",
+   "games": 2,
+   "strength": -0.512,
+   "mmr": 872,
+   "lanes": {
+    "MIDDLE": {
+     "strength": -0.712,
+     "mmr": 822
+    },
+    "BOTTOM": {
+     "strength": -0.712,
+     "mmr": 822
+    }
+   },
+   "main_lane": "MIDDLE",
+   "playable": [
+    "MIDDLE",
+    "BOTTOM"
+   ]
+  },
+  "p9": {
+   "name": "말든쓰",
+   "games": 1,
+   "strength": 0.573,
+   "mmr": 1143,
+   "lanes": {
+    "TOP": {
+     "strength": 0.773,
+     "mmr": 1193
+    }
+   },
+   "main_lane": "TOP",
+   "playable": [
+    "TOP"
+   ]
+  },
+  "p10": {
+   "name": "몰 매",
+   "games": 2,
+   "strength": -0.459,
+   "mmr": 885,
+   "lanes": {
+    "UTILITY": {
+     "strength": -0.659,
+     "mmr": 835
+    }
+   },
+   "main_lane": "UTILITY",
+   "playable": [
+    "UTILITY"
+   ]
+  }
+ },
+ "players": {
+  "p1": {
+   "name": "Lotze",
+   "account_count": 1,
+   "record": {
+    "games": 2,
+    "wins": 0,
+    "losses": 2,
+    "winrate": 0.0,
+    "ci_lower": 0.0,
+    "kda": 2.77,
+    "kp": 0.4,
+    "dpm": 959.7
+   },
+   "form": {
+    "form": "0-2",
+    "winrate": 0.0,
+    "streak": 2,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.86
+    },
+    {
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 3.67
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "pct": 0.5
+    },
+    {
+     "lane": "TOP",
+     "games": 1,
+     "pct": 0.5
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Anivia",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 3.67
+    },
+    {
+     "champion_name": "Jayce",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.86
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Anivia",
+     "lane": "TOP",
+     "win": false,
+     "kda": 3.67,
+     "dpm": 1051.8
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Jayce",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 1.86,
+     "dpm": 867.5
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "도영 둘 도영도영",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": 0.0
+    },
+    {
+     "partner": "몰 매",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": 0.0
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.065
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.032
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "도영 둘 도영도영",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "몰 매",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Kassadin",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Kassadin",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p2": {
+   "name": "jekjek",
+   "account_count": 1,
+   "record": {
+    "games": 1,
+    "wins": 0,
+    "losses": 1,
+    "winrate": 0.0,
+    "ci_lower": 0.0,
+    "kda": 0.38,
+    "kp": 0.188,
+    "dpm": 834.0
+   },
+   "form": {
+    "form": "0-1",
+    "winrate": 0.0,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.38
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "TOP",
+     "games": 1,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Aatrox",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.38
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Aatrox",
+     "lane": "TOP",
+     "win": false,
+     "kda": 0.38,
+     "dpm": 834.0
+    }
+   ],
+   "partners_best": [],
+   "partners_worst": [],
+   "partner_winrate": [],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Nasus",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Nasus",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p3": {
+   "name": "광명시25살최문선",
+   "account_count": 1,
+   "record": {
+    "games": 5,
+    "wins": 1,
+    "losses": 4,
+    "winrate": 0.2,
+    "ci_lower": 0.036,
+    "kda": 2.34,
+    "kp": 0.412,
+    "dpm": 630.3
+   },
+   "form": {
+    "form": "1-4",
+    "winrate": 0.2,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "games": 4,
+     "winrate": 0.25,
+     "kda": 2.53
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.6
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "MIDDLE",
+     "games": 4,
+     "pct": 0.8
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 1,
+     "pct": 0.2
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Viktor",
+     "lane": "MIDDLE",
+     "games": 2,
+     "winrate": 0.0,
+     "kda": 3.6
+    },
+    {
+     "champion_name": "Yone",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 1.9
+    },
+    {
+     "champion_name": "Darius",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.6
+    },
+    {
+     "champion_name": "Sylas",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.0
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Viktor",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 2.2,
+     "dpm": 990.3
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Yone",
+     "lane": "MIDDLE",
+     "win": true,
+     "kda": 1.9,
+     "dpm": 729.1
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Sylas",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 1.0,
+     "dpm": 245.6
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Darius",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 1.6,
+     "dpm": 543.0
+    },
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Viktor",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 5.0,
+     "dpm": 643.7
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "근 빅",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.081
+    },
+    {
+     "partner": "팟 지",
+     "games": 5,
+     "winrate": 0.2,
+     "synergy": 0.055
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.184
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.135
+    },
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.119
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "근 빅",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "주 암",
+     "games": 3,
+     "winrate": 0.333
+    },
+    {
+     "partner": "팟 지",
+     "games": 5,
+     "winrate": 0.2
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 2,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Yone",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Taliyah",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Ahri",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Fizz",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Yone",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Taliyah",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p4": {
+   "name": "굴농장에 굴서리",
+   "account_count": 1,
+   "record": {
+    "games": 4,
+    "wins": 1,
+    "losses": 3,
+    "winrate": 0.25,
+    "ci_lower": 0.046,
+    "kda": 1.63,
+    "kp": 0.471,
+    "dpm": 480.4
+   },
+   "form": {
+    "form": "1-3",
+    "winrate": 0.25,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "winrate": 0.0,
+     "kda": 0.95
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.36
+    },
+    {
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.25
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "pct": 0.5
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 1,
+     "pct": 0.25
+    },
+    {
+     "lane": "TOP",
+     "games": 1,
+     "pct": 0.25
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Naafiri",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.25
+    },
+    {
+     "champion_name": "Blitzcrank",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.2
+    },
+    {
+     "champion_name": "Seraphine",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.7
+    },
+    {
+     "champion_name": "Vi",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.36
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Naafiri",
+     "lane": "TOP",
+     "win": true,
+     "kda": 3.25,
+     "dpm": 755.2
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Vi",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 1.36,
+     "dpm": 360.2
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Blitzcrank",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 1.2,
+     "dpm": 122.0
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Seraphine",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 0.7,
+     "dpm": 684.2
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    },
+    {
+     "partner": "앙양맹",
+     "games": 4,
+     "winrate": 0.25,
+     "synergy": -0.02
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "용기사",
+     "games": 4,
+     "winrate": 0.25,
+     "synergy": -0.184
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.135
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.114
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "앙양맹",
+     "games": 4,
+     "winrate": 0.25
+    },
+    {
+     "partner": "용기사",
+     "games": 4,
+     "winrate": 0.25
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "LeeSin",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Karma",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Lux",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "MissFortune",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "LeeSin",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Karma",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p5": {
+   "name": "근 빅",
+   "account_count": 1,
+   "record": {
+    "games": 2,
+    "wins": 1,
+    "losses": 1,
+    "winrate": 0.5,
+    "ci_lower": 0.095,
+    "kda": 4.13,
+    "kp": 0.566,
+    "dpm": 374.1
+   },
+   "form": {
+    "form": "1-1",
+    "winrate": 0.5,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 4.13
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Nautilus",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 6.25
+    },
+    {
+     "champion_name": "Karma",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.0
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Karma",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 2.0,
+     "dpm": 365.3
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Nautilus",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 6.25,
+     "dpm": 382.9
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.081
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.081
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.081
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.049
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.5
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Lulu",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Sylas",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Sylas",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Lulu",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p6": {
+   "name": "내 이름은 정준토",
+   "account_count": 1,
+   "record": {
+    "games": 1,
+    "wins": 1,
+    "losses": 0,
+    "winrate": 1.0,
+    "ci_lower": 0.207,
+    "kda": 2.33,
+    "kp": 0.226,
+    "dpm": 611.3
+   },
+   "form": {
+    "form": "1-0",
+    "winrate": 1.0,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.33
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Yone",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.33
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Yone",
+     "lane": "MIDDLE",
+     "win": true,
+     "kda": 2.33,
+     "dpm": 611.3
+    }
+   ],
+   "partners_best": [],
+   "partners_worst": [],
+   "partner_winrate": [],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Viktor",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Viktor",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p7": {
+   "name": "도야짬뽕누룽지탕",
+   "account_count": 1,
+   "record": {
+    "games": 1,
+    "wins": 1,
+    "losses": 0,
+    "winrate": 1.0,
+    "ci_lower": 0.207,
+    "kda": 4.5,
+    "kp": 0.581,
+    "dpm": 978.5
+   },
+   "form": {
+    "form": "1-0",
+    "winrate": 1.0,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.5
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Caitlyn",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.5
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Caitlyn",
+     "lane": "BOTTOM",
+     "win": true,
+     "kda": 4.5,
+     "dpm": 978.5
+    }
+   ],
+   "partners_best": [],
+   "partners_worst": [],
+   "partner_winrate": [],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Zeri",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Zeri",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p8": {
+   "name": "도영 둘 도영도영",
+   "account_count": 1,
+   "record": {
+    "games": 2,
+    "wins": 0,
+    "losses": 2,
+    "winrate": 0.0,
+    "ci_lower": 0.0,
+    "kda": 1.52,
+    "kp": 0.467,
+    "dpm": 1096.0
+   },
+   "form": {
+    "form": "0-2",
+    "winrate": 0.0,
+    "streak": 2,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.44
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.6
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "pct": 0.5
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "pct": 0.5
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Lucian",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.6
+    },
+    {
+     "champion_name": "Zeri",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.44
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Zeri",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 2.44,
+     "dpm": 1388.3
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Lucian",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 0.6,
+     "dpm": 803.6
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "Lotze",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": 0.0
+    },
+    {
+     "partner": "몰 매",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": 0.0
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.065
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.032
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "Lotze",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "몰 매",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Ezreal",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Ezreal",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p9": {
+   "name": "말든쓰",
+   "account_count": 1,
+   "record": {
+    "games": 1,
+    "wins": 1,
+    "losses": 0,
+    "winrate": 1.0,
+    "ci_lower": 0.207,
+    "kda": 5.5,
+    "kp": 0.355,
+    "dpm": 1119.8
+   },
+   "form": {
+    "form": "1-0",
+    "winrate": 1.0,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 5.5
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "TOP",
+     "games": 1,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Nasus",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 5.5
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Nasus",
+     "lane": "TOP",
+     "win": true,
+     "kda": 5.5,
+     "dpm": 1119.8
+    }
+   ],
+   "partners_best": [],
+   "partners_worst": [],
+   "partner_winrate": [],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Aatrox",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Aatrox",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p10": {
+   "name": "몰 매",
+   "account_count": 1,
+   "record": {
+    "games": 2,
+    "wins": 0,
+    "losses": 2,
+    "winrate": 0.0,
+    "ci_lower": 0.0,
+    "kda": 2.62,
+    "kp": 0.65,
+    "dpm": 203.0
+   },
+   "form": {
+    "form": "0-2",
+    "winrate": 0.0,
+    "streak": 2,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "winrate": 0.0,
+     "kda": 2.62
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Lulu",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.9
+    },
+    {
+     "champion_name": "Milio",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 3.33
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Lulu",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 1.9,
+     "dpm": 240.9
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Milio",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 3.33,
+     "dpm": 165.1
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "Lotze",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": 0.0
+    },
+    {
+     "partner": "도영 둘 도영도영",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": 0.0
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.065
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.032
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "Lotze",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "도영 둘 도영도영",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.0
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Orianna",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Nautilus",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Orianna",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Nautilus",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p11": {
+   "name": "앙양맹",
+   "account_count": 1,
+   "record": {
+    "games": 7,
+    "wins": 2,
+    "losses": 5,
+    "winrate": 0.286,
+    "ci_lower": 0.082,
+    "kda": 5.52,
+    "kp": 0.557,
+    "dpm": 756.4
+   },
+   "form": {
+    "form": "1-4",
+    "winrate": 0.2,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "games": 4,
+     "winrate": 0.25,
+     "kda": 7.13
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 2.57
+    },
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 5.0
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "JUNGLE",
+     "games": 4,
+     "pct": 0.571
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 2,
+     "pct": 0.286
+    },
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "pct": 0.143
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Sylas",
+     "lane": "JUNGLE",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 12.25
+    },
+    {
+     "champion_name": "Varus",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.5
+    },
+    {
+     "champion_name": "Aphelios",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 5.0
+    },
+    {
+     "champion_name": "Nautilus",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.64
+    },
+    {
+     "champion_name": "Shyvana",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.0
+    },
+    {
+     "champion_name": "Viego",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.0
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Varus",
+     "lane": "MIDDLE",
+     "win": true,
+     "kda": 4.5,
+     "dpm": 1289.8
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Aphelios",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 5.0,
+     "dpm": 863.8
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Shyvana",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 2.0,
+     "dpm": 318.3
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Nautilus",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 0.64,
+     "dpm": 606.0
+    },
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Viego",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 2.0,
+     "dpm": 511.2
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Sylas",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 2.5,
+     "dpm": 833.1
+    },
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Sylas",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 22.0,
+     "dpm": 872.7
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 4,
+     "winrate": 0.25,
+     "synergy": -0.02
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.032
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.032
+    },
+    {
+     "partner": "용기사",
+     "games": 5,
+     "winrate": 0.4,
+     "synergy": -0.055
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "팟 지",
+     "games": 4,
+     "winrate": 0.0,
+     "synergy": -0.245
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.119
+    },
+    {
+     "partner": "몰 매",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.065
+    },
+    {
+     "partner": "도영 둘 도영도영",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.065
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "용기사",
+     "games": 5,
+     "winrate": 0.4
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 4,
+     "winrate": 0.25
+    },
+    {
+     "partner": "팟 지",
+     "games": 4,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "LeeSin",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "MonkeyKing",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Galio",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Vi",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Viktor",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "LeeSin",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p12": {
+   "name": "용기사",
+   "account_count": 1,
+   "record": {
+    "games": 7,
+    "wins": 4,
+    "losses": 3,
+    "winrate": 0.571,
+    "ci_lower": 0.25,
+    "kda": 2.67,
+    "kp": 0.566,
+    "dpm": 530.0
+   },
+   "form": {
+    "form": "2-3",
+    "winrate": 0.4,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "TOP",
+     "games": 3,
+     "winrate": 0.0,
+     "kda": 1.62
+    },
+    {
+     "lane": "UTILITY",
+     "games": 3,
+     "winrate": 1.0,
+     "kda": 3.7
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.75
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "TOP",
+     "games": 3,
+     "pct": 0.429
+    },
+    {
+     "lane": "UTILITY",
+     "games": 3,
+     "pct": 0.429
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 1,
+     "pct": 0.143
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "KSante",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.75
+    },
+    {
+     "champion_name": "Maokai",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.17
+    },
+    {
+     "champion_name": "Nautilus",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.83
+    },
+    {
+     "champion_name": "Rakan",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.11
+    },
+    {
+     "champion_name": "Jayce",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.0
+    },
+    {
+     "champion_name": "KSante",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.86
+    },
+    {
+     "champion_name": "Rumble",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.0
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "KSante",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 2.75,
+     "dpm": 805.8
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Jayce",
+     "lane": "TOP",
+     "win": false,
+     "kda": 1.0,
+     "dpm": 805.3
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Rumble",
+     "lane": "TOP",
+     "win": false,
+     "kda": 2.0,
+     "dpm": 438.4
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "KSante",
+     "lane": "TOP",
+     "win": false,
+     "kda": 1.86,
+     "dpm": 652.5
+    },
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Nautilus",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 4.83,
+     "dpm": 281.5
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Rakan",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 3.11,
+     "dpm": 292.7
+    },
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Maokai",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 3.17,
+     "dpm": 433.6
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.162
+    },
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.097
+    },
+    {
+     "partner": "현 우",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.097
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 0.75,
+     "synergy": 0.041
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.184
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 4,
+     "winrate": 0.25,
+     "synergy": -0.184
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.162
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.097
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "현 우",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 0.75
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 0.5
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Jayce",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Malphite",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Ambessa",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Thresh",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Lillia",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Lulu",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p13": {
+   "name": "우체국집배원",
+   "account_count": 1,
+   "record": {
+    "games": 4,
+    "wins": 4,
+    "losses": 0,
+    "winrate": 1.0,
+    "ci_lower": 0.51,
+    "kda": 3.06,
+    "kp": 0.405,
+    "dpm": 693.4
+   },
+   "form": {
+    "form": "4-0",
+    "winrate": 1.0,
+    "streak": 4,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "TOP",
+     "games": 4,
+     "winrate": 1.0,
+     "kda": 3.06
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "TOP",
+     "games": 4,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Ambessa",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.0
+    },
+    {
+     "champion_name": "Jayce",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.25
+    },
+    {
+     "champion_name": "Kassadin",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.0
+    },
+    {
+     "champion_name": "Nautilus",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 6.0
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Ambessa",
+     "lane": "TOP",
+     "win": true,
+     "kda": 2.0,
+     "dpm": 342.0
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Jayce",
+     "lane": "TOP",
+     "win": true,
+     "kda": 2.25,
+     "dpm": 858.8
+    },
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Kassadin",
+     "lane": "TOP",
+     "win": true,
+     "kda": 2.0,
+     "dpm": 814.7
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Nautilus",
+     "lane": "TOP",
+     "win": true,
+     "kda": 6.0,
+     "dpm": 758.1
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "주 암",
+     "games": 4,
+     "winrate": 1.0,
+     "synergy": 0.163
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 1.0,
+     "synergy": 0.123
+    },
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.097
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "현 우",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.0
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.081
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.081
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "주 암",
+     "games": 4,
+     "winrate": 1.0
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 1.0
+    },
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 1.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Anivia",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Rumble",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "KSante",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Anivia",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Rumble",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "KSante",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p14": {
+   "name": "윙봉현",
+   "account_count": 1,
+   "record": {
+    "games": 1,
+    "wins": 0,
+    "losses": 1,
+    "winrate": 0.0,
+    "ci_lower": 0.0,
+    "kda": 2.2,
+    "kp": 0.688,
+    "dpm": 1023.2
+   },
+   "form": {
+    "form": "0-1",
+    "winrate": 0.0,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.2
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 1,
+     "pct": 1.0
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Zeri",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.2
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Zeri",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 2.2,
+     "dpm": 1023.2
+    }
+   ],
+   "partners_best": [],
+   "partners_worst": [],
+   "partner_winrate": [],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Caitlyn",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Caitlyn",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p15": {
+   "name": "조 C",
+   "account_count": 1,
+   "record": {
+    "games": 4,
+    "wins": 3,
+    "losses": 1,
+    "winrate": 0.75,
+    "ci_lower": 0.301,
+    "kda": 4.93,
+    "kp": 0.58,
+    "dpm": 636.7
+   },
+   "form": {
+    "form": "3-1",
+    "winrate": 0.75,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "games": 2,
+     "winrate": 1.0,
+     "kda": 6.25
+    },
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 3.61
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "MIDDLE",
+     "games": 2,
+     "pct": 0.5
+    },
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "pct": 0.5
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Ahri",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.5
+    },
+    {
+     "champion_name": "Galio",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 10.0
+    },
+    {
+     "champion_name": "Lulu",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 5.0
+    },
+    {
+     "champion_name": "Sylas",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.22
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Lulu",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 5.0,
+     "dpm": 437.3
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Sylas",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 2.22,
+     "dpm": 843.3
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Ahri",
+     "lane": "MIDDLE",
+     "win": true,
+     "kda": 2.5,
+     "dpm": 427.9
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Galio",
+     "lane": "MIDDLE",
+     "win": true,
+     "kda": 10.0,
+     "dpm": 838.4
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.162
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.146
+    },
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.081
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.097
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 0.75,
+     "synergy": -0.061
+    },
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.032
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 0.75
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 2,
+     "winrate": 0.5
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Nautilus",
+      "games": 2,
+      "winrate": 0.5
+     },
+     {
+      "vs_champ": "Sylas",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Karma",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Sylas",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Karma",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Nautilus",
+      "games": 2,
+      "winrate": 0.5
+     }
+    ]
+   }
+  },
+  "p16": {
+   "name": "주 암",
+   "account_count": 1,
+   "record": {
+    "games": 7,
+    "wins": 5,
+    "losses": 2,
+    "winrate": 0.714,
+    "ci_lower": 0.359,
+    "kda": 5.12,
+    "kp": 0.579,
+    "dpm": 774.0
+   },
+   "form": {
+    "form": "4-1",
+    "winrate": 0.8,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "games": 5,
+     "winrate": 0.8,
+     "kda": 6.4
+    },
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 1.93
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "JUNGLE",
+     "games": 5,
+     "pct": 0.714
+    },
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "pct": 0.286
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Taliyah",
+     "lane": "JUNGLE",
+     "games": 2,
+     "winrate": 1.0,
+     "kda": 12.5
+    },
+    {
+     "champion_name": "LeeSin",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.0
+    },
+    {
+     "champion_name": "MonkeyKing",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.0
+    },
+    {
+     "champion_name": "Ziggs",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.86
+    },
+    {
+     "champion_name": "Kindred",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.0
+    },
+    {
+     "champion_name": "Vi",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.0
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Kindred",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 1.0,
+     "dpm": 672.8
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Ziggs",
+     "lane": "BOTTOM",
+     "win": true,
+     "kda": 2.86,
+     "dpm": 1031.1
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "MonkeyKing",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 3.0,
+     "dpm": 292.0
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Taliyah",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 12.67,
+     "dpm": 1076.6
+    },
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "LeeSin",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 3.0,
+     "dpm": 462.2
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Taliyah",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 12.33,
+     "dpm": 1419.9
+    },
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Vi",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 1.0,
+     "dpm": 463.5
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 1.0,
+     "synergy": 0.286
+    },
+    {
+     "partner": "우체국집배원",
+     "games": 4,
+     "winrate": 1.0,
+     "synergy": 0.163
+    },
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.162
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.146
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "팟 지",
+     "games": 3,
+     "winrate": 0.333,
+     "synergy": -0.07
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 3,
+     "winrate": 0.333,
+     "synergy": -0.07
+    },
+    {
+     "partner": "근 빅",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.049
+    },
+    {
+     "partner": "토 토",
+     "games": 4,
+     "winrate": 0.75,
+     "synergy": 0.02
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "우체국집배원",
+     "games": 4,
+     "winrate": 1.0
+    },
+    {
+     "partner": "코 파",
+     "games": 4,
+     "winrate": 1.0
+    },
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "현 우",
+     "games": 2,
+     "winrate": 1.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Syndra",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Sylas",
+      "games": 2,
+      "winrate": 0.5
+     },
+     {
+      "vs_champ": "Aphelios",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Aphelios",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Shyvana",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Darius",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p17": {
+   "name": "코 파",
+   "account_count": 1,
+   "record": {
+    "games": 6,
+    "wins": 5,
+    "losses": 1,
+    "winrate": 0.833,
+    "ci_lower": 0.436,
+    "kda": 7.45,
+    "kp": 0.632,
+    "dpm": 916.2
+   },
+   "form": {
+    "form": "4-1",
+    "winrate": 0.8,
+    "streak": 1,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "winrate": 1.0,
+     "kda": 3.07
+    },
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "winrate": 1.0,
+     "kda": 16.75
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.56
+    },
+    {
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.5
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "pct": 0.333
+    },
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "pct": 0.333
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "pct": 0.167
+    },
+    {
+     "lane": "TOP",
+     "games": 1,
+     "pct": 0.167
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Ezreal",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.14
+    },
+    {
+     "champion_name": "Karma",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 25.0
+    },
+    {
+     "champion_name": "Lux",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 8.5
+    },
+    {
+     "champion_name": "Syndra",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.0
+    },
+    {
+     "champion_name": "Yunara",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 3.5
+    },
+    {
+     "champion_name": "Fizz",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.56
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Syndra",
+     "lane": "BOTTOM",
+     "win": true,
+     "kda": 2.0,
+     "dpm": 1410.3
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Fizz",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 1.56,
+     "dpm": 828.1
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Lux",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 8.5,
+     "dpm": 391.1
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Karma",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 25.0,
+     "dpm": 407.1
+    },
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Ezreal",
+     "lane": "BOTTOM",
+     "win": true,
+     "kda": 4.14,
+     "dpm": 1579.7
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Yunara",
+     "lane": "TOP",
+     "win": true,
+     "kda": 3.5,
+     "dpm": 881.0
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "주 암",
+     "games": 4,
+     "winrate": 1.0,
+     "synergy": 0.286
+    },
+    {
+     "partner": "우체국집배원",
+     "games": 4,
+     "winrate": 1.0,
+     "synergy": 0.123
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.122
+    },
+    {
+     "partner": "용기사",
+     "games": 4,
+     "winrate": 0.75,
+     "synergy": 0.041
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "조 C",
+     "games": 4,
+     "winrate": 0.75,
+     "synergy": -0.061
+    },
+    {
+     "partner": "앙양맹",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.032
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    },
+    {
+     "partner": "현 우",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.041
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "우체국집배원",
+     "games": 4,
+     "winrate": 1.0
+    },
+    {
+     "partner": "주 암",
+     "games": 4,
+     "winrate": 1.0
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "현 우",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "용기사",
+     "games": 4,
+     "winrate": 0.75
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Yone",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Zeri",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Lillia",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Zeri",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Lillia",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Kindred",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  },
+  "p18": {
+   "name": "토 토",
+   "account_count": 1,
+   "record": {
+    "games": 4,
+    "wins": 3,
+    "losses": 1,
+    "winrate": 0.75,
+    "ci_lower": 0.301,
+    "kda": 4.18,
+    "kp": 0.53,
+    "dpm": 628.2
+   },
+   "form": {
+    "form": "3-1",
+    "winrate": 0.75,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "winrate": 1.0,
+     "kda": 4.87
+    },
+    {
+     "lane": "TOP",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 3.5
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "pct": 0.5
+    },
+    {
+     "lane": "TOP",
+     "games": 2,
+     "pct": 0.5
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Ashe",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 5.4
+    },
+    {
+     "champion_name": "Caitlyn",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.33
+    },
+    {
+     "champion_name": "Malphite",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 5.33
+    },
+    {
+     "champion_name": "MissFortune",
+     "lane": "TOP",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.67
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "MissFortune",
+     "lane": "TOP",
+     "win": false,
+     "kda": 1.67,
+     "dpm": 586.1
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "Malphite",
+     "lane": "TOP",
+     "win": true,
+     "kda": 5.33,
+     "dpm": 585.4
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Caitlyn",
+     "lane": "BOTTOM",
+     "win": true,
+     "kda": 4.33,
+     "dpm": 523.0
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Ashe",
+     "lane": "BOTTOM",
+     "win": true,
+     "kda": 5.4,
+     "dpm": 818.1
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.162
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.122
+    },
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.081
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "근 빅",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": -0.081
+    },
+    {
+     "partner": "팟 지",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "조 C",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "주 암",
+     "games": 4,
+     "winrate": 0.75
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 2,
+     "winrate": 0.5
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Naafiri",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Jayce",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Tristana",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Jayce",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Tristana",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Naafiri",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p19": {
+   "name": "팟 지",
+   "account_count": 1,
+   "record": {
+    "games": 7,
+    "wins": 1,
+    "losses": 6,
+    "winrate": 0.143,
+    "ci_lower": 0.026,
+    "kda": 2.29,
+    "kp": 0.569,
+    "dpm": 685.5
+   },
+   "form": {
+    "form": "1-4",
+    "winrate": 0.2,
+    "streak": 1,
+    "dir": "L"
+   },
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "winrate": 0.0,
+     "kda": 1.95
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 2,
+     "winrate": 0.5,
+     "kda": 3.92
+    },
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "winrate": 0.0,
+     "kda": 1.17
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.0
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "BOTTOM",
+     "games": 2,
+     "pct": 0.286
+    },
+    {
+     "lane": "JUNGLE",
+     "games": 2,
+     "pct": 0.286
+    },
+    {
+     "lane": "UTILITY",
+     "games": 2,
+     "pct": 0.286
+    },
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "pct": 0.143
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "LeeSin",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 4.33
+    },
+    {
+     "champion_name": "Caitlyn",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 3.0
+    },
+    {
+     "champion_name": "Leblanc",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 2.0
+    },
+    {
+     "champion_name": "Lillia",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.0
+    },
+    {
+     "champion_name": "Lillia",
+     "lane": "JUNGLE",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 3.5
+    },
+    {
+     "champion_name": "Thresh",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 1.33
+    },
+    {
+     "champion_name": "Tristana",
+     "lane": "BOTTOM",
+     "games": 1,
+     "winrate": 0.0,
+     "kda": 0.89
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787262120000,
+     "champion_name": "Lillia",
+     "lane": "JUNGLE",
+     "win": false,
+     "kda": 3.5,
+     "dpm": 948.6
+    },
+    {
+     "game_creation": 1787261700000,
+     "champion_name": "LeeSin",
+     "lane": "JUNGLE",
+     "win": true,
+     "kda": 4.33,
+     "dpm": 944.3
+    },
+    {
+     "game_creation": 1787261280000,
+     "champion_name": "Lillia",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 1.0,
+     "dpm": 326.9
+    },
+    {
+     "game_creation": 1787260860000,
+     "champion_name": "Tristana",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 0.89,
+     "dpm": 598.9
+    },
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Leblanc",
+     "lane": "MIDDLE",
+     "win": false,
+     "kda": 2.0,
+     "dpm": 695.9
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Caitlyn",
+     "lane": "BOTTOM",
+     "win": false,
+     "kda": 3.0,
+     "dpm": 985.5
+    },
+    {
+     "game_creation": 1786914000000,
+     "champion_name": "Thresh",
+     "lane": "UTILITY",
+     "win": false,
+     "kda": 1.33,
+     "dpm": 298.4
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "근 빅",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.081
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 5,
+     "winrate": 0.2,
+     "synergy": 0.055
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 0.5,
+     "synergy": 0.0
+    },
+    {
+     "partner": "Lotze",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.032
+    },
+    {
+     "partner": "도영 둘 도영도영",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.032
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "앙양맹",
+     "games": 4,
+     "winrate": 0.0,
+     "synergy": -0.245
+    },
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.162
+    },
+    {
+     "partner": "굴농장에 굴서리",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.114
+    },
+    {
+     "partner": "주 암",
+     "games": 3,
+     "winrate": 0.333,
+     "synergy": -0.07
+    },
+    {
+     "partner": "몰 매",
+     "games": 2,
+     "winrate": 0.0,
+     "synergy": -0.032
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "근 빅",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "토 토",
+     "games": 2,
+     "winrate": 0.5
+    },
+    {
+     "partner": "주 암",
+     "games": 3,
+     "winrate": 0.333
+    },
+    {
+     "partner": "광명시25살최문선",
+     "games": 5,
+     "winrate": 0.2
+    },
+    {
+     "partner": "앙양맹",
+     "games": 4,
+     "winrate": 0.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Ashe",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Lux",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "KSante",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Vi",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Ashe",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
+      "vs_champ": "Lux",
+      "games": 1,
+      "winrate": 0.0
+     }
+    ]
+   }
+  },
+  "p20": {
+   "name": "현 우",
+   "account_count": 1,
+   "record": {
+    "games": 2,
+    "wins": 2,
+    "losses": 0,
+    "winrate": 1.0,
+    "ci_lower": 0.342,
+    "kda": 1.94,
+    "kp": 0.386,
+    "dpm": 369.1
+   },
+   "form": {
+    "form": "2-0",
+    "winrate": 1.0,
+    "streak": 2,
+    "dir": "W"
+   },
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 1.5
+    },
+    {
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.38
+    }
+   ],
+   "role_dist": [
+    {
+     "lane": "MIDDLE",
+     "games": 1,
+     "pct": 0.5
+    },
+    {
+     "lane": "UTILITY",
+     "games": 1,
+     "pct": 0.5
+    }
+   ],
+   "champions": [
+    {
+     "champion_name": "Lulu",
+     "lane": "MIDDLE",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 1.5
+    },
+    {
+     "champion_name": "Orianna",
+     "lane": "UTILITY",
+     "games": 1,
+     "winrate": 1.0,
+     "kda": 2.38
+    }
+   ],
+   "recent_games": [
+    {
+     "game_creation": 1787174040000,
+     "champion_name": "Lulu",
+     "lane": "MIDDLE",
+     "win": true,
+     "kda": 1.5,
+     "dpm": 270.6
+    },
+    {
+     "game_creation": 1787173620000,
+     "champion_name": "Orianna",
+     "lane": "UTILITY",
+     "win": true,
+     "kda": 2.38,
+     "dpm": 467.6
+    }
+   ],
+   "partners_best": [
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.097
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.065
+    }
+   ],
+   "partners_worst": [
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.0
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 1.0,
+     "synergy": 0.041
+    }
+   ],
+   "partner_winrate": [
+    {
+     "partner": "용기사",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "우체국집배원",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "주 암",
+     "games": 2,
+     "winrate": 1.0
+    },
+    {
+     "partner": "코 파",
+     "games": 2,
+     "winrate": 1.0
+    }
+   ],
+   "nemesis_victim": {
+    "nemesis": [
+     {
+      "vs_champ": "Milio",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Leblanc",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ],
+    "victim": [
+     {
+      "vs_champ": "Milio",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Leblanc",
+      "games": 1,
+      "winrate": 1.0
+     }
+    ]
+   }
+  }
+ },
+ "warnings": []
+}
