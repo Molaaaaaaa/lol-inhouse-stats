@@ -1,8 +1,8 @@
 {
  "guild_id": "DUMMY",
  "name": "🧪 더미 테스트 (예시 데이터)",
- "patch": "16.15.1",
- "timestamp": "2026-07-30T09:08:10+00:00",
+ "patch": "16.16.1",
+ "timestamp": "2026-08-20T01:52:38+00:00",
  "summary": {
   "total_games": 3,
   "player_count": 10,
@@ -15,19 +15,9 @@
    "wins": 3.0,
    "winrate": 1.0,
    "ci_lower": 0.438,
-   "kda": 16.07,
-   "kp": 0.488,
-   "dpm": 303.9
-  },
-  {
-   "discord_name": "준호",
-   "games": 3,
-   "wins": 3.0,
-   "winrate": 1.0,
-   "ci_lower": 0.438,
-   "kda": 5.86,
-   "kp": 0.425,
-   "dpm": 875.6
+   "kda": 9.28,
+   "kp": 0.462,
+   "dpm": 391.1
   },
   {
    "discord_name": "정글차이",
@@ -35,19 +25,19 @@
    "wins": 3.0,
    "winrate": 1.0,
    "ci_lower": 0.438,
-   "kda": 8.13,
-   "kp": 0.497,
-   "dpm": 696.5
+   "kda": 11.94,
+   "kp": 0.52,
+   "dpm": 693.6
   },
   {
-   "discord_name": "포지셔닝",
+   "discord_name": "준호",
    "games": 3,
-   "wins": 2.0,
-   "winrate": 0.667,
-   "ci_lower": 0.208,
-   "kda": 6.11,
-   "kp": 0.393,
-   "dpm": 904.3
+   "wins": 3.0,
+   "winrate": 1.0,
+   "ci_lower": 0.438,
+   "kda": 5.67,
+   "kp": 0.436,
+   "dpm": 827.8
   },
   {
    "discord_name": "섬광장인",
@@ -55,9 +45,19 @@
    "wins": 2.0,
    "winrate": 0.667,
    "ci_lower": 0.208,
-   "kda": 6.22,
-   "kp": 0.396,
-   "dpm": 599.1
+   "kda": 3.07,
+   "kp": 0.433,
+   "dpm": 624.6
+  },
+  {
+   "discord_name": "포지셔닝",
+   "games": 3,
+   "wins": 2.0,
+   "winrate": 0.667,
+   "ci_lower": 0.208,
+   "kda": 4.47,
+   "kp": 0.449,
+   "dpm": 939.9
   },
   {
    "discord_name": "원딜본능",
@@ -65,9 +65,9 @@
    "wins": 1.0,
    "winrate": 0.333,
    "ci_lower": 0.061,
-   "kda": 14.33,
-   "kp": 0.561,
-   "dpm": 979.1
+   "kda": 7.76,
+   "kp": 0.447,
+   "dpm": 915.3
   },
   {
    "discord_name": "탑신병자",
@@ -75,19 +75,9 @@
    "wins": 1.0,
    "winrate": 0.333,
    "ci_lower": 0.061,
-   "kda": 4.72,
-   "kp": 0.414,
-   "dpm": 570.4
-  },
-  {
-   "discord_name": "페이커심",
-   "games": 3,
-   "wins": 0.0,
-   "winrate": 0.0,
-   "ci_lower": 0.0,
-   "kda": 3.17,
-   "kp": 0.471,
-   "dpm": 1016.7
+   "kda": 3.04,
+   "kp": 0.463,
+   "dpm": 649.7
   },
   {
    "discord_name": "로밍왕",
@@ -95,9 +85,9 @@
    "wins": 0.0,
    "winrate": 0.0,
    "ci_lower": 0.0,
-   "kda": 3.03,
-   "kp": 0.464,
-   "dpm": 280.7
+   "kda": 2.82,
+   "kp": 0.528,
+   "dpm": 316.2
   },
   {
    "discord_name": "갱킹머신",
@@ -105,9 +95,19 @@
    "wins": 0.0,
    "winrate": 0.0,
    "ci_lower": 0.0,
-   "kda": 2.46,
-   "kp": 0.421,
-   "dpm": 609.0
+   "kda": 2.94,
+   "kp": 0.439,
+   "dpm": 730.8
+  },
+  {
+   "discord_name": "페이커심",
+   "games": 3,
+   "wins": 0.0,
+   "winrate": 0.0,
+   "ci_lower": 0.0,
+   "kda": 3.85,
+   "kp": 0.636,
+   "dpm": 1037.4
   }
  ],
  "elo": [
@@ -168,113 +168,113 @@
     "discord_name": "페이커심",
     "lane": "MIDDLE",
     "games": 3,
-    "value": 1016.6
-   },
-   {
-    "discord_name": "원딜본능",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 979.1
+    "value": 1037.3
    },
    {
     "discord_name": "포지셔닝",
     "lane": "BOTTOM",
     "games": 3,
-    "value": 904.3
+    "value": 939.9
+   },
+   {
+    "discord_name": "원딜본능",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 915.3
    },
    {
     "discord_name": "준호",
     "lane": "MIDDLE",
     "games": 3,
-    "value": 875.6
-   },
-   {
-    "discord_name": "정글차이",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": 696.4
+    "value": 827.7
    },
    {
     "discord_name": "갱킹머신",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 608.9
+    "value": 730.8
    },
    {
-    "discord_name": "섬광장인",
-    "lane": "TOP",
+    "discord_name": "정글차이",
+    "lane": "JUNGLE",
     "games": 3,
-    "value": 599.1
+    "value": 693.6
    },
    {
     "discord_name": "탑신병자",
     "lane": "TOP",
     "games": 3,
-    "value": 570.4
+    "value": 649.7
+   },
+   {
+    "discord_name": "섬광장인",
+    "lane": "TOP",
+    "games": 3,
+    "value": 624.6
    },
    {
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 303.9
+    "value": 391.1
    },
    {
     "discord_name": "로밍왕",
     "lane": "UTILITY",
     "games": 3,
-    "value": 280.7
+    "value": 316.2
    }
   ],
   "dpm": [
    {
     "discord_name": "페이커심",
     "games": 3,
-    "value": 1016.67
-   },
-   {
-    "discord_name": "원딜본능",
-    "games": 3,
-    "value": 979.1
+    "value": 1037.37
    },
    {
     "discord_name": "포지셔닝",
     "games": 3,
-    "value": 904.33
+    "value": 939.93
+   },
+   {
+    "discord_name": "원딜본능",
+    "games": 3,
+    "value": 915.3
    },
    {
     "discord_name": "준호",
     "games": 3,
-    "value": 875.63
-   },
-   {
-    "discord_name": "정글차이",
-    "games": 3,
-    "value": 696.5
+    "value": 827.77
    },
    {
     "discord_name": "갱킹머신",
     "games": 3,
-    "value": 608.97
+    "value": 730.8
    },
    {
-    "discord_name": "섬광장인",
+    "discord_name": "정글차이",
     "games": 3,
-    "value": 599.13
+    "value": 693.57
    },
    {
     "discord_name": "탑신병자",
     "games": 3,
-    "value": 570.43
+    "value": 649.73
+   },
+   {
+    "discord_name": "섬광장인",
+    "games": 3,
+    "value": 624.63
    },
    {
     "discord_name": "서폿마스터",
     "games": 3,
-    "value": 303.9
+    "value": 391.13
    },
    {
     "discord_name": "로밍왕",
     "games": 3,
-    "value": 280.7
+    "value": 316.2
    }
   ],
   "gold15": [
@@ -282,61 +282,61 @@
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 8142.3
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 8019.0
-   },
-   {
-    "discord_name": "페이커심",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 7698.0
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 7562.0
+    "value": 8023.3
    },
    {
     "discord_name": "원딜본능",
     "lane": "BOTTOM",
     "games": 3,
-    "value": 7385.7
-   },
-   {
-    "discord_name": "갱킹머신",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": 7350.3
+    "value": 7892.0
    },
    {
     "discord_name": "정글차이",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 7300.0
+    "value": 7805.0
    },
    {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
+    "discord_name": "페이커심",
+    "lane": "MIDDLE",
     "games": 3,
-    "value": 7186.0
-   },
-   {
-    "discord_name": "로밍왕",
-    "lane": "UTILITY",
-    "games": 3,
-    "value": 6874.0
+    "value": 7508.7
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": 6721.7
+    "value": 7466.3
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": 7392.7
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 7184.7
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 7184.0
+   },
+   {
+    "discord_name": "갱킹머신",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": 7154.0
+   },
+   {
+    "discord_name": "로밍왕",
+    "lane": "UTILITY",
+    "games": 3,
+    "value": 6712.3
    }
   ],
   "cs15": [
@@ -344,61 +344,61 @@
     "discord_name": "정글차이",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 185.3
+    "value": 181.0
    },
    {
     "discord_name": "갱킹머신",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 169.3
-   },
-   {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
-    "games": 3,
-    "value": 128.3
-   },
-   {
-    "discord_name": "원딜본능",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 121.0
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 120.0
-   },
-   {
-    "discord_name": "페이커심",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 109.0
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 107.7
+    "value": 175.3
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": 106.3
+    "value": 120.3
+   },
+   {
+    "discord_name": "원딜본능",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 118.0
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 115.3
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": 115.3
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 115.3
+   },
+   {
+    "discord_name": "페이커심",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 113.0
    },
    {
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 18.0
+    "value": 20.7
    },
    {
     "discord_name": "로밍왕",
     "lane": "UTILITY",
     "games": 3,
-    "value": 8.7
+    "value": 13.0
    }
   ],
   "xp15": [
@@ -445,14 +445,14 @@
     "value": 4848.0
    },
    {
-    "discord_name": "로밍왕",
-    "lane": "UTILITY",
+    "discord_name": "섬광장인",
+    "lane": "TOP",
     "games": 3,
     "value": 4800.0
    },
    {
-    "discord_name": "섬광장인",
-    "lane": "TOP",
+    "discord_name": "로밍왕",
+    "lane": "UTILITY",
     "games": 3,
     "value": 4800.0
    },
@@ -468,123 +468,123 @@
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 1268.3
-   },
-   {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
-    "games": 3,
-    "value": 464.3
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 321.0
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 176.3
-   },
-   {
-    "discord_name": "갱킹머신",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": 50.3
-   },
-   {
-    "discord_name": "정글차이",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": -50.3
+    "value": 1311.0
    },
    {
     "discord_name": "원딜본능",
     "lane": "BOTTOM",
     "games": 3,
-    "value": -176.3
+    "value": 707.3
+   },
+   {
+    "discord_name": "정글차이",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": 651.0
    },
    {
     "discord_name": "페이커심",
     "lane": "MIDDLE",
     "games": 3,
-    "value": -321.0
+    "value": 324.7
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": -464.3
+    "value": 73.7
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": -73.7
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": -324.7
+   },
+   {
+    "discord_name": "갱킹머신",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": -651.0
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": -707.3
    },
    {
     "discord_name": "로밍왕",
     "lane": "UTILITY",
     "games": 3,
-    "value": -1268.3
+    "value": -1311.0
    }
   ],
   "cs_diff_15": [
    {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
+    "discord_name": "서폿마스터",
+    "lane": "UTILITY",
     "games": 3,
-    "value": 22.0
+    "value": 7.7
    },
    {
     "discord_name": "정글차이",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 16.0
-   },
-   {
-    "discord_name": "서폿마스터",
-    "lane": "UTILITY",
-    "games": 3,
-    "value": 9.3
-   },
-   {
-    "discord_name": "페이커심",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 1.3
-   },
-   {
-    "discord_name": "원딜본능",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 1.0
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": -1.0
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": -1.3
-   },
-   {
-    "discord_name": "로밍왕",
-    "lane": "UTILITY",
-    "games": 3,
-    "value": -9.3
-   },
-   {
-    "discord_name": "갱킹머신",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": -16.0
+    "value": 5.7
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": -22.0
+    "value": 5.0
+   },
+   {
+    "discord_name": "원딜본능",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 2.7
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 2.3
+   },
+   {
+    "discord_name": "페이커심",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": -2.3
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": -2.7
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": -5.0
+   },
+   {
+    "discord_name": "갱킹머신",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": -5.7
+   },
+   {
+    "discord_name": "로밍왕",
+    "lane": "UTILITY",
+    "games": 3,
+    "value": -7.7
    }
   ],
   "xp_diff_15": [
@@ -654,61 +654,61 @@
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 14577.0
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 14351.7
-   },
-   {
-    "discord_name": "페이커심",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 13762.0
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 13502.0
+    "value": 14352.7
    },
    {
     "discord_name": "원딜본능",
     "lane": "BOTTOM",
     "games": 3,
-    "value": 13180.3
-   },
-   {
-    "discord_name": "갱킹머신",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": 13113.0
+    "value": 14112.3
    },
    {
     "discord_name": "정글차이",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 13014.0
+    "value": 13952.7
    },
    {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
+    "discord_name": "페이커심",
+    "lane": "MIDDLE",
     "games": 3,
-    "value": 12811.3
-   },
-   {
-    "discord_name": "로밍왕",
-    "lane": "UTILITY",
-    "games": 3,
-    "value": 12242.7
+    "value": 13410.0
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": 11965.0
+    "value": 13326.3
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": 13189.7
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 12813.0
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 12807.0
+   },
+   {
+    "discord_name": "갱킹머신",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": 12754.0
+   },
+   {
+    "discord_name": "로밍왕",
+    "lane": "UTILITY",
+    "games": 3,
+    "value": 11931.3
    }
   ],
   "cs25": [
@@ -716,61 +716,61 @@
     "discord_name": "정글차이",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 309.3
+    "value": 303.0
    },
    {
     "discord_name": "갱킹머신",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 283.3
-   },
-   {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
-    "games": 3,
-    "value": 214.7
-   },
-   {
-    "discord_name": "원딜본능",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 202.0
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 200.3
-   },
-   {
-    "discord_name": "페이커심",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 182.0
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 180.0
+    "value": 293.7
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": 177.0
+    "value": 201.0
+   },
+   {
+    "discord_name": "원딜본능",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 197.3
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 192.7
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 192.3
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": 192.3
+   },
+   {
+    "discord_name": "페이커심",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 189.0
    },
    {
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 30.7
+    "value": 34.7
    },
    {
     "discord_name": "로밍왕",
     "lane": "UTILITY",
     "games": 3,
-    "value": 15.0
+    "value": 22.0
    }
   ],
   "gold_diff_25": [
@@ -778,465 +778,475 @@
     "discord_name": "서폿마스터",
     "lane": "UTILITY",
     "games": 3,
-    "value": 2334.3
-   },
-   {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
-    "games": 3,
-    "value": 846.3
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 589.7
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 321.7
-   },
-   {
-    "discord_name": "갱킹머신",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": 99.0
-   },
-   {
-    "discord_name": "정글차이",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": -99.0
+    "value": 2421.3
    },
    {
     "discord_name": "원딜본능",
     "lane": "BOTTOM",
     "games": 3,
-    "value": -321.7
+    "value": 1299.3
+   },
+   {
+    "discord_name": "정글차이",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": 1198.7
    },
    {
     "discord_name": "페이커심",
     "lane": "MIDDLE",
     "games": 3,
-    "value": -589.7
+    "value": 603.0
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": -846.3
+    "value": 136.7
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": -136.7
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": -603.0
+   },
+   {
+    "discord_name": "갱킹머신",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": -1198.7
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": -1299.3
    },
    {
     "discord_name": "로밍왕",
     "lane": "UTILITY",
     "games": 3,
-    "value": -2334.3
+    "value": -2421.3
    }
   ],
   "cs_diff_25": [
    {
-    "discord_name": "탑신병자",
-    "lane": "TOP",
+    "discord_name": "서폿마스터",
+    "lane": "UTILITY",
     "games": 3,
-    "value": 37.7
+    "value": 12.7
    },
    {
     "discord_name": "정글차이",
     "lane": "JUNGLE",
     "games": 3,
-    "value": 26.0
-   },
-   {
-    "discord_name": "서폿마스터",
-    "lane": "UTILITY",
-    "games": 3,
-    "value": 15.7
-   },
-   {
-    "discord_name": "페이커심",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 2.0
-   },
-   {
-    "discord_name": "원딜본능",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": 1.7
-   },
-   {
-    "discord_name": "포지셔닝",
-    "lane": "BOTTOM",
-    "games": 3,
-    "value": -1.7
-   },
-   {
-    "discord_name": "준호",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": -2.0
-   },
-   {
-    "discord_name": "로밍왕",
-    "lane": "UTILITY",
-    "games": 3,
-    "value": -15.7
-   },
-   {
-    "discord_name": "갱킹머신",
-    "lane": "JUNGLE",
-    "games": 3,
-    "value": -26.0
+    "value": 9.3
    },
    {
     "discord_name": "섬광장인",
     "lane": "TOP",
     "games": 3,
-    "value": -37.7
+    "value": 8.7
+   },
+   {
+    "discord_name": "원딜본능",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": 5.0
+   },
+   {
+    "discord_name": "준호",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": 3.7
+   },
+   {
+    "discord_name": "페이커심",
+    "lane": "MIDDLE",
+    "games": 3,
+    "value": -3.7
+   },
+   {
+    "discord_name": "포지셔닝",
+    "lane": "BOTTOM",
+    "games": 3,
+    "value": -5.0
+   },
+   {
+    "discord_name": "탑신병자",
+    "lane": "TOP",
+    "games": 3,
+    "value": -8.7
+   },
+   {
+    "discord_name": "갱킹머신",
+    "lane": "JUNGLE",
+    "games": 3,
+    "value": -9.3
+   },
+   {
+    "discord_name": "로밍왕",
+    "lane": "UTILITY",
+    "games": 3,
+    "value": -12.7
    }
   ],
   "dmg_share": [
    {
     "discord_name": "페이커심",
     "games": 3,
-    "value": 0.297
+    "value": 0.287
    },
    {
     "discord_name": "포지셔닝",
     "games": 3,
-    "value": 0.283
+    "value": 0.26
    },
    {
     "discord_name": "원딜본능",
     "games": 3,
-    "value": 0.265
+    "value": 0.254
    },
    {
     "discord_name": "준호",
     "games": 3,
-    "value": 0.252
+    "value": 0.231
+   },
+   {
+    "discord_name": "갱킹머신",
+    "games": 3,
+    "value": 0.202
    },
    {
     "discord_name": "정글차이",
-    "games": 3,
-    "value": 0.203
-   },
-   {
-    "discord_name": "섬광장인",
-    "games": 3,
-    "value": 0.188
-   },
-   {
-    "discord_name": "갱킹머신",
-    "games": 3,
-    "value": 0.178
-   },
-   {
-    "discord_name": "탑신병자",
-    "games": 3,
-    "value": 0.161
-   },
-   {
-    "discord_name": "서폿마스터",
-    "games": 3,
-    "value": 0.088
-   },
-   {
-    "discord_name": "로밍왕",
-    "games": 3,
-    "value": 0.084
-   }
-  ],
-  "gold_share": [
-   {
-    "discord_name": "서폿마스터",
-    "games": 3,
-    "value": 0.213
-   },
-   {
-    "discord_name": "페이커심",
-    "games": 3,
-    "value": 0.212
-   },
-   {
-    "discord_name": "준호",
-    "games": 3,
-    "value": 0.209
-   },
-   {
-    "discord_name": "갱킹머신",
-    "games": 3,
-    "value": 0.205
-   },
-   {
-    "discord_name": "포지셔닝",
-    "games": 3,
-    "value": 0.204
-   },
-   {
-    "discord_name": "원딜본능",
     "games": 3,
     "value": 0.2
    },
    {
     "discord_name": "탑신병자",
     "games": 3,
-    "value": 0.196
-   },
-   {
-    "discord_name": "정글차이",
-    "games": 3,
-    "value": 0.193
-   },
-   {
-    "discord_name": "로밍왕",
-    "games": 3,
     "value": 0.19
    },
    {
     "discord_name": "섬광장인",
     "games": 3,
-    "value": 0.178
+    "value": 0.173
+   },
+   {
+    "discord_name": "서폿마스터",
+    "games": 3,
+    "value": 0.113
+   },
+   {
+    "discord_name": "로밍왕",
+    "games": 3,
+    "value": 0.09
+   }
+  ],
+  "gold_share": [
+   {
+    "discord_name": "원딜본능",
+    "games": 3,
+    "value": 0.215
+   },
+   {
+    "discord_name": "서폿마스터",
+    "games": 3,
+    "value": 0.211
+   },
+   {
+    "discord_name": "페이커심",
+    "games": 3,
+    "value": 0.207
+   },
+   {
+    "discord_name": "정글차이",
+    "games": 3,
+    "value": 0.205
+   },
+   {
+    "discord_name": "탑신병자",
+    "games": 3,
+    "value": 0.202
+   },
+   {
+    "discord_name": "섬광장인",
+    "games": 3,
+    "value": 0.199
+   },
+   {
+    "discord_name": "갱킹머신",
+    "games": 3,
+    "value": 0.197
+   },
+   {
+    "discord_name": "포지셔닝",
+    "games": 3,
+    "value": 0.19
+   },
+   {
+    "discord_name": "준호",
+    "games": 3,
+    "value": 0.189
+   },
+   {
+    "discord_name": "로밍왕",
+    "games": 3,
+    "value": 0.186
    }
   ],
   "dmg_per_gold": [
    {
     "discord_name": "페이커심",
     "games": 3,
-    "value": 2.123
-   },
-   {
-    "discord_name": "원딜본능",
-    "games": 3,
-    "value": 2.035
+    "value": 2.159
    },
    {
     "discord_name": "포지셔닝",
     "games": 3,
-    "value": 1.87
+    "value": 2.041
+   },
+   {
+    "discord_name": "원딜본능",
+    "games": 3,
+    "value": 1.805
    },
    {
     "discord_name": "준호",
     "games": 3,
-    "value": 1.717
-   },
-   {
-    "discord_name": "정글차이",
-    "games": 3,
-    "value": 1.499
-   },
-   {
-    "discord_name": "섬광장인",
-    "games": 3,
-    "value": 1.445
+    "value": 1.776
    },
    {
     "discord_name": "갱킹머신",
     "games": 3,
-    "value": 1.307
+    "value": 1.595
+   },
+   {
+    "discord_name": "정글차이",
+    "games": 3,
+    "value": 1.389
    },
    {
     "discord_name": "탑신병자",
     "games": 3,
-    "value": 1.256
+    "value": 1.374
    },
    {
-    "discord_name": "로밍왕",
+    "discord_name": "섬광장인",
     "games": 3,
-    "value": 0.65
+    "value": 1.319
    },
    {
     "discord_name": "서폿마스터",
     "games": 3,
-    "value": 0.588
+    "value": 0.762
+   },
+   {
+    "discord_name": "로밍왕",
+    "games": 3,
+    "value": 0.74
    }
   ],
   "kda": [
    {
+    "discord_name": "정글차이",
+    "games": 3,
+    "value": 11.94
+   },
+   {
     "discord_name": "서폿마스터",
     "games": 3,
-    "value": 16.07
+    "value": 9.28
    },
    {
     "discord_name": "원딜본능",
     "games": 3,
-    "value": 14.33
-   },
-   {
-    "discord_name": "정글차이",
-    "games": 3,
-    "value": 8.13
-   },
-   {
-    "discord_name": "섬광장인",
-    "games": 3,
-    "value": 6.22
-   },
-   {
-    "discord_name": "포지셔닝",
-    "games": 3,
-    "value": 6.11
+    "value": 7.76
    },
    {
     "discord_name": "준호",
     "games": 3,
-    "value": 5.86
+    "value": 5.67
    },
    {
-    "discord_name": "탑신병자",
+    "discord_name": "포지셔닝",
     "games": 3,
-    "value": 4.72
+    "value": 4.47
    },
    {
     "discord_name": "페이커심",
     "games": 3,
-    "value": 3.17
+    "value": 3.85
    },
    {
-    "discord_name": "로밍왕",
+    "discord_name": "섬광장인",
     "games": 3,
-    "value": 3.03
+    "value": 3.07
+   },
+   {
+    "discord_name": "탑신병자",
+    "games": 3,
+    "value": 3.04
    },
    {
     "discord_name": "갱킹머신",
     "games": 3,
-    "value": 2.46
+    "value": 2.94
+   },
+   {
+    "discord_name": "로밍왕",
+    "games": 3,
+    "value": 2.82
    }
   ],
   "kp": [
    {
-    "discord_name": "원딜본능",
-    "games": 3,
-    "value": 0.561
-   },
-   {
-    "discord_name": "정글차이",
-    "games": 3,
-    "value": 0.497
-   },
-   {
-    "discord_name": "서폿마스터",
-    "games": 3,
-    "value": 0.488
-   },
-   {
     "discord_name": "페이커심",
     "games": 3,
-    "value": 0.471
+    "value": 0.636
    },
    {
     "discord_name": "로밍왕",
     "games": 3,
-    "value": 0.464
+    "value": 0.528
    },
    {
-    "discord_name": "준호",
+    "discord_name": "정글차이",
     "games": 3,
-    "value": 0.425
-   },
-   {
-    "discord_name": "갱킹머신",
-    "games": 3,
-    "value": 0.421
+    "value": 0.52
    },
    {
     "discord_name": "탑신병자",
     "games": 3,
-    "value": 0.414
+    "value": 0.463
    },
    {
-    "discord_name": "섬광장인",
+    "discord_name": "서폿마스터",
     "games": 3,
-    "value": 0.396
+    "value": 0.462
    },
    {
     "discord_name": "포지셔닝",
     "games": 3,
-    "value": 0.393
+    "value": 0.449
+   },
+   {
+    "discord_name": "원딜본능",
+    "games": 3,
+    "value": 0.447
+   },
+   {
+    "discord_name": "갱킹머신",
+    "games": 3,
+    "value": 0.439
+   },
+   {
+    "discord_name": "준호",
+    "games": 3,
+    "value": 0.436
+   },
+   {
+    "discord_name": "섬광장인",
+    "games": 3,
+    "value": 0.433
    }
   ],
   "vision": [
    {
     "discord_name": "로밍왕",
     "games": 3,
-    "value": 57.33
+    "value": 60.67
    },
    {
     "discord_name": "서폿마스터",
     "games": 3,
-    "value": 53.33
-   },
-   {
-    "discord_name": "페이커심",
-    "games": 3,
-    "value": 25.67
-   },
-   {
-    "discord_name": "포지셔닝",
-    "games": 3,
-    "value": 25.67
-   },
-   {
-    "discord_name": "원딜본능",
-    "games": 3,
-    "value": 25.33
+    "value": 58.67
    },
    {
     "discord_name": "정글차이",
     "games": 3,
-    "value": 24.33
+    "value": 29.67
+   },
+   {
+    "discord_name": "원딜본능",
+    "games": 3,
+    "value": 29.67
    },
    {
     "discord_name": "준호",
     "games": 3,
-    "value": 23.67
+    "value": 27.33
+   },
+   {
+    "discord_name": "페이커심",
+    "games": 3,
+    "value": 26.33
    },
    {
     "discord_name": "갱킹머신",
     "games": 3,
-    "value": 20.0
+    "value": 23.0
    },
    {
-    "discord_name": "섬광장인",
+    "discord_name": "포지셔닝",
     "games": 3,
-    "value": 19.33
+    "value": 23.0
    },
    {
     "discord_name": "탑신병자",
     "games": 3,
-    "value": 18.67
+    "value": 22.33
+   },
+   {
+    "discord_name": "섬광장인",
+    "games": 3,
+    "value": 21.33
    }
   ],
   "multikills": [
    {
-    "discord_name": "서폿마스터",
+    "discord_name": "정글차이",
+    "games": 3,
+    "value": 2.0
+   },
+   {
+    "discord_name": "페이커심",
+    "games": 3,
+    "value": 2.0
+   },
+   {
+    "discord_name": "포지셔닝",
     "games": 3,
     "value": 1.67
    },
    {
     "discord_name": "원딜본능",
     "games": 3,
-    "value": 1.67
+    "value": 1.33
    },
    {
     "discord_name": "섬광장인",
     "games": 3,
-    "value": 1.67
+    "value": 1.33
    },
    {
-    "discord_name": "정글차이",
+    "discord_name": "갱킹머신",
     "games": 3,
     "value": 1.33
    },
    {
-    "discord_name": "포지셔닝",
+    "discord_name": "로밍왕",
     "games": 3,
     "value": 1.0
    },
    {
-    "discord_name": "로밍왕",
+    "discord_name": "준호",
     "games": 3,
     "value": 0.67
    },
@@ -1246,17 +1256,7 @@
     "value": 0.67
    },
    {
-    "discord_name": "갱킹머신",
-    "games": 3,
-    "value": 0.67
-   },
-   {
-    "discord_name": "페이커심",
-    "games": 3,
-    "value": 0.67
-   },
-   {
-    "discord_name": "준호",
+    "discord_name": "서폿마스터",
     "games": 3,
     "value": 0.67
    }
@@ -1268,17 +1268,17 @@
     "value": 0.667
    },
    {
+    "discord_name": "원딜본능",
+    "games": 3,
+    "value": 0.667
+   },
+   {
+    "discord_name": "갱킹머신",
+    "games": 3,
+    "value": 0.667
+   },
+   {
     "discord_name": "페이커심",
-    "games": 3,
-    "value": 0.667
-   },
-   {
-    "discord_name": "정글차이",
-    "games": 3,
-    "value": 0.667
-   },
-   {
-    "discord_name": "섬광장인",
     "games": 3,
     "value": 0.333
    },
@@ -1288,27 +1288,27 @@
     "value": 0.333
    },
    {
-    "discord_name": "준호",
-    "games": 3,
-    "value": 0.333
-   },
-   {
-    "discord_name": "서폿마스터",
-    "games": 3,
-    "value": 0.333
-   },
-   {
-    "discord_name": "원딜본능",
-    "games": 3,
-    "value": 0.0
-   },
-   {
     "discord_name": "포지셔닝",
     "games": 3,
     "value": 0.0
    },
    {
-    "discord_name": "갱킹머신",
+    "discord_name": "서폿마스터",
+    "games": 3,
+    "value": 0.0
+   },
+   {
+    "discord_name": "정글차이",
+    "games": 3,
+    "value": 0.0
+   },
+   {
+    "discord_name": "준호",
+    "games": 3,
+    "value": 0.0
+   },
+   {
+    "discord_name": "섬광장인",
     "games": 3,
     "value": 0.0
    }
@@ -1674,270 +1674,281 @@
   "best_kda": {
    "name": "원딜본능",
    "champ": "Kaisa",
-   "value": 34.0
+   "value": 19.0
   },
   "most_dmg": {
-   "name": "페이커심",
-   "champ": "Syndra",
-   "value": 35022
+   "name": "원딜본능",
+   "champ": "Caitlyn",
+   "value": 34664
   },
   "longest_streak": {
    "name": "준호",
    "value": 3
   },
-  "pentas": [],
+  "pentas": [
+   {
+    "name": "정글차이",
+    "champ": "LeeSin"
+   }
+  ],
   "most_cs15": {
    "name": "정글차이",
    "champ": "Viego",
-   "value": 226
+   "value": 212
   }
  },
  "champion_matchups": [],
  "champion_meta": [
   {
-   "champion_name": "Camille",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 6.34,
-   "dpm": 512.1
-  },
-  {
-   "champion_name": "Orianna",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 3.75,
-   "dpm": 888.5
-  },
-  {
-   "champion_name": "Caitlyn",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 5.84,
-   "dpm": 948.6
-  },
-  {
    "champion_name": "LeeSin",
    "games": 2,
    "winrate": 0.5,
-   "kda": 6.55,
-   "dpm": 558.3
-  },
-  {
-   "champion_name": "Karma",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 8.5,
-   "dpm": 287.9
-  },
-  {
-   "champion_name": "Zed",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 5.08,
-   "dpm": 762.1
+   "kda": 7.0,
+   "dpm": 692.5
   },
   {
    "champion_name": "Thresh",
    "games": 2,
    "winrate": 0.5,
-   "kda": 4.2,
-   "dpm": 281.6
+   "kda": 5.4,
+   "dpm": 376.5
   },
   {
    "champion_name": "Viego",
    "games": 2,
    "winrate": 0.5,
-   "kda": 5.48,
-   "dpm": 670.1
+   "kda": 6.67,
+   "dpm": 673.2
   },
   {
-   "champion_name": "Ezreal",
+   "champion_name": "Camille",
    "games": 2,
-   "winrate": 0.0,
-   "kda": 4.0,
-   "dpm": 780.1
+   "winrate": 0.5,
+   "kda": 2.92,
+   "dpm": 608.7
+  },
+  {
+   "champion_name": "Zed",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 4.31,
+   "dpm": 881.9
+  },
+  {
+   "champion_name": "Karma",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 7.65,
+   "dpm": 328.2
+  },
+  {
+   "champion_name": "Caitlyn",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 5.36,
+   "dpm": 1107.3
+  },
+  {
+   "champion_name": "Orianna",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 5.75,
+   "dpm": 993.6
   },
   {
    "champion_name": "Darius",
    "games": 2,
    "winrate": 0.0,
-   "kda": 5.59,
-   "dpm": 643.0
+   "kda": 2.01,
+   "dpm": 587.3
+  },
+  {
+   "champion_name": "Ezreal",
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 1.84,
+   "dpm": 714.0
   }
  ],
  "champion_meta_lane": [
   {
-   "champion_name": "Thresh",
-   "lane": "UTILITY",
+   "champion_name": "Camille",
+   "lane": "TOP",
    "games": 2,
    "winrate": 0.5,
-   "kda": 4.2,
-   "dpm": 281.6
-  },
-  {
-   "champion_name": "Orianna",
-   "lane": "MIDDLE",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 3.75,
-   "dpm": 888.5
-  },
-  {
-   "champion_name": "Karma",
-   "lane": "UTILITY",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 8.5,
-   "dpm": 287.9
-  },
-  {
-   "champion_name": "Caitlyn",
-   "lane": "BOTTOM",
-   "games": 2,
-   "winrate": 0.5,
-   "kda": 5.84,
-   "dpm": 948.6
+   "kda": 2.92,
+   "dpm": 608.7
   },
   {
    "champion_name": "Zed",
    "lane": "MIDDLE",
    "games": 2,
    "winrate": 0.5,
-   "kda": 5.08,
-   "dpm": 762.1
+   "kda": 4.31,
+   "dpm": 881.9
+  },
+  {
+   "champion_name": "Thresh",
+   "lane": "UTILITY",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 5.4,
+   "dpm": 376.5
   },
   {
    "champion_name": "Viego",
    "lane": "JUNGLE",
    "games": 2,
    "winrate": 0.5,
-   "kda": 5.48,
-   "dpm": 670.1
+   "kda": 6.67,
+   "dpm": 673.2
   },
   {
-   "champion_name": "Camille",
-   "lane": "TOP",
+   "champion_name": "Caitlyn",
+   "lane": "BOTTOM",
    "games": 2,
    "winrate": 0.5,
-   "kda": 6.34,
-   "dpm": 512.1
+   "kda": 5.36,
+   "dpm": 1107.3
+  },
+  {
+   "champion_name": "Orianna",
+   "lane": "MIDDLE",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 5.75,
+   "dpm": 993.6
+  },
+  {
+   "champion_name": "Karma",
+   "lane": "UTILITY",
+   "games": 2,
+   "winrate": 0.5,
+   "kda": 7.65,
+   "dpm": 328.2
   },
   {
    "champion_name": "LeeSin",
    "lane": "JUNGLE",
    "games": 2,
    "winrate": 0.5,
-   "kda": 6.55,
-   "dpm": 558.3
-  },
-  {
-   "champion_name": "Ezreal",
-   "lane": "BOTTOM",
-   "games": 2,
-   "winrate": 0.0,
-   "kda": 4.0,
-   "dpm": 780.1
+   "kda": 7.0,
+   "dpm": 692.5
   },
   {
    "champion_name": "Darius",
    "lane": "TOP",
    "games": 2,
    "winrate": 0.0,
-   "kda": 5.59,
-   "dpm": 643.0
+   "kda": 2.01,
+   "dpm": 587.3
   },
   {
-   "champion_name": "Garen",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 3.0,
-   "dpm": 599.7
-  },
-  {
-   "champion_name": "Aphelios",
+   "champion_name": "Ezreal",
    "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 7.67,
-   "dpm": 978.5
-  },
-  {
-   "champion_name": "Sett",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 6.0,
-   "dpm": 598.8
-  },
-  {
-   "champion_name": "Khazix",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 5.4,
-   "dpm": 643.2
+   "games": 2,
+   "winrate": 0.0,
+   "kda": 1.84,
+   "dpm": 714.0
   },
   {
    "champion_name": "Leona",
    "lane": "UTILITY",
    "games": 1,
    "winrate": 1.0,
-   "kda": 30.0,
-   "dpm": 332.5
+   "kda": 8.33,
+   "dpm": 383.9
   },
   {
-   "champion_name": "Kaisa",
-   "lane": "BOTTOM",
+   "champion_name": "Garen",
+   "lane": "TOP",
    "games": 1,
    "winrate": 1.0,
-   "kda": 34.0,
-   "dpm": 1214.4
+   "kda": 3.5,
+   "dpm": 693.4
   },
   {
    "champion_name": "Ahri",
    "lane": "MIDDLE",
    "games": 1,
    "winrate": 1.0,
-   "kda": 7.67,
-   "dpm": 1028.7
+   "kda": 3.83,
+   "dpm": 641.2
   },
   {
-   "champion_name": "Lulu",
-   "lane": "UTILITY",
+   "champion_name": "Sett",
+   "lane": "TOP",
    "games": 1,
-   "winrate": 0.0,
-   "kda": 1.89,
-   "dpm": 282.4
+   "winrate": 1.0,
+   "kda": 5.0,
+   "dpm": 737.7
+  },
+  {
+   "champion_name": "Khazix",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 14.5,
+   "dpm": 653.6
+  },
+  {
+   "champion_name": "Aphelios",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.29,
+   "dpm": 1144.7
+  },
+  {
+   "champion_name": "Kaisa",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 19.0,
+   "dpm": 778.4
   },
   {
    "champion_name": "Syndra",
    "lane": "MIDDLE",
    "games": 1,
    "winrate": 0.0,
-   "kda": 1.78,
-   "dpm": 1347.0
+   "kda": 4.6,
+   "dpm": 1203.3
+  },
+  {
+   "champion_name": "Lulu",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.86,
+   "dpm": 328.8
   },
   {
    "champion_name": "Graves",
    "lane": "JUNGLE",
    "games": 1,
    "winrate": 0.0,
-   "kda": 2.33,
-   "dpm": 816.5
+   "kda": 2.83,
+   "dpm": 888.1
   }
  ],
  "ban_meta": [
   {
-   "champion_id": 157,
-   "champion_name": "Yasuo",
-   "champion_kr": "야스오",
-   "bans": 4
+   "champion_id": 412,
+   "champion_name": "Thresh",
+   "champion_kr": "쓰레쉬",
+   "bans": 5
   },
   {
-   "champion_id": 1,
-   "champion_name": "Annie",
-   "champion_kr": "애니",
+   "champion_id": 81,
+   "champion_name": "Ezreal",
+   "champion_kr": "이즈리얼",
+   "bans": 5
+  },
+  {
+   "champion_id": 14,
+   "champion_name": "Sion",
+   "champion_kr": "사이온",
    "bans": 4
   },
   {
@@ -1947,40 +1958,40 @@
    "bans": 4
   },
   {
-   "champion_id": 555,
-   "champion_name": "Pyke",
-   "champion_kr": "파이크",
-   "bans": 4
-  },
-  {
-   "champion_id": 238,
-   "champion_name": "Zed",
-   "champion_kr": "제드",
-   "bans": 4
-  },
-  {
-   "champion_id": 81,
-   "champion_name": "Ezreal",
-   "champion_kr": "이즈리얼",
-   "bans": 3
-  },
-  {
-   "champion_id": 14,
-   "champion_name": "Sion",
-   "champion_kr": "사이온",
+   "champion_id": 64,
+   "champion_name": "LeeSin",
+   "champion_kr": "리 신",
    "bans": 3
   },
   {
    "champion_id": 25,
    "champion_name": "Morgana",
    "champion_kr": "모르가나",
+   "bans": 3
+  },
+  {
+   "champion_id": 1,
+   "champion_name": "Annie",
+   "champion_kr": "애니",
    "bans": 2
   },
   {
-   "champion_id": 412,
-   "champion_name": "Thresh",
-   "champion_kr": "쓰레쉬",
+   "champion_id": 238,
+   "champion_name": "Zed",
+   "champion_kr": "제드",
    "bans": 2
+  },
+  {
+   "champion_id": 555,
+   "champion_name": "Pyke",
+   "champion_kr": "파이크",
+   "bans": 1
+  },
+  {
+   "champion_id": 157,
+   "champion_name": "Yasuo",
+   "champion_kr": "야스오",
+   "bans": 1
   }
  ],
  "recent_matches": [
@@ -1992,20 +2003,20 @@
      "win": true,
      "players": [
       {
-       "name": "섬광장인",
-       "champ": "Garen"
+       "name": "준호",
+       "champ": "Orianna"
       },
       {
-       "name": "서폿마스터",
-       "champ": "Thresh"
+       "name": "섬광장인",
+       "champ": "Garen"
       },
       {
        "name": "정글차이",
        "champ": "Viego"
       },
       {
-       "name": "준호",
-       "champ": "Orianna"
+       "name": "서폿마스터",
+       "champ": "Thresh"
       },
       {
        "name": "포지셔닝",
@@ -2029,12 +2040,12 @@
        "champ": "Camille"
       },
       {
-       "name": "원딜본능",
-       "champ": "Caitlyn"
-      },
-      {
        "name": "페이커심",
        "champ": "Syndra"
+      },
+      {
+       "name": "원딜본능",
+       "champ": "Caitlyn"
       }
      ]
     }
@@ -2046,10 +2057,10 @@
      {
       "team_id": 100,
       "win": true,
-      "kills": 50,
-      "deaths": 24,
-      "assists": 70,
-      "gold": 68162,
+      "kills": 54,
+      "deaths": 22,
+      "assists": 65,
+      "gold": 68075,
       "objectives": {
        "towers": 11,
        "dragons": 3,
@@ -2058,27 +2069,27 @@
        "grubs": 3
       },
       "bans": [
+       "LeeSin",
        "Thresh",
-       "Yasuo",
-       "Pyke",
        "Ezreal",
-       "Zed"
+       "Lux",
+       "Sion"
       ],
       "players": [
        {
         "name": "섬광장인",
         "champ": "Garen",
         "lane": "TOP",
-        "k": 8,
-        "d": 7,
-        "a": 13,
-        "kda": 3.0,
-        "cs": 215,
-        "gold": 13096,
-        "dmg": 15591,
-        "dmg_taken": 26824,
-        "dmg_turret": 3741,
-        "vision": 16,
+        "k": 11,
+        "d": 6,
+        "a": 10,
+        "kda": 3.5,
+        "cs": 248,
+        "gold": 12049,
+        "dmg": 18029,
+        "dmg_taken": 29236,
+        "dmg_turret": 1612,
+        "vision": 19,
         "items": [
          3068,
          3047,
@@ -2093,16 +2104,16 @@
         "name": "정글차이",
         "champ": "Viego",
         "lane": "JUNGLE",
-        "k": 10,
+        "k": 12,
         "d": 3,
-        "a": 15,
-        "kda": 8.33,
-        "cs": 246,
-        "gold": 11163,
-        "dmg": 18921,
-        "dmg_taken": 31856,
-        "dmg_turret": 2838,
-        "vision": 22,
+        "a": 16,
+        "kda": 9.33,
+        "cs": 231,
+        "gold": 14090,
+        "dmg": 19802,
+        "dmg_taken": 31950,
+        "dmg_turret": 432,
+        "vision": 35,
         "items": [
          6692,
          3047,
@@ -2118,15 +2129,15 @@
         "champ": "Orianna",
         "lane": "MIDDLE",
         "k": 11,
-        "d": 6,
-        "a": 14,
-        "kda": 4.17,
-        "cs": 194,
-        "gold": 15372,
-        "dmg": 22300,
-        "dmg_taken": 17121,
-        "dmg_turret": 3716,
-        "vision": 34,
+        "d": 3,
+        "a": 12,
+        "kda": 7.67,
+        "cs": 199,
+        "gold": 13210,
+        "dmg": 30918,
+        "dmg_taken": 16225,
+        "dmg_turret": 3145,
+        "vision": 35,
         "items": [
          6655,
          3020,
@@ -2141,16 +2152,16 @@
         "name": "포지셔닝",
         "champ": "Aphelios",
         "lane": "BOTTOM",
-        "k": 11,
-        "d": 3,
-        "a": 12,
-        "kda": 7.67,
-        "cs": 223,
-        "gold": 13345,
-        "dmg": 25441,
-        "dmg_taken": 24195,
-        "dmg_turret": 2931,
-        "vision": 33,
+        "k": 10,
+        "d": 7,
+        "a": 13,
+        "kda": 3.29,
+        "cs": 202,
+        "gold": 14164,
+        "dmg": 29762,
+        "dmg_taken": 27340,
+        "dmg_turret": 4172,
+        "vision": 21,
         "items": [
          3031,
          3006,
@@ -2166,15 +2177,15 @@
         "champ": "Thresh",
         "lane": "UTILITY",
         "k": 10,
-        "d": 5,
-        "a": 16,
-        "kda": 5.2,
-        "cs": 26,
-        "gold": 15186,
-        "dmg": 7558,
-        "dmg_taken": 21058,
-        "dmg_turret": 2311,
-        "vision": 52,
+        "d": 3,
+        "a": 14,
+        "kda": 8.0,
+        "cs": 21,
+        "gold": 14562,
+        "dmg": 10526,
+        "dmg_taken": 20169,
+        "dmg_turret": 666,
+        "vision": 55,
         "items": [
          3877,
          3158,
@@ -2190,39 +2201,39 @@
      {
       "team_id": 200,
       "win": false,
-      "kills": 39,
-      "deaths": 34,
-      "assists": 44,
-      "gold": 65376,
+      "kills": 35,
+      "deaths": 36,
+      "assists": 57,
+      "gold": 63433,
       "objectives": {
        "towers": 5,
        "dragons": 1,
        "barons": 0,
        "heralds": 1,
-       "grubs": 2
+       "grubs": 0
       },
       "bans": [
-       "Pyke",
-       "Zed",
-       "Lux",
+       "Morgana",
        "Ezreal",
-       "Annie"
+       "Yasuo",
+       "Lux",
+       "Thresh"
       ],
       "players": [
        {
         "name": "탑신병자",
         "champ": "Camille",
         "lane": "TOP",
-        "k": 9,
-        "d": 3,
-        "a": 6,
-        "kda": 5.0,
-        "cs": 233,
-        "gold": 12831,
-        "dmg": 11736,
-        "dmg_taken": 29790,
-        "dmg_turret": 3707,
-        "vision": 16,
+        "k": 8,
+        "d": 10,
+        "a": 12,
+        "kda": 2.0,
+        "cs": 210,
+        "gold": 12838,
+        "dmg": 17374,
+        "dmg_taken": 30472,
+        "dmg_turret": 3138,
+        "vision": 21,
         "items": [
          3068,
          3047,
@@ -2237,16 +2248,16 @@
         "name": "갱킹머신",
         "champ": "Graves",
         "lane": "JUNGLE",
-        "k": 5,
+        "k": 6,
         "d": 6,
-        "a": 9,
-        "kda": 2.33,
-        "cs": 201,
-        "gold": 12480,
-        "dmg": 21228,
-        "dmg_taken": 23217,
-        "dmg_turret": 2493,
-        "vision": 25,
+        "a": 11,
+        "kda": 2.83,
+        "cs": 208,
+        "gold": 12280,
+        "dmg": 23091,
+        "dmg_taken": 28446,
+        "dmg_turret": 2607,
+        "vision": 32,
         "items": [
          6692,
          3047,
@@ -2261,16 +2272,16 @@
         "name": "페이커심",
         "champ": "Syndra",
         "lane": "MIDDLE",
-        "k": 8,
-        "d": 9,
-        "a": 8,
-        "kda": 1.78,
-        "cs": 212,
-        "gold": 14270,
-        "dmg": 35022,
-        "dmg_taken": 20648,
-        "dmg_turret": 2524,
-        "vision": 29,
+        "k": 9,
+        "d": 5,
+        "a": 14,
+        "kda": 4.6,
+        "cs": 216,
+        "gold": 14594,
+        "dmg": 31285,
+        "dmg_taken": 17987,
+        "dmg_turret": 3767,
+        "vision": 23,
         "items": [
          6655,
          3020,
@@ -2285,16 +2296,16 @@
         "name": "원딜본능",
         "champ": "Caitlyn",
         "lane": "BOTTOM",
-        "k": 10,
-        "d": 7,
+        "k": 8,
+        "d": 8,
         "a": 11,
-        "kda": 3.0,
-        "cs": 219,
-        "gold": 12333,
-        "dmg": 28873,
-        "dmg_taken": 17616,
-        "dmg_turret": 4050,
-        "vision": 31,
+        "kda": 2.38,
+        "cs": 208,
+        "gold": 13468,
+        "dmg": 34664,
+        "dmg_taken": 17620,
+        "dmg_turret": 3833,
+        "vision": 25,
         "items": [
          3031,
          3006,
@@ -2309,927 +2320,15 @@
         "name": "로밍왕",
         "champ": "Lulu",
         "lane": "UTILITY",
-        "k": 7,
-        "d": 9,
-        "a": 10,
-        "kda": 1.89,
-        "cs": 8,
-        "gold": 13462,
-        "dmg": 7342,
-        "dmg_taken": 19999,
-        "dmg_turret": 4824,
-        "vision": 64,
-        "items": [
-         3877,
-         3158,
-         3190,
-         2065,
-         3107,
-         3222,
-         3340
-        ]
-       }
-      ]
-     }
-    ],
-    "timeline": {
-     "minutes": [
-      0,
-      5,
-      10,
-      15,
-      20,
-      25
-     ],
-     "gold_diff": [
-      0,
-      487,
-      1035,
-      1644,
-      2316,
-      3050
-     ],
-     "cs_diff": [
-      0,
-      12,
-      21,
-      33,
-      45,
-      56
-     ],
-     "xp_diff": [
-      0,
-      -17,
-      -34,
-      -49,
-      -66,
-      -80
-     ],
-     "a_gold": [
-      2500,
-      13960,
-      26878,
-      41254,
-      57086,
-      74377
-     ],
-     "b_gold": [
-      2500,
-      13473,
-      25843,
-      39610,
-      54770,
-      71327
-     ]
-    }
-   },
-   "timeline": {
-    "minutes": [
-     0,
-     5,
-     10,
-     15,
-     20,
-     25
-    ],
-    "gold_diff": [
-     0,
-     487,
-     1035,
-     1644,
-     2316,
-     3050
-    ],
-    "cs_diff": [
-     0,
-     12,
-     21,
-     33,
-     45,
-     56
-    ],
-    "xp_diff": [
-     0,
-     -17,
-     -34,
-     -49,
-     -66,
-     -80
-    ],
-    "a_gold": [
-     2500,
-     13960,
-     26878,
-     41254,
-     57086,
-     74377
-    ],
-    "b_gold": [
-     2500,
-     13473,
-     25843,
-     39610,
-     54770,
-     71327
-    ]
-   }
-  },
-  {
-   "match_id": "DUMMY_2",
-   "ts": 1700172800000,
-   "teams": [
-    {
-     "win": false,
-     "players": [
-      {
-       "name": "로밍왕",
-       "champ": "Thresh"
-      },
-      {
-       "name": "페이커심",
-       "champ": "Orianna"
-      },
-      {
-       "name": "갱킹머신",
-       "champ": "Viego"
-      },
-      {
-       "name": "원딜본능",
-       "champ": "Ezreal"
-      },
-      {
-       "name": "탑신병자",
-       "champ": "Darius"
-      }
-     ]
-    },
-    {
-     "win": true,
-     "players": [
-      {
-       "name": "정글차이",
-       "champ": "LeeSin"
-      },
-      {
-       "name": "서폿마스터",
-       "champ": "Karma"
-      },
-      {
-       "name": "포지셔닝",
-       "champ": "Caitlyn"
-      },
-      {
-       "name": "섬광장인",
-       "champ": "Camille"
-      },
-      {
-       "name": "준호",
-       "champ": "Zed"
-      }
-     ]
-    }
-   ],
-   "detail": {
-    "match_id": "DUMMY_2",
-    "duration": 1880,
-    "teams": [
-     {
-      "team_id": 100,
-      "win": false,
-      "kills": 43,
-      "deaths": 29,
-      "assists": 57,
-      "gold": 62392,
-      "objectives": {
-       "towers": 2,
-       "dragons": 1,
-       "barons": 1,
-       "heralds": 0,
-       "grubs": 3
-      },
-      "bans": [
-       "Ezreal",
-       "Yasuo",
-       "Thresh",
-       "Pyke",
-       "Lux"
-      ],
-      "players": [
-       {
-        "name": "탑신병자",
-        "champ": "Darius",
-        "lane": "TOP",
-        "k": 11,
-        "d": 6,
-        "a": 8,
-        "kda": 3.17,
-        "cs": 231,
-        "gold": 13464,
-        "dmg": 20716,
-        "dmg_taken": 33757,
-        "dmg_turret": 3077,
-        "vision": 32,
-        "items": [
-         3068,
-         3047,
-         3075,
-         3065,
-         3143,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "갱킹머신",
-        "champ": "Viego",
-        "lane": "JUNGLE",
-        "k": 6,
-        "d": 8,
-        "a": 15,
-        "kda": 2.62,
-        "cs": 180,
-        "gold": 13460,
-        "dmg": 19192,
-        "dmg_taken": 32032,
-        "dmg_turret": 2731,
-        "vision": 20,
-        "items": [
-         6692,
-         3047,
-         3071,
-         3742,
-         3193,
-         6333,
-         3340
-        ]
-       },
-       {
-        "name": "페이커심",
-        "champ": "Orianna",
-        "lane": "MIDDLE",
-        "k": 8,
-        "d": 6,
-        "a": 12,
-        "kda": 3.33,
-        "cs": 226,
-        "gold": 11380,
-        "dmg": 28806,
-        "dmg_taken": 20117,
-        "dmg_turret": 2650,
-        "vision": 16,
-        "items": [
-         6655,
-         3020,
-         3157,
-         3089,
-         3135,
-         4645,
-         3340
-        ]
-       },
-       {
-        "name": "원딜본능",
-        "champ": "Ezreal",
-        "lane": "BOTTOM",
-        "k": 10,
-        "d": 4,
-        "a": 14,
-        "kda": 6.0,
-        "cs": 250,
-        "gold": 12232,
-        "dmg": 19190,
-        "dmg_taken": 16686,
-        "dmg_turret": 4972,
-        "vision": 28,
-        "items": [
-         3031,
-         3006,
-         3094,
-         3036,
-         3072,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "로밍왕",
-        "champ": "Thresh",
-        "lane": "UTILITY",
-        "k": 8,
-        "d": 5,
-        "a": 8,
-        "kda": 3.2,
-        "cs": 14,
-        "gold": 11856,
-        "dmg": 8539,
-        "dmg_taken": 17241,
-        "dmg_turret": 1890,
-        "vision": 53,
-        "items": [
-         3877,
-         3158,
-         3190,
-         2065,
-         3107,
-         3222,
-         3340
-        ]
-       }
-      ]
-     },
-     {
-      "team_id": 200,
-      "win": true,
-      "kills": 61,
-      "deaths": 15,
-      "assists": 69,
-      "gold": 67289,
-      "objectives": {
-       "towers": 11,
-       "dragons": 3,
-       "barons": 1,
-       "heralds": 1,
-       "grubs": 3
-      },
-      "bans": [
-       "Annie",
-       "Zed",
-       "Morgana",
-       "Sion",
-       "Pyke"
-      ],
-      "players": [
-       {
-        "name": "섬광장인",
-        "champ": "Camille",
-        "lane": "TOP",
-        "k": 9,
-        "d": 3,
-        "a": 14,
-        "kda": 7.67,
-        "cs": 185,
-        "gold": 10052,
-        "dmg": 17948,
-        "dmg_taken": 23235,
-        "dmg_turret": 2881,
-        "vision": 21,
-        "items": [
-         3068,
-         3047,
-         3075,
-         3065,
-         3143,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "정글차이",
-        "champ": "LeeSin",
-        "lane": "JUNGLE",
-        "k": 18,
-        "d": 3,
-        "a": 14,
-        "kda": 10.67,
-        "cs": 223,
-        "gold": 14879,
-        "dmg": 22516,
-        "dmg_taken": 37204,
-        "dmg_turret": 1262,
-        "vision": 30,
-        "items": [
-         6692,
-         3047,
-         3071,
-         3742,
-         3193,
-         6333,
-         3340
-        ]
-       },
-       {
-        "name": "준호",
-        "champ": "Zed",
-        "lane": "MIDDLE",
-        "k": 12,
-        "d": 4,
-        "a": 11,
-        "kda": 5.75,
-        "cs": 201,
-        "gold": 13182,
-        "dmg": 23202,
-        "dmg_taken": 23773,
-        "dmg_turret": 616,
-        "vision": 16,
-        "items": [
-         6655,
-         3020,
-         3157,
-         3089,
-         3135,
-         4645,
-         3340
-        ]
-       },
-       {
-        "name": "포지셔닝",
-        "champ": "Caitlyn",
-        "lane": "BOTTOM",
-        "k": 10,
-        "d": 3,
-        "a": 16,
-        "kda": 8.67,
-        "cs": 230,
-        "gold": 15241,
-        "dmg": 24649,
-        "dmg_taken": 14796,
-        "dmg_turret": 4079,
-        "vision": 21,
-        "items": [
-         3031,
-         3006,
-         3094,
-         3036,
-         3072,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "서폿마스터",
-        "champ": "Karma",
-        "lane": "UTILITY",
-        "k": 12,
-        "d": 2,
-        "a": 14,
-        "kda": 13.0,
-        "cs": 36,
-        "gold": 13935,
-        "dmg": 9039,
-        "dmg_taken": 14736,
-        "dmg_turret": 3453,
-        "vision": 54,
-        "items": [
-         3877,
-         3158,
-         3190,
-         2065,
-         3107,
-         3222,
-         3340
-        ]
-       }
-      ]
-     }
-    ],
-    "timeline": {
-     "minutes": [
-      0,
-      5,
-      10,
-      15,
-      20,
-      25,
-      30
-     ],
-     "gold_diff": [
-      0,
-      -703,
-      -1480,
-      -2329,
-      -3254,
-      -4256,
-      -5332
-     ],
-     "cs_diff": [
-      0,
-      0,
-      -1,
-      -1,
-      -1,
-      2,
-      0
-     ],
-     "xp_diff": [
-      0,
-      17,
-      34,
-      49,
-      66,
-      80,
-      97
-     ],
-     "a_gold": [
-      2500,
-      11078,
-      20574,
-      30986,
-      42313,
-      54554,
-      67710
-     ],
-     "b_gold": [
-      2500,
-      11781,
-      22054,
-      33315,
-      45567,
-      58810,
-      73042
-     ]
-    }
-   },
-   "timeline": {
-    "minutes": [
-     0,
-     5,
-     10,
-     15,
-     20,
-     25,
-     30
-    ],
-    "gold_diff": [
-     0,
-     -703,
-     -1480,
-     -2329,
-     -3254,
-     -4256,
-     -5332
-    ],
-    "cs_diff": [
-     0,
-     0,
-     -1,
-     -1,
-     -1,
-     2,
-     0
-    ],
-    "xp_diff": [
-     0,
-     17,
-     34,
-     49,
-     66,
-     80,
-     97
-    ],
-    "a_gold": [
-     2500,
-     11078,
-     20574,
-     30986,
-     42313,
-     54554,
-     67710
-    ],
-    "b_gold": [
-     2500,
-     11781,
-     22054,
-     33315,
-     45567,
-     58810,
-     73042
-    ]
-   }
-  },
-  {
-   "match_id": "DUMMY_1",
-   "ts": 1700000000000,
-   "teams": [
-    {
-     "win": true,
-     "players": [
-      {
-       "name": "서폿마스터",
-       "champ": "Leona"
-      },
-      {
-       "name": "정글차이",
-       "champ": "Khazix"
-      },
-      {
-       "name": "준호",
-       "champ": "Ahri"
-      },
-      {
-       "name": "원딜본능",
-       "champ": "Kaisa"
-      },
-      {
-       "name": "탑신병자",
-       "champ": "Sett"
-      }
-     ]
-    },
-    {
-     "win": false,
-     "players": [
-      {
-       "name": "페이커심",
-       "champ": "Zed"
-      },
-      {
-       "name": "포지셔닝",
-       "champ": "Ezreal"
-      },
-      {
-       "name": "로밍왕",
-       "champ": "Karma"
-      },
-      {
-       "name": "섬광장인",
-       "champ": "Darius"
-      },
-      {
-       "name": "갱킹머신",
-       "champ": "LeeSin"
-      }
-     ]
-    }
-   ],
-   "detail": {
-    "match_id": "DUMMY_1",
-    "duration": 1720,
-    "teams": [
-     {
-      "team_id": 100,
-      "win": true,
-      "kills": 58,
-      "deaths": 14,
-      "assists": 80,
-      "gold": 73847,
-      "objectives": {
-       "towers": 8,
-       "dragons": 3,
-       "barons": 1,
-       "heralds": 1,
-       "grubs": 3
-      },
-      "bans": [
-       "Yasuo",
-       "Annie",
-       "Morgana",
-       "Sion",
-       "Lux"
-      ],
-      "players": [
-       {
-        "name": "탑신병자",
-        "champ": "Sett",
-        "lane": "TOP",
-        "k": 11,
-        "d": 4,
-        "a": 13,
-        "kda": 6.0,
-        "cs": 271,
-        "gold": 13053,
-        "dmg": 17167,
-        "dmg_taken": 33827,
-        "dmg_turret": 3344,
-        "vision": 8,
-        "items": [
-         3068,
-         3047,
-         3075,
-         3065,
-         3143,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "정글차이",
-        "champ": "Khazix",
-        "lane": "JUNGLE",
-        "k": 11,
-        "d": 5,
-        "a": 16,
-        "kda": 5.4,
-        "cs": 193,
-        "gold": 14295,
-        "dmg": 18437,
-        "dmg_taken": 28899,
-        "dmg_turret": 2226,
-        "vision": 21,
-        "items": [
-         6692,
-         3047,
-         3071,
-         3742,
-         3193,
-         6333,
-         3340
-        ]
-       },
-       {
-        "name": "준호",
-        "champ": "Ahri",
-        "lane": "MIDDLE",
-        "k": 11,
-        "d": 3,
-        "a": 12,
-        "kda": 7.67,
-        "cs": 223,
-        "gold": 15203,
-        "dmg": 29489,
-        "dmg_taken": 17192,
-        "dmg_turret": 1285,
-        "vision": 21,
-        "items": [
-         6655,
-         3020,
-         3157,
-         3089,
-         3135,
-         4645,
-         3340
-        ]
-       },
-       {
-        "name": "원딜본능",
-        "champ": "Kaisa",
-        "lane": "BOTTOM",
-        "k": 10,
-        "d": 1,
-        "a": 24,
-        "kda": 34.0,
-        "cs": 227,
-        "gold": 15861,
-        "dmg": 34814,
-        "dmg_taken": 16513,
-        "dmg_turret": 2381,
-        "vision": 17,
-        "items": [
-         3031,
-         3006,
-         3094,
-         3036,
-         3072,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "서폿마스터",
-        "champ": "Leona",
-        "lane": "UTILITY",
-        "k": 15,
-        "d": 1,
-        "a": 15,
-        "kda": 30.0,
-        "cs": 45,
-        "gold": 15435,
-        "dmg": 9531,
-        "dmg_taken": 19503,
-        "dmg_turret": 1764,
-        "vision": 54,
-        "items": [
-         3877,
-         3158,
-         3190,
-         2065,
-         3107,
-         3222,
-         3340
-        ]
-       }
-      ]
-     },
-     {
-      "team_id": 200,
-      "win": false,
-      "kills": 41,
-      "deaths": 26,
-      "assists": 50,
-      "gold": 68855,
-      "objectives": {
-       "towers": 2,
-       "dragons": 1,
-       "barons": 0,
-       "heralds": 0,
-       "grubs": 2
-      },
-      "bans": [
-       "Sion",
-       "Zed",
-       "Yasuo",
-       "Lux",
-       "Annie"
-      ],
-      "players": [
-       {
-        "name": "섬광장인",
-        "champ": "Darius",
-        "lane": "TOP",
-        "k": 7,
-        "d": 2,
-        "a": 9,
-        "kda": 8.0,
-        "cs": 205,
-        "gold": 13193,
-        "dmg": 17915,
-        "dmg_taken": 24064,
-        "dmg_turret": 2514,
-        "vision": 21,
-        "items": [
-         3068,
-         3047,
-         3075,
-         3065,
-         3143,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "갱킹머신",
-        "champ": "LeeSin",
-        "lane": "JUNGLE",
-        "k": 8,
+        "k": 4,
         "d": 7,
         "a": 9,
-        "kda": 2.43,
-        "cs": 225,
-        "gold": 14386,
-        "dmg": 11407,
-        "dmg_taken": 21769,
-        "dmg_turret": 2270,
-        "vision": 15,
-        "items": [
-         6692,
-         3047,
-         3071,
-         3742,
-         3193,
-         6333,
-         3340
-        ]
-       },
-       {
-        "name": "페이커심",
-        "champ": "Zed",
-        "lane": "MIDDLE",
-        "k": 10,
-        "d": 5,
-        "a": 12,
-        "kda": 4.4,
-        "cs": 187,
-        "gold": 16238,
-        "dmg": 22465,
-        "dmg_taken": 13127,
-        "dmg_turret": 3228,
-        "vision": 32,
-        "items": [
-         6655,
-         3020,
-         3157,
-         3089,
-         3135,
-         4645,
-         3340
-        ]
-       },
-       {
-        "name": "포지셔닝",
-        "champ": "Ezreal",
-        "lane": "BOTTOM",
-        "k": 6,
-        "d": 6,
-        "a": 6,
-        "kda": 2.0,
-        "cs": 235,
-        "gold": 13016,
-        "dmg": 27171,
-        "dmg_taken": 20676,
-        "dmg_turret": 4113,
-        "vision": 23,
-        "items": [
-         3031,
-         3006,
-         3094,
-         3036,
-         3072,
-         3026,
-         3340
-        ]
-       },
-       {
-        "name": "로밍왕",
-        "champ": "Karma",
-        "lane": "UTILITY",
-        "k": 10,
-        "d": 6,
-        "a": 14,
-        "kda": 4.0,
-        "cs": 32,
-        "gold": 12022,
-        "dmg": 8234,
-        "dmg_taken": 20973,
-        "dmg_turret": 3176,
+        "kda": 1.86,
+        "cs": 39,
+        "gold": 10253,
+        "dmg": 8549,
+        "dmg_taken": 15014,
+        "dmg_turret": 3312,
         "vision": 55,
         "items": [
          3877,
@@ -3255,43 +2354,43 @@
      ],
      "gold_diff": [
       0,
-      786,
-      1661,
-      2630,
-      3690,
-      4839
+      810,
+      1723,
+      2739,
+      3858,
+      5081
      ],
      "cs_diff": [
       0,
-      10,
-      19,
-      29,
-      39,
-      49
+      5,
+      11,
+      21,
+      24,
+      33
      ],
      "xp_diff": [
       0,
-      143,
-      286,
-      431,
-      574,
-      720
+      -17,
+      -34,
+      -49,
+      -66,
+      -80
      ],
      "a_gold": [
       2500,
-      13726,
-      26257,
-      40091,
-      55227,
-      71664
+      13944,
+      26846,
+      41201,
+      57014,
+      74281
      ],
      "b_gold": [
       2500,
-      12940,
-      24596,
-      37461,
-      51537,
-      66825
+      13134,
+      25123,
+      38462,
+      53156,
+      69200
      ]
     }
    },
@@ -3306,19 +2405,931 @@
     ],
     "gold_diff": [
      0,
-     786,
-     1661,
-     2630,
-     3690,
-     4839
+     810,
+     1723,
+     2739,
+     3858,
+     5081
     ],
     "cs_diff": [
      0,
+     5,
+     11,
+     21,
+     24,
+     33
+    ],
+    "xp_diff": [
+     0,
+     -17,
+     -34,
+     -49,
+     -66,
+     -80
+    ],
+    "a_gold": [
+     2500,
+     13944,
+     26846,
+     41201,
+     57014,
+     74281
+    ],
+    "b_gold": [
+     2500,
+     13134,
+     25123,
+     38462,
+     53156,
+     69200
+    ]
+   }
+  },
+  {
+   "match_id": "DUMMY_2",
+   "ts": 1700172800000,
+   "teams": [
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "로밍왕",
+       "champ": "Thresh"
+      },
+      {
+       "name": "갱킹머신",
+       "champ": "Viego"
+      },
+      {
+       "name": "탑신병자",
+       "champ": "Darius"
+      },
+      {
+       "name": "페이커심",
+       "champ": "Orianna"
+      },
+      {
+       "name": "원딜본능",
+       "champ": "Ezreal"
+      }
+     ]
+    },
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "정글차이",
+       "champ": "LeeSin"
+      },
+      {
+       "name": "준호",
+       "champ": "Zed"
+      },
+      {
+       "name": "섬광장인",
+       "champ": "Camille"
+      },
+      {
+       "name": "포지셔닝",
+       "champ": "Caitlyn"
+      },
+      {
+       "name": "서폿마스터",
+       "champ": "Karma"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "DUMMY_2",
+    "duration": 1880,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": false,
+      "kills": 40,
+      "deaths": 37,
+      "assists": 61,
+      "gold": 68479,
+      "objectives": {
+       "towers": 2,
+       "dragons": 1,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 2
+      },
+      "bans": [
+       "Annie",
+       "Zed",
+       "Thresh",
+       "Morgana",
+       "Lux"
+      ],
+      "players": [
+       {
+        "name": "탑신병자",
+        "champ": "Darius",
+        "lane": "TOP",
+        "k": 6,
+        "d": 8,
+        "a": 11,
+        "kda": 2.12,
+        "cs": 239,
+        "gold": 14636,
+        "dmg": 17022,
+        "dmg_taken": 31843,
+        "dmg_turret": 2484,
+        "vision": 21,
+        "items": [
+         3068,
+         3047,
+         3075,
+         3065,
+         3143,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "갱킹머신",
+        "champ": "Viego",
+        "lane": "JUNGLE",
+        "k": 5,
+        "d": 4,
+        "a": 11,
+        "kda": 4.0,
+        "cs": 200,
+        "gold": 12386,
+        "dmg": 18324,
+        "dmg_taken": 22896,
+        "dmg_turret": 746,
+        "vision": 22,
+        "items": [
+         6692,
+         3047,
+         3071,
+         3742,
+         3193,
+         6333,
+         3340
+        ]
+       },
+       {
+        "name": "페이커심",
+        "champ": "Orianna",
+        "lane": "MIDDLE",
+        "k": 9,
+        "d": 6,
+        "a": 14,
+        "kda": 3.83,
+        "cs": 221,
+        "gold": 13709,
+        "dmg": 25004,
+        "dmg_taken": 16082,
+        "dmg_turret": 3612,
+        "vision": 33,
+        "items": [
+         6655,
+         3020,
+         3157,
+         3089,
+         3135,
+         4645,
+         3340
+        ]
+       },
+       {
+        "name": "원딜본능",
+        "champ": "Ezreal",
+        "lane": "BOTTOM",
+        "k": 9,
+        "d": 9,
+        "a": 8,
+        "kda": 1.89,
+        "cs": 230,
+        "gold": 13438,
+        "dmg": 19875,
+        "dmg_taken": 12518,
+        "dmg_turret": 4176,
+        "vision": 39,
+        "items": [
+         3031,
+         3006,
+         3094,
+         3036,
+         3072,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "로밍왕",
+        "champ": "Thresh",
+        "lane": "UTILITY",
+        "k": 11,
+        "d": 10,
+        "a": 17,
+        "kda": 2.8,
+        "cs": 19,
+        "gold": 14310,
+        "dmg": 10909,
+        "dmg_taken": 21217,
+        "dmg_turret": 1505,
+        "vision": 63,
+        "items": [
+         3877,
+         3158,
+         3190,
+         2065,
+         3107,
+         3222,
+         3340
+        ]
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": true,
+      "kills": 51,
+      "deaths": 17,
+      "assists": 66,
+      "gold": 71057,
+      "objectives": {
+       "towers": 7,
+       "dragons": 3,
+       "barons": 1,
+       "heralds": 1,
+       "grubs": 3
+      },
+      "bans": [
+       "Ezreal",
+       "Zed",
+       "Annie",
+       "Sion",
+       "LeeSin"
+      ],
+      "players": [
+       {
+        "name": "섬광장인",
+        "champ": "Camille",
+        "lane": "TOP",
+        "k": 9,
+        "d": 6,
+        "a": 14,
+        "kda": 3.83,
+        "cs": 231,
+        "gold": 12960,
+        "dmg": 17204,
+        "dmg_taken": 30118,
+        "dmg_turret": 4379,
+        "vision": 23,
+        "items": [
+         3068,
+         3047,
+         3075,
+         3065,
+         3143,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "정글차이",
+        "champ": "LeeSin",
+        "lane": "JUNGLE",
+        "k": 9,
+        "d": 2,
+        "a": 15,
+        "kda": 12.0,
+        "cs": 206,
+        "gold": 14113,
+        "dmg": 20852,
+        "dmg_taken": 32546,
+        "dmg_turret": 3850,
+        "vision": 27,
+        "items": [
+         6692,
+         3047,
+         3071,
+         3742,
+         3193,
+         6333,
+         3340
+        ]
+       },
+       {
+        "name": "준호",
+        "champ": "Zed",
+        "lane": "MIDDLE",
+        "k": 11,
+        "d": 4,
+        "a": 11,
+        "kda": 5.5,
+        "cs": 223,
+        "gold": 14592,
+        "dmg": 20457,
+        "dmg_taken": 22664,
+        "dmg_turret": 2059,
+        "vision": 25,
+        "items": [
+         6655,
+         3020,
+         3157,
+         3089,
+         3135,
+         4645,
+         3340
+        ]
+       },
+       {
+        "name": "포지셔닝",
+        "champ": "Caitlyn",
+        "lane": "BOTTOM",
+        "k": 10,
+        "d": 3,
+        "a": 15,
+        "kda": 8.33,
+        "cs": 218,
+        "gold": 13673,
+        "dmg": 27616,
+        "dmg_taken": 19649,
+        "dmg_turret": 3463,
+        "vision": 28,
+        "items": [
+         3031,
+         3006,
+         3094,
+         3036,
+         3072,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "서폿마스터",
+        "champ": "Karma",
+        "lane": "UTILITY",
+        "k": 12,
+        "d": 2,
+        "a": 11,
+        "kda": 11.5,
+        "cs": 47,
+        "gold": 15719,
+        "dmg": 12055,
+        "dmg_taken": 13622,
+        "dmg_turret": 2999,
+        "vision": 65,
+        "items": [
+         3877,
+         3158,
+         3190,
+         2065,
+         3107,
+         3222,
+         3340
+        ]
+       }
+      ]
+     }
+    ],
+    "timeline": {
+     "minutes": [
+      0,
+      5,
+      10,
+      15,
+      20,
+      25,
+      30
+     ],
+     "gold_diff": [
+      0,
+      -371,
+      -778,
+      -1226,
+      -1715,
+      -2241,
+      -2808
+     ],
+     "cs_diff": [
+      0,
+      -1,
+      -6,
+      -9,
+      -13,
+      -15,
+      -20
+     ],
+     "xp_diff": [
+      0,
+      17,
+      34,
+      49,
+      66,
+      80,
+      97
+     ],
+     "a_gold": [
+      2500,
+      11950,
+      22412,
+      33882,
+      46359,
+      59844,
+      74337
+     ],
+     "b_gold": [
+      2500,
+      12321,
+      23190,
+      35108,
+      48074,
+      62085,
+      77145
+     ]
+    }
+   },
+   "timeline": {
+    "minutes": [
+     0,
+     5,
      10,
-     19,
-     29,
-     39,
-     49
+     15,
+     20,
+     25,
+     30
+    ],
+    "gold_diff": [
+     0,
+     -371,
+     -778,
+     -1226,
+     -1715,
+     -2241,
+     -2808
+    ],
+    "cs_diff": [
+     0,
+     -1,
+     -6,
+     -9,
+     -13,
+     -15,
+     -20
+    ],
+    "xp_diff": [
+     0,
+     17,
+     34,
+     49,
+     66,
+     80,
+     97
+    ],
+    "a_gold": [
+     2500,
+     11950,
+     22412,
+     33882,
+     46359,
+     59844,
+     74337
+    ],
+    "b_gold": [
+     2500,
+     12321,
+     23190,
+     35108,
+     48074,
+     62085,
+     77145
+    ]
+   }
+  },
+  {
+   "match_id": "DUMMY_1",
+   "ts": 1700000000000,
+   "teams": [
+    {
+     "win": true,
+     "players": [
+      {
+       "name": "서폿마스터",
+       "champ": "Leona"
+      },
+      {
+       "name": "원딜본능",
+       "champ": "Kaisa"
+      },
+      {
+       "name": "정글차이",
+       "champ": "Khazix"
+      },
+      {
+       "name": "탑신병자",
+       "champ": "Sett"
+      },
+      {
+       "name": "준호",
+       "champ": "Ahri"
+      }
+     ]
+    },
+    {
+     "win": false,
+     "players": [
+      {
+       "name": "포지셔닝",
+       "champ": "Ezreal"
+      },
+      {
+       "name": "섬광장인",
+       "champ": "Darius"
+      },
+      {
+       "name": "페이커심",
+       "champ": "Zed"
+      },
+      {
+       "name": "로밍왕",
+       "champ": "Karma"
+      },
+      {
+       "name": "갱킹머신",
+       "champ": "LeeSin"
+      }
+     ]
+    }
+   ],
+   "detail": {
+    "match_id": "DUMMY_1",
+    "duration": 1720,
+    "teams": [
+     {
+      "team_id": 100,
+      "win": true,
+      "kills": 51,
+      "deaths": 16,
+      "assists": 65,
+      "gold": 69574,
+      "objectives": {
+       "towers": 9,
+       "dragons": 3,
+       "barons": 1,
+       "heralds": 1,
+       "grubs": 3
+      },
+      "bans": [
+       "Sion",
+       "Thresh",
+       "Morgana",
+       "LeeSin",
+       "Ezreal"
+      ],
+      "players": [
+       {
+        "name": "탑신병자",
+        "champ": "Sett",
+        "lane": "TOP",
+        "k": 8,
+        "d": 4,
+        "a": 12,
+        "kda": 5.0,
+        "cs": 214,
+        "gold": 13164,
+        "dmg": 21146,
+        "dmg_taken": 30190,
+        "dmg_turret": 3720,
+        "vision": 25,
+        "items": [
+         3068,
+         3047,
+         3075,
+         3065,
+         3143,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "정글차이",
+        "champ": "Khazix",
+        "lane": "JUNGLE",
+        "k": 13,
+        "d": 2,
+        "a": 16,
+        "kda": 14.5,
+        "cs": 210,
+        "gold": 14581,
+        "dmg": 18737,
+        "dmg_taken": 30811,
+        "dmg_turret": 5324,
+        "vision": 27,
+        "items": [
+         6692,
+         3047,
+         3071,
+         3742,
+         3193,
+         6333,
+         3340
+        ]
+       },
+       {
+        "name": "준호",
+        "champ": "Ahri",
+        "lane": "MIDDLE",
+        "k": 8,
+        "d": 6,
+        "a": 15,
+        "kda": 3.83,
+        "cs": 241,
+        "gold": 11600,
+        "dmg": 18382,
+        "dmg_taken": 22780,
+        "dmg_turret": 4220,
+        "vision": 22,
+        "items": [
+         6655,
+         3020,
+         3157,
+         3089,
+         3135,
+         4645,
+         3340
+        ]
+       },
+       {
+        "name": "원딜본능",
+        "champ": "Kaisa",
+        "lane": "BOTTOM",
+        "k": 11,
+        "d": 1,
+        "a": 8,
+        "kda": 19.0,
+        "cs": 240,
+        "gold": 16383,
+        "dmg": 22313,
+        "dmg_taken": 14260,
+        "dmg_turret": 5363,
+        "vision": 25,
+        "items": [
+         3031,
+         3006,
+         3094,
+         3036,
+         3072,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "서폿마스터",
+        "champ": "Leona",
+        "lane": "UTILITY",
+        "k": 11,
+        "d": 3,
+        "a": 14,
+        "kda": 8.33,
+        "cs": 54,
+        "gold": 13846,
+        "dmg": 11005,
+        "dmg_taken": 24454,
+        "dmg_turret": 1704,
+        "vision": 56,
+        "items": [
+         3877,
+         3158,
+         3190,
+         2065,
+         3107,
+         3222,
+         3340
+        ]
+       }
+      ]
+     },
+     {
+      "team_id": 200,
+      "win": false,
+      "kills": 37,
+      "deaths": 39,
+      "assists": 56,
+      "gold": 66989,
+      "objectives": {
+       "towers": 1,
+       "dragons": 1,
+       "barons": 0,
+       "heralds": 0,
+       "grubs": 1
+      },
+      "bans": [
+       "Lux",
+       "Ezreal",
+       "Sion",
+       "Pyke",
+       "Thresh"
+      ],
+      "players": [
+       {
+        "name": "섬광장인",
+        "champ": "Darius",
+        "lane": "TOP",
+        "k": 7,
+        "d": 9,
+        "a": 10,
+        "kda": 1.89,
+        "cs": 208,
+        "gold": 15982,
+        "dmg": 18100,
+        "dmg_taken": 24845,
+        "dmg_turret": 3878,
+        "vision": 22,
+        "items": [
+         3068,
+         3047,
+         3075,
+         3065,
+         3143,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "갱킹머신",
+        "champ": "LeeSin",
+        "lane": "JUNGLE",
+        "k": 5,
+        "d": 8,
+        "a": 11,
+        "kda": 2.0,
+        "cs": 221,
+        "gold": 14464,
+        "dmg": 20626,
+        "dmg_taken": 22377,
+        "dmg_turret": 2551,
+        "vision": 15,
+        "items": [
+         6692,
+         3047,
+         3071,
+         3742,
+         3193,
+         6333,
+         3340
+        ]
+       },
+       {
+        "name": "페이커심",
+        "champ": "Zed",
+        "lane": "MIDDLE",
+        "k": 9,
+        "d": 8,
+        "a": 16,
+        "kda": 3.12,
+        "cs": 212,
+        "gold": 12695,
+        "dmg": 31842,
+        "dmg_taken": 11512,
+        "dmg_turret": 628,
+        "vision": 23,
+        "items": [
+         6655,
+         3020,
+         3157,
+         3089,
+         3135,
+         4645,
+         3340
+        ]
+       },
+       {
+        "name": "포지셔닝",
+        "champ": "Ezreal",
+        "lane": "BOTTOM",
+        "k": 6,
+        "d": 9,
+        "a": 10,
+        "kda": 1.78,
+        "cs": 241,
+        "gold": 11366,
+        "dmg": 22753,
+        "dmg_taken": 20377,
+        "dmg_turret": 2904,
+        "vision": 20,
+        "items": [
+         3031,
+         3006,
+         3094,
+         3036,
+         3072,
+         3026,
+         3340
+        ]
+       },
+       {
+        "name": "로밍왕",
+        "champ": "Karma",
+        "lane": "UTILITY",
+        "k": 10,
+        "d": 5,
+        "a": 9,
+        "kda": 3.8,
+        "cs": 17,
+        "gold": 12482,
+        "dmg": 7786,
+        "dmg_taken": 17691,
+        "dmg_turret": 4490,
+        "vision": 64,
+        "items": [
+         3877,
+         3158,
+         3190,
+         2065,
+         3107,
+         3222,
+         3340
+        ]
+       }
+      ]
+     }
+    ],
+    "timeline": {
+     "minutes": [
+      0,
+      5,
+      10,
+      15,
+      20,
+      25
+     ],
+     "gold_diff": [
+      0,
+      407,
+      861,
+      1362,
+      1911,
+      2507
+     ],
+     "cs_diff": [
+      0,
+      9,
+      18,
+      28,
+      37,
+      48
+     ],
+     "xp_diff": [
+      0,
+      143,
+      286,
+      431,
+      574,
+      720
+     ],
+     "a_gold": [
+      2500,
+      13054,
+      24835,
+      37839,
+      52069,
+      67522
+     ],
+     "b_gold": [
+      2500,
+      12647,
+      23974,
+      36477,
+      50158,
+      65015
+     ]
+    }
+   },
+   "timeline": {
+    "minutes": [
+     0,
+     5,
+     10,
+     15,
+     20,
+     25
+    ],
+    "gold_diff": [
+     0,
+     407,
+     861,
+     1362,
+     1911,
+     2507
+    ],
+    "cs_diff": [
+     0,
+     9,
+     18,
+     28,
+     37,
+     48
     ],
     "xp_diff": [
      0,
@@ -3330,19 +3341,19 @@
     ],
     "a_gold": [
      2500,
-     13726,
-     26257,
-     40091,
-     55227,
-     71664
+     13054,
+     24835,
+     37839,
+     52069,
+     67522
     ],
     "b_gold": [
      2500,
-     12940,
-     24596,
-     37461,
-     51537,
-     66825
+     12647,
+     23974,
+     36477,
+     50158,
+     65015
     ]
    }
   }
@@ -3351,12 +3362,12 @@
   "p7": {
    "name": "준호",
    "games": 3,
-   "strength": 0.352,
-   "mmr": 1088,
+   "strength": 0.367,
+   "mmr": 1092,
    "lanes": {
     "MIDDLE": {
-     "strength": 0.552,
-     "mmr": 1138
+     "strength": 0.567,
+     "mmr": 1142
     }
    },
    "main_lane": "MIDDLE",
@@ -3367,12 +3378,12 @@
   "p9": {
    "name": "페이커심",
    "games": 3,
-   "strength": -0.422,
-   "mmr": 894,
+   "strength": -0.196,
+   "mmr": 951,
    "lanes": {
     "MIDDLE": {
-     "strength": -0.622,
-     "mmr": 844
+     "strength": -0.396,
+     "mmr": 901
     }
    },
    "main_lane": "MIDDLE",
@@ -3383,12 +3394,12 @@
   "p8": {
    "name": "탑신병자",
    "games": 3,
-   "strength": -0.28,
-   "mmr": 930,
+   "strength": -0.263,
+   "mmr": 934,
    "lanes": {
     "TOP": {
-     "strength": -0.346,
-     "mmr": 913
+     "strength": -0.329,
+     "mmr": 918
     }
    },
    "main_lane": "TOP",
@@ -3399,12 +3410,12 @@
   "p4": {
    "name": "섬광장인",
    "games": 3,
-   "strength": 0.006,
-   "mmr": 1002,
+   "strength": -0.055,
+   "mmr": 986,
    "lanes": {
     "TOP": {
-     "strength": 0.073,
-     "mmr": 1018
+     "strength": 0.012,
+     "mmr": 1003
     }
    },
    "main_lane": "TOP",
@@ -3415,12 +3426,12 @@
   "p6": {
    "name": "정글차이",
    "games": 3,
-   "strength": 0.506,
-   "mmr": 1127,
+   "strength": 0.719,
+   "mmr": 1180,
    "lanes": {
     "JUNGLE": {
-     "strength": 0.706,
-     "mmr": 1177
+     "strength": 0.919,
+     "mmr": 1230
     }
    },
    "main_lane": "JUNGLE",
@@ -3431,12 +3442,12 @@
   "p1": {
    "name": "갱킹머신",
    "games": 3,
-   "strength": -0.593,
-   "mmr": 852,
+   "strength": -0.561,
+   "mmr": 860,
    "lanes": {
     "JUNGLE": {
-     "strength": -0.793,
-     "mmr": 802
+     "strength": -0.761,
+     "mmr": 810
     }
    },
    "main_lane": "JUNGLE",
@@ -3447,12 +3458,12 @@
   "p5": {
    "name": "원딜본능",
    "games": 3,
-   "strength": 0.291,
-   "mmr": 1073,
+   "strength": -0.044,
+   "mmr": 989,
    "lanes": {
     "BOTTOM": {
-     "strength": 0.224,
-     "mmr": 1056
+     "strength": -0.111,
+     "mmr": 972
     }
    },
    "main_lane": "BOTTOM",
@@ -3463,12 +3474,12 @@
   "p10": {
    "name": "포지셔닝",
    "games": 3,
-   "strength": 0.054,
-   "mmr": 1013,
+   "strength": 0.085,
+   "mmr": 1021,
    "lanes": {
     "BOTTOM": {
-     "strength": 0.12,
-     "mmr": 1030
+     "strength": 0.152,
+     "mmr": 1038
     }
    },
    "main_lane": "BOTTOM",
@@ -3479,12 +3490,12 @@
   "p3": {
    "name": "서폿마스터",
    "games": 3,
-   "strength": 0.646,
-   "mmr": 1162,
+   "strength": 0.47,
+   "mmr": 1117,
    "lanes": {
     "UTILITY": {
-     "strength": 0.846,
-     "mmr": 1212
+     "strength": 0.67,
+     "mmr": 1167
     }
    },
    "main_lane": "UTILITY",
@@ -3495,12 +3506,12 @@
   "p2": {
    "name": "로밍왕",
    "games": 3,
-   "strength": -0.56,
-   "mmr": 860,
+   "strength": -0.522,
+   "mmr": 869,
    "lanes": {
     "UTILITY": {
-     "strength": -0.76,
-     "mmr": 810
+     "strength": -0.722,
+     "mmr": 819
     }
    },
    "main_lane": "UTILITY",
@@ -3519,9 +3530,9 @@
     "losses": 0,
     "winrate": 1.0,
     "ci_lower": 0.438,
-    "kda": 5.86,
-    "kp": 0.425,
-    "dpm": 875.6
+    "kda": 5.67,
+    "kp": 0.436,
+    "dpm": 827.8
    },
    "form": {
     "form": "3-0",
@@ -3534,7 +3545,7 @@
      "lane": "MIDDLE",
      "games": 3,
      "winrate": 1.0,
-     "kda": 5.86
+     "kda": 5.67
     }
    ],
    "role_dist": [
@@ -3550,21 +3561,21 @@
      "lane": "MIDDLE",
      "games": 1,
      "winrate": 1.0,
-     "kda": 7.67
+     "kda": 3.83
     },
     {
      "champion_name": "Orianna",
      "lane": "MIDDLE",
      "games": 1,
      "winrate": 1.0,
-     "kda": 4.17
+     "kda": 7.67
     },
     {
      "champion_name": "Zed",
      "lane": "MIDDLE",
      "games": 1,
      "winrate": 1.0,
-     "kda": 5.75
+     "kda": 5.5
     }
    ],
    "recent_games": [
@@ -3573,24 +3584,24 @@
      "champion_name": "Orianna",
      "lane": "MIDDLE",
      "win": true,
-     "kda": 4.17,
-     "dpm": 857.7
+     "kda": 7.67,
+     "dpm": 1189.2
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Zed",
      "lane": "MIDDLE",
      "win": true,
-     "kda": 5.75,
-     "dpm": 740.5
+     "kda": 5.5,
+     "dpm": 652.9
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Ahri",
      "lane": "MIDDLE",
      "win": true,
-     "kda": 7.67,
-     "dpm": 1028.7
+     "kda": 3.83,
+     "dpm": 641.2
     }
    ],
    "partners_best": [
@@ -3646,12 +3657,12 @@
    "nemesis_victim": {
     "nemesis": [
      {
-      "vs_champ": "Syndra",
+      "vs_champ": "Orianna",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Orianna",
+      "vs_champ": "Syndra",
       "games": 1,
       "winrate": 1.0
      },
@@ -3663,12 +3674,12 @@
     ],
     "victim": [
      {
-      "vs_champ": "Syndra",
+      "vs_champ": "Orianna",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Orianna",
+      "vs_champ": "Syndra",
       "games": 1,
       "winrate": 1.0
      },
@@ -3689,9 +3700,9 @@
     "losses": 3,
     "winrate": 0.0,
     "ci_lower": 0.0,
-    "kda": 3.17,
-    "kp": 0.471,
-    "dpm": 1016.7
+    "kda": 3.85,
+    "kp": 0.636,
+    "dpm": 1037.4
    },
    "form": {
     "form": "0-3",
@@ -3704,7 +3715,7 @@
      "lane": "MIDDLE",
      "games": 3,
      "winrate": 0.0,
-     "kda": 3.17
+     "kda": 3.85
     }
    ],
    "role_dist": [
@@ -3720,21 +3731,21 @@
      "lane": "MIDDLE",
      "games": 1,
      "winrate": 0.0,
-     "kda": 3.33
+     "kda": 3.83
     },
     {
      "champion_name": "Syndra",
      "lane": "MIDDLE",
      "games": 1,
      "winrate": 0.0,
-     "kda": 1.78
+     "kda": 4.6
     },
     {
      "champion_name": "Zed",
      "lane": "MIDDLE",
      "games": 1,
      "winrate": 0.0,
-     "kda": 4.4
+     "kda": 3.12
     }
    ],
    "recent_games": [
@@ -3743,24 +3754,24 @@
      "champion_name": "Syndra",
      "lane": "MIDDLE",
      "win": false,
-     "kda": 1.78,
-     "dpm": 1347.0
+     "kda": 4.6,
+     "dpm": 1203.3
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Orianna",
      "lane": "MIDDLE",
      "win": false,
-     "kda": 3.33,
-     "dpm": 919.3
+     "kda": 3.83,
+     "dpm": 798.0
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Zed",
      "lane": "MIDDLE",
      "win": false,
-     "kda": 4.4,
-     "dpm": 783.7
+     "kda": 3.12,
+     "dpm": 1110.8
     }
    ],
    "partners_best": [
@@ -3816,34 +3827,34 @@
    "nemesis_victim": {
     "nemesis": [
      {
+      "vs_champ": "Ahri",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
       "vs_champ": "Orianna",
       "games": 1,
       "winrate": 0.0
      },
      {
       "vs_champ": "Zed",
-      "games": 1,
-      "winrate": 0.0
-     },
-     {
-      "vs_champ": "Ahri",
       "games": 1,
       "winrate": 0.0
      }
     ],
     "victim": [
      {
+      "vs_champ": "Ahri",
+      "games": 1,
+      "winrate": 0.0
+     },
+     {
       "vs_champ": "Orianna",
       "games": 1,
       "winrate": 0.0
      },
      {
       "vs_champ": "Zed",
-      "games": 1,
-      "winrate": 0.0
-     },
-     {
-      "vs_champ": "Ahri",
       "games": 1,
       "winrate": 0.0
      }
@@ -3859,9 +3870,9 @@
     "losses": 2,
     "winrate": 0.333,
     "ci_lower": 0.061,
-    "kda": 4.72,
-    "kp": 0.414,
-    "dpm": 570.4
+    "kda": 3.04,
+    "kp": 0.463,
+    "dpm": 649.7
    },
    "form": {
     "form": "1-2",
@@ -3874,7 +3885,7 @@
      "lane": "TOP",
      "games": 3,
      "winrate": 0.333,
-     "kda": 4.72
+     "kda": 3.04
     }
    ],
    "role_dist": [
@@ -3890,21 +3901,21 @@
      "lane": "TOP",
      "games": 1,
      "winrate": 1.0,
-     "kda": 6.0
+     "kda": 5.0
     },
     {
      "champion_name": "Camille",
      "lane": "TOP",
      "games": 1,
      "winrate": 0.0,
-     "kda": 5.0
+     "kda": 2.0
     },
     {
      "champion_name": "Darius",
      "lane": "TOP",
      "games": 1,
      "winrate": 0.0,
-     "kda": 3.17
+     "kda": 2.12
     }
    ],
    "recent_games": [
@@ -3913,24 +3924,24 @@
      "champion_name": "Camille",
      "lane": "TOP",
      "win": false,
-     "kda": 5.0,
-     "dpm": 451.4
+     "kda": 2.0,
+     "dpm": 668.2
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Darius",
      "lane": "TOP",
      "win": false,
-     "kda": 3.17,
-     "dpm": 661.1
+     "kda": 2.12,
+     "dpm": 543.3
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Sett",
      "lane": "TOP",
      "win": true,
-     "kda": 6.0,
-     "dpm": 598.8
+     "kda": 5.0,
+     "dpm": 737.7
     }
    ],
    "partners_best": [
@@ -3986,12 +3997,12 @@
    "nemesis_victim": {
     "nemesis": [
      {
-      "vs_champ": "Camille",
+      "vs_champ": "Garen",
       "games": 1,
       "winrate": 0.0
      },
      {
-      "vs_champ": "Garen",
+      "vs_champ": "Camille",
       "games": 1,
       "winrate": 0.0
      },
@@ -4008,12 +4019,12 @@
       "winrate": 1.0
      },
      {
-      "vs_champ": "Camille",
+      "vs_champ": "Garen",
       "games": 1,
       "winrate": 0.0
      },
      {
-      "vs_champ": "Garen",
+      "vs_champ": "Camille",
       "games": 1,
       "winrate": 0.0
      }
@@ -4029,9 +4040,9 @@
     "losses": 1,
     "winrate": 0.667,
     "ci_lower": 0.208,
-    "kda": 6.22,
-    "kp": 0.396,
-    "dpm": 599.1
+    "kda": 3.07,
+    "kp": 0.433,
+    "dpm": 624.6
    },
    "form": {
     "form": "2-1",
@@ -4044,7 +4055,7 @@
      "lane": "TOP",
      "games": 3,
      "winrate": 0.667,
-     "kda": 6.22
+     "kda": 3.07
     }
    ],
    "role_dist": [
@@ -4060,21 +4071,21 @@
      "lane": "TOP",
      "games": 1,
      "winrate": 1.0,
-     "kda": 7.67
+     "kda": 3.83
     },
     {
      "champion_name": "Garen",
      "lane": "TOP",
      "games": 1,
      "winrate": 1.0,
-     "kda": 3.0
+     "kda": 3.5
     },
     {
      "champion_name": "Darius",
      "lane": "TOP",
      "games": 1,
      "winrate": 0.0,
-     "kda": 8.0
+     "kda": 1.89
     }
    ],
    "recent_games": [
@@ -4083,24 +4094,24 @@
      "champion_name": "Garen",
      "lane": "TOP",
      "win": true,
-     "kda": 3.0,
-     "dpm": 599.7
+     "kda": 3.5,
+     "dpm": 693.4
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Camille",
      "lane": "TOP",
      "win": true,
-     "kda": 7.67,
-     "dpm": 572.8
+     "kda": 3.83,
+     "dpm": 549.1
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Darius",
      "lane": "TOP",
      "win": false,
-     "kda": 8.0,
-     "dpm": 624.9
+     "kda": 1.89,
+     "dpm": 631.4
     }
    ],
    "partners_best": [
@@ -4161,24 +4172,24 @@
       "winrate": 0.0
      },
      {
-      "vs_champ": "Darius",
+      "vs_champ": "Camille",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Camille",
+      "vs_champ": "Darius",
       "games": 1,
       "winrate": 1.0
      }
     ],
     "victim": [
      {
-      "vs_champ": "Darius",
+      "vs_champ": "Camille",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Camille",
+      "vs_champ": "Darius",
       "games": 1,
       "winrate": 1.0
      },
@@ -4199,9 +4210,9 @@
     "losses": 0,
     "winrate": 1.0,
     "ci_lower": 0.438,
-    "kda": 8.13,
-    "kp": 0.497,
-    "dpm": 696.5
+    "kda": 11.94,
+    "kp": 0.52,
+    "dpm": 693.6
    },
    "form": {
     "form": "3-0",
@@ -4214,7 +4225,7 @@
      "lane": "JUNGLE",
      "games": 3,
      "winrate": 1.0,
-     "kda": 8.13
+     "kda": 11.94
     }
    ],
    "role_dist": [
@@ -4230,21 +4241,21 @@
      "lane": "JUNGLE",
      "games": 1,
      "winrate": 1.0,
-     "kda": 5.4
+     "kda": 14.5
     },
     {
      "champion_name": "LeeSin",
      "lane": "JUNGLE",
      "games": 1,
      "winrate": 1.0,
-     "kda": 10.67
+     "kda": 12.0
     },
     {
      "champion_name": "Viego",
      "lane": "JUNGLE",
      "games": 1,
      "winrate": 1.0,
-     "kda": 8.33
+     "kda": 9.33
     }
    ],
    "recent_games": [
@@ -4253,24 +4264,24 @@
      "champion_name": "Viego",
      "lane": "JUNGLE",
      "win": true,
-     "kda": 8.33,
-     "dpm": 727.7
+     "kda": 9.33,
+     "dpm": 761.6
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "LeeSin",
      "lane": "JUNGLE",
      "win": true,
-     "kda": 10.67,
-     "dpm": 718.6
+     "kda": 12.0,
+     "dpm": 665.5
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Khazix",
      "lane": "JUNGLE",
      "win": true,
-     "kda": 5.4,
-     "dpm": 643.2
+     "kda": 14.5,
+     "dpm": 653.6
     }
    ],
    "partners_best": [
@@ -4326,34 +4337,34 @@
    "nemesis_victim": {
     "nemesis": [
      {
-      "vs_champ": "Viego",
-      "games": 1,
-      "winrate": 1.0
-     },
-     {
       "vs_champ": "Graves",
       "games": 1,
       "winrate": 1.0
      },
      {
       "vs_champ": "LeeSin",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Viego",
       "games": 1,
       "winrate": 1.0
      }
     ],
     "victim": [
      {
-      "vs_champ": "Viego",
-      "games": 1,
-      "winrate": 1.0
-     },
-     {
       "vs_champ": "Graves",
       "games": 1,
       "winrate": 1.0
      },
      {
       "vs_champ": "LeeSin",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Viego",
       "games": 1,
       "winrate": 1.0
      }
@@ -4369,9 +4380,9 @@
     "losses": 3,
     "winrate": 0.0,
     "ci_lower": 0.0,
-    "kda": 2.46,
-    "kp": 0.421,
-    "dpm": 609.0
+    "kda": 2.94,
+    "kp": 0.439,
+    "dpm": 730.8
    },
    "form": {
     "form": "0-3",
@@ -4384,7 +4395,7 @@
      "lane": "JUNGLE",
      "games": 3,
      "winrate": 0.0,
-     "kda": 2.46
+     "kda": 2.94
     }
    ],
    "role_dist": [
@@ -4400,21 +4411,21 @@
      "lane": "JUNGLE",
      "games": 1,
      "winrate": 0.0,
-     "kda": 2.33
+     "kda": 2.83
     },
     {
      "champion_name": "LeeSin",
      "lane": "JUNGLE",
      "games": 1,
      "winrate": 0.0,
-     "kda": 2.43
+     "kda": 2.0
     },
     {
      "champion_name": "Viego",
      "lane": "JUNGLE",
      "games": 1,
      "winrate": 0.0,
-     "kda": 2.62
+     "kda": 4.0
     }
    ],
    "recent_games": [
@@ -4423,24 +4434,24 @@
      "champion_name": "Graves",
      "lane": "JUNGLE",
      "win": false,
-     "kda": 2.33,
-     "dpm": 816.5
+     "kda": 2.83,
+     "dpm": 888.1
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Viego",
      "lane": "JUNGLE",
      "win": false,
-     "kda": 2.62,
-     "dpm": 612.5
+     "kda": 4.0,
+     "dpm": 584.8
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "LeeSin",
      "lane": "JUNGLE",
      "win": false,
-     "kda": 2.43,
-     "dpm": 397.9
+     "kda": 2.0,
+     "dpm": 719.5
     }
    ],
    "partners_best": [
@@ -4501,12 +4512,12 @@
       "winrate": 0.0
      },
      {
-      "vs_champ": "LeeSin",
+      "vs_champ": "Viego",
       "games": 1,
       "winrate": 0.0
      },
      {
-      "vs_champ": "Viego",
+      "vs_champ": "LeeSin",
       "games": 1,
       "winrate": 0.0
      }
@@ -4518,12 +4529,12 @@
       "winrate": 0.0
      },
      {
-      "vs_champ": "LeeSin",
+      "vs_champ": "Viego",
       "games": 1,
       "winrate": 0.0
      },
      {
-      "vs_champ": "Viego",
+      "vs_champ": "LeeSin",
       "games": 1,
       "winrate": 0.0
      }
@@ -4539,9 +4550,9 @@
     "losses": 2,
     "winrate": 0.333,
     "ci_lower": 0.061,
-    "kda": 14.33,
-    "kp": 0.561,
-    "dpm": 979.1
+    "kda": 7.76,
+    "kp": 0.447,
+    "dpm": 915.3
    },
    "form": {
     "form": "1-2",
@@ -4554,7 +4565,7 @@
      "lane": "BOTTOM",
      "games": 3,
      "winrate": 0.333,
-     "kda": 14.33
+     "kda": 7.76
     }
    ],
    "role_dist": [
@@ -4570,21 +4581,21 @@
      "lane": "BOTTOM",
      "games": 1,
      "winrate": 1.0,
-     "kda": 34.0
+     "kda": 19.0
     },
     {
      "champion_name": "Caitlyn",
      "lane": "BOTTOM",
      "games": 1,
      "winrate": 0.0,
-     "kda": 3.0
+     "kda": 2.38
     },
     {
      "champion_name": "Ezreal",
      "lane": "BOTTOM",
      "games": 1,
      "winrate": 0.0,
-     "kda": 6.0
+     "kda": 1.89
     }
    ],
    "recent_games": [
@@ -4593,24 +4604,24 @@
      "champion_name": "Caitlyn",
      "lane": "BOTTOM",
      "win": false,
-     "kda": 3.0,
-     "dpm": 1110.5
+     "kda": 2.38,
+     "dpm": 1333.2
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Ezreal",
      "lane": "BOTTOM",
      "win": false,
-     "kda": 6.0,
-     "dpm": 612.4
+     "kda": 1.89,
+     "dpm": 634.3
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Kaisa",
      "lane": "BOTTOM",
      "win": true,
-     "kda": 34.0,
-     "dpm": 1214.4
+     "kda": 19.0,
+     "dpm": 778.4
     }
    ],
    "partners_best": [
@@ -4709,9 +4720,9 @@
     "losses": 1,
     "winrate": 0.667,
     "ci_lower": 0.208,
-    "kda": 6.11,
-    "kp": 0.393,
-    "dpm": 904.3
+    "kda": 4.47,
+    "kp": 0.449,
+    "dpm": 939.9
    },
    "form": {
     "form": "2-1",
@@ -4724,7 +4735,7 @@
      "lane": "BOTTOM",
      "games": 3,
      "winrate": 0.667,
-     "kda": 6.11
+     "kda": 4.47
     }
    ],
    "role_dist": [
@@ -4740,21 +4751,21 @@
      "lane": "BOTTOM",
      "games": 1,
      "winrate": 1.0,
-     "kda": 7.67
+     "kda": 3.29
     },
     {
      "champion_name": "Caitlyn",
      "lane": "BOTTOM",
      "games": 1,
      "winrate": 1.0,
-     "kda": 8.67
+     "kda": 8.33
     },
     {
      "champion_name": "Ezreal",
      "lane": "BOTTOM",
      "games": 1,
      "winrate": 0.0,
-     "kda": 2.0
+     "kda": 1.78
     }
    ],
    "recent_games": [
@@ -4763,24 +4774,24 @@
      "champion_name": "Aphelios",
      "lane": "BOTTOM",
      "win": true,
-     "kda": 7.67,
-     "dpm": 978.5
+     "kda": 3.29,
+     "dpm": 1144.7
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Caitlyn",
      "lane": "BOTTOM",
      "win": true,
-     "kda": 8.67,
-     "dpm": 786.7
+     "kda": 8.33,
+     "dpm": 881.4
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Ezreal",
      "lane": "BOTTOM",
      "win": false,
-     "kda": 2.0,
-     "dpm": 947.8
+     "kda": 1.78,
+     "dpm": 793.7
     }
    ],
    "partners_best": [
@@ -4841,24 +4852,24 @@
       "winrate": 0.0
      },
      {
-      "vs_champ": "Ezreal",
+      "vs_champ": "Caitlyn",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Caitlyn",
+      "vs_champ": "Ezreal",
       "games": 1,
       "winrate": 1.0
      }
     ],
     "victim": [
      {
-      "vs_champ": "Ezreal",
+      "vs_champ": "Caitlyn",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Caitlyn",
+      "vs_champ": "Ezreal",
       "games": 1,
       "winrate": 1.0
      },
@@ -4879,9 +4890,9 @@
     "losses": 0,
     "winrate": 1.0,
     "ci_lower": 0.438,
-    "kda": 16.07,
-    "kp": 0.488,
-    "dpm": 303.9
+    "kda": 9.28,
+    "kp": 0.462,
+    "dpm": 391.1
    },
    "form": {
     "form": "3-0",
@@ -4894,7 +4905,7 @@
      "lane": "UTILITY",
      "games": 3,
      "winrate": 1.0,
-     "kda": 16.07
+     "kda": 9.28
     }
    ],
    "role_dist": [
@@ -4910,21 +4921,21 @@
      "lane": "UTILITY",
      "games": 1,
      "winrate": 1.0,
-     "kda": 13.0
+     "kda": 11.5
     },
     {
      "champion_name": "Leona",
      "lane": "UTILITY",
      "games": 1,
      "winrate": 1.0,
-     "kda": 30.0
+     "kda": 8.33
     },
     {
      "champion_name": "Thresh",
      "lane": "UTILITY",
      "games": 1,
      "winrate": 1.0,
-     "kda": 5.2
+     "kda": 8.0
     }
    ],
    "recent_games": [
@@ -4933,24 +4944,24 @@
      "champion_name": "Thresh",
      "lane": "UTILITY",
      "win": true,
-     "kda": 5.2,
-     "dpm": 290.7
+     "kda": 8.0,
+     "dpm": 404.8
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Karma",
      "lane": "UTILITY",
      "win": true,
-     "kda": 13.0,
-     "dpm": 288.5
+     "kda": 11.5,
+     "dpm": 384.7
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Leona",
      "lane": "UTILITY",
      "win": true,
-     "kda": 30.0,
-     "dpm": 332.5
+     "kda": 8.33,
+     "dpm": 383.9
     }
    ],
    "partners_best": [
@@ -5006,7 +5017,7 @@
    "nemesis_victim": {
     "nemesis": [
      {
-      "vs_champ": "Karma",
+      "vs_champ": "Thresh",
       "games": 1,
       "winrate": 1.0
      },
@@ -5016,14 +5027,14 @@
       "winrate": 1.0
      },
      {
-      "vs_champ": "Thresh",
+      "vs_champ": "Karma",
       "games": 1,
       "winrate": 1.0
      }
     ],
     "victim": [
      {
-      "vs_champ": "Karma",
+      "vs_champ": "Thresh",
       "games": 1,
       "winrate": 1.0
      },
@@ -5033,7 +5044,7 @@
       "winrate": 1.0
      },
      {
-      "vs_champ": "Thresh",
+      "vs_champ": "Karma",
       "games": 1,
       "winrate": 1.0
      }
@@ -5049,9 +5060,9 @@
     "losses": 3,
     "winrate": 0.0,
     "ci_lower": 0.0,
-    "kda": 3.03,
-    "kp": 0.464,
-    "dpm": 280.7
+    "kda": 2.82,
+    "kp": 0.528,
+    "dpm": 316.2
    },
    "form": {
     "form": "0-3",
@@ -5064,7 +5075,7 @@
      "lane": "UTILITY",
      "games": 3,
      "winrate": 0.0,
-     "kda": 3.03
+     "kda": 2.82
     }
    ],
    "role_dist": [
@@ -5080,21 +5091,21 @@
      "lane": "UTILITY",
      "games": 1,
      "winrate": 0.0,
-     "kda": 4.0
+     "kda": 3.8
     },
     {
      "champion_name": "Lulu",
      "lane": "UTILITY",
      "games": 1,
      "winrate": 0.0,
-     "kda": 1.89
+     "kda": 1.86
     },
     {
      "champion_name": "Thresh",
      "lane": "UTILITY",
      "games": 1,
      "winrate": 0.0,
-     "kda": 3.2
+     "kda": 2.8
     }
    ],
    "recent_games": [
@@ -5103,24 +5114,24 @@
      "champion_name": "Lulu",
      "lane": "UTILITY",
      "win": false,
-     "kda": 1.89,
-     "dpm": 282.4
+     "kda": 1.86,
+     "dpm": 328.8
     },
     {
      "game_creation": 1700172800000,
      "champion_name": "Thresh",
      "lane": "UTILITY",
      "win": false,
-     "kda": 3.2,
-     "dpm": 272.5
+     "kda": 2.8,
+     "dpm": 348.2
     },
     {
      "game_creation": 1700000000000,
      "champion_name": "Karma",
      "lane": "UTILITY",
      "win": false,
-     "kda": 4.0,
-     "dpm": 287.2
+     "kda": 3.8,
+     "dpm": 271.6
     }
    ],
    "partners_best": [

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <title>내전 해체 분석기</title>
 <link rel="icon" href="data:," />
 <style>
@@ -76,6 +76,19 @@
   .team.win{} .vs{color:var(--dim);font-weight:700;padding:0 4px}
   .res{font-weight:700;border-radius:6px;padding:2px 8px;font-size:12px}
   .res.w{background:#0bc5d422;color:var(--acc)} .res.l{background:#ef4f5a22;color:var(--bad)}
+  /* 피드백 창구 — 친구들 대부분 GitHub 계정이 없어 사이트에서 바로 받는다 */
+  .fbsec{max-width:1180px;margin:0 auto;padding:20px 22px 8px;border-top:1px solid var(--line)}
+  .fbsec h2{font-size:16px;margin:0 0 6px}
+  .fbsec .lead{color:var(--dim);font-size:13px;margin:0 0 12px}
+  .fbrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .fbsec label{font-size:11px;color:var(--dim);display:flex;flex-direction:column;gap:4px}
+  .fbsec textarea{width:100%;min-height:92px;background:var(--panel2);color:var(--txt);
+    border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:13px;
+    resize:vertical}
+  .fbsec textarea:focus{outline:none;border-color:var(--acc)}
+  .fbfoot{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  .fbmsg{font-size:12px;color:var(--dim)}
+  .fbmsg.ok{color:var(--good)} .fbmsg.err{color:var(--bad)}
   footer{color:var(--dim);font-size:12px;text-align:center;padding:24px}
   .tooltip{cursor:help;border-bottom:1px dotted var(--dim)}
   .chart{width:100%;height:auto;display:block}
@@ -191,6 +204,26 @@
     <div id="balResult"></div>
   </div></section>
 </div>
+<section class="fbsec" id="fbsec">
+  <h2>💬 피드백</h2>
+  <p class="lead">숫자가 이상하거나, 이런 걸 보고 싶거나, 그냥 할 말이 있으면 남겨주세요.</p>
+  <div class="fbrow">
+    <label>누구<select id="fbWho"></select></label>
+    <label>무슨 얘기<select id="fbKind">
+      <option>숫자가 이상함</option><option>버그</option>
+      <option>이런 걸 보고 싶다</option><option>기타</option>
+    </select></label>
+  </div>
+  <label style="display:block">내용
+    <textarea id="fbBody" maxlength="2000"
+      placeholder="예) 내 승률이 이상합니다. 부캐로 한 판이 안 합쳐진 것 같아요."></textarea></label>
+  <div class="fbfoot">
+    <button id="fbSend">보내기</button>
+    <span class="fbmsg" id="fbMsg"></span>
+    <span class="muted" id="fbCount" style="margin-left:auto;font-size:11px">0 / 2000</span>
+  </div>
+  <p class="muted" id="fbAlt" style="display:none;font-size:12px;margin-top:8px"></p>
+</section>
 <footer id="foot"></footer>
 
 <script>
@@ -625,8 +658,51 @@ function renderAll(){
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
   renderCompare(); renderBalancePicker();
-  $('#foot').innerHTML=`내전 해체 분석기 · ${DATA.name||''}`;   // DATA는 sanitize된 값
+  $('#foot').innerHTML=`내전 해체 분석기 · ${DATA.name||''}`;
+  fillFeedbackWho();   // DATA는 sanitize된 값
 }
+
+// ---------- 피드백 창구 ----------
+// 정적 사이트라 서버가 없다. Cloudflare에 올라가 있으면 /api/feedback(worker.js)이 받아
+// 디스코드 웹훅으로 넘기고, GitHub Pages처럼 없는 곳에서는 안내 문구로 우아하게 물러난다.
+const FB_REPO = "https://github.com/Molaaaaaaa/lol-inhouse-stats/issues";
+function fillFeedbackWho(){
+  const sel = $('#fbWho'); if(!sel) return;
+  const names = Object.values(DATA.players||{}).map(p=>p.name).filter(Boolean).sort();
+  sel.innerHTML = '<option value="">익명으로</option>' +
+    names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  try{ const last=localStorage.getItem('fbWho'); if(last) sel.value=last; }catch(e){}
+}
+(function(){
+  const who=$('#fbWho'), kind=$('#fbKind'), body=$('#fbBody'),
+        send=$('#fbSend'), msg=$('#fbMsg'), cnt=$('#fbCount'), alt=$('#fbAlt');
+  if(!send) return;
+  who.onchange=()=>{ try{ localStorage.setItem('fbWho',who.value); }catch(e){} };
+  body.oninput=()=>{ cnt.textContent=`${body.value.length} / 2000`; };
+  const showAlt=lead=>{ alt.style.display='block';
+    alt.innerHTML=`${lead} <a href="${FB_REPO}" target="_blank" rel="noopener">GitHub Issues</a>`
+      + ' 또는 디스코드로 남겨주세요.'; };
+  send.onclick=async()=>{
+    const t=(body.value||'').trim();
+    if(t.length<5){ msg.className='fbmsg err'; msg.textContent='내용을 다섯 글자 이상 적어주세요.'; return; }
+    send.disabled=true; msg.className='fbmsg'; msg.textContent='보내는 중...';
+    try{
+      const r=await fetch('/api/feedback',{method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({who:who.value,kind:kind.value,body:t,
+                             page:(DATA&&DATA.name)||''})});
+      let j=null; try{ j=await r.json(); }catch(e){}
+      if(j&&j.ok){ msg.className='fbmsg ok'; msg.textContent='고맙습니다. 잘 받았습니다.';
+        body.value=''; cnt.textContent='0 / 2000'; }
+      else { msg.className='fbmsg err';
+        msg.textContent=(j&&j.error)||'전송에 실패했습니다.'; showAlt('대신'); }
+    }catch(e){
+      msg.className='fbmsg err'; msg.textContent='전송 창구가 아직 연결되지 않았습니다.';
+      showAlt('대신');
+    }
+    send.disabled=false;
+  };
+})();
 
 async function loadGuild(gid){
   if(!safeId(gid)){ $('#meta').textContent='잘못된 데이터 식별자'; return; }
