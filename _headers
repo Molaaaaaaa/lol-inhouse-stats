@@ -1,0 +1,12 @@
+# Cloudflare Workers 정적 에셋용 응답 헤더.
+#
+# ⚠️ worker.js 에도 같은 헤더를 붙이는 코드가 있지만 **정적 파일에는 실행되지 않는다** —
+#    [assets] 는 에셋이 존재하는 경로를 엣지에서 바로 응답하고 Worker 를 타지 않기 때문.
+#    그래서 index.html·data/*.json 에 실제로 헤더를 붙이는 건 이 파일이다.
+#    (frame-ancestors 는 <meta> 로는 무시되므로 헤더가 유일한 수단이다)
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
