@@ -259,8 +259,11 @@
   </section>
 
   <section id="fun" class="view hidden">
-    <div class="card"><h2>😈 호구 관계<span class="qmark" data-tip-key="호구" aria-label="호구 설명">?</span></h2>
-      <p class="muted">적으로 만났을 때 누가 누구를 더 많이 잡았나. 챔피언이 아니라 <b>사람</b> 기준입니다.</p>
+    <div class="card"><h2>⚔️ 상대 전적<span class="qmark" data-tip-key="상대전적" aria-label="상대 전적 설명">?</span></h2>
+      <p class="muted">적으로 만난 판에서 <b>누가 이겼나</b>. 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.</p>
+      <div id="funH2H"></div></div>
+    <div class="card" style="margin-top:10px"><h2>🗡️ 킬 관계<span class="qmark" data-tip-key="킬관계" aria-label="킬 관계 설명">?</span></h2>
+      <p class="muted">적으로 만났을 때 누가 누구를 더 많이 <b>잡았나</b>(킬 기준). 승패와는 별개입니다.</p>
       <div id="funRivals"></div></div>
     <div class="grid2" style="margin-top:10px">
       <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
@@ -386,7 +389,8 @@ const HELP={
   MMR:'단순 승률이 아니라 "누구를 이겼나"를 봅니다(Bradley-Terry).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다.\n1000이 평균이고 팀 밸런싱에 그대로 쓰입니다.',
   시너지:'둘이 같이 이긴 비율에서 "각자 실력만으로 기대되는 승률"을 뺀 값입니다.\n기대 승률은 두 사람이 함께한 판을 빼고 계산해 자기 자신과 비교하지 않습니다.\n+면 같이 할 때 더 잘 맞고, −면 덜 맞습니다.',
   밸런스:'실력 점수는 단순 승률이 아니라 "누구를 이겼나"(Bradley-Terry)입니다.\n여기에 그 사람이 그 라인에서 보인 숙련도와 퍼포먼스를 더해\n두 팀의 예측 승률이 50:50에 가장 가까워지는 조합을 고릅니다.\n라인을 지정하지 않으면 각자 잘하는 라인으로 알아서 배치합니다.',
-  호구:'적으로 만난 판에서 서로 몇 번 잡았는지 셉니다.\n왼쪽이 더 많이 잡은 쪽, 숫자는 (잡은 수 : 당한 수) 입니다.\n양쪽 합이 3킬 미만인 조합은 우연이라 보고 뺍니다.',
+  상대전적:'적으로 만난 판에서 서로 몇 번 이겼는지 셉니다.\n왼쪽이 더 많이 이긴 쪽, 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.\n같은 편이었던 판은 세지 않습니다.',
+  킬관계:'적으로 만난 판에서 서로 몇 번 잡았는지 셉니다(킬 기준).\n왼쪽이 더 많이 잡은 쪽, 숫자는 (잡은 수 : 당한 수) 입니다.\n양쪽 합이 3킬 미만인 조합은 우연이라 보고 뺍니다.\n많이 잡혀도 그 판을 이겼을 수 있으니 승패는 상대 전적에서 보세요.',
   길이:'경기 시간을 25분·35분으로 끊어 각 구간 승률을 봅니다.\n짧은 판에 강하면 라인전형, 긴 판에 강하면 후반 캐리형입니다.\n괄호 안은 그 구간의 판수입니다.',
   역전:'15분 팀 골드차가 2500 이상 벌어진 판만 셉니다.\n역전승률 = 열세였는데 이긴 비율.\n날린 비율 = 우세였는데 진 비율. 접전은 양쪽에서 모두 뺍니다.',
   죽음:'퍼블 헌납률 = 그 경기 첫 데스가 나였던 비율.\n첫 데스 = 매 경기 처음 죽은 시각의 평균.\n헌납 현상금 = 내가 죽어서 상대가 받아간 골드의 판당 평균.',
@@ -417,6 +421,8 @@ const TIP=(()=>{
 const LANE_KO={TOP:'탑',JUNGLE:'정글',MIDDLE:'미드',BOTTOM:'원딜',UTILITY:'서폿'};
 const LANE_SEQ=['TOP','JUNGLE','MIDDLE','BOTTOM','UTILITY'];
 const laneKo=l=>LANE_KO[l]||l||'?';
+// 영문 챔피언 id → 한글 이름. 아이콘 URL 은 영문이 필요하므로 표기만 바꾼다.
+const champKo=c=>((DATA.champ_ko||{})[c])||c||'';
 const laneIdx=l=>{const i=LANE_SEQ.indexOf(l);return i<0?9:i;};
 function help(key){
   const t=(HELP[key]||'').replace(/"/g,'&quot;');
@@ -439,6 +445,7 @@ function renderBoard(){
     {k:'discord_name',h:'멤버',fmt:(v,r,idx)=>(idx<3?MEDAL[idx]+' ':'')+v},
     {k:'mmr',h:'MMR',num:1,bar:1,hlp:'MMR'},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
+    {k:'losses',h:'패',num:1,fmt:(v,r)=>r.games-r.wins},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'ci_lower',h:'신뢰성',num:1,fmt:v=>pct(v),hlp:'신뢰성'},
     {k:'kda',h:'KDA',num:1},{k:'kp',h:'킬관여',num:1,fmt:pct},
@@ -527,6 +534,7 @@ function renderRecords(){
   const r=DATA.records||{};
   const mmss2=sec=>sec?`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`:'';
   const sub=o=>{const b=[];
+    if(o.win!=null) b.push(`<span class="${o.win?'pos':'neg'}">${o.win?'승':'패'}</span>`);
     if(o.k!=null&&(o.k||o.d||o.a)) b.push(`${o.k}/${o.d}/${o.a}`);
     if(o.dur) b.push(`⏱ ${mmss2(o.dur)}`);
     if(o.ts) b.push(new Date(o.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'}));
@@ -541,7 +549,7 @@ function renderRecords(){
     ['most_heal_shield','💚','최다 힐·실드'],['most_vision','👁️','최고 시야 점수'],
     ['most_jungle_cs10','🌲','최다 정글 CS@10'],['most_steals','🪝','스틸'],
     ['most_dmg_taken','🛡️','최다 탱킹'],['most_bounty','🎯','최다 현상금 수급'],
-    ['longest_living','🧘','최장 생존'],['least_time_dead','👻','가장 안 죽은 판'],
+    ['longest_living','🧘','최장 생존'],
   ];
   const cards=DEFS.filter(([k])=>r[k]&&r[k].name).map(([k,icon,label])=>
     `<div class="kpi"><div class="label">${icon} ${label}</div>`+
@@ -564,14 +572,15 @@ function buildChampLaneBtns(){
 }
 function renderChamp(){
   const rows=champLane?(DATA.champion_meta_lane||[]).filter(r=>r.lane===champLane):(DATA.champion_meta||[]);
-  const cols=[{k:'champion_name',h:'챔피언',img:'champion_name'}];
+  const cols=[{k:'champion_name',h:'챔피언',img:'champion_name',fmt:v=>champKo(v)}];
   if(champLane) cols.push({k:'lane',h:'라인',fmt:laneKo});
   cols.push({k:'games',h:'판',num:1,bar:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1});
   renderTable($('#champT'),rows,cols,'games',-1);
   renderTable($('#champMatchT'),DATA.champion_matchups||[],[
-    {k:'champ',h:'챔프',img:'champ'},{k:'vs_champ',h:'상대',img:'vs_champ'},
+    {k:'champ',h:'챔프',img:'champ',fmt:v=>champKo(v)},
+    {k:'vs_champ',h:'상대',img:'vs_champ',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1,bar:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)}],'games',-1);
   if(!DATA.ban_available){
@@ -595,7 +604,20 @@ function barCell(v,max,txt){
 }
 function renderFun(){
   const F=DATA.fun||{};
-  // 호구 관계
+  // 상대 전적 — 적으로 만난 판의 승패(h2h). 킬이 아니라 '그 판을 이겼나'다.
+  const nameOf=k=>((DATA.players||{})[k]||{}).name||k;
+  const pairs=Object.entries(DATA.h2h||{})
+    .map(([k,v])=>{const [a,b]=k.split('|');
+      return {a:nameOf(a),b:nameOf(b),aw:v.a_wins||0,bw:v.b_wins||0,n:v.vs_games||0};})
+    .filter(x=>x.n>0)
+    .map(x=>x.aw>=x.bw?x:{a:x.b,b:x.a,aw:x.bw,bw:x.aw,n:x.n})   // 이긴 쪽을 왼쪽에
+    .sort((x,y)=>(y.aw-y.bw)-(x.aw-x.bw)||y.n-x.n).slice(0,14);
+  $('#funH2H').innerHTML=pairs.length? pairs.map(r=>
+    `<div class="rival"><span class="rn">${r.a}</span>`+
+    `<span class="rk">${r.aw} <span class="muted">:</span> ${r.bw}</span>`+
+    `<span class="rn right">${r.b}</span></div>`).join('')
+    : '<p class="muted">아직 적으로 만난 조합이 없습니다.</p>';
+  // 킬 관계 — 누가 누구를 많이 잡았나(승패와 별개)
   const rv=F.rivals||[];
   $('#funRivals').innerHTML=rv.length? rv.map(r=>
     `<div class="rival"><span class="rn">${r.strong}</span>`+
@@ -730,7 +752,7 @@ function renderPlayerBody(){
   const best=(p.partners_best||[]).map(x=>`${x.partner} <span class="pos">${sgn(x.synergy)}</span>`).join(', ')||'—';
   const worst=(p.partners_worst||[]).map(x=>`${x.partner} <span class="neg">${sgn(x.synergy)}</span>`).join(', ')||'—';
   const nv=p.nemesis_victim||{nemesis:[],victim:[]};
-  const nvf=arr=>(arr||[]).map(x=>`${champImg(x.vs_champ)}${x.vs_champ} ${pct(x.winrate)}`).join(', ')||'—';
+  const nvf=arr=>(arr||[]).map(x=>`${champImg(x.vs_champ)}${champKo(x.vs_champ)} ${pct(x.winrate)}`).join(', ')||'—';
   const nemesis=nvf(nv.nemesis), victim=nvf(nv.victim);
   let h=`<div class="row">
     <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
@@ -765,18 +787,18 @@ function renderPlayerBody(){
   $('#playerBody').innerHTML=h;
   renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},{k:'kda',h:'KDA',num:1}],'games',-1);
-  renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name'},
+  renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},
     {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plRecent'),(p.recent_games||[]).map(g=>({...g,res:g.win?'승':'패'})),
-    [{k:'champion_name',h:'챔프',img:'champion_name'},{k:'lane',h:'라인',fmt:laneKo},
+    [{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},{k:'lane',h:'라인',fmt:laneKo},
      {k:'res',h:'결과',cls:r=>r.win?'pos':'neg'},{k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1}],null,-1);
   renderPlayerMetrics(p);
 }
 function kcList(arr){
   return (arr||[]).length
-    ? arr.map(x=>`${champImg(x.champion)}${x.champion} <span class="muted">${x.n}회</span>`).join(', ')
+    ? arr.map(x=>`${champImg(x.champion)}${champKo(x.champion)} <span class="muted">${x.n}회</span>`).join(', ')
     : '<span class="muted">기록 없음</span>';
 }
 function hourBars(hs){
@@ -832,7 +854,7 @@ function renderCompare(){
   const lanes=(rec&&rec.lanes||[]).filter(x=>x.same_lane);
   const laneNote=lanes.length?`<p class="muted" style="font-size:12px;margin:10px 0 0">`+
       `같은 라인에서 붙은 판 ${lanes.length}회 — `+
-      lanes.slice(0,5).map(x=>`${laneKo(x.lane)} ${flip?x.b_champ:x.a_champ} vs ${flip?x.a_champ:x.b_champ}`+
+      lanes.slice(0,5).map(x=>`${laneKo(x.lane)} ${champKo(flip?x.b_champ:x.a_champ)} vs ${champKo(flip?x.a_champ:x.b_champ)}`+
         ` <span class="${(flip? !x.a_win : x.a_win)?'pos':'neg'}">${(flip? !x.a_win : x.a_win)?'승':'패'}</span>`).join(' · ')+`</p>`:'';
   const withNote=rec&&rec.with_games?
     `<p class="muted" style="font-size:12px;margin:6px 0 0">같은 편이었던 판 ${rec.with_games}회 · 그때 승률 ${pct(rec.with_winrate)}</p>`:'';
@@ -959,7 +981,7 @@ const OBJ_ICON={towers:'🏰',dragons:'🐉',barons:'👑',heralds:'🦅',grubs:
 function dmgBars(d){
   const max=Math.max(1,...d.teams.flatMap(t=>(t.players||[]).map(p=>+p.dmg||0)));
   const col=t=>t.team_id===100?'var(--good)':'var(--bad)';
-  const colH=t=>`<div class="dmgcol">`+(t.players||[]).slice().sort((a,b)=>b.dmg-a.dmg).map(p=>
+  const colH=t=>`<div class="dmgcol">`+(t.players||[]).slice().sort((a,b)=>laneIdx(a.lane)-laneIdx(b.lane)).map(p=>
     `<div class="dmgrow">${champImg(p.champ)}<span class="dmgnm">${p.name}</span>`+
     `<span class="dmgval">${(p.dmg/1000).toFixed(1)}K</span>`+
     `<div class="dmgbar"><i style="width:${(p.dmg/max*100).toFixed(0)}%;background:${col(t)}"></i></div></div>`).join('')+`</div>`;
