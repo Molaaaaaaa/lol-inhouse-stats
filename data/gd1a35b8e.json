@@ -2,7 +2,7 @@
  "guild_id": "gd1a35b8e",
  "name": "조 C 방",
  "patch": "16.16.1",
- "timestamp": "2026-08-22T11:17:42+00:00",
+ "timestamp": "2026-08-22T11:23:09+00:00",
  "summary": {
   "total_games": 4,
   "player_count": 13,
@@ -10368,13 +10368,13 @@
    "strength": 0.022,
    "mmr": 1005,
    "lanes": {
-    "MIDDLE": {
-     "strength": -0.178,
-     "mmr": 955
-    },
     "JUNGLE": {
      "strength": 0.022,
      "mmr": 1005
+    },
+    "MIDDLE": {
+     "strength": -0.178,
+     "mmr": 955
     }
    },
    "main_lane": "JUNGLE",
@@ -10417,499 +10417,28 @@
   }
  },
  "h2h": {
-  "p10|p13": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Lulu",
-     "b_champ": "Zoe",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p3|p5": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 3,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Soraka",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p3|p9": {
-   "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "JarvanIV",
-     "b_champ": "Graves",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "LeeSin",
-     "b_champ": "Zyra",
-     "same_lane": true,
-     "a_win": false
-    }
-   ]
-  },
-  "p3|p10": {
-   "vs_games": 3,
-   "a_wins": 0,
-   "b_wins": 3,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Seraphine",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "JarvanIV",
-     "b_champ": "Leona",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "LeeSin",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p3|p4": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p10|p12": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p3|p12": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p3|p11": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p3|p8": {
-   "vs_games": 3,
-   "a_wins": 0,
-   "b_wins": 3,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Nasus",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "JarvanIV",
-     "b_champ": "Jax",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "LeeSin",
-     "b_champ": "Shen",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p3|p13": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Yone",
-     "same_lane": true,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Cassiopeia",
-     "same_lane": true,
-     "a_win": false
-    }
-   ]
-  },
-  "p10|p11": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Taliyah",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p8|p10": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 4,
-   "with_wins": 4,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p8|p9": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 3,
-   "with_wins": 3,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Nasus",
-     "b_champ": "Qiyana",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p8|p13": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Darius",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Shen",
-     "b_champ": "Zoe",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p11|p13": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": []
-  },
-  "p8|p11": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Darius",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Jax",
-     "b_champ": "Taliyah",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p8|p12": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Darius",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p11|p12": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p4|p13": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p10": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p4|p5": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Soraka",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p11": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p12": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Jhin",
-     "same_lane": true,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p8": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p4|p9": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p9|p10": {
+  "p1|p3": {
    "vs_games": 1,
    "a_wins": 0,
    "b_wins": 1,
    "a_winrate": 0.0,
    "with_games": 3,
-   "with_wins": 3,
-   "with_winrate": 1.0,
+   "with_wins": 0,
+   "with_winrate": 0.0,
    "lanes": [
     {
-     "lane": "JUNGLE",
-     "a_champ": "Qiyana",
-     "b_champ": "Seraphine",
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Aurora",
      "same_lane": false,
      "a_win": false
     }
    ]
   },
-  "p1|p4": {
-   "vs_games": 1,
+  "p1|p10": {
+   "vs_games": 4,
    "a_wins": 0,
-   "b_wins": 1,
+   "b_wins": 4,
    "a_winrate": 0.0,
    "with_games": 0,
    "with_wins": 0,
@@ -10918,29 +10447,192 @@
     {
      "lane": "TOP",
      "a_champ": "Mordekaiser",
-     "b_champ": "Kaisa",
+     "b_champ": "Leona",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Seraphine",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Leona",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Lulu",
      "same_lane": false,
      "a_win": false
     }
    ]
   },
-  "p9|p12": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
+  "p5|p10": {
+   "vs_games": 4,
+   "a_wins": 0,
+   "b_wins": 4,
+   "a_winrate": 0.0,
    "with_games": 0,
    "with_wins": 0,
    "with_winrate": null,
    "lanes": [
     {
-     "lane": "JUNGLE",
-     "a_champ": "Naafiri",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
+     "lane": "UTILITY",
+     "a_champ": "Soraka",
+     "b_champ": "Leona",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Seraphine",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Rakan",
+     "b_champ": "Leona",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Neeko",
+     "b_champ": "Lulu",
+     "same_lane": true,
+     "a_win": false
     }
    ]
+  },
+  "p1|p11": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p5|p11": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p5|p8": {
+   "vs_games": 4,
+   "a_wins": 0,
+   "b_wins": 4,
+   "a_winrate": 0.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Soraka",
+     "b_champ": "Darius",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Nasus",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Rakan",
+     "b_champ": "Jax",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Neeko",
+     "b_champ": "Shen",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p13": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Cassiopeia",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p5|p13": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Cassiopeia",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p12|p13": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
   },
   "p1|p8": {
    "vs_games": 4,
@@ -10977,6 +10669,86 @@
      "a_champ": "Sion",
      "b_champ": "Shen",
      "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p12": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p5|p12": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p1|p4": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Kaisa",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p5": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 4,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p1|p9": {
+   "vs_games": 3,
+   "a_wins": 0,
+   "b_wins": 3,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Naafiri",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Graves",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Zyra",
+     "same_lane": false,
      "a_win": false
     }
    ]
@@ -11045,113 +10817,39 @@
     }
    ]
   },
-  "p1|p9": {
-   "vs_games": 3,
+  "p9|p10": {
+   "vs_games": 1,
    "a_wins": 0,
-   "b_wins": 3,
+   "b_wins": 1,
    "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
+   "with_games": 3,
+   "with_wins": 3,
+   "with_winrate": 1.0,
    "lanes": [
     {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Naafiri",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Graves",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Zyra",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p5|p8": {
-   "vs_games": 4,
-   "a_wins": 0,
-   "b_wins": 4,
-   "a_winrate": 0.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Soraka",
-     "b_champ": "Darius",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Nasus",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Rakan",
-     "b_champ": "Jax",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Neeko",
-     "b_champ": "Shen",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p10": {
-   "vs_games": 4,
-   "a_wins": 0,
-   "b_wins": 4,
-   "a_winrate": 0.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Leona",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
+     "lane": "JUNGLE",
+     "a_champ": "Qiyana",
      "b_champ": "Seraphine",
      "same_lane": false,
      "a_win": false
-    },
+    }
+   ]
+  },
+  "p9|p12": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
     {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Leona",
+     "lane": "JUNGLE",
+     "a_champ": "Naafiri",
+     "b_champ": "Jhin",
      "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": false
+     "a_win": true
     }
    ]
   },
@@ -11187,171 +10885,577 @@
     }
    ]
   },
-  "p1|p3": {
+  "p3|p5": {
    "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
    "with_games": 3,
    "with_wins": 0,
    "with_winrate": 0.0,
    "lanes": [
     {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Aurora",
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Soraka",
      "same_lane": false,
-     "a_win": false
+     "a_win": true
     }
    ]
   },
-  "p5|p11": {
-   "vs_games": 1,
-   "a_wins": 0,
+  "p3|p13": {
+   "vs_games": 2,
+   "a_wins": 1,
    "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
+   "a_winrate": 0.5,
+   "with_games": 1,
    "with_wins": 0,
    "with_winrate": 0.0,
    "lanes": [
     {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p13": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Yone",
+     "same_lane": true,
+     "a_win": true
+    },
     {
-     "lane": "TOP",
-     "a_champ": "Urgot",
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
      "b_champ": "Cassiopeia",
-     "same_lane": false,
+     "same_lane": true,
      "a_win": false
     }
    ]
   },
-  "p5|p13": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Cassiopeia",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p12|p13": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p1|p11": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p12": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p5|p12": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p1|p5": {
+  "p8|p10": {
    "vs_games": 0,
    "a_wins": 0,
    "b_wins": 0,
    "a_winrate": null,
    "with_games": 4,
+   "with_wins": 4,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p11|p12": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
    "with_wins": 0,
    "with_winrate": 0.0,
    "lanes": []
   },
-  "p5|p10": {
-   "vs_games": 4,
+  "p3|p12": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Jhin",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p3|p10": {
+   "vs_games": 3,
    "a_wins": 0,
-   "b_wins": 4,
+   "b_wins": 3,
    "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
+     "b_champ": "Seraphine",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "JarvanIV",
+     "b_champ": "Leona",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "LeeSin",
+     "b_champ": "Lulu",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p8|p9": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 3,
+   "with_wins": 3,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Nasus",
+     "b_champ": "Qiyana",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p8|p11": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Darius",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Jax",
+     "b_champ": "Taliyah",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p3|p9": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "JarvanIV",
+     "b_champ": "Graves",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "LeeSin",
+     "b_champ": "Zyra",
+     "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p8|p12": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Darius",
+     "b_champ": "Jhin",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p3|p11": {
+   "vs_games": 2,
+   "a_wins": 1,
+   "b_wins": 1,
+   "a_winrate": 0.5,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p3|p8": {
+   "vs_games": 3,
+   "a_wins": 0,
+   "b_wins": 3,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
+     "b_champ": "Nasus",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "JarvanIV",
+     "b_champ": "Jax",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "LeeSin",
+     "b_champ": "Shen",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p8|p13": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Darius",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Shen",
+     "b_champ": "Zoe",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p3|p4": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p11|p13": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
+   "lanes": []
+  },
+  "p10|p11": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Taliyah",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p10|p13": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Lulu",
+     "b_champ": "Zoe",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p10|p12": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
    "with_games": 0,
    "with_wins": 0,
    "with_winrate": null,
    "lanes": [
     {
      "lane": "UTILITY",
-     "a_champ": "Soraka",
-     "b_champ": "Leona",
+     "a_champ": "Leona",
+     "b_champ": "Jhin",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p10": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p4|p8": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p4|p9": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p4|p5": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Soraka",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p12": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Jhin",
      "same_lane": true,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p13": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p11": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p7": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Ashe",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p2": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Kaisa",
+     "same_lane": false,
      "a_win": false
     },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Yunara",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p5|p7": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
     {
      "lane": "UTILITY",
      "a_champ": "Milio",
-     "b_champ": "Seraphine",
-     "same_lane": true,
+     "b_champ": "Ashe",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p3|p7": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
+     "b_champ": "Ashe",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p7|p8": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Xayah",
+     "b_champ": "Jax",
+     "same_lane": false,
      "a_win": false
     },
     {
-     "lane": "UTILITY",
-     "a_champ": "Rakan",
-     "b_champ": "Leona",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Neeko",
-     "b_champ": "Lulu",
-     "same_lane": true,
+     "lane": "BOTTOM",
+     "a_champ": "Ezreal",
+     "b_champ": "Shen",
+     "same_lane": false,
      "a_win": false
     }
    ]
@@ -11388,32 +11492,32 @@
     }
    ]
   },
-  "p2|p3": {
+  "p7|p10": {
    "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
    "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
+   "with_wins": 1,
+   "with_winrate": 1.0,
    "lanes": [
     {
      "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "JarvanIV",
+     "a_champ": "Xayah",
+     "b_champ": "Leona",
      "same_lane": false,
-     "a_win": true
+     "a_win": false
     },
     {
      "lane": "BOTTOM",
-     "a_champ": "Yunara",
-     "b_champ": "LeeSin",
+     "a_champ": "Ezreal",
+     "b_champ": "Lulu",
      "same_lane": false,
-     "a_win": true
+     "a_win": false
     }
    ]
   },
-  "p7|p13": {
+  "p7|p11": {
    "vs_games": 0,
    "a_wins": 0,
    "b_wins": 0,
@@ -11423,39 +11527,14 @@
    "with_winrate": 0.5,
    "lanes": []
   },
-  "p2|p11": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Lucian",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Taliyah",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p2|p9": {
+  "p7|p13": {
    "vs_games": 0,
    "a_wins": 0,
    "b_wins": 0,
    "a_winrate": null,
-   "with_games": 3,
-   "with_wins": 2,
-   "with_winrate": 0.667,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
    "lanes": []
   },
   "p2|p13": {
@@ -11483,63 +11562,28 @@
     }
    ]
   },
-  "p7|p11": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": []
-  },
-  "p7|p8": {
+  "p2|p11": {
    "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
+   "a_wins": 1,
+   "b_wins": 1,
+   "a_winrate": 0.5,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
    "lanes": [
     {
      "lane": "BOTTOM",
-     "a_champ": "Xayah",
-     "b_champ": "Jax",
+     "a_champ": "Lucian",
+     "b_champ": "Kindred",
      "same_lane": false,
      "a_win": false
     },
     {
      "lane": "BOTTOM",
-     "a_champ": "Ezreal",
-     "b_champ": "Shen",
+     "a_champ": "Kaisa",
+     "b_champ": "Taliyah",
      "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p7|p10": {
-   "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Xayah",
-     "b_champ": "Leona",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Ezreal",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": false
+     "a_win": true
     }
    ]
   },
@@ -11568,6 +11612,16 @@
     }
    ]
   },
+  "p2|p9": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 3,
+   "with_wins": 2,
+   "with_winrate": 0.667,
+   "lanes": []
+  },
   "p2|p8": {
    "vs_games": 1,
    "a_wins": 0,
@@ -11583,6 +11637,31 @@
      "b_champ": "Nasus",
      "same_lane": false,
      "a_win": false
+    }
+   ]
+  },
+  "p2|p3": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "JarvanIV",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Yunara",
+     "b_champ": "LeeSin",
+     "same_lane": false,
+     "a_win": true
     }
    ]
   },
@@ -11636,84 +11715,88 @@
     }
    ]
   },
-  "p3|p7": {
-   "vs_games": 1,
+  "p2|p6": {
+   "vs_games": 0,
    "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
+   "b_wins": 0,
+   "a_winrate": null,
    "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p6|p11": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
    "with_wins": 0,
-   "with_winrate": 0.0,
+   "with_winrate": null,
    "lanes": [
     {
      "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Ashe",
-     "same_lane": false,
-     "a_win": false
+     "a_champ": "Ryze",
+     "b_champ": "Taliyah",
+     "same_lane": true,
+     "a_win": true
     }
    ]
   },
-  "p1|p2": {
-   "vs_games": 2,
+  "p6|p9": {
+   "vs_games": 0,
    "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p6|p8": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p6|p7": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
    "with_wins": 0,
-   "with_winrate": 0.0,
+   "with_winrate": null,
    "lanes": [
     {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Kaisa",
+     "lane": "MIDDLE",
+     "a_champ": "Ryze",
+     "b_champ": "Xayah",
      "same_lane": false,
-     "a_win": false
+     "a_win": true
     },
     {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Yunara",
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Ezreal",
      "same_lane": false,
-     "a_win": false
+     "a_win": true
     }
    ]
   },
-  "p5|p7": {
-   "vs_games": 1,
+  "p6|p10": {
+   "vs_games": 0,
    "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
+   "b_wins": 0,
+   "a_winrate": null,
    "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Ashe",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p7": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
-     "b_champ": "Ashe",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": []
   },
   "p5|p6": {
    "vs_games": 2,
@@ -11787,89 +11870,6 @@
      "b_champ": "Aurora",
      "same_lane": false,
      "a_win": false
-    }
-   ]
-  },
-  "p6|p8": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p6|p9": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p6|p10": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p6|p7": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Ryze",
-     "b_champ": "Xayah",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Ezreal",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p2|p6": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p6|p11": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Ryze",
-     "b_champ": "Taliyah",
-     "same_lane": true,
-     "a_win": true
     }
    ]
   },
