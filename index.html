@@ -285,7 +285,7 @@
   </div></section>
 
   <section id="syn" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🤝 듀오"><h2>🤝 듀오 시너지<span class="qmark" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
+    <div class="card" data-sub="🤝 듀오"><h2>🤝 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
       <div id="synT"></div></div>
     <div class="card" data-sub="👥 트리오"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
     <div class="card" data-sub="🔥 히트맵"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
@@ -302,35 +302,51 @@
   <section id="records" class="view hidden" data-subtabs>
     <div class="card" data-sub="🏅 명예의 전당"><h2>🏅 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
     <div class="grid2" data-sub="👑 MVP · 펜타">
-      <div class="card"><h2>👑 MVP 랭킹<span class="qmark" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
+      <div class="card"><h2>👑 MVP 랭킹<span class="qmark" tabindex="0" role="button" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
       <div class="card"><h2>🔥 펜타킬</h2><div id="pentaT"></div></div>
     </div>
   </section>
 
   <section id="fun" class="view hidden" data-subtabs>
     <div data-sub="⚔️ 맞대결">
-      <div class="card"><h2>⚔️ 상대 전적<span class="qmark" data-tip-key="상대전적" aria-label="상대 전적 설명">?</span></h2>
+      <div class="card"><h2>⚔️ 상대 전적<span class="qmark" tabindex="0" role="button" data-tip-key="상대전적" aria-label="상대 전적 설명">?</span></h2>
         <p class="muted">적으로 만난 판에서 <b>누가 이겼나</b>. 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.</p>
         <div id="funH2H"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🗡️ 킬 관계<span class="qmark" data-tip-key="킬관계" aria-label="킬 관계 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2>🗡️ 킬 관계<span class="qmark" tabindex="0" role="button" data-tip-key="킬관계" aria-label="킬 관계 설명">?</span></h2>
         <p class="muted">적으로 만났을 때 누가 누구를 더 많이 <b>잡았나</b>(킬 기준). 승패와는 별개입니다.</p>
         <div id="funRivals"></div></div>
     </div>
     <div class="grid2" data-sub="🌙 언제 · 얼마나">
       <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
-      <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
+      <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" tabindex="0" role="button" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
     </div>
     <div data-sub="🔄 역전 · 죽음">
-      <div class="card"><h2>🔄 역전과 던짐<span class="qmark" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
+      <div class="card"><h2>🔄 역전과 던짐<span class="qmark" tabindex="0" role="button" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
         <div id="funComeback"></div></div>
-      <div class="card" style="margin-top:10px"><h2>💀 죽음의 기술<span class="qmark" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2>💀 죽음의 기술<span class="qmark" tabindex="0" role="button" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
         <div id="funDeath"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🗺️ 데스 히트맵<span class="qmark" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2>🗺️ 데스 히트맵<span class="qmark" tabindex="0" role="button" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
         <div id="funHeat"></div></div>
     </div>
+    <div data-sub="🍻 술안주">
+      <div class="card"><h2>💀 같이 죽는 커플<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
+        <p class="muted">같은 팀 두 사람이 <b>10초 안에, 가까운 데서</b> 같이 죽은 횟수입니다.
+          맵 반대편에서 각자 죽은 건 빠집니다. 실력 지표가 아니라 커플 인증입니다.</p>
+        <div id="funCouple"></div></div>
+      <div class="card" style="margin-top:10px"><h2>🍚 밥상과 숟가락<span class="qmark" tabindex="0" role="button" data-tip-key="밥상" aria-label="밥상 설명">?</span></h2>
+        <p class="muted">누가 누구 킬을 깔아 줬나(어시스트 기준). 옆의 <b>비중</b>은 받은 사람
+          전체 킬 중 이 사람 어시가 낀 비율입니다 — 원시 횟수는 그냥 킬 많은 사람이 위로 옵니다.</p>
+        <div id="funAssist"></div></div>
+      <div class="grid2" style="margin-top:10px">
+        <div class="card"><h2>🔥 최장 연속킬</h2><div id="funSpree"></div></div>
+        <div class="card"><h2>🛑 폭주 저지</h2>
+          <p class="muted">한참 달리던 사람을 처음 끊은 사람입니다. 아무도 못 끊고 끝난 폭주도 많아 따로 냅니다.</p>
+          <div id="funStopper"></div></div>
+      </div>
+    </div>
     <div class="grid2" data-sub="🧭 움직임 · 용">
-      <div class="card"><h2>🧭 로밍 지수<span class="qmark" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
-      <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
+      <div class="card"><h2>🧭 로밍 지수<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
+      <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
       <div class="card"><h2>🐲 용 종류별 성적</h2><div id="funDragon"></div></div>
     </div>
   </section>
@@ -346,7 +362,7 @@
     <div id="cmpBody"></div></div></section>
 
   <section id="balance" class="view hidden"><div class="card">
-    <h2>🧮 팀 밸런스<span class="qmark" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
+    <h2>🧮 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
     <p class="muted" id="balNote">오늘 온 사람을 눌러서 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 갈립니다.</p>
     <div id="balPick" class="chips"></div>
     <div id="balResult"></div>
@@ -449,6 +465,8 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
+  동반사망:'같은 팀 두 사람이 10초 안에, 서로 2500 유닛 이내에서 죽은 횟수입니다.\n거리 조건이 없으면 맵 반대편에서 각자 죽은 것도 잡힙니다.\n판당 횟수로 세웁니다 — 총 횟수로 하면 많이 뛴 사람이 자동으로 위에 옵니다.\n데스가 많은 라인(정글)이 잘 걸리니 실력으로 읽지 마세요.',
+  밥상:'킬을 낸 사람과 그 킬에 어시를 준 사람 쌍을 셉니다.\n비중 = 이 어시 수 ÷ 받은 사람의 총 킬.\n원시 횟수만 보면 사실상 킬 수 차이라, 서포터와 정글러를 구분하는 것에 가깝습니다.\n같이 3판 이상 뛴 조합만 나옵니다.',
   신뢰성:'승률을 그대로 믿으면 2판 2승(100%)이 20판 14승(70%)보다 위로 갑니다.\nWilson 신뢰구간의 아래끝을 써서 표본이 적을수록 더 깎아 내립니다.\n판수가 쌓일수록 실제 승률에 가까워집니다. 리더보드 정렬 기준입니다.',
   MVP:'경기마다 킬 관여·딜 비중·KDA를 합쳐 가장 높은 사람에게 1회 줍니다.\n이긴 팀에서만 뽑습니다. 표의 숫자는 누적 횟수입니다.',
   MMR:'단순 승률이 아니라 "누구를 이겼나"를 봅니다(Bradley-Terry).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다.\n1000이 평균이고 팀 밸런싱에 그대로 쓰입니다.',
@@ -466,7 +484,11 @@ const HELP={
 const TIP=(()=>{
   const box=document.createElement('div'); box.id='tipbox'; document.body.appendChild(box);
   const show=el=>{
-    box.textContent=el.dataset.tip; box.style.display='block';
+    // data-tip 이 없으면 data-tip-key 로 HELP 에서 찾는다(카드 제목 물음표가 이 경로다).
+    // textContent 라 따옴표 이스케이프 문제도 애초에 안 생긴다.
+    const txt=el.dataset.tip||HELP[el.dataset.tipKey]||'';
+    if(!txt){ box.style.display='none'; return; }
+    box.textContent=txt; box.style.display='block';
     const r=el.getBoundingClientRect(), b=box.getBoundingClientRect();
     let left=r.left+r.width/2-b.width/2;
     left=Math.max(8, Math.min(left, innerWidth-b.width-8));   // 화면 밖으로 나가지 않게
@@ -474,9 +496,16 @@ const TIP=(()=>{
     if(top+b.height>innerHeight-8) top=r.top-b.height-8;      // 아래가 좁으면 위로
     box.style.left=left+'px'; box.style.top=Math.max(8,top)+'px';
   };
+  // ⚠️ data-tip-key(카드 제목 물음표 11곳)를 여기서 안 받아서 **전부 죽어 있었다**.
+  //    mouseout 쪽은 이미 두 속성을 다 보고 있어 비대칭이었다.
   document.addEventListener('mouseover',e=>{
-    const el=e.target.closest('[data-tip]'); if(el) show(el);
+    const el=e.target.closest('[data-tip],[data-tip-key]'); if(el) show(el);
   });
+  // 키보드로도 열리게 — 마우스가 없으면 설명을 아예 못 보던 문제
+  document.addEventListener('focusin',e=>{
+    const el=e.target.closest('[data-tip],[data-tip-key]'); if(el) show(el);
+  });
+  document.addEventListener('focusout',()=>{box.style.display='none';});
   document.addEventListener('mouseout',e=>{
     if(e.target.closest('[data-tip],[data-tip-key]')) box.style.display='none';
   });
@@ -491,7 +520,7 @@ const champKo=c=>((DATA.champ_ko||{})[c])||c||'';
 const laneIdx=l=>{const i=LANE_SEQ.indexOf(l);return i<0?9:i;};
 function help(key){
   const t=(HELP[key]||'').replace(/"/g,'&quot;');
-  return `<span class="qmark" data-tip="${t}" aria-label="${key} 설명">?</span>`;
+  return `<span class="qmark" tabindex="0" role="button" data-tip="${t}" aria-label="${key} 설명">?</span>`;
 }
 
 const MEDAL=['🥇','🥈','🥉'];
@@ -524,14 +553,23 @@ function renderBoard(){
   const mmrByName={}, idByName={};
   Object.entries(DATA.ratings||{}).forEach(([id,r])=>{mmrByName[r.name]=r.mmr; idByName[r.name]=id;});
   const rows=(DATA.leaderboard||[]).map(r=>(
-    {...r,mmr:mmrByName[r.discord_name]||0,_rid:idByName[r.discord_name]||''}));
+    // losses 는 서버가 안 보낸다. fmt 로만 만들면 표시는 되는데 **정렬이 죽는다**
+    // (undefined 끼리 비교하면 전부 동률 → 원래 순서로 되돌아갈 뿐이다).
+    {...r,losses:(r.games||0)-(r.wins||0),
+     mmr:mmrByName[r.discord_name]||0,_rid:idByName[r.discord_name]||''}));
+  // ⚠️ 메달은 **기본 정렬(신뢰성 내림차순) 기준 등수**로 미리 박는다. renderTable 이
+  //    넘겨주는 idx 는 '지금 정렬된 순서'라, DPM 으로 정렬하면 DPM 1등이, 이름으로
+  //    정렬하면 가나다순 첫 사람이 금메달을 달았다(실측). 등수 열이 따로 없어서
+  //    메달이 유일한 순위 표시인데 그게 정렬을 따라다니면 안 된다.
+  rows.slice().sort((a,b)=>((+b.ci_lower||0)-(+a.ci_lower||0)))
+      .forEach((r,i)=>{ r._medal=i<3?MEDAL[i]+' ':''; });
   renderTable($('#boardT'),rows,[
-    {k:'discord_name',h:'멤버',fmt:(v,r,idx)=>(idx<3?MEDAL[idx]+' ':'')+v},
+    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v},
     {k:'mmr',h:'MMR',num:1,bar:1,hlp:'MMR',
      fmt:(v,r)=>r._rid?`<a href="#" class="mmrlink" data-who="${r._rid}"
        title="계산 과정 보기">${v}</a>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
-    {k:'losses',h:'패',num:1,fmt:(v,r)=>r.games-r.wins},
+    {k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
     {k:'ci_lower',h:'신뢰성',num:1,fmt:v=>pct(v),hlp:'신뢰성'},
     {k:'kda',h:'KDA',num:1},{k:'kp',h:'킬관여',num:1,fmt:pct},
@@ -576,7 +614,10 @@ function renderRank(){
   cols.push({k:'value',h:mLabel(curMetric),num:1,
     fmt:v=>fmtMetric(curMetric,v),
     cls:isDiff?(r=>'num '+(r.value>0?'pos':(r.value<0?'neg':''))):null,
-    bar:isDiff?0:1});
+    // 막대 길이는 값에 비례한다 → **낮을수록 좋은 지표에서는 1등이 가장 짧은 막대**를
+    // 갖는 모순이 생긴다(죽어 있던 시간·경기당 데스·최대 킬 열세 3개). 반전 산식은
+    // 0·이상치에서 새 버그를 부르므로 그냥 끈다. 순서는 이미 오름차순이라 읽힌다.
+    bar:(isDiff||lowerBetter(curMetric))?0:1});
   // 낮을수록 좋은 지표는 오름차순으로 세워야 1등이 위에 온다
   renderTable($('#rankT'),rows,cols,'value',lowerBetter(curMetric)?1:-1);
 }
@@ -747,43 +788,78 @@ function renderFun(){
     `<span class="rn right">${r.weak}</span></div>`).join('')
     : '<p class="muted">아직 서로 3킬 이상 주고받은 조합이 없습니다.</p>';
 
-  // 시간대 — 판수가 적은 시간대는 승률이 요동치므로 판수를 같이 보여준다
+  // 시간대 — 승률 열은 **구조적으로 항상 50%** 라 뺐다. 내전은 우리끼리 5대5라
+  // 어느 시간대든 승과 패가 정확히 상쇄된다(실측: 네 구간 전부 0.5). 정보가 0인 열을
+  // 색까지 입혀 보여주면 "새벽에 약하다" 같은 없는 패턴을 읽게 된다.
+  // 판수 분포는 진짜 정보다 — 우리가 언제 모이는지.
   const hs=(F.by_hour||[]).slice().sort((a,b)=>a.hour-b.hour);
   const hmax=Math.max(1,...hs.map(h=>h.games));
-  $('#funHour').innerHTML=hs.length? '<table><thead><tr><th>시각</th><th class="num">판</th><th class="num">승률</th></tr></thead><tbody>'+
+  const htot=hs.reduce((t,h)=>t+(+h.games||0),0)||1;
+  $('#funHour').innerHTML=hs.length? '<table><thead><tr><th>시각</th><th class="num">경기 수</th><th class="num">비중</th></tr></thead><tbody>'+
     hs.map(h=>`<tr><td>${String(h.hour).padStart(2,'0')}시</td>`+
       `<td class="num">${barCell(h.games,hmax,h.games)}</td>`+
-      `<td class="num ${wrClass(h.winrate)}">${pct(h.winrate)}</td></tr>`).join('')+
-    '</tbody></table>' : '<p class="muted">데이터 없음</p>';
+      `<td class="num muted">${pct(h.games/htot)}</td></tr>`).join('')+
+    '</tbody></table>'+
+    '<p class="muted" style="font-size:12px;margin:8px 0 0">우리끼리 하는 내전이라 어느 '+
+    '시간대든 승률은 정확히 50%가 됩니다(승과 패가 상쇄). 그래서 승률 대신 언제 모이는지를 봅니다.</p>'
+    : '<p class="muted">데이터 없음</p>';
 
   // 경기 길이
   renderTable($('#funDur'),F.by_duration||[],[
     {k:'discord_name',h:'멤버'},
     {k:'short_wr',h:'~25분',num:1,fmt:(v,r)=>r.short_g?`${pct(v)} <span class="muted">(${r.short_g})</span>`:'-',
-     cls:r=>'num '+wrClass(r.short_wr)},
+     cls:r=>'num '+(r.short_g?wrClass(r.short_wr):'')},
     {k:'mid_wr',h:'25~35분',num:1,fmt:(v,r)=>r.mid_g?`${pct(v)} <span class="muted">(${r.mid_g})</span>`:'-',
-     cls:r=>'num '+wrClass(r.mid_wr)},
+     cls:r=>'num '+(r.mid_g?wrClass(r.mid_wr):'')},
     {k:'long_wr',h:'35분~',num:1,fmt:(v,r)=>r.long_g?`${pct(v)} <span class="muted">(${r.long_g})</span>`:'-',
-     cls:r=>'num '+wrClass(r.long_wr)},
+     cls:r=>'num '+(r.long_g?wrClass(r.long_wr):'')},
   ],null,-1);
 
   // 역전 / 던짐
   renderTable($('#funComeback'),F.comeback||[],[
     {k:'discord_name',h:'멤버'},
     {k:'behind_g',h:'열세 판',num:1},
-    {k:'comeback_rate',h:'역전승률',num:1,fmt:v=>v==null?'-':pct(v),cls:r=>'num pos'},
+    {k:'comeback_rate',h:'역전승률',num:1,
+     // 열세였던 판이 0인데 '역전 0%'로 찍으면 못 한 게 아니라 기회가 없던 것이다
+     fmt:(v,r)=>r.behind_g?pct(v):'-',cls:r=>'num '+(r.behind_g?'pos':'')},
     {k:'ahead_g',h:'우세 판',num:1},
-    {k:'throw_rate',h:'날린 비율',num:1,fmt:v=>v==null?'-':pct(v),cls:r=>'num neg'},
+    {k:'throw_rate',h:'날린 비율',num:1,
+     fmt:(v,r)=>r.ahead_g?pct(v):'-',cls:r=>'num '+(r.ahead_g?'neg':'')},
   ],'throw_rate',-1);
 
   // 죽음
   renderTable($('#funDeath'),F.deaths||[],[
     {k:'discord_name',h:'멤버'},
     {k:'games',h:'판',num:1},
-    {k:'fb_given',h:'퍼블 헌납률',num:1,fmt:v=>pct(v),cls:r=>'num '+(r.fb_given>0.2?'neg':'')},
+    {k:'fb_given',h:'퍼블 헌납률',num:1,fmt:(v,r)=>r.deaths?pct(v):'-',
+     cls:r=>'num '+(r.deaths&&r.fb_given>0.2?'neg':'')},
     {k:'first_death_min',h:'첫 데스',num:1,fmt:v=>v==null?'-':`${v}분`},
     {k:'bounty_given',h:'헌납 현상금',num:1,fmt:v=>v==null?'-':(+v).toLocaleString(),bar:1},
   ],'bounty_given',-1);
+
+  // 술안주 — 같이 죽는 커플 / 밥상과 숟가락 / 폭주
+  renderTable($('#funCouple'),F.co_deaths||[],[
+    {k:'a',h:'커플',fmt:(v,r)=>`${r.a} <span class="muted">＋</span> ${r.b}`},
+    {k:'games',h:'같이 뛴 판',num:1},
+    {k:'n',h:'동반 사망',num:1},
+    {k:'per_game',h:'판당',num:1,bar:1,fmt:v=>(+v).toFixed(2)},
+  ],'per_game',-1);
+  renderTable($('#funAssist'),F.assist_flow||[],[
+    {k:'giver',h:'깔아 준 사람'},{k:'taker',h:'먹은 사람'},
+    {k:'assists',h:'어시',num:1},
+    {k:'share',h:'그 사람 킬 중',num:1,fmt:v=>pct(v),bar:1},
+    {k:'games',h:'같이 뛴 판',num:1},
+  ],'assists',-1);
+  const SP=F.sprees||{};
+  renderTable($('#funSpree'),SP.sprees||[],[
+    {k:'name',h:'멤버'},{k:'champ',h:'챔프',img:'champ',fmt:v=>champKo(v)},
+    {k:'streak',h:'연속킬',num:1,bar:1},
+    {k:'minute',h:'시점',num:1,fmt:v=>`${v}분`},
+  ],'streak',-1);
+  renderTable($('#funStopper'),SP.stoppers||[],[
+    {k:'stopper',h:'끊은 사람'},{k:'runner',h:'폭주하던 사람'},
+    {k:'streak',h:'그때 연속킬',num:1,bar:1},
+  ],'streak',-1);
 
   // 로밍
   renderTable($('#funRoam'),F.roaming||[],[
@@ -1194,6 +1270,17 @@ function renderSynHeat(){
 function donut(dist){
   if(!dist||!dist.length) return '<span class="muted">-</span>';
   const R=46,r=27,cx=54,cy=54,tot=dist.reduce((t,x)=>t+(+x.games||0),0)||1; let a0=-Math.PI/2,seg='';
+  // frac==1 이면 호의 시작점과 끝점이 같아져 SVG 가 그 세그먼트를 통째로 생략한다
+  // → 한 라인만 뛴 사람(16명 중 11명)은 빈 칸을 본다. 링을 직접 그린다.
+  if(dist.length===1){
+    const x=dist[0], c=ROLE_COLOR[x.lane]||'#9aa6b2';
+    return `<div style="display:flex;gap:14px;align-items:center">`+
+      `<svg style="width:108px;height:108px;flex:none" viewBox="0 0 108 108" role="img" aria-label="라인 분포">`+
+      `<circle cx="${cx}" cy="${cy}" r="${(R+r)/2}" fill="none" stroke="${c}" stroke-width="${R-r}">`+
+      `<title>${LANE_KR[x.lane]||x.lane} ${x.games}판</title></circle></svg>`+
+      `<div><div class="mini"><span style="width:10px;height:10px;border-radius:2px;background:${c};display:inline-block"></span>`+
+      `<span class="lane">${LANE_KR[x.lane]||x.lane}</span><span class="muted">${x.games}판</span></div></div></div>`;
+  }
   dist.forEach(x=>{const frac=(+x.games||0)/tot,a1=a0+frac*2*Math.PI,L=frac>0.5?1:0;
     const x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);
     const xi=cx+r*Math.cos(a1),yi=cy+r*Math.sin(a1),xj=cx+r*Math.cos(a0),yj=cy+r*Math.sin(a0);
@@ -1226,11 +1313,17 @@ function radar(rec,profile){
     `${grid}<polygon points="${poly}" fill="rgba(58,160,238,.32)" stroke="#3aa0ee" stroke-width="2"/>${dots}${labels}</svg>`+
     `<p class="muted" style="font-size:11px;margin:2px 0 0">점선 = 방 평균(50%). 점에 올리면 실제 값이 나옵니다.</p>`;
 }
+const fmtDur=sec=>{
+  const n=+sec; if(!n||!isFinite(n)) return '-';
+  return `${Math.floor(n/60)}분 ${String(Math.round(n%60)).padStart(2,'0')}초`;
+};
 function renderKpis(){
   const s=DATA.summary||{}, d=DATA.timestamp?new Date(DATA.timestamp):null;
   const ts=(d&&!isNaN(d.getTime()))?d.toLocaleString('ko-KR'):'-';
   $('#kpis').innerHTML=[
-    ['총 경기',s.total_games??0,''],['평균 승률',pct(s.avg_winrate||0),'acc'],
+    // '평균 승률'은 제로섬이라 항상 50% 근처다 — 정보가 없다. 대신 평균 경기 시간을
+    // 보여준다(우리 내전이 빨리 끝나는 편인지 길게 가는지는 실제로 다르다).
+    ['총 경기',s.total_games??0,''],['평균 경기 시간',fmtDur(s.avg_duration_sec),'acc'],
     ['플레이어',s.player_count??0,''],['업데이트',ts,'']
   ].map(([l,v,c])=>`<div class="kpi"><div class="label">${l}</div><div class="value ${c}">${v}</div></div>`).join('');
 }
