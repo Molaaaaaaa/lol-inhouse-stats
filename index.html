@@ -65,6 +65,23 @@
   .barwrap i{position:absolute;right:0;bottom:-3px;height:4px;border-radius:3px;
     background:linear-gradient(90deg,#0a93a8,var(--acc));opacity:.55}
   .muted{color:var(--dim)} .hidden{display:none}
+  /* 계산식 탭 — 식은 등폭으로, 설명은 본문으로. 좁은 화면에서 식이 넘치면 가로 스크롤 */
+  .mathwrap h3{font-size:13.5px;margin:20px 0 8px;font-weight:650;color:var(--acc)}
+  .mathwrap h3:first-child{margin-top:0}
+  .mathwrap .fml{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12.5px;line-height:1.75;background:#0c121a;border:1px solid var(--line);
+    border-left:3px solid var(--acc);border-radius:8px;padding:10px 13px;margin:0 0 8px;
+    overflow-x:auto}
+  .mathwrap .muted{font-size:12.5px;line-height:1.65;margin:0 0 6px}
+  .mathwrap .tbl{overflow-x:auto;margin:0 0 8px}
+  .mathwrap table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .mathwrap th,.mathwrap td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left}
+  .mathwrap th{color:var(--dim);font-weight:600}
+  .mathwrap td.num,.mathwrap th.num{text-align:right;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .mathwrap b.acc{color:var(--acc)}
+  a.mmrlink{color:inherit;text-decoration:none;border-bottom:1px dashed var(--dim);cursor:pointer}
+  a.mmrlink:hover{color:var(--acc);border-bottom-color:var(--acc)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .mini{display:flex;align-items:center;gap:8px;margin:3px 0}
   .mini .lane{width:64px;color:var(--dim);font-size:12px}
@@ -219,6 +236,7 @@
     <div class="tab" data-t="player">👤 플레이어</div>
     <div class="tab" data-t="compare">⚖️ 비교</div>
     <div class="tab" data-t="balance">🧮 밸런스</div>
+    <div class="tab" data-t="math">📐 계산식</div>
   </div>
 
   <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div>
@@ -301,6 +319,19 @@
     <div class="row" style="margin-top:10px"><button id="balClear">비우기</button>
       <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정하기</label></div>
   </div></section>
+
+  <section id="math" class="view hidden">
+    <div class="card">
+      <h2>📐 이 숫자는 어떻게 나왔나</h2>
+      <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
+        <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
+      <div class="row" style="margin:10px 0">
+        <label>MMR 검산할 사람 <select id="mathWho"></select></label>
+      </div>
+      <div id="mathMmr"></div>
+    </div>
+    <div class="card"><h2>🧮 나머지 지표</h2><div id="mathRest"></div></div>
+  </section>
 </div>
 <section class="fbsec" id="fbsec">
   <h2>💬 피드백</h2>
@@ -445,12 +476,26 @@ function minGamesNote(lane){
     (dx?`${ex?', ':' — '}${dx}명이 참여 일수 미달(${DATA.min_days}일)로 빠져 있습니다`:'')+
     `. <span class="qmark" data-tip="총 경기 수의 20%(최소 3판)를 요구합니다.&#10;경기가 쌓이면 기준도 같이 올라가서, 한두 판 뛴 기록이 계속 1위에 남지 않습니다." aria-label="최소 판수 설명">?</span></p>`;
 }
+// MMR 숫자를 누르면 그 사람의 계산 과정으로 바로 간다 — "이 숫자 어디서 나왔냐"에
+// 답이 두 번의 클릭 안에 있어야 한다.
+function openMathFor(id){
+  if(!id||!(DATA.ratings||{})[id]) return;
+  $('#mathWho').value=id; renderMathMmr();
+  activateTab(document.querySelector('#tabs .tab[data-t="math"]'));
+  $('#math').scrollIntoView({behavior:'smooth',block:'start'});
+}
 function renderBoard(){
-  const mmrByName={}; Object.values(DATA.ratings||{}).forEach(r=>{mmrByName[r.name]=r.mmr;});
-  const rows=(DATA.leaderboard||[]).map(r=>({...r,mmr:mmrByName[r.discord_name]||0}));
+  // 이름이 아니라 **id**로 잇는다. sanitize된 이름을 속성에 넣었다 다시 읽으면
+  // 엔티티가 풀려(&quot; → ") 원본과 안 맞는다.
+  const mmrByName={}, idByName={};
+  Object.entries(DATA.ratings||{}).forEach(([id,r])=>{mmrByName[r.name]=r.mmr; idByName[r.name]=id;});
+  const rows=(DATA.leaderboard||[]).map(r=>(
+    {...r,mmr:mmrByName[r.discord_name]||0,_rid:idByName[r.discord_name]||''}));
   renderTable($('#boardT'),rows,[
     {k:'discord_name',h:'멤버',fmt:(v,r,idx)=>(idx<3?MEDAL[idx]+' ':'')+v},
-    {k:'mmr',h:'MMR',num:1,bar:1,hlp:'MMR'},
+    {k:'mmr',h:'MMR',num:1,bar:1,hlp:'MMR',
+     fmt:(v,r)=>r._rid?`<a href="#" class="mmrlink" data-who="${r._rid}"
+       title="계산 과정 보기">${v}</a>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'losses',h:'패',num:1,fmt:(v,r)=>r.games-r.wins},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
@@ -1108,6 +1153,143 @@ function renderKpis(){
   ].map(([l,v,c])=>`<div class="kpi"><div class="label">${l}</div><div class="value ${c}">${v}</div></div>`).join('');
 }
 
+// ---------- 계산식 (검산 가능하게) ----------
+// 원칙: 상수는 payload(rating_constants)에서만 읽는다. 화면에 숫자를 따로 적어 두면
+// 코드와 반드시 어긋난다(라인 최소 판수에서 이미 겪었다).
+// 받침 유무로 조사를 고른다. "마빡는"처럼 틀리면 읽는 사람이 먼저 신뢰를 잃는다.
+function josa(word,pair){
+  const [withB,noB]=pair;                       // 예: ['은','는']
+  const c=(word||'').trim().slice(-1).charCodeAt(0);
+  if(!(c>=0xAC00&&c<=0xD7A3)) return noB;       // 한글이 아니면 받침 판정 불가
+  return ((c-0xAC00)%28)?withB:noB;
+}
+const nf=(v,d=4)=>v==null||!isFinite(v)?'—':(v>=0?'+':'')+Number(v).toFixed(d);
+const nf0=(v,d=4)=>v==null||!isFinite(v)?'—':Number(v).toFixed(d);
+
+function renderMath(){
+  const R=DATA.ratings||{}, sel=$('#mathWho');
+  const ids=Object.keys(R).sort((a,b)=>(R[b].mmr||0)-(R[a].mmr||0));
+  sel.innerHTML=ids.map(id=>`<option value="${id}">${R[id].name} · MMR ${R[id].mmr}</option>`).join('');
+  renderMathMmr();
+  renderMathRest();
+}
+
+function renderMathMmr(){
+  const R=DATA.ratings||{}, C=DATA.rating_constants||{};
+  const r=R[$('#mathWho').value];
+  const box=$('#mathMmr');
+  if(!r||!r.breakdown){ box.innerHTML='<p class="muted">이 사람은 MMR 계산에 필요한 데이터가 없습니다.</p>'; return; }
+  const b=r.breakdown, K=C.blend_k, SK=C.perf_shrink_k, PW=C.perf_weight, FW=C.form_weight;
+  const sum=b.bt_term+b.perf_term+b.form_term;
+  // 항 합이 strength와 어긋나면 숨기지 말고 드러낸다 — 검산 페이지가 거짓말하면 안 된다
+  const okSum=Math.abs(sum-b.strength)<1e-5, okMmr=Math.round(b.mmr_exact)===r.mmr;
+  const zrow=(b.perf_z||[]).map(z=>
+    `<tr><td>${z.label}</td><td class="num">${z.raw==null?'—':nf0(z.raw,3)}</td>`+
+    `<td class="num">${nf(z.z,2)}</td><td class="num">×${z.weight}</td>`+
+    `<td class="num">${z.z==null?'—':nf(z.z*z.weight,4)}</td></tr>`).join('');
+  const zsum=(b.perf_z||[]).filter(z=>z.z!=null).reduce((t,z)=>t+z.z*z.weight,0);
+  // 0.4+0.3+0.2+0.1 이 부동소수로 0.9999999999999999 가 된다 → 보기 좋게 정리
+  const zw=+((b.perf_z||[]).filter(z=>z.z!=null).reduce((t,z)=>t+z.weight,0)).toFixed(4);
+  box.innerHTML=`
+  <div class="mathwrap">
+    <p class="fml">MMR = ${C.mmr_base} + ${C.mmr_scale} × 실력점수<br>
+      실력점수 = <b>α·BT</b> + <b>(1−α)·${PW}·퍼포먼스·수축</b> + <b>${FW}·(최근승률−0.5)·2·수축</b><br>
+      α = 판수/(판수+${K}) &nbsp;·&nbsp; 수축 = 판수/(판수+${SK})</p>
+
+    <h3>① 판수로 정하는 두 계수 — ${r.name}${josa(r.name,['은','는'])} ${b.games}판</h3>
+    <p class="fml">α = ${b.games}/(${b.games}+${K}) = <b>${nf0(b.alpha,6)}</b>
+      &nbsp;·&nbsp; 수축 = ${b.games}/(${b.games}+${SK}) = <b>${nf0(b.shrink,6)}</b></p>
+    <p class="muted">판수가 적을수록 α가 작아져 BT 실력을 덜 믿고, 수축도 작아져 퍼포먼스를
+      방 평균(0) 쪽으로 끌어당깁니다. 한두 판 뛰고 1위가 되는 걸 막는 장치입니다.</p>
+
+    <h3>② BT 항 — 누구를 이겼는가</h3>
+    <p class="fml">BT = <b>${nf(b.bt,6)}</b> &nbsp;→&nbsp;
+      BT항 = ${nf0(b.alpha,6)} × ${nf(b.bt,6)} = <b>${nf(b.bt_term,6)}</b></p>
+    <p class="muted">모든 경기를 한 번에 로지스틱 회귀로 적합합니다. P(100팀 승) = σ(Σr<sub>100</sub> − Σr<sub>200</sub>).
+      강한 라인업을 이기면 더 오릅니다. 표본이 적으면 L2 정규화가 0으로 당깁니다.</p>
+
+    <h3>③ 퍼포먼스 항 — 방 안에서의 상대 위치(z점수)</h3>
+    <div class="tbl"><table><thead><tr><th>항목</th><th class="num">내 값</th>
+      <th class="num">z</th><th class="num">가중치</th><th class="num">기여</th></tr></thead>
+      <tbody>${zrow}</tbody></table></div>
+    <p class="fml">퍼포먼스 = ${nf(zsum,4)} ÷ ${zw} = <b>${nf(b.perf,6)}</b><br>
+      퍼포항 = (1−${nf0(b.alpha,6)}) × ${PW} × ${nf(b.perf,6)} × ${nf0(b.shrink,6)}
+      = <b>${nf(b.perf_term,6)}</b></p>
+    <p class="muted">z는 "방 평균에서 표준편차 몇 개만큼 떨어져 있나"입니다. 0이면 딱 평균.
+      절대값이 아니라 <b>이 방 안에서의 상대 위치</b>라, 사람이 늘거나 빠지면 같이 움직입니다.</p>
+
+    <h3>④ 폼 항 — 최근 ${b.form?(b.form.split('-').reduce((t,x)=>t+(+x||0),0)):'—'}판<span class="muted" style="font-weight:400"> (최대 5판)</span></h3>
+    <p class="fml">${b.form?`최근 ${b.form} (승률 ${nf0(b.form_winrate,3)}) →
+      ${FW} × (${nf0(b.form_winrate,3)} − 0.5) × 2 × ${nf0(b.shrink,6)} = <b>${nf(b.form_term,6)}</b>`
+      :'최근 경기 없음 → <b>0</b>'}</p>
+
+    <h3>⑤ 합계</h3>
+    <p class="fml">실력점수 = ${nf(b.bt_term,6)} ${b.perf_term<0?'−':'+'} ${nf0(Math.abs(b.perf_term),6)}
+      ${b.form_term<0?'−':'+'} ${nf0(Math.abs(b.form_term),6)} = <b>${nf(b.strength,6)}</b>
+      ${okSum?'':' <span class="neg">⚠ 항 합이 안 맞습니다</span>'}</p>
+    <p class="fml">MMR = ${C.mmr_base} + ${C.mmr_scale} × ${nf0(b.strength,6)}
+      = ${nf0(b.mmr_exact,3)} → 반올림 <b class="acc">${r.mmr}</b>
+      ${okMmr?'':' <span class="neg">⚠ 반올림이 안 맞습니다</span>'}</p>
+
+    <h3>라인별 MMR</h3>
+    <p class="fml">라인 MMR = ${C.mmr_base} + ${C.mmr_scale} × (실력점수 + ${C.lane_adj_weight}×(그 라인 승률 − 0.5))</p>
+    <p class="fml">${Object.entries(r.lanes||{}).map(([ln,v])=>
+      `${LANE_KO[ln]||ln} <b>${v.mmr}</b>`).join(' &nbsp;·&nbsp; ')||'—'}</p>
+  </div>`;
+}
+
+function renderMathRest(){
+  const C=DATA.rating_constants||{};
+  const mg=DATA.min_games, lm=DATA.min_games_lane;
+  $('#mathRest').innerHTML=`
+  <div class="mathwrap">
+    <h3>신뢰성 (Wilson 95% 하한)</h3>
+    <p class="fml">하한 = ( p + z²/2n − z·√( p(1−p)/n + z²/4n² ) ) / ( 1 + z²/n ),
+      &nbsp; p = 승/판, n = 판, z = 1.96</p>
+    <p class="muted">승률만 쓰면 <b>1승 0패 = 100%</b>가 1위가 됩니다. 표본이 적을수록 하한을
+      크게 깎아, "적어도 이만큼은 된다"로 줄을 세웁니다. 판이 쌓이면 승률에 수렴합니다.</p>
+
+    <h3>KDA</h3>
+    <p class="fml">KDA = (킬 합 + 어시 합) ÷ max(데스 합, 1) &nbsp;— <b>누적</b>입니다</p>
+    <p class="muted">판별 KDA를 평균 내지 <b>않습니다</b>. 그러면 0데스 한 판이 전체를 지배하고
+      값이 위로 부풀어요(실측: 한 명이 11.20 vs 7.07). op.gg·딥롤과 같은 방식입니다.</p>
+
+    <h3>MVP</h3>
+    <p class="fml">경기 점수 = 0.40×킬관여비 + 0.35×딜비중비 + 0.25×KDA비 &nbsp;(각 항목 = 그 경기 1등 대비 비율, KDA는 10 상한)</p>
+    <p class="muted">경기 <b>안에서</b> 상대화하기 때문에, 난타전이든 저점수 경기든 공평하게
+      비교됩니다. 한 경기에 MVP는 정확히 한 명이라 MVP 총합 = 경기 수입니다.</p>
+
+    <h3>시너지 (경험적 베이즈)</h3>
+    <p class="fml">시너지 = ( 같이 이긴 판 − 같이 한 판 × 기대승률 ) ÷ ( 같이 한 판 + κ )</p>
+    <p class="fml">기대승률 = 두 사람 각각의 "그 페어 없이 뛴 승률"의 평균,
+      단 (이긴 판 + 2) / (판 + 4) 로 0.5 쪽 수축</p>
+    <p class="muted">수축이 없으면 무너집니다. 내전은 늘 같은 사람끼리 하니 페어 동반 판을
+      빼면 남는 표본이 0~2판뿐이고, 그 한 판을 지면 기대승률이 <b>0.0</b>이 돼 시너지가
+      통째로 부풀어요(실측: 1위였던 값이 전부 인공물이었습니다). 내전은 제로섬이라
+      전체 승률이 정확히 0.5라서, 0.5가 근거 있는 기준값입니다. κ는 적률법으로 추정합니다.</p>
+
+    <h3>백분위 · 능력치</h3>
+    <p class="fml">백분위 = (나보다 낮은 사람 수 + 같은 사람 수/2) ÷ 전체 × 100</p>
+    <p class="muted">낮을수록 좋은 지표(죽어 있던 시간 등)는 방향을 뒤집어서 계산합니다.</p>
+
+    <h3>최소 판수</h3>
+    <p class="fml">최소 판수 = max(3, ⌈총 경기 × 0.2⌉), 총 경기 수를 넘지 않음 → 지금 <b>${mg}판</b><br>
+      라인별 지표 = max(3, ⌈최소 판수 ÷ 2⌉), 최소 판수를 넘지 않음 → 지금 <b>${lm}판</b></p>
+    <p class="muted">경기가 쌓이면 기준도 같이 올라갑니다. 한두 판 뛴 기록이 계속 1위에
+      남지 않게 하려는 것이고, 라인별은 판수가 라인마다 쪼개지므로 완화하되 3판이 바닥입니다.</p>
+
+    <h3>내전으로 인정하는 기준</h3>
+    <p class="fml">토너먼트 코드로 치른 경기 중 · 우리 멤버 6명 이상 + 양 팀에 분포 · 14분 이상</p>
+    <p class="muted">5대5에서 6명이면 반드시 양 팀에 한 명씩은 있습니다(비둘기집). 즉 우리끼리
+      붙은 판이라는 뜻이에요. 14분 미만은 재경기로 보고 뺍니다(롤은 15분 전 항복이 안 됩니다).</p>
+
+    <h3>상수 (코드에서 그대로 가져옴)</h3>
+    <p class="fml">α의 K = ${C.blend_k} · 퍼포먼스 수축 K = ${C.perf_shrink_k}
+      · 퍼포먼스 가중 = ${C.perf_weight} · 폼 가중 = ${C.form_weight}
+      · 라인 보정 = ${C.lane_adj_weight} · MMR = ${C.mmr_base} + ${C.mmr_scale}×실력점수</p>
+  </div>`;
+}
+
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
   renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
@@ -1115,7 +1297,7 @@ function renderAll(){
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
-  renderCompare(); renderBalancePicker();
+  renderCompare(); renderBalancePicker(); renderMath();
   $('#foot').innerHTML=`내전 해체 분석기 · ${DATA.name||''}`;
   fillFeedbackWho();   // DATA는 sanitize된 값
 }
@@ -1196,6 +1378,11 @@ $('#playerSearch').addEventListener('input',e=>{
 $('#cmpSearchA').addEventListener('input',e=>{fillPlayerSelect($('#cmpA'),e.target.value);renderCompare();});
 $('#cmpSearchB').addEventListener('input',e=>{fillPlayerSelect($('#cmpB'),e.target.value);renderCompare();});
 $('#playerSel').addEventListener('change',renderPlayerBody);
+$('#mathWho').addEventListener('change',renderMathMmr);
+$('#boardT').addEventListener('click',e=>{
+  const a=e.target.closest('.mmrlink'); if(!a) return;
+  e.preventDefault(); openMathFor(a.dataset.who);
+});
 $('#cmpA').addEventListener('change',renderCompare);
 $('#cmpB').addEventListener('change',renderCompare);
 $('#balPick').addEventListener('click',e=>{
