@@ -430,12 +430,15 @@ function help(key){
 }
 
 const MEDAL=['🥇','🥈','🥉'];
-function minGamesNote(){
+function minGamesNote(lane){
   // 1판만 뛰고 지표 1위가 되는 걸 막는 기준. 왜 누가 안 보이는지도 함께 밝힌다.
   const n=DATA.min_games||1, ex=DATA.min_games_excluded||0;
   if(n<=1) return '';
   return `<p class="muted" style="font-size:12px;margin:8px 0 0">`+
-    `${n}판 이상 뛴 사람만 집계합니다`+(ex?` — ${ex}명이 판수 미달로 빠져 있습니다`:'')+
+    `${n}판 이상 뛴 사람만 집계합니다`+
+    (lane&&DATA.min_games_lane&&DATA.min_games_lane!==n
+      ? ` (라인별 지표는 ${DATA.min_games_lane}판)` : '')+
+    (ex?` — ${ex}명이 판수 미달로 빠져 있습니다`:'')+
     `. <span class="qmark" data-tip="총 경기 수의 20%(최소 3판)를 요구합니다.&#10;경기가 쌓이면 기준도 같이 올라가서, 한두 판 뛴 기록이 계속 1위에 남지 않습니다." aria-label="최소 판수 설명">?</span></p>`;
 }
 function renderBoard(){
@@ -475,7 +478,7 @@ function renderRank(){
   const byLane=rows.length&&('lane' in rows[0]);
   if(curLane && byLane) rows=rows.filter(r=>r.lane===curLane);
   $('#rankNote').innerHTML=(byLane?'(라인별 분리) ':'')
-    +(lowerBetter(curMetric)?'<span class="pill">낮을수록 좋음</span> ':'')+minGamesNote();
+    +(lowerBetter(curMetric)?'<span class="pill">낮을수록 좋음</span> ':'')+minGamesNote(byLane);
   const pend=(DATA.rankings_pending||[]);
   const pn=$('#rankPending');
   if(pn) pn.innerHTML=pend.length
