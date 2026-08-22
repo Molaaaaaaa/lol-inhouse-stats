@@ -64,7 +64,10 @@
   .barwrap{position:relative;display:flex;justify-content:flex-end;align-items:center;gap:8px}
   .barwrap i{position:absolute;right:0;bottom:-3px;height:4px;border-radius:3px;
     background:linear-gradient(90deg,#0a93a8,var(--acc));opacity:.55}
-  .muted{color:var(--dim)} .hidden{display:none}
+  .muted{color:var(--dim)}
+  /* !important 인 이유: .grid2{display:grid} 처럼 나중에 선언된 같은 특이도 규칙이
+     .hidden 을 이겨서 '숨긴' 요소가 그대로 보였다(실측: 재미 탭 서브탭 3개 동시 노출). */
+  .hidden{display:none!important}
   /* 계산식 탭 — 식은 등폭으로, 설명은 본문으로. 좁은 화면에서 식이 넘치면 가로 스크롤 */
   .mathwrap h3{font-size:13.5px;margin:20px 0 8px;font-weight:650;color:var(--acc)}
   .mathwrap h3:first-child{margin-top:0}
@@ -82,6 +85,25 @@
   .mathwrap b.acc{color:var(--acc)}
   a.mmrlink{color:inherit;text-decoration:none;border-bottom:1px dashed var(--dim);cursor:pointer}
   a.mmrlink:hover{color:var(--acc);border-bottom-color:var(--acc)}
+  /* 섹션 안 서브탭 — 한 화면에 한 주제만. 스크롤로 훑게 하지 않는다 */
+  .subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .subtab{padding:6px 13px;border:1px solid var(--line);border-radius:999px;cursor:pointer;
+    color:var(--dim);user-select:none;font-size:12.5px;transition:.12s;background:none}
+  .subtab:hover{color:var(--txt);border-color:var(--dim)}
+  .subtab.on{background:var(--panel);color:var(--acc);border-color:var(--acc);font-weight:650}
+  /* 지표 선택기 — 65개를 드롭다운에 넣으면 스크롤바가 손톱만 해진다 */
+  .mpick{display:flex;flex-direction:column;gap:8px;width:100%}
+  .mpick .grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .mpick .mets{display:flex;gap:6px;flex-wrap:wrap}
+  .mpick input[type=search]{background:#0c121a;border:1px solid var(--line);border-radius:8px;
+    color:var(--txt);padding:6px 11px;font-size:12.5px;min-width:170px}
+  .mpick input[type=search]:focus{outline:none;border-color:var(--acc)}
+  .mchip{padding:5px 11px;border:1px solid var(--line);border-radius:8px;cursor:pointer;
+    color:var(--dim);font-size:12.5px;background:none;transition:.12s}
+  .mchip:hover{color:var(--txt);border-color:var(--dim)}
+  .mchip.on{background:linear-gradient(90deg,var(--acc),#0a93a8);color:#04121a;
+    border-color:transparent;font-weight:650}
+  .mpick .cnt{color:var(--dim);font-size:11.5px;margin-left:auto}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .mini{display:flex;align-items:center;gap:8px;margin:3px 0}
   .mini .lane{width:64px;color:var(--dim);font-size:12px}
@@ -243,61 +265,73 @@
     <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). 헤더 클릭으로 재정렬.</div></div></section>
 
   <section id="rank" class="view hidden"><div class="card">
-    <div class="row">
-      <span>지표</span>
-      <select id="metricSel"></select>
-      <span id="laneBtns"></span>
-      <span class="muted" id="rankNote"></span>
+    <div class="mpick">
+      <div class="grp">
+        <span class="muted" style="font-size:12.5px">분류</span>
+        <span id="metricGroups"></span>
+        <input type="search" id="metricSearch" placeholder="지표 검색 (예: 골드)"
+               aria-label="지표 검색">
+        <span class="cnt" id="metricCount"></span>
+      </div>
+      <div class="mets" id="metricChips"></div>
+      <div class="row" style="margin-top:2px">
+        <span class="muted" style="font-size:12.5px">라인</span>
+        <span id="laneBtns"></span>
+        <span class="muted" id="rankNote"></span>
+      </div>
       <div class="muted" id="rankPending"></div>
     </div>
     <div id="rankT"></div>
   </div></section>
 
-  <section id="syn" class="view hidden">
-    <div class="card"><h2>🤝 듀오 시너지<span class="qmark" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
+  <section id="syn" class="view hidden" data-subtabs>
+    <div class="card" data-sub="🤝 듀오"><h2>🤝 듀오 시너지<span class="qmark" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
       <div id="synT"></div></div>
-    <div class="card"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
-    <div class="card"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
+    <div class="card" data-sub="👥 트리오"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
+    <div class="card" data-sub="🔥 히트맵"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
   </section>
 
-  <section id="champ" class="view hidden">
-    <div class="card"><h2>🧙 챔피언 메타 (서버 전체)</h2>
+  <section id="champ" class="view hidden" data-subtabs>
+    <div class="card" data-sub="🧙 메타"><h2>🧙 챔피언 메타 (서버 전체)</h2>
       <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
       <div id="champT"></div></div>
-    <div class="card"><h2>⚔️ 챔프 매치업 (같은 라인 맞대결)</h2><div id="champMatchT"></div></div>
-    <div class="card"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
+    <div class="card" data-sub="⚔️ 매치업"><h2>⚔️ 챔프 매치업 (같은 라인 맞대결)</h2><div id="champMatchT"></div></div>
+    <div class="card" data-sub="🚫 밴"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
   </section>
 
-  <section id="records" class="view hidden">
-    <div class="card"><h2>🏅 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
-    <div class="grid2">
+  <section id="records" class="view hidden" data-subtabs>
+    <div class="card" data-sub="🏅 명예의 전당"><h2>🏅 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
+    <div class="grid2" data-sub="👑 MVP · 펜타">
       <div class="card"><h2>👑 MVP 랭킹<span class="qmark" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
       <div class="card"><h2>🔥 펜타킬</h2><div id="pentaT"></div></div>
     </div>
   </section>
 
-  <section id="fun" class="view hidden">
-    <div class="card"><h2>⚔️ 상대 전적<span class="qmark" data-tip-key="상대전적" aria-label="상대 전적 설명">?</span></h2>
-      <p class="muted">적으로 만난 판에서 <b>누가 이겼나</b>. 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.</p>
-      <div id="funH2H"></div></div>
-    <div class="card" style="margin-top:10px"><h2>🗡️ 킬 관계<span class="qmark" data-tip-key="킬관계" aria-label="킬 관계 설명">?</span></h2>
-      <p class="muted">적으로 만났을 때 누가 누구를 더 많이 <b>잡았나</b>(킬 기준). 승패와는 별개입니다.</p>
-      <div id="funRivals"></div></div>
-    <div class="grid2" style="margin-top:10px">
+  <section id="fun" class="view hidden" data-subtabs>
+    <div data-sub="⚔️ 맞대결">
+      <div class="card"><h2>⚔️ 상대 전적<span class="qmark" data-tip-key="상대전적" aria-label="상대 전적 설명">?</span></h2>
+        <p class="muted">적으로 만난 판에서 <b>누가 이겼나</b>. 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.</p>
+        <div id="funH2H"></div></div>
+      <div class="card" style="margin-top:10px"><h2>🗡️ 킬 관계<span class="qmark" data-tip-key="킬관계" aria-label="킬 관계 설명">?</span></h2>
+        <p class="muted">적으로 만났을 때 누가 누구를 더 많이 <b>잡았나</b>(킬 기준). 승패와는 별개입니다.</p>
+        <div id="funRivals"></div></div>
+    </div>
+    <div class="grid2" data-sub="🌙 언제 · 얼마나">
       <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
       <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
     </div>
-    <div class="card" style="margin-top:10px"><h2>🔄 역전과 던짐<span class="qmark" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
-      <div id="funComeback"></div></div>
-    <div class="card" style="margin-top:10px"><h2>💀 죽음의 기술<span class="qmark" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
-      <div id="funDeath"></div></div>
-    <div class="grid2" style="margin-top:10px">
+    <div data-sub="🔄 역전 · 죽음">
+      <div class="card"><h2>🔄 역전과 던짐<span class="qmark" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
+        <div id="funComeback"></div></div>
+      <div class="card" style="margin-top:10px"><h2>💀 죽음의 기술<span class="qmark" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
+        <div id="funDeath"></div></div>
+      <div class="card" style="margin-top:10px"><h2>🗺️ 데스 히트맵<span class="qmark" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
+        <div id="funHeat"></div></div>
+    </div>
+    <div class="grid2" data-sub="🧭 움직임 · 용">
       <div class="card"><h2>🧭 로밍 지수<span class="qmark" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
       <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
-    </div>
-    <div class="grid2" style="margin-top:10px">
       <div class="card"><h2>🐲 용 종류별 성적</h2><div id="funDragon"></div></div>
-      <div class="card"><h2>🗺️ 데스 히트맵<span class="qmark" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2><div id="funHeat"></div></div>
     </div>
   </section>
 
@@ -320,8 +354,8 @@
       <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정하기</label></div>
   </div></section>
 
-  <section id="math" class="view hidden">
-    <div class="card">
+  <section id="math" class="view hidden" data-subtabs>
+    <div class="card" data-sub="🎯 MMR 검산">
       <h2>📐 이 숫자는 어떻게 나왔나</h2>
       <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
         <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
@@ -330,7 +364,7 @@
       </div>
       <div id="mathMmr"></div>
     </div>
-    <div class="card"><h2>🧮 나머지 지표</h2><div id="mathRest"></div></div>
+    <div class="card" data-sub="🧮 나머지 지표"><h2>🧮 나머지 지표</h2><div id="mathRest"></div></div>
   </section>
 </div>
 <section class="fbsec" id="fbsec">
@@ -546,22 +580,58 @@ function renderRank(){
   // 낮을수록 좋은 지표는 오름차순으로 세워야 1등이 위에 온다
   renderTable($('#rankT'),rows,cols,'value',lowerBetter(curMetric)?1:-1);
 }
-function buildRankControls(){
-  // 지표가 60개가 넘어 평평한 목록은 못 쓴다 → 서버가 준 그룹으로 optgroup 을 만든다.
-  // 값이 없는 지표는 아예 빼서 "데이터 없음"만 보이는 화면을 막는다.
+let curGroup='', metricQuery='';
+function metricGroups(){
+  // 값이 있는 지표만. "데이터 없음"만 뜨는 칸을 고르게 하지 않는다.
   const have=DATA.rankings||{};
-  let groups=(DATA.metric_groups||[]).map(g=>({
+  let gs=(DATA.metric_groups||[]).map(g=>({
     group:g.group, metrics:(g.metrics||[]).filter(k=>have[k])})).filter(g=>g.metrics.length);
-  // 배포 순서상 새 index.html 이 옛 JSON(metric_groups 없음)을 만날 수 있다.
-  // 그때 드롭다운을 비워 버리면 랭킹 탭이 통째로 죽으므로 평평한 목록으로 되돌아간다.
-  if(!groups.length && Object.keys(have).length)
-    groups=[{group:'지표', metrics:Object.keys(have)}];
-  const flat=groups.flatMap(g=>g.metrics);
-  if(!flat.length){ $('#metricSel').innerHTML=''; $('#rankT').innerHTML=''; return; }
+  // 배포 순서상 새 index.html 이 옛 JSON(metric_groups 없음)을 만날 수 있다 →
+  // 비워 버리면 랭킹 탭이 통째로 죽으므로 평평한 목록으로 되돌아간다.
+  if(!gs.length && Object.keys(have).length) gs=[{group:'지표', metrics:Object.keys(have)}];
+  return gs;
+}
+function buildRankControls(){
+  // 지표가 65개다. <select> 에 넣으면 스크롤바가 손톱만 해져서 뭘 고르는지 알 수 없다.
+  // → 분류 칩으로 한 번 좁히고, 그래도 못 찾으면 검색으로 전체를 훑는다.
+  const groups=metricGroups(), flat=groups.flatMap(g=>g.metrics);
+  if(!flat.length){
+    $('#metricGroups').innerHTML=''; $('#metricChips').innerHTML='';
+    $('#rankT').innerHTML='<p class="muted">아직 표시할 지표가 없습니다.</p>'; return;
+  }
   if(!flat.includes(curMetric)) curMetric=flat[0];
-  $('#metricSel').innerHTML=groups.map(g=>`<optgroup label="${g.group}">`+
-    g.metrics.map(k=>`<option value="${k}">${mLabel(k)}</option>`).join('')+`</optgroup>`).join('');
-  $('#metricSel').value=curMetric;
+  if(!groups.some(g=>g.group===curGroup))
+    curGroup=(groups.find(g=>g.metrics.includes(curMetric))||groups[0]).group;
+
+  const q=metricQuery.trim().toLowerCase();
+  // 검색 중에는 분류를 무시하고 전체에서 찾는다 — 어느 분류인지 모르니까 검색하는 것이다
+  const hits=q?groups.flatMap(g=>g.metrics.filter(k=>mLabel(k).toLowerCase().includes(q)))
+              :(groups.find(g=>g.group===curGroup)||groups[0]).metrics;
+
+  // 검색 중에도 '지금 보고 있는 지표가 어느 분류인지'는 계속 표시한다.
+  // 안 그러면 검색 결과에서 하나 고른 순간 내가 어디에 있는지 알 수 없다.
+  $('#metricGroups').innerHTML=groups.map(g=>
+    `<button type="button" class="mchip ${g.group===curGroup?'on':''}" data-g="${g.group}"
+      >${g.group}<span class="muted" style="margin-left:5px">${g.metrics.length}</span></button>`).join('');
+  $('#metricChips').innerHTML=hits.length
+    ? hits.map(k=>`<button type="button" class="mchip ${k===curMetric?'on':''}" data-m="${k}"
+        >${mLabel(k)}</button>`).join('')
+    : `<span class="muted" style="font-size:12.5px">'${metricQuery}' 에 맞는 지표가 없습니다.</span>`;
+  $('#metricCount').textContent=q?`검색 ${hits.length}개 / 전체 ${flat.length}개`
+                                 :`${flat.length}개 지표`;
+
+  $('#metricGroups').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
+    curGroup=btn.dataset.g; metricQuery=''; $('#metricSearch').value='';
+    const g=groups.find(x=>x.group===curGroup);
+    // 분류를 바꾸면 그 분류의 첫 지표를 바로 보여준다(한 번 더 클릭하게 하지 않는다)
+    if(g&&g.metrics.length&&!g.metrics.includes(curMetric)) curMetric=g.metrics[0];
+    buildRankControls(); renderRank();
+  });
+  $('#metricChips').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
+    curMetric=btn.dataset.m;
+    const g=groups.find(x=>x.metrics.includes(curMetric)); if(g) curGroup=g.group;
+    buildRankControls(); renderRank();
+  });
   $('#laneBtns').innerHTML=LANES.map(([k,l])=>
     `<button class="tab ${k===curLane?'on':''}" data-l="${k}" style="padding:5px 11px">${l}</button>`).join(' ');
   $('#laneBtns').querySelectorAll('button').forEach(b=>b.onclick=()=>{curLane=b.dataset.l;buildRankControls();renderRank();});
@@ -812,31 +882,43 @@ function renderPlayerBody(){
     <span class="pill">KDA ${r.kda}</span><span class="pill">킬관여 ${pct(r.kp)}</span>
     <span class="pill">DPM ${r.dpm}</span>${streak}</div>
     ${((p.account_count||(p.accounts||[]).length)>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">🪪 계정 ${p.account_count||p.accounts.length}개 합산${p.accounts?': '+p.accounts.join(', '):''}</div>`:''}
-    <div class="grid2">
-      <div><h2>라인 분포</h2>${donut(p.role_dist)}</div>
-      <div><h2>능력치 <span class="qmark" data-tip="우리 방 안에서의 백분위입니다.&#10;바깥쪽일수록 방에서 상위권.&#10;점선은 방 평균(50%)." aria-label="능력치 설명">?</span></h2>${radar(r,p.profile)}</div>
-    </div>
-    <div class="grid2" style="margin-top:6px">
-      <div><h2>라인별 전적</h2><div id="plLane"></div></div>
-      <div><h2>챔피언</h2><div id="plChamp"></div></div>
-    </div>
-    <div style="margin-top:6px"><h2>최근 경기</h2><div id="plRecent"></div></div>
-    <div class="grid2" style="margin-top:6px">
-      <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
-      <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
-    </div>
-    <div class="grid2" style="margin-top:6px">
-      <div class="card"><h2>😈 천적 챔피언 (자주 짐)</h2>${nemesis}</div>
-      <div class="card"><h2>🍚 밥 챔피언 (자주 이김)</h2>${victim}</div>
-    </div>
-    <div class="grid2" style="margin-top:6px">
-      <div class="card"><h2>💀 나를 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed_by)}</div>
-      <div class="card"><h2>🗡️ 내가 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed)}</div>
-    </div>
-    <div style="margin-top:6px"><h2>🌙 시간대별 승률</h2>${hourBars(p.by_hour)}</div>
-    <div style="margin-top:10px"><h2>📐 세부 지표<span class="qmark" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
-      <div id="plMetrics"></div></div>`;
+    <div id="plPanes">
+      <div data-sub="📊 요약">
+        <div class="grid2">
+          <div><h2>라인 분포</h2>${donut(p.role_dist)}</div>
+          <div><h2>능력치 <span class="qmark" data-tip="우리 방 안에서의 백분위입니다.&#10;바깥쪽일수록 방에서 상위권.&#10;점선은 방 평균(50%)." aria-label="능력치 설명">?</span></h2>${radar(r,p.profile)}</div>
+        </div>
+        <div class="grid2" style="margin-top:6px">
+          <div><h2>라인별 전적</h2><div id="plLane"></div></div>
+          <div><h2>챔피언</h2><div id="plChamp"></div></div>
+        </div>
+      </div>
+      <div data-sub="📜 최근 · 시간대">
+        <div><h2>최근 경기</h2><div id="plRecent"></div></div>
+        <div style="margin-top:10px"><h2>🌙 시간대별 승률</h2>${hourBars(p.by_hour)}</div>
+      </div>
+      <div data-sub="🤝 궁합 · 천적">
+        <div class="grid2">
+          <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
+          <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
+        </div>
+        <div class="grid2" style="margin-top:6px">
+          <div class="card"><h2>😈 천적 챔피언 (자주 짐)</h2>${nemesis}</div>
+          <div class="card"><h2>🍚 밥 챔피언 (자주 이김)</h2>${victim}</div>
+        </div>
+        <div class="grid2" style="margin-top:6px">
+          <div class="card"><h2>💀 나를 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed_by)}</div>
+          <div class="card"><h2>🗡️ 내가 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed)}</div>
+        </div>
+      </div>
+      <div data-sub="📐 세부 지표">
+        <h2>📐 세부 지표<span class="qmark" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
+        <div id="plMetrics"></div>
+      </div>
+    </div>`;
   $('#playerBody').innerHTML=h;
+  // 사람을 바꿀 때마다 innerHTML 을 새로 쓰므로 서브탭도 매번 다시 만든다
+  buildSubtabs($('#plPanes'));
   renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},{k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
@@ -1297,7 +1379,7 @@ function renderAll(){
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
-  renderCompare(); renderBalancePicker(); renderMath();
+  renderCompare(); renderBalancePicker(); renderMath(); buildSubtabs();
   $('#foot').innerHTML=`내전 해체 분석기 · ${DATA.name||''}`;
   fillFeedbackWho();   // DATA는 sanitize된 값
 }
@@ -1351,6 +1433,37 @@ async function loadGuild(gid){
   DATA=sanitize(await r.json()); renderAll();
 }
 
+// ---------- 섹션 안 서브탭 ----------
+// 한 탭에 카드를 세로로 쌓아 두면 "밑에 뭐가 더 있는지" 알 수 없고 스크롤만 길어진다.
+// data-subtabs 를 단 섹션의 직계 자식 중 data-sub 가 있는 것만 한 번에 하나씩 보여준다.
+function buildSubtabs(root){
+  const scope=root?[root]:[...document.querySelectorAll('section[data-subtabs]')];
+  scope.forEach(sec=>{
+    if(sec.querySelector(':scope > .subtabs')) return;      // 이미 만들었으면 그대로
+    const panes=[...sec.children].filter(c=>c.dataset.sub);
+    if(panes.length<2) return;                              // 한 개면 굳이 나누지 않는다
+    const bar=document.createElement('div');
+    bar.className='subtabs'; bar.setAttribute('role','tablist');
+    panes.forEach((pane,i)=>{
+      const btn=document.createElement('button');
+      btn.className='subtab'+(i?'':' on'); btn.type='button';
+      btn.textContent=pane.dataset.sub;
+      btn.setAttribute('role','tab'); btn.setAttribute('aria-selected',!i);
+      btn.addEventListener('click',()=>{
+        bar.querySelectorAll('.subtab').forEach((b,j)=>{
+          const on=(j===i); b.classList.toggle('on',on); b.setAttribute('aria-selected',on);
+        });
+        panes.forEach((x,j)=>x.classList.toggle('hidden',j!==i));
+        // 전환하면 섹션 머리로 — 아래쪽에서 눌렀는데 화면이 그대로면 안 바뀐 줄 안다
+        sec.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      bar.appendChild(btn);
+      if(i) pane.classList.add('hidden');
+    });
+    sec.prepend(bar);
+  });
+}
+
 function activateTab(t){
   if(!t||!t.dataset.t) return;
   document.querySelectorAll('#tabs .tab').forEach(x=>{
@@ -1369,7 +1482,7 @@ document.querySelectorAll('#tabs .tab').forEach(t=>{
   });
 });
 $('#tabs').setAttribute('role','tablist');
-$('#metricSel').addEventListener('change',e=>{curMetric=e.target.value;renderRank();});
+$('#metricSearch').addEventListener('input',e=>{metricQuery=e.target.value;buildRankControls();});
 $('#playerSearch').addEventListener('input',e=>{
   const n=fillPlayerSelect($('#playerSel'),e.target.value);
   $('#playerHit').textContent=e.target.value.trim()?`${n}명`:'';
