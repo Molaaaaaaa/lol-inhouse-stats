@@ -2,7 +2,7 @@
  "guild_id": "gd1a35b8e",
  "name": "조 C 방",
  "patch": "16.16.1",
- "timestamp": "2026-08-21T18:45:47+00:00",
+ "timestamp": "2026-08-22T09:47:23+00:00",
  "summary": {
   "total_games": 4,
   "player_count": 13,
@@ -60,16 +60,6 @@
    "dpm": 802.2
   },
   {
-   "discord_name": "조 C",
-   "games": 3,
-   "wins": 1.0,
-   "winrate": 0.333,
-   "ci_lower": 0.061,
-   "kda": 6.44,
-   "kp": 0.565,
-   "dpm": 994.9
-  },
-  {
    "discord_name": "뚠댕뚠냥",
    "games": 3,
    "wins": 1.0,
@@ -78,6 +68,16 @@
    "kda": 1.92,
    "kp": 0.62,
    "dpm": 883.4
+  },
+  {
+   "discord_name": "조 C",
+   "games": 3,
+   "wins": 1.0,
+   "winrate": 0.333,
+   "ci_lower": 0.061,
+   "kda": 6.44,
+   "kp": 0.565,
+   "dpm": 994.9
   },
   {
    "discord_name": "광명시25살최문선",
@@ -905,12 +905,12 @@
     "value": 0.25
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "광명시25살최문선",
     "games": 4,
     "value": 0.0
    },
    {
-    "discord_name": "광명시25살최문선",
+    "discord_name": "말듣쓰",
     "games": 4,
     "value": 0.0
    },
@@ -930,12 +930,12 @@
     "value": 0.0
    },
    {
-    "discord_name": "우체국집배원",
+    "discord_name": "내 이름은 정준토",
     "games": 1,
     "value": 0.0
    },
    {
-    "discord_name": "내 이름은 정준토",
+    "discord_name": "우체국집배원",
     "games": 1,
     "value": 0.0
    }
@@ -992,12 +992,12 @@
     "value": 45.59
    },
    {
-    "discord_name": "대오주인",
+    "discord_name": "빛나는 마빡",
     "games": 4,
     "value": 0.0
    },
    {
-    "discord_name": "빛나는 마빡",
+    "discord_name": "대오주인",
     "games": 4,
     "value": 0.0
    },
@@ -1063,13 +1063,13 @@
     "value": 15.0
    },
    {
-    "discord_name": "광명시25살최문선",
+    "discord_name": "도야짬뽕누룽지탕",
     "lane": "MIDDLE",
     "games": 2,
     "value": 11.5
    },
    {
-    "discord_name": "도야짬뽕누룽지탕",
+    "discord_name": "광명시25살최문선",
     "lane": "MIDDLE",
     "games": 2,
     "value": 11.5
@@ -1161,6 +1161,12 @@
     "value": 0.0
    },
    {
+    "discord_name": "광명시25살최문선",
+    "lane": "MIDDLE",
+    "games": 2,
+    "value": 0.0
+   },
+   {
     "discord_name": "도야짬뽕누룽지탕",
     "lane": "MIDDLE",
     "games": 2,
@@ -1169,12 +1175,6 @@
    {
     "discord_name": "앙앙맹",
     "lane": "JUNGLE",
-    "games": 2,
-    "value": 0.0
-   },
-   {
-    "discord_name": "광명시25살최문선",
-    "lane": "MIDDLE",
     "games": 2,
     "value": 0.0
    },
@@ -1211,6 +1211,12 @@
     "value": 0.25
    },
    {
+    "discord_name": "말듣쓰",
+    "lane": "TOP",
+    "games": 4,
+    "value": 0.0
+   },
+   {
     "discord_name": "몰 매",
     "lane": "JUNGLE",
     "games": 4,
@@ -1223,9 +1229,9 @@
     "value": 0.0
    },
    {
-    "discord_name": "말듣쓰",
-    "lane": "TOP",
-    "games": 4,
+    "discord_name": "조 C",
+    "lane": "MIDDLE",
+    "games": 3,
     "value": 0.0
    },
    {
@@ -1235,14 +1241,8 @@
     "value": 0.0
    },
    {
-    "discord_name": "조 C",
-    "lane": "MIDDLE",
-    "games": 3,
-    "value": 0.0
-   },
-   {
     "discord_name": "광명시25살최문선",
-    "lane": "MIDDLE",
+    "lane": "JUNGLE",
     "games": 2,
     "value": 0.0
    },
@@ -1260,7 +1260,7 @@
    },
    {
     "discord_name": "광명시25살최문선",
-    "lane": "JUNGLE",
+    "lane": "MIDDLE",
     "games": 2,
     "value": 0.0
    },
@@ -1291,13 +1291,13 @@
     "value": 3.0
    },
    {
-    "discord_name": "jekjek",
+    "discord_name": "말듣쓰",
     "lane": "TOP",
     "games": 4,
     "value": 2.0
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "jekjek",
     "lane": "TOP",
     "games": 4,
     "value": 2.0
@@ -1327,14 +1327,14 @@
     "value": 1.5
    },
    {
-    "discord_name": "조 C",
-    "lane": "MIDDLE",
+    "discord_name": "뚠댕뚠냥",
+    "lane": "BOTTOM",
     "games": 3,
     "value": 1.33
    },
    {
-    "discord_name": "뚠댕뚠냥",
-    "lane": "BOTTOM",
+    "discord_name": "조 C",
+    "lane": "MIDDLE",
     "games": 3,
     "value": 1.33
    },
@@ -1351,26 +1351,26 @@
     "value": 1.0
    },
    {
-    "discord_name": "광명시25살최문선",
-    "lane": "MIDDLE",
-    "games": 2,
-    "value": 1.0
-   },
-   {
     "discord_name": "도야짬뽕누룽지탕",
     "lane": "MIDDLE",
     "games": 2,
     "value": 1.0
    },
    {
-    "discord_name": "우체국집배원",
-    "lane": "BOTTOM",
-    "games": 1,
+    "discord_name": "광명시25살최문선",
+    "lane": "MIDDLE",
+    "games": 2,
     "value": 1.0
    },
    {
     "discord_name": "앙앙맹",
     "lane": "MIDDLE",
+    "games": 1,
+    "value": 1.0
+   },
+   {
+    "discord_name": "우체국집배원",
+    "lane": "BOTTOM",
     "games": 1,
     "value": 1.0
    }
@@ -1505,13 +1505,13 @@
     "value": 0.0
    },
    {
-    "discord_name": "내 이름은 정준토",
+    "discord_name": "우체국집배원",
     "lane": "BOTTOM",
     "games": 1,
     "value": 0.0
    },
    {
-    "discord_name": "우체국집배원",
+    "discord_name": "내 이름은 정준토",
     "lane": "BOTTOM",
     "games": 1,
     "value": 0.0
@@ -2835,13 +2835,13 @@
     "value": 8.0
    },
    {
-    "discord_name": "빛나는 마빡",
+    "discord_name": "대오주인",
     "lane": "UTILITY",
     "games": 4,
     "value": 7.8
    },
    {
-    "discord_name": "대오주인",
+    "discord_name": "빛나는 마빡",
     "lane": "UTILITY",
     "games": 4,
     "value": 7.8
@@ -3053,12 +3053,12 @@
     "value": 4.0
    },
    {
-    "discord_name": "빛나는 마빡",
+    "discord_name": "말듣쓰",
     "games": 4,
     "value": 0.0
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "빛나는 마빡",
     "games": 4,
     "value": 0.0
    },
@@ -3120,12 +3120,12 @@
     "value": 1.0
    },
    {
-    "discord_name": "조 C",
+    "discord_name": "뚠댕뚠냥",
     "games": 3,
     "value": 1.0
    },
    {
-    "discord_name": "뚠댕뚠냥",
+    "discord_name": "조 C",
     "games": 3,
     "value": 1.0
    },
@@ -3182,17 +3182,17 @@
     "value": 0.75
    },
    {
+    "discord_name": "조 C",
+    "games": 3,
+    "value": 0.67
+   },
+   {
     "discord_name": "뚠댕뚠냥",
     "games": 3,
     "value": 0.67
    },
    {
     "discord_name": "qkdlvj3",
-    "games": 3,
-    "value": 0.67
-   },
-   {
-    "discord_name": "조 C",
     "games": 3,
     "value": 0.67
    },
@@ -3239,22 +3239,17 @@
     "value": 1.0
    },
    {
-    "discord_name": "조 C",
-    "games": 3,
-    "value": 0.33
-   },
-   {
     "discord_name": "앙앙맹",
     "games": 3,
     "value": 0.33
    },
    {
-    "discord_name": "jekjek",
-    "games": 4,
-    "value": 0.25
+    "discord_name": "조 C",
+    "games": 3,
+    "value": 0.33
    },
    {
-    "discord_name": "대오주인",
+    "discord_name": "말듣쓰",
     "games": 4,
     "value": 0.25
    },
@@ -3269,7 +3264,12 @@
     "value": 0.25
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "jekjek",
+    "games": 4,
+    "value": 0.25
+   },
+   {
+    "discord_name": "대오주인",
     "games": 4,
     "value": 0.25
    },
@@ -3279,12 +3279,12 @@
     "value": 0.0
    },
    {
-    "discord_name": "qkdlvj3",
+    "discord_name": "뚠댕뚠냥",
     "games": 3,
     "value": 0.0
    },
    {
-    "discord_name": "뚠댕뚠냥",
+    "discord_name": "qkdlvj3",
     "games": 3,
     "value": 0.0
    },
@@ -3301,13 +3301,13 @@
   ],
   "solo_kills": [
    {
-    "discord_name": "jekjek",
+    "discord_name": "말듣쓰",
     "lane": "TOP",
     "games": 4,
     "value": 2.0
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "jekjek",
     "lane": "TOP",
     "games": 4,
     "value": 2.0
@@ -3350,13 +3350,13 @@
    },
    {
     "discord_name": "광명시25살최문선",
-    "lane": "MIDDLE",
+    "lane": "JUNGLE",
     "games": 2,
     "value": 0.5
    },
    {
     "discord_name": "광명시25살최문선",
-    "lane": "JUNGLE",
+    "lane": "MIDDLE",
     "games": 2,
     "value": 0.5
    },
@@ -3379,13 +3379,13 @@
     "value": 0.0
    },
    {
-    "discord_name": "내 이름은 정준토",
+    "discord_name": "우체국집배원",
     "lane": "BOTTOM",
     "games": 1,
     "value": 0.0
    },
    {
-    "discord_name": "우체국집배원",
+    "discord_name": "내 이름은 정준토",
     "lane": "BOTTOM",
     "games": 1,
     "value": 0.0
@@ -3418,12 +3418,12 @@
     "value": 1.25
    },
    {
-    "discord_name": "광명시25살최문선",
+    "discord_name": "몰 매",
     "games": 4,
     "value": 1.0
    },
    {
-    "discord_name": "몰 매",
+    "discord_name": "광명시25살최문선",
     "games": 4,
     "value": 1.0
    },
@@ -3815,12 +3815,12 @@
     "value": 546.5
    },
    {
-    "discord_name": "jekjek",
+    "discord_name": "몰 매",
     "games": 4,
     "value": 0.0
    },
    {
-    "discord_name": "몰 매",
+    "discord_name": "jekjek",
     "games": 4,
     "value": 0.0
    },
@@ -3835,12 +3835,12 @@
     "value": 0.0
    },
    {
-    "discord_name": "앙앙맹",
+    "discord_name": "뚠댕뚠냥",
     "games": 3,
     "value": 0.0
    },
    {
-    "discord_name": "뚠댕뚠냥",
+    "discord_name": "앙앙맹",
     "games": 3,
     "value": 0.0
    },
@@ -3850,12 +3850,12 @@
     "value": 0.0
    },
    {
-    "discord_name": "내 이름은 정준토",
+    "discord_name": "우체국집배원",
     "games": 1,
     "value": 0.0
    },
    {
-    "discord_name": "우체국집배원",
+    "discord_name": "내 이름은 정준토",
     "games": 1,
     "value": 0.0
    }
@@ -3872,6 +3872,16 @@
     "value": 0.75
    },
    {
+    "discord_name": "광명시25살최문선",
+    "games": 4,
+    "value": 0.0
+   },
+   {
+    "discord_name": "jekjek",
+    "games": 4,
+    "value": 0.0
+   },
+   {
     "discord_name": "몰 매",
     "games": 4,
     "value": 0.0
@@ -3882,22 +3892,7 @@
     "value": 0.0
    },
    {
-    "discord_name": "jekjek",
-    "games": 4,
-    "value": 0.0
-   },
-   {
-    "discord_name": "광명시25살최문선",
-    "games": 4,
-    "value": 0.0
-   },
-   {
     "discord_name": "qkdlvj3",
-    "games": 3,
-    "value": 0.0
-   },
-   {
-    "discord_name": "조 C",
     "games": 3,
     "value": 0.0
    },
@@ -3908,6 +3903,11 @@
    },
    {
     "discord_name": "뚠댕뚠냥",
+    "games": 3,
+    "value": 0.0
+   },
+   {
+    "discord_name": "조 C",
     "games": 3,
     "value": 0.0
    },
@@ -3959,12 +3959,12 @@
     "value": 31.5
    },
    {
-    "discord_name": "qkdlvj3",
+    "discord_name": "조 C",
     "games": 3,
     "value": 30.0
    },
    {
-    "discord_name": "조 C",
+    "discord_name": "qkdlvj3",
     "games": 3,
     "value": 30.0
    },
@@ -4118,12 +4118,12 @@
     "value": 4.0
    },
    {
-    "discord_name": "앙앙맹",
+    "discord_name": "뚠댕뚠냥",
     "games": 3,
     "value": 3.67
    },
    {
-    "discord_name": "뚠댕뚠냥",
+    "discord_name": "앙앙맹",
     "games": 3,
     "value": 3.67
    },
@@ -4612,12 +4612,12 @@
     "value": 4.75
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "광명시25살최문선",
     "games": 4,
     "value": 5.0
    },
    {
-    "discord_name": "광명시25살최문선",
+    "discord_name": "말듣쓰",
     "games": 4,
     "value": 5.0
    },
@@ -4736,17 +4736,17 @@
     "value": 1.0
    },
    {
-    "discord_name": "뚠댕뚠냥",
-    "games": 3,
-    "value": 1.33
-   },
-   {
     "discord_name": "조 C",
     "games": 3,
     "value": 1.33
    },
    {
     "discord_name": "앙앙맹",
+    "games": 3,
+    "value": 1.33
+   },
+   {
+    "discord_name": "뚠댕뚠냥",
     "games": 3,
     "value": 1.33
    },
@@ -4766,12 +4766,12 @@
     "value": 4.0
    },
    {
-    "discord_name": "빛나는 마빡",
+    "discord_name": "말듣쓰",
     "games": 4,
     "value": 4.5
    },
    {
-    "discord_name": "말듣쓰",
+    "discord_name": "빛나는 마빡",
     "games": 4,
     "value": 4.5
    },
@@ -5856,12 +5856,12 @@
    "games": 3
   },
   {
-   "name": "앙앙맹",
+   "name": "조 C",
    "mvp": 1,
    "games": 3
   },
   {
-   "name": "빛나는 마빡",
+   "name": "몰 매",
    "mvp": 1,
    "games": 4
   }
@@ -6026,6 +6026,27 @@
  "min_games_excluded": 3,
  "champion_matchups": [
   {
+   "champ": "Shen",
+   "vs_champ": "Sion",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
+   "champ": "Ashe",
+   "vs_champ": "Lucian",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
+   "champ": "Lulu",
+   "vs_champ": "Neeko",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
    "champ": "Jax",
    "vs_champ": "Zaahen",
    "lane": "TOP",
@@ -6047,37 +6068,9 @@
    "winrate": 1.0
   },
   {
-   "champ": "Leona",
-   "vs_champ": "Soraka",
-   "lane": "UTILITY",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Seraphine",
-   "vs_champ": "Milio",
-   "lane": "UTILITY",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Cassiopeia",
-   "vs_champ": "Vladimir",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Aurora",
-   "vs_champ": "Zoe",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Kaisa",
-   "vs_champ": "Xayah",
-   "lane": "BOTTOM",
+   "champ": "Darius",
+   "vs_champ": "Mordekaiser",
+   "lane": "TOP",
    "games": 1,
    "winrate": 1.0
   },
@@ -6089,37 +6082,16 @@
    "winrate": 1.0
   },
   {
-   "champ": "Darius",
-   "vs_champ": "Mordekaiser",
-   "lane": "TOP",
+   "champ": "Seraphine",
+   "vs_champ": "Milio",
+   "lane": "UTILITY",
    "games": 1,
    "winrate": 1.0
   },
   {
-   "champ": "Naafiri",
-   "vs_champ": "Sylas",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Nasus",
-   "vs_champ": "Urgot",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Kindred",
-   "vs_champ": "Qiyana",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Kaisa",
-   "vs_champ": "Jhin",
-   "lane": "BOTTOM",
+   "champ": "Leona",
+   "vs_champ": "Soraka",
+   "lane": "UTILITY",
    "games": 1,
    "winrate": 1.0
   },
@@ -6131,22 +6103,15 @@
    "winrate": 1.0
   },
   {
-   "champ": "Shen",
-   "vs_champ": "Sion",
-   "lane": "TOP",
+   "champ": "Naafiri",
+   "vs_champ": "Sylas",
+   "lane": "JUNGLE",
    "games": 1,
    "winrate": 1.0
   },
   {
-   "champ": "Lulu",
-   "vs_champ": "Neeko",
-   "lane": "UTILITY",
-   "games": 1,
-   "winrate": 1.0
-  },
-  {
-   "champ": "Yunara",
-   "vs_champ": "Ezreal",
+   "champ": "Kaisa",
+   "vs_champ": "Xayah",
    "lane": "BOTTOM",
    "games": 1,
    "winrate": 1.0
@@ -6159,18 +6124,46 @@
    "winrate": 1.0
   },
   {
-   "champ": "Ashe",
-   "vs_champ": "Lucian",
+   "champ": "Yunara",
+   "vs_champ": "Ezreal",
    "lane": "BOTTOM",
    "games": 1,
    "winrate": 1.0
   },
   {
-   "champ": "Urgot",
-   "vs_champ": "Nasus",
+   "champ": "Aurora",
+   "vs_champ": "Zoe",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
+   "champ": "Cassiopeia",
+   "vs_champ": "Vladimir",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
+   "champ": "Kaisa",
+   "vs_champ": "Jhin",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
+   "champ": "Kindred",
+   "vs_champ": "Qiyana",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 1.0
+  },
+  {
+   "champ": "Nasus",
+   "vs_champ": "Urgot",
    "lane": "TOP",
    "games": 1,
-   "winrate": 0.0
+   "winrate": 1.0
   },
   {
    "champ": "Soraka",
@@ -6180,16 +6173,16 @@
    "winrate": 0.0
   },
   {
-   "champ": "Xayah",
-   "vs_champ": "Kaisa",
-   "lane": "BOTTOM",
+   "champ": "Urgot",
+   "vs_champ": "Nasus",
+   "lane": "TOP",
    "games": 1,
    "winrate": 0.0
   },
   {
-   "champ": "Milio",
-   "vs_champ": "Seraphine",
-   "lane": "UTILITY",
+   "champ": "Zoe",
+   "vs_champ": "Aurora",
+   "lane": "MIDDLE",
    "games": 1,
    "winrate": 0.0
   },
@@ -6201,8 +6194,43 @@
    "winrate": 0.0
   },
   {
-   "champ": "Zoe",
-   "vs_champ": "Aurora",
+   "champ": "Milio",
+   "vs_champ": "Seraphine",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0
+  },
+  {
+   "champ": "Sion",
+   "vs_champ": "Shen",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0
+  },
+  {
+   "champ": "Xayah",
+   "vs_champ": "Kaisa",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0
+  },
+  {
+   "champ": "Ezreal",
+   "vs_champ": "Yunara",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0
+  },
+  {
+   "champ": "Qiyana",
+   "vs_champ": "Kindred",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0
+  },
+  {
+   "champ": "Vladimir",
+   "vs_champ": "Cassiopeia",
    "lane": "MIDDLE",
    "games": 1,
    "winrate": 0.0
@@ -6215,9 +6243,16 @@
    "winrate": 0.0
   },
   {
-   "champ": "JarvanIV",
-   "vs_champ": "Graves",
-   "lane": "JUNGLE",
+   "champ": "Mordekaiser",
+   "vs_champ": "Darius",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0
+  },
+  {
+   "champ": "Jhin",
+   "vs_champ": "Kaisa",
+   "lane": "BOTTOM",
    "games": 1,
    "winrate": 0.0
   },
@@ -6229,44 +6264,16 @@
    "winrate": 0.0
   },
   {
-   "champ": "Vladimir",
-   "vs_champ": "Cassiopeia",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 0.0
-  },
-  {
-   "champ": "Qiyana",
-   "vs_champ": "Kindred",
+   "champ": "JarvanIV",
+   "vs_champ": "Graves",
    "lane": "JUNGLE",
    "games": 1,
    "winrate": 0.0
   },
   {
-   "champ": "Ezreal",
-   "vs_champ": "Yunara",
-   "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 0.0
-  },
-  {
-   "champ": "Sion",
-   "vs_champ": "Shen",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 0.0
-  },
-  {
-   "champ": "Mordekaiser",
-   "vs_champ": "Darius",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 0.0
-  },
-  {
-   "champ": "Neeko",
-   "vs_champ": "Lulu",
-   "lane": "UTILITY",
+   "champ": "Taliyah",
+   "vs_champ": "Ryze",
+   "lane": "MIDDLE",
    "games": 1,
    "winrate": 0.0
   },
@@ -6285,9 +6292,9 @@
    "winrate": 0.0
   },
   {
-   "champ": "Taliyah",
-   "vs_champ": "Ryze",
-   "lane": "MIDDLE",
+   "champ": "Neeko",
+   "vs_champ": "Lulu",
+   "lane": "UTILITY",
    "games": 1,
    "winrate": 0.0
   },
@@ -6297,24 +6304,10 @@
    "lane": "JUNGLE",
    "games": 1,
    "winrate": 0.0
-  },
-  {
-   "champ": "Jhin",
-   "vs_champ": "Kaisa",
-   "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 0.0
   }
  ],
  "champion_meta": [
   {
-   "champion_name": "Leona",
-   "games": 2,
-   "winrate": 1.0,
-   "kda": 14.25,
-   "dpm": 351.0
-  },
-  {
    "champion_name": "Kaisa",
    "games": 2,
    "winrate": 1.0,
@@ -6329,11 +6322,39 @@
    "dpm": 1007.4
   },
   {
-   "champion_name": "Lulu",
+   "champion_name": "Leona",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 14.25,
+   "dpm": 351.0
+  },
+  {
+   "champion_name": "Yunara",
    "games": 1,
    "winrate": 1.0,
-   "kda": 5.4,
-   "dpm": 294.1
+   "kda": 5.5,
+   "dpm": 1838.1
+  },
+  {
+   "champion_name": "Graves",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.0,
+   "dpm": 702.5
+  },
+  {
+   "champion_name": "Ashe",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 1.71,
+   "dpm": 732.4
+  },
+  {
+   "champion_name": "Cassiopeia",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 14.0,
+   "dpm": 1262.8
   },
   {
    "champion_name": "Darius",
@@ -6343,25 +6364,25 @@
    "dpm": 491.0
   },
   {
-   "champion_name": "Naafiri",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 5.0,
-   "dpm": 1017.9
-  },
-  {
-   "champion_name": "Seraphine",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 3.4,
-   "dpm": 457.8
-  },
-  {
    "champion_name": "Kindred",
    "games": 1,
    "winrate": 1.0,
    "kda": 17.0,
    "dpm": 974.1
+  },
+  {
+   "champion_name": "Jax",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.33,
+   "dpm": 989.2
+  },
+  {
+   "champion_name": "Ryze",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.0,
+   "dpm": 668.4
   },
   {
    "champion_name": "Zyra",
@@ -6378,27 +6399,6 @@
    "dpm": 514.0
   },
   {
-   "champion_name": "Ashe",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 1.71,
-   "dpm": 732.4
-  },
-  {
-   "champion_name": "Graves",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 3.0,
-   "dpm": 702.5
-  },
-  {
-   "champion_name": "Cassiopeia",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 14.0,
-   "dpm": 1262.8
-  },
-  {
    "champion_name": "Shen",
    "games": 1,
    "winrate": 1.0,
@@ -6406,39 +6406,25 @@
    "dpm": 622.0
   },
   {
-   "champion_name": "Ryze",
+   "champion_name": "Naafiri",
    "games": 1,
    "winrate": 1.0,
-   "kda": 3.0,
-   "dpm": 668.4
+   "kda": 5.0,
+   "dpm": 1017.9
   },
   {
-   "champion_name": "Jax",
+   "champion_name": "Lulu",
    "games": 1,
    "winrate": 1.0,
-   "kda": 3.33,
-   "dpm": 989.2
+   "kda": 5.4,
+   "dpm": 294.1
   },
   {
-   "champion_name": "Yunara",
+   "champion_name": "Seraphine",
    "games": 1,
    "winrate": 1.0,
-   "kda": 5.5,
-   "dpm": 1838.1
-  },
-  {
-   "champion_name": "Zaahen",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.17,
-   "dpm": 528.4
-  },
-  {
-   "champion_name": "Sylas",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.67,
-   "dpm": 603.3
+   "kda": 3.4,
+   "dpm": 457.8
   },
   {
    "champion_name": "Qiyana",
@@ -6448,46 +6434,11 @@
    "dpm": 497.3
   },
   {
-   "champion_name": "Vladimir",
+   "champion_name": "Zaahen",
    "games": 1,
    "winrate": 0.0,
-   "kda": 0.4,
-   "dpm": 437.5
-  },
-  {
-   "champion_name": "Neeko",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.08,
-   "dpm": 370.0
-  },
-  {
-   "champion_name": "Mordekaiser",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 2.0,
-   "dpm": 697.3
-  },
-  {
-   "champion_name": "Jhin",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.0,
-   "dpm": 334.3
-  },
-  {
-   "champion_name": "Soraka",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 0.83,
-   "dpm": 133.3
-  },
-  {
-   "champion_name": "Urgot",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.2,
-   "dpm": 931.5
+   "kda": 1.17,
+   "dpm": 528.4
   },
   {
    "champion_name": "LeeSin",
@@ -6504,25 +6455,39 @@
    "dpm": 285.2
   },
   {
-   "champion_name": "Taliyah",
+   "champion_name": "Lucian",
    "games": 1,
    "winrate": 0.0,
-   "kda": 2.5,
-   "dpm": 829.1
+   "kda": 1.57,
+   "dpm": 886.4
   },
   {
-   "champion_name": "Xayah",
+   "champion_name": "Sion",
    "games": 1,
    "winrate": 0.0,
-   "kda": 1.18,
-   "dpm": 872.9
+   "kda": 3.75,
+   "dpm": 646.8
   },
   {
-   "champion_name": "Yone",
+   "champion_name": "Mordekaiser",
    "games": 1,
    "winrate": 0.0,
    "kda": 2.0,
-   "dpm": 616.5
+   "dpm": 697.3
+  },
+  {
+   "champion_name": "Urgot",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.2,
+   "dpm": 931.5
+  },
+  {
+   "champion_name": "Soraka",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.83,
+   "dpm": 133.3
   },
   {
    "champion_name": "JarvanIV",
@@ -6539,18 +6504,39 @@
    "dpm": 215.3
   },
   {
-   "champion_name": "Sion",
+   "champion_name": "Vladimir",
    "games": 1,
    "winrate": 0.0,
-   "kda": 3.75,
-   "dpm": 646.8
+   "kda": 0.4,
+   "dpm": 437.5
   },
   {
-   "champion_name": "Lucian",
+   "champion_name": "Yone",
    "games": 1,
    "winrate": 0.0,
-   "kda": 1.57,
-   "dpm": 886.4
+   "kda": 2.0,
+   "dpm": 616.5
+  },
+  {
+   "champion_name": "Neeko",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.08,
+   "dpm": 370.0
+  },
+  {
+   "champion_name": "Sylas",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.67,
+   "dpm": 603.3
+  },
+  {
+   "champion_name": "Ezreal",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.86,
+   "dpm": 1044.9
   },
   {
    "champion_name": "Zoe",
@@ -6560,29 +6546,43 @@
    "dpm": 1105.5
   },
   {
-   "champion_name": "Ezreal",
+   "champion_name": "Taliyah",
    "games": 1,
    "winrate": 0.0,
-   "kda": 2.86,
-   "dpm": 1044.9
+   "kda": 2.5,
+   "dpm": 829.1
+  },
+  {
+   "champion_name": "Xayah",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.18,
+   "dpm": 872.9
+  },
+  {
+   "champion_name": "Jhin",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.0,
+   "dpm": 334.3
   }
  ],
  "champion_meta_lane": [
   {
-   "champion_name": "Kaisa",
-   "lane": "BOTTOM",
-   "games": 2,
-   "winrate": 1.0,
-   "kda": 8.5,
-   "dpm": 966.4
-  },
-  {
    "champion_name": "Leona",
    "lane": "UTILITY",
    "games": 2,
    "winrate": 1.0,
    "kda": 14.25,
    "dpm": 351.0
+  },
+  {
+   "champion_name": "Kaisa",
+   "lane": "BOTTOM",
+   "games": 2,
+   "winrate": 1.0,
+   "kda": 8.5,
+   "dpm": 966.4
   },
   {
    "champion_name": "Aurora",
@@ -6593,12 +6593,68 @@
    "dpm": 1007.4
   },
   {
-   "champion_name": "Jax",
+   "champion_name": "Cassiopeia",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 14.0,
+   "dpm": 1262.8
+  },
+  {
+   "champion_name": "Lulu",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 5.4,
+   "dpm": 294.1
+  },
+  {
+   "champion_name": "Ryze",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 3.0,
+   "dpm": 668.4
+  },
+  {
+   "champion_name": "Zyra",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.43,
+   "dpm": 1094.3
+  },
+  {
+   "champion_name": "Yunara",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 5.5,
+   "dpm": 1838.1
+  },
+  {
+   "champion_name": "Nasus",
    "lane": "TOP",
    "games": 1,
    "winrate": 1.0,
-   "kda": 3.33,
-   "dpm": 989.2
+   "kda": 2.25,
+   "dpm": 514.0
+  },
+  {
+   "champion_name": "Naafiri",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 5.0,
+   "dpm": 1017.9
+  },
+  {
+   "champion_name": "Shen",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 1.0,
+   "kda": 2.0,
+   "dpm": 622.0
   },
   {
    "champion_name": "Graves",
@@ -6617,22 +6673,6 @@
    "dpm": 732.4
   },
   {
-   "champion_name": "Seraphine",
-   "lane": "UTILITY",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 3.4,
-   "dpm": 457.8
-  },
-  {
-   "champion_name": "Cassiopeia",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 14.0,
-   "dpm": 1262.8
-  },
-  {
    "champion_name": "Kindred",
    "lane": "JUNGLE",
    "games": 1,
@@ -6641,28 +6681,20 @@
    "dpm": 974.1
   },
   {
-   "champion_name": "Lulu",
+   "champion_name": "Seraphine",
    "lane": "UTILITY",
    "games": 1,
    "winrate": 1.0,
-   "kda": 5.4,
-   "dpm": 294.1
+   "kda": 3.4,
+   "dpm": 457.8
   },
   {
-   "champion_name": "Yunara",
-   "lane": "BOTTOM",
+   "champion_name": "Jax",
+   "lane": "TOP",
    "games": 1,
    "winrate": 1.0,
-   "kda": 5.5,
-   "dpm": 1838.1
-  },
-  {
-   "champion_name": "Zyra",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 2.43,
-   "dpm": 1094.3
+   "kda": 3.33,
+   "dpm": 989.2
   },
   {
    "champion_name": "Darius",
@@ -6671,70 +6703,6 @@
    "winrate": 1.0,
    "kda": 1.0,
    "dpm": 491.0
-  },
-  {
-   "champion_name": "Shen",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 2.0,
-   "dpm": 622.0
-  },
-  {
-   "champion_name": "Naafiri",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 5.0,
-   "dpm": 1017.9
-  },
-  {
-   "champion_name": "Ryze",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 3.0,
-   "dpm": 668.4
-  },
-  {
-   "champion_name": "Nasus",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 1.0,
-   "kda": 2.25,
-   "dpm": 514.0
-  },
-  {
-   "champion_name": "Milio",
-   "lane": "UTILITY",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 2.75,
-   "dpm": 215.3
-  },
-  {
-   "champion_name": "JarvanIV",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.86,
-   "dpm": 460.2
-  },
-  {
-   "champion_name": "Soraka",
-   "lane": "UTILITY",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 0.83,
-   "dpm": 133.3
-  },
-  {
-   "champion_name": "Qiyana",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.4,
-   "dpm": 497.3
   },
   {
    "champion_name": "Yone",
@@ -6753,92 +6721,12 @@
    "dpm": 603.3
   },
   {
-   "champion_name": "LeeSin",
-   "lane": "JUNGLE",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 4.5,
-   "dpm": 544.8
-  },
-  {
    "champion_name": "Zaahen",
    "lane": "TOP",
    "games": 1,
    "winrate": 0.0,
    "kda": 1.17,
    "dpm": 528.4
-  },
-  {
-   "champion_name": "Jhin",
-   "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.0,
-   "dpm": 334.3
-  },
-  {
-   "champion_name": "Sion",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 3.75,
-   "dpm": 646.8
-  },
-  {
-   "champion_name": "Vladimir",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 0.4,
-   "dpm": 437.5
-  },
-  {
-   "champion_name": "Taliyah",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 2.5,
-   "dpm": 829.1
-  },
-  {
-   "champion_name": "Lucian",
-   "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.57,
-   "dpm": 886.4
-  },
-  {
-   "champion_name": "Ezreal",
-   "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 2.86,
-   "dpm": 1044.9
-  },
-  {
-   "champion_name": "Zoe",
-   "lane": "MIDDLE",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 3.33,
-   "dpm": 1105.5
-  },
-  {
-   "champion_name": "Mordekaiser",
-   "lane": "TOP",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 2.0,
-   "dpm": 697.3
-  },
-  {
-   "champion_name": "Xayah",
-   "lane": "BOTTOM",
-   "games": 1,
-   "winrate": 0.0,
-   "kda": 1.18,
-   "dpm": 872.9
   },
   {
    "champion_name": "Urgot",
@@ -6863,6 +6751,118 @@
    "winrate": 0.0,
    "kda": 1.5,
    "dpm": 285.2
+  },
+  {
+   "champion_name": "Xayah",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.18,
+   "dpm": 872.9
+  },
+  {
+   "champion_name": "Sion",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 3.75,
+   "dpm": 646.8
+  },
+  {
+   "champion_name": "Qiyana",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.4,
+   "dpm": 497.3
+  },
+  {
+   "champion_name": "Jhin",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.0,
+   "dpm": 334.3
+  },
+  {
+   "champion_name": "Zoe",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 3.33,
+   "dpm": 1105.5
+  },
+  {
+   "champion_name": "Mordekaiser",
+   "lane": "TOP",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.0,
+   "dpm": 697.3
+  },
+  {
+   "champion_name": "Vladimir",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.4,
+   "dpm": 437.5
+  },
+  {
+   "champion_name": "LeeSin",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 4.5,
+   "dpm": 544.8
+  },
+  {
+   "champion_name": "JarvanIV",
+   "lane": "JUNGLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.86,
+   "dpm": 460.2
+  },
+  {
+   "champion_name": "Milio",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.75,
+   "dpm": 215.3
+  },
+  {
+   "champion_name": "Soraka",
+   "lane": "UTILITY",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 0.83,
+   "dpm": 133.3
+  },
+  {
+   "champion_name": "Ezreal",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.86,
+   "dpm": 1044.9
+  },
+  {
+   "champion_name": "Taliyah",
+   "lane": "MIDDLE",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 2.5,
+   "dpm": 829.1
+  },
+  {
+   "champion_name": "Lucian",
+   "lane": "BOTTOM",
+   "games": 1,
+   "winrate": 0.0,
+   "kda": 1.57,
+   "dpm": 886.4
   }
  ],
  "fun": {
@@ -6882,15 +6882,15 @@
     "diff": 10
    },
    {
-    "strong": "몰 매",
-    "weak": "우체국집배원",
+    "strong": "jekjek",
+    "weak": "빛나는 마빡",
     "kills": 5,
     "back": 0,
     "diff": 5
    },
    {
-    "strong": "jekjek",
-    "weak": "빛나는 마빡",
+    "strong": "몰 매",
+    "weak": "우체국집배원",
     "kills": 5,
     "back": 0,
     "diff": 5
@@ -6984,16 +6984,6 @@
     "kills": 6
    },
    {
-    "killer": "도야짬뽕누룽지탕",
-    "victim": "조 C",
-    "kills": 5
-   },
-   {
-    "killer": "도야짬뽕누룽지탕",
-    "victim": "대오주인",
-    "kills": 5
-   },
-   {
     "killer": "몰 매",
     "victim": "우체국집배원",
     "kills": 5
@@ -7004,17 +6994,22 @@
     "kills": 5
    },
    {
+    "killer": "도야짬뽕누룽지탕",
+    "victim": "조 C",
+    "kills": 5
+   },
+   {
+    "killer": "도야짬뽕누룽지탕",
+    "victim": "대오주인",
+    "kills": 5
+   },
+   {
     "killer": "광명시25살최문선",
     "victim": "도야짬뽕누룽지탕",
     "kills": 5
    },
    {
     "killer": "몰 매",
-    "victim": "광명시25살최문선",
-    "kills": 4
-   },
-   {
-    "killer": "몰 매",
     "victim": "앙앙맹",
     "kills": 4
    },
@@ -7024,18 +7019,28 @@
     "kills": 4
    },
    {
-    "killer": "앙앙맹",
-    "victim": "qkdlvj3",
-    "kills": 4
-   },
-   {
     "killer": "조 C",
     "victim": "광명시25살최문선",
     "kills": 4
    },
    {
     "killer": "앙앙맹",
+    "victim": "qkdlvj3",
+    "kills": 4
+   },
+   {
+    "killer": "몰 매",
+    "victim": "광명시25살최문선",
+    "kills": 4
+   },
+   {
+    "killer": "앙앙맹",
     "victim": "jekjek",
+    "kills": 3
+   },
+   {
+    "killer": "몰 매",
+    "victim": "대오주인",
     "kills": 3
    },
    {
@@ -7044,43 +7049,18 @@
     "kills": 3
    },
    {
-    "killer": "내 이름은 정준토",
-    "victim": "대오주인",
-    "kills": 3
-   },
-   {
-    "killer": "뚠댕뚠냥",
-    "victim": "qkdlvj3",
-    "kills": 3
-   },
-   {
     "killer": "광명시25살최문선",
     "victim": "말듣쓰",
     "kills": 3
    },
    {
-    "killer": "몰 매",
+    "killer": "뚠댕뚠냥",
+    "victim": "말듣쓰",
+    "kills": 3
+   },
+   {
+    "killer": "내 이름은 정준토",
     "victim": "대오주인",
-    "kills": 3
-   },
-   {
-    "killer": "조 C",
-    "victim": "몰 매",
-    "kills": 3
-   },
-   {
-    "killer": "말듣쓰",
-    "victim": "광명시25살최문선",
-    "kills": 3
-   },
-   {
-    "killer": "말듣쓰",
-    "victim": "뚠댕뚠냥",
-    "kills": 3
-   },
-   {
-    "killer": "앙앙맹",
-    "victim": "광명시25살최문선",
     "kills": 3
    },
    {
@@ -7089,13 +7069,18 @@
     "kills": 3
    },
    {
-    "killer": "빛나는 마빡",
-    "victim": "대오주인",
+    "killer": "qkdlvj3",
+    "victim": "광명시25살최문선",
     "kills": 3
    },
    {
-    "killer": "qkdlvj3",
+    "killer": "앙앙맹",
     "victim": "광명시25살최문선",
+    "kills": 3
+   },
+   {
+    "killer": "뚠댕뚠냥",
+    "victim": "qkdlvj3",
     "kills": 3
    },
    {
@@ -7109,33 +7094,33 @@
     "kills": 3
    },
    {
+    "killer": "말듣쓰",
+    "victim": "뚠댕뚠냥",
+    "kills": 3
+   },
+   {
+    "killer": "빛나는 마빡",
+    "victim": "대오주인",
+    "kills": 3
+   },
+   {
+    "killer": "조 C",
+    "victim": "몰 매",
+    "kills": 3
+   },
+   {
     "killer": "몰 매",
     "victim": "jekjek",
     "kills": 3
    },
    {
-    "killer": "뚠댕뚠냥",
-    "victim": "말듣쓰",
+    "killer": "말듣쓰",
+    "victim": "광명시25살최문선",
     "kills": 3
    },
    {
-    "killer": "뚠댕뚠냥",
-    "victim": "몰 매",
-    "kills": 2
-   },
-   {
     "killer": "조 C",
-    "victim": "빛나는 마빡",
-    "kills": 2
-   },
-   {
-    "killer": "광명시25살최문선",
-    "victim": "조 C",
-    "kills": 2
-   },
-   {
-    "killer": "조 C",
-    "victim": "대오주인",
+    "victim": "말듣쓰",
     "kills": 2
    },
    {
@@ -7144,13 +7129,18 @@
     "kills": 2
    },
    {
-    "killer": "조 C",
-    "victim": "도야짬뽕누룽지탕",
+    "killer": "광명시25살최문선",
+    "victim": "빛나는 마빡",
     "kills": 2
    },
    {
     "killer": "조 C",
-    "victim": "말듣쓰",
+    "victim": "빛나는 마빡",
+    "kills": 2
+   },
+   {
+    "killer": "뚠댕뚠냥",
+    "victim": "몰 매",
     "kills": 2
    },
    {
@@ -7159,8 +7149,23 @@
     "kills": 2
    },
    {
+    "killer": "조 C",
+    "victim": "도야짬뽕누룽지탕",
+    "kills": 2
+   },
+   {
     "killer": "내 이름은 정준토",
     "victim": "조 C",
+    "kills": 2
+   },
+   {
+    "killer": "조 C",
+    "victim": "대오주인",
+    "kills": 2
+   },
+   {
+    "killer": "조 C",
+    "victim": "qkdlvj3",
     "kills": 2
    },
    {
@@ -7170,12 +7175,12 @@
    },
    {
     "killer": "광명시25살최문선",
-    "victim": "빛나는 마빡",
+    "victim": "qkdlvj3",
     "kills": 2
    },
    {
     "killer": "광명시25살최문선",
-    "victim": "qkdlvj3",
+    "victim": "조 C",
     "kills": 2
    },
    {
@@ -7184,12 +7189,47 @@
     "kills": 2
    },
    {
-    "killer": "조 C",
+    "killer": "jekjek",
     "victim": "qkdlvj3",
-    "kills": 2
+    "kills": 1
+   },
+   {
+    "killer": "광명시25살최문선",
+    "victim": "앙앙맹",
+    "kills": 1
    },
    {
     "killer": "도야짬뽕누룽지탕",
+    "victim": "뚠댕뚠냥",
+    "kills": 1
+   },
+   {
+    "killer": "말듣쓰",
+    "victim": "대오주인",
+    "kills": 1
+   },
+   {
+    "killer": "내 이름은 정준토",
+    "victim": "jekjek",
+    "kills": 1
+   },
+   {
+    "killer": "뚠댕뚠냥",
+    "victim": "빛나는 마빡",
+    "kills": 1
+   },
+   {
+    "killer": "말듣쓰",
+    "victim": "앙앙맹",
+    "kills": 1
+   },
+   {
+    "killer": "조 C",
+    "victim": "jekjek",
+    "kills": 1
+   },
+   {
+    "killer": "대오주인",
     "victim": "뚠댕뚠냥",
     "kills": 1
    },
@@ -7199,113 +7239,73 @@
     "kills": 1
    },
    {
+    "killer": "앙앙맹",
+    "victim": "대오주인",
+    "kills": 1
+   },
+   {
+    "killer": "대오주인",
+    "victim": "몰 매",
+    "kills": 1
+   },
+   {
+    "killer": "앙앙맹",
+    "victim": "말듣쓰",
+    "kills": 1
+   },
+   {
+    "killer": "몰 매",
+    "victim": "조 C",
+    "kills": 1
+   },
+   {
+    "killer": "말듣쓰",
+    "victim": "조 C",
+    "kills": 1
+   },
+   {
+    "killer": "앙앙맹",
+    "victim": "빛나는 마빡",
+    "kills": 1
+   },
+   {
+    "killer": "몰 매",
+    "victim": "말듣쓰",
+    "kills": 1
+   },
+   {
+    "killer": "대오주인",
+    "victim": "빛나는 마빡",
+    "kills": 1
+   },
+   {
+    "killer": "몰 매",
+    "victim": "빛나는 마빡",
+    "kills": 1
+   },
+   {
     "killer": "광명시25살최문선",
     "victim": "대오주인",
     "kills": 1
    },
    {
-    "killer": "광명시25살최문선",
-    "victim": "앙앙맹",
+    "killer": "jekjek",
+    "victim": "내 이름은 정준토",
     "kills": 1
    },
    {
-    "killer": "조 C",
-    "victim": "jekjek",
+    "killer": "앙앙맹",
+    "victim": "도야짬뽕누룽지탕",
+    "kills": 1
+   },
+   {
+    "killer": "앙앙맹",
+    "victim": "내 이름은 정준토",
     "kills": 1
    },
    {
     "killer": "내 이름은 정준토",
     "victim": "우체국집배원",
-    "kills": 1
-   },
-   {
-    "killer": "앙앙맹",
-    "victim": "대오주인",
-    "kills": 1
-   },
-   {
-    "killer": "말듣쓰",
-    "victim": "앙앙맹",
-    "kills": 1
-   },
-   {
-    "killer": "앙앙맹",
-    "victim": "내 이름은 정준토",
-    "kills": 1
-   },
-   {
-    "killer": "앙앙맹",
-    "victim": "도야짬뽕누룽지탕",
-    "kills": 1
-   },
-   {
-    "killer": "앙앙맹",
-    "victim": "빛나는 마빡",
-    "kills": 1
-   },
-   {
-    "killer": "대오주인",
-    "victim": "몰 매",
-    "kills": 1
-   },
-   {
-    "killer": "jekjek",
-    "victim": "qkdlvj3",
-    "kills": 1
-   },
-   {
-    "killer": "jekjek",
-    "victim": "내 이름은 정준토",
-    "kills": 1
-   },
-   {
-    "killer": "말듣쓰",
-    "victim": "조 C",
-    "kills": 1
-   },
-   {
-    "killer": "말듣쓰",
-    "victim": "대오주인",
-    "kills": 1
-   },
-   {
-    "killer": "앙앙맹",
-    "victim": "말듣쓰",
-    "kills": 1
-   },
-   {
-    "killer": "대오주인",
-    "victim": "뚠댕뚠냥",
-    "kills": 1
-   },
-   {
-    "killer": "몰 매",
-    "victim": "말듣쓰",
-    "kills": 1
-   },
-   {
-    "killer": "대오주인",
-    "victim": "빛나는 마빡",
-    "kills": 1
-   },
-   {
-    "killer": "내 이름은 정준토",
-    "victim": "jekjek",
-    "kills": 1
-   },
-   {
-    "killer": "몰 매",
-    "victim": "빛나는 마빡",
-    "kills": 1
-   },
-   {
-    "killer": "뚠댕뚠냥",
-    "victim": "빛나는 마빡",
-    "kills": 1
-   },
-   {
-    "killer": "몰 매",
-    "victim": "조 C",
     "kills": 1
    }
   ],
@@ -7452,6 +7452,69 @@
   ],
   "comeback": [
    {
+    "discord_name": "앙앙맹",
+    "behind_g": 2,
+    "comeback": 1,
+    "ahead_g": 0,
+    "thrown": 0,
+    "comeback_rate": 0.5,
+    "throw_rate": 0.0
+   },
+   {
+    "discord_name": "jekjek",
+    "behind_g": 1,
+    "comeback": 0,
+    "ahead_g": 1,
+    "thrown": 1,
+    "comeback_rate": 0.0,
+    "throw_rate": 1.0
+   },
+   {
+    "discord_name": "대오주인",
+    "behind_g": 1,
+    "comeback": 0,
+    "ahead_g": 1,
+    "thrown": 1,
+    "comeback_rate": 0.0,
+    "throw_rate": 1.0
+   },
+   {
+    "discord_name": "조 C",
+    "behind_g": 1,
+    "comeback": 1,
+    "ahead_g": 0,
+    "thrown": 0,
+    "comeback_rate": 1.0,
+    "throw_rate": 0.0
+   },
+   {
+    "discord_name": "뚠댕뚠냥",
+    "behind_g": 2,
+    "comeback": 1,
+    "ahead_g": 0,
+    "thrown": 0,
+    "comeback_rate": 0.5,
+    "throw_rate": 0.0
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "behind_g": 1,
+    "comeback": 0,
+    "ahead_g": 1,
+    "thrown": 1,
+    "comeback_rate": 0.0,
+    "throw_rate": 1.0
+   },
+   {
+    "discord_name": "몰 매",
+    "behind_g": 0,
+    "comeback": 0,
+    "ahead_g": 2,
+    "thrown": 1,
+    "comeback_rate": 0.0,
+    "throw_rate": 0.5
+   },
+   {
     "discord_name": "우체국집배원",
     "behind_g": 0,
     "comeback": 0,
@@ -7488,33 +7551,6 @@
     "throw_rate": 0.0
    },
    {
-    "discord_name": "앙앙맹",
-    "behind_g": 2,
-    "comeback": 1,
-    "ahead_g": 0,
-    "thrown": 0,
-    "comeback_rate": 0.5,
-    "throw_rate": 0.0
-   },
-   {
-    "discord_name": "말듣쓰",
-    "behind_g": 1,
-    "comeback": 1,
-    "ahead_g": 1,
-    "thrown": 0,
-    "comeback_rate": 1.0,
-    "throw_rate": 0.0
-   },
-   {
-    "discord_name": "몰 매",
-    "behind_g": 0,
-    "comeback": 0,
-    "ahead_g": 2,
-    "thrown": 1,
-    "comeback_rate": 0.0,
-    "throw_rate": 0.5
-   },
-   {
     "discord_name": "빛나는 마빡",
     "behind_g": 1,
     "comeback": 1,
@@ -7524,46 +7560,10 @@
     "throw_rate": 0.0
    },
    {
-    "discord_name": "광명시25살최문선",
-    "behind_g": 1,
-    "comeback": 0,
-    "ahead_g": 1,
-    "thrown": 1,
-    "comeback_rate": 0.0,
-    "throw_rate": 1.0
-   },
-   {
-    "discord_name": "뚠댕뚠냥",
-    "behind_g": 2,
-    "comeback": 1,
-    "ahead_g": 0,
-    "thrown": 0,
-    "comeback_rate": 0.5,
-    "throw_rate": 0.0
-   },
-   {
-    "discord_name": "jekjek",
-    "behind_g": 1,
-    "comeback": 0,
-    "ahead_g": 1,
-    "thrown": 1,
-    "comeback_rate": 0.0,
-    "throw_rate": 1.0
-   },
-   {
-    "discord_name": "대오주인",
-    "behind_g": 1,
-    "comeback": 0,
-    "ahead_g": 1,
-    "thrown": 1,
-    "comeback_rate": 0.0,
-    "throw_rate": 1.0
-   },
-   {
-    "discord_name": "조 C",
+    "discord_name": "말듣쓰",
     "behind_g": 1,
     "comeback": 1,
-    "ahead_g": 0,
+    "ahead_g": 1,
     "thrown": 0,
     "comeback_rate": 1.0,
     "throw_rate": 0.0
@@ -8944,13 +8944,13 @@
     "roam_rate": 0.393
    },
    {
-    "discord_name": "광명시25살최문선",
+    "discord_name": "앙앙맹",
     "lane": "JUNGLE",
     "frames": 29,
     "roam_rate": 0.345
    },
    {
-    "discord_name": "앙앙맹",
+    "discord_name": "광명시25살최문선",
     "lane": "JUNGLE",
     "frames": 29,
     "roam_rate": 0.345
@@ -8968,24 +8968,24 @@
     "winrate": 0.667
    },
    {
-    "dragon": "CHEMTECH_DRAGON",
-    "taken": 2,
-    "winrate": 0.5
-   },
-   {
     "dragon": "EARTH_DRAGON",
     "taken": 2,
     "winrate": 0.5
    },
    {
-    "dragon": "AIR_DRAGON",
-    "taken": 1,
-    "winrate": 1.0
+    "dragon": "CHEMTECH_DRAGON",
+    "taken": 2,
+    "winrate": 0.5
    },
    {
     "dragon": "HEXTECH_DRAGON",
     "taken": 1,
     "winrate": 0.0
+   },
+   {
+    "dragon": "AIR_DRAGON",
+    "taken": 1,
+    "winrate": 1.0
    }
   ],
   "teamfight": [
@@ -9002,15 +9002,15 @@
     "join_rate": 0.938
    },
    {
-    "discord_name": "빛나는 마빡",
-    "fights": 21.0,
-    "joined": 18.0,
-    "join_rate": 0.857
-   },
-   {
     "discord_name": "도야짬뽕누룽지탕",
     "fights": 14.0,
     "joined": 12.0,
+    "join_rate": 0.857
+   },
+   {
+    "discord_name": "빛나는 마빡",
+    "fights": 21.0,
+    "joined": 18.0,
     "join_rate": 0.857
    },
    {
@@ -9020,13 +9020,13 @@
     "join_rate": 0.813
    },
    {
-    "discord_name": "대오주인",
+    "discord_name": "광명시25살최문선",
     "fights": 21.0,
     "joined": 17.0,
     "join_rate": 0.81
    },
    {
-    "discord_name": "광명시25살최문선",
+    "discord_name": "대오주인",
     "fights": 21.0,
     "joined": 17.0,
     "join_rate": 0.81
@@ -9038,15 +9038,15 @@
     "join_rate": 0.762
    },
    {
-    "discord_name": "앙앙맹",
-    "fights": 12.0,
-    "joined": 9.0,
-    "join_rate": 0.75
-   },
-   {
     "discord_name": "qkdlvj3",
     "fights": 16.0,
     "joined": 12.0,
+    "join_rate": 0.75
+   },
+   {
+    "discord_name": "앙앙맹",
+    "fights": 12.0,
+    "joined": 9.0,
     "join_rate": 0.75
    },
    {
@@ -9377,16 +9377,6 @@
      "win": true,
      "players": [
       {
-       "name": "말듣쓰",
-       "champ": "Darius",
-       "lane": "TOP"
-      },
-      {
-       "name": "몰 매",
-       "champ": "Naafiri",
-       "lane": "JUNGLE"
-      },
-      {
        "name": "광명시25살최문선",
        "champ": "Aurora",
        "lane": "MIDDLE"
@@ -9397,9 +9387,19 @@
        "lane": "UTILITY"
       },
       {
+       "name": "몰 매",
+       "champ": "Naafiri",
+       "lane": "JUNGLE"
+      },
+      {
        "name": "내 이름은 정준토",
        "champ": "Kaisa",
        "lane": "BOTTOM"
+      },
+      {
+       "name": "말듣쓰",
+       "champ": "Darius",
+       "lane": "TOP"
       }
      ]
     },
@@ -9422,14 +9422,14 @@
        "lane": "BOTTOM"
       },
       {
-       "name": "jekjek",
-       "champ": "Mordekaiser",
-       "lane": "TOP"
-      },
-      {
        "name": "대오주인",
        "champ": "Soraka",
        "lane": "UTILITY"
+      },
+      {
+       "name": "jekjek",
+       "champ": "Mordekaiser",
+       "lane": "TOP"
       }
      ]
     }
@@ -9838,11 +9838,6 @@
        "lane": "JUNGLE"
       },
       {
-       "name": "뚠댕뚠냥",
-       "champ": "Ashe",
-       "lane": "BOTTOM"
-      },
-      {
        "name": "말듣쓰",
        "champ": "Nasus",
        "lane": "TOP"
@@ -9851,6 +9846,11 @@
        "name": "빛나는 마빡",
        "champ": "Seraphine",
        "lane": "UTILITY"
+      },
+      {
+       "name": "뚠댕뚠냥",
+       "champ": "Ashe",
+       "lane": "BOTTOM"
       },
       {
        "name": "조 C",
@@ -9863,16 +9863,6 @@
      "win": false,
      "players": [
       {
-       "name": "대오주인",
-       "champ": "Milio",
-       "lane": "UTILITY"
-      },
-      {
-       "name": "몰 매",
-       "champ": "Qiyana",
-       "lane": "JUNGLE"
-      },
-      {
        "name": "qkdlvj3",
        "champ": "Lucian",
        "lane": "BOTTOM"
@@ -9883,9 +9873,19 @@
        "lane": "MIDDLE"
       },
       {
+       "name": "대오주인",
+       "champ": "Milio",
+       "lane": "UTILITY"
+      },
+      {
        "name": "jekjek",
        "champ": "Urgot",
        "lane": "TOP"
+      },
+      {
+       "name": "몰 매",
+       "champ": "Qiyana",
+       "lane": "JUNGLE"
       }
      ]
     }
@@ -10289,14 +10289,14 @@
      "win": true,
      "players": [
       {
+       "name": "말듣쓰",
+       "champ": "Jax",
+       "lane": "TOP"
+      },
+      {
        "name": "빛나는 마빡",
        "champ": "Leona",
        "lane": "UTILITY"
-      },
-      {
-       "name": "qkdlvj3",
-       "champ": "Kaisa",
-       "lane": "BOTTOM"
       },
       {
        "name": "도야짬뽕누룽지탕",
@@ -10304,20 +10304,25 @@
        "lane": "MIDDLE"
       },
       {
+       "name": "qkdlvj3",
+       "champ": "Kaisa",
+       "lane": "BOTTOM"
+      },
+      {
        "name": "몰 매",
        "champ": "Graves",
        "lane": "JUNGLE"
-      },
-      {
-       "name": "말듣쓰",
-       "champ": "Jax",
-       "lane": "TOP"
       }
      ]
     },
     {
      "win": false,
      "players": [
+      {
+       "name": "뚠댕뚠냥",
+       "champ": "Xayah",
+       "lane": "BOTTOM"
+      },
       {
        "name": "앙앙맹",
        "champ": "Taliyah",
@@ -10329,19 +10334,14 @@
        "lane": "JUNGLE"
       },
       {
-       "name": "대오주인",
-       "champ": "Rakan",
-       "lane": "UTILITY"
-      },
-      {
        "name": "jekjek",
        "champ": "Zaahen",
        "lane": "TOP"
       },
       {
-       "name": "뚠댕뚠냥",
-       "champ": "Xayah",
-       "lane": "BOTTOM"
+       "name": "대오주인",
+       "champ": "Rakan",
+       "lane": "UTILITY"
       }
      ]
     }
@@ -10743,14 +10743,9 @@
      "win": false,
      "players": [
       {
-       "name": "뚠댕뚠냥",
-       "champ": "Ezreal",
-       "lane": "BOTTOM"
-      },
-      {
-       "name": "대오주인",
-       "champ": "Neeko",
-       "lane": "UTILITY"
+       "name": "광명시25살최문선",
+       "champ": "LeeSin",
+       "lane": "JUNGLE"
       },
       {
        "name": "jekjek",
@@ -10758,14 +10753,19 @@
        "lane": "TOP"
       },
       {
-       "name": "광명시25살최문선",
-       "champ": "LeeSin",
-       "lane": "JUNGLE"
+       "name": "대오주인",
+       "champ": "Neeko",
+       "lane": "UTILITY"
       },
       {
        "name": "조 C",
        "champ": "Zoe",
        "lane": "MIDDLE"
+      },
+      {
+       "name": "뚠댕뚠냥",
+       "champ": "Ezreal",
+       "lane": "BOTTOM"
       }
      ]
     },
@@ -10778,16 +10778,6 @@
        "lane": "BOTTOM"
       },
       {
-       "name": "몰 매",
-       "champ": "Zyra",
-       "lane": "JUNGLE"
-      },
-      {
-       "name": "말듣쓰",
-       "champ": "Shen",
-       "lane": "TOP"
-      },
-      {
        "name": "도야짬뽕누룽지탕",
        "champ": "Aurora",
        "lane": "MIDDLE"
@@ -10796,6 +10786,16 @@
        "name": "빛나는 마빡",
        "champ": "Lulu",
        "lane": "UTILITY"
+      },
+      {
+       "name": "말듣쓰",
+       "champ": "Shen",
+       "lane": "TOP"
+      },
+      {
+       "name": "몰 매",
+       "champ": "Zyra",
+       "lane": "JUNGLE"
       }
      ]
     }
@@ -11222,12 +11222,12 @@
   "p1": {
    "name": "jekjek",
    "games": 4,
-   "strength": -0.548,
-   "mmr": 863,
+   "strength": -0.309,
+   "mmr": 923,
    "lanes": {
     "TOP": {
-     "strength": -0.748,
-     "mmr": 813
+     "strength": -0.509,
+     "mmr": 873
     }
    },
    "main_lane": "TOP",
@@ -11238,12 +11238,12 @@
   "p2": {
    "name": "qkdlvj3",
    "games": 3,
-   "strength": 0.322,
-   "mmr": 1081,
+   "strength": 0.142,
+   "mmr": 1036,
    "lanes": {
     "BOTTOM": {
-     "strength": 0.389,
-     "mmr": 1097
+     "strength": 0.209,
+     "mmr": 1052
     }
    },
    "main_lane": "BOTTOM",
@@ -11254,16 +11254,16 @@
   "p3": {
    "name": "광명시25살최문선",
    "games": 4,
-   "strength": -0.343,
-   "mmr": 914,
+   "strength": -0.189,
+   "mmr": 953,
    "lanes": {
     "MIDDLE": {
-     "strength": -0.343,
-     "mmr": 914
+     "strength": -0.189,
+     "mmr": 953
     },
     "JUNGLE": {
-     "strength": -0.543,
-     "mmr": 864
+     "strength": -0.389,
+     "mmr": 903
     }
    },
    "main_lane": "MIDDLE",
@@ -11275,12 +11275,12 @@
   "p4": {
    "name": "내 이름은 정준토",
    "games": 1,
-   "strength": 0.826,
-   "mmr": 1207,
+   "strength": 0.17,
+   "mmr": 1043,
    "lanes": {
     "BOTTOM": {
-     "strength": 1.026,
-     "mmr": 1257
+     "strength": 0.37,
+     "mmr": 1093
     }
    },
    "main_lane": "BOTTOM",
@@ -11291,12 +11291,12 @@
   "p5": {
    "name": "대오주인",
    "games": 4,
-   "strength": -0.608,
-   "mmr": 848,
+   "strength": -0.339,
+   "mmr": 915,
    "lanes": {
     "UTILITY": {
-     "strength": -0.808,
-     "mmr": 798
+     "strength": -0.539,
+     "mmr": 865
     }
    },
    "main_lane": "UTILITY",
@@ -11307,12 +11307,12 @@
   "p6": {
    "name": "도야짬뽕누룽지탕",
    "games": 2,
-   "strength": 0.247,
-   "mmr": 1062,
+   "strength": 0.095,
+   "mmr": 1024,
    "lanes": {
     "MIDDLE": {
-     "strength": 0.447,
-     "mmr": 1112
+     "strength": 0.295,
+     "mmr": 1074
     }
    },
    "main_lane": "MIDDLE",
@@ -11323,12 +11323,12 @@
   "p7": {
    "name": "뚠댕뚠냥",
    "games": 3,
-   "strength": -0.143,
-   "mmr": 964,
+   "strength": -0.065,
+   "mmr": 984,
    "lanes": {
     "BOTTOM": {
-     "strength": -0.209,
-     "mmr": 948
+     "strength": -0.132,
+     "mmr": 967
     }
    },
    "main_lane": "BOTTOM",
@@ -11339,12 +11339,12 @@
   "p8": {
    "name": "말듣쓰",
    "games": 4,
-   "strength": 0.182,
-   "mmr": 1045,
+   "strength": 0.126,
+   "mmr": 1031,
    "lanes": {
     "TOP": {
-     "strength": 0.382,
-     "mmr": 1095
+     "strength": 0.326,
+     "mmr": 1081
     }
    },
    "main_lane": "TOP",
@@ -11355,12 +11355,12 @@
   "p9": {
    "name": "몰 매",
    "games": 4,
-   "strength": 0.155,
-   "mmr": 1039,
+   "strength": 0.091,
+   "mmr": 1023,
    "lanes": {
     "JUNGLE": {
-     "strength": 0.255,
-     "mmr": 1064
+     "strength": 0.191,
+     "mmr": 1048
     }
    },
    "main_lane": "JUNGLE",
@@ -11371,12 +11371,12 @@
   "p10": {
    "name": "빛나는 마빡",
    "games": 4,
-   "strength": 0.693,
-   "mmr": 1173,
+   "strength": 0.382,
+   "mmr": 1095,
    "lanes": {
     "UTILITY": {
-     "strength": 0.893,
-     "mmr": 1223
+     "strength": 0.582,
+     "mmr": 1145
     }
    },
    "main_lane": "UTILITY",
@@ -11387,16 +11387,16 @@
   "p11": {
    "name": "앙앙맹",
    "games": 3,
-   "strength": 0.063,
-   "mmr": 1016,
+   "strength": 0.022,
+   "mmr": 1005,
    "lanes": {
     "JUNGLE": {
-     "strength": 0.063,
-     "mmr": 1016
+     "strength": 0.022,
+     "mmr": 1005
     },
     "MIDDLE": {
-     "strength": -0.137,
-     "mmr": 966
+     "strength": -0.178,
+     "mmr": 955
     }
    },
    "main_lane": "JUNGLE",
@@ -11408,12 +11408,12 @@
   "p12": {
    "name": "우체국집배원",
    "games": 1,
-   "strength": -0.797,
-   "mmr": 801,
+   "strength": -0.164,
+   "mmr": 959,
    "lanes": {
     "BOTTOM": {
-     "strength": -0.997,
-     "mmr": 751
+     "strength": -0.364,
+     "mmr": 909
     }
    },
    "main_lane": "BOTTOM",
@@ -11424,12 +11424,12 @@
   "p13": {
    "name": "조 C",
    "games": 3,
-   "strength": 0.047,
-   "mmr": 1012,
+   "strength": 0.014,
+   "mmr": 1004,
    "lanes": {
     "MIDDLE": {
-     "strength": -0.02,
-     "mmr": 995
+     "strength": -0.052,
+     "mmr": 987
     }
    },
    "main_lane": "MIDDLE",
@@ -13071,7 +13071,7 @@
    "nemesis_victim": {
     "nemesis": [
      {
-      "vs_champ": "Shen",
+      "vs_champ": "Jax",
       "games": 1,
       "winrate": 0.0
      },
@@ -13081,7 +13081,7 @@
       "winrate": 0.0
      },
      {
-      "vs_champ": "Jax",
+      "vs_champ": "Shen",
       "games": 1,
       "winrate": 0.0
      }
@@ -13355,7 +13355,7 @@
      "value": 2.0,
      "games": 4,
      "lane": "TOP",
-     "rank": 2,
+     "rank": 3,
      "n": 13,
      "pct": 0.769
     },
@@ -13531,7 +13531,7 @@
      "value": 0.25,
      "games": 4,
      "lane": null,
-     "rank": 4,
+     "rank": 7,
      "n": 13,
      "pct": 0.577
     },
@@ -13539,7 +13539,7 @@
      "value": 2.0,
      "games": 4,
      "lane": "TOP",
-     "rank": 1,
+     "rank": 2,
      "n": 13,
      "pct": 0.923
     },
@@ -13595,7 +13595,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 5,
+     "rank": 6,
      "n": 13,
      "pct": 0.346
     },
@@ -13603,7 +13603,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 5,
+     "rank": 4,
      "n": 13,
      "pct": 0.423
     },
@@ -14023,7 +14023,7 @@
      "desc": "시야 점수",
      "value": 30.0,
      "pct": 0.462,
-     "rank": 7,
+     "rank": 8,
      "n": 13
     },
     {
@@ -14329,7 +14329,7 @@
      "value": 0.67,
      "games": 3,
      "lane": null,
-     "rank": 5,
+     "rank": 6,
      "n": 13,
      "pct": 0.654
     },
@@ -14337,7 +14337,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 10,
+     "rank": 11,
      "n": 13,
      "pct": 0.192
     },
@@ -14417,7 +14417,7 @@
      "value": 30.0,
      "games": 3,
      "lane": null,
-     "rank": 7,
+     "rank": 8,
      "n": 13,
      "pct": 0.462
     },
@@ -14856,7 +14856,7 @@
      "desc": "맞라인 상대보다 앞선 최대 CS",
      "value": 11.5,
      "pct": 0.308,
-     "rank": 9,
+     "rank": 10,
      "n": 13
     },
     {
@@ -14963,7 +14963,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 8,
+     "rank": 7,
      "n": 13,
      "pct": 0.269
     },
@@ -14979,7 +14979,7 @@
      "value": 11.5,
      "games": 2,
      "lane": "MIDDLE",
-     "rank": 9,
+     "rank": 10,
      "n": 13,
      "pct": 0.308
     },
@@ -14994,7 +14994,7 @@
     "early_lane_rate": {
      "value": 0.0,
      "games": 2,
-     "lane": "MIDDLE",
+     "lane": "JUNGLE",
      "rank": 9,
      "n": 13,
      "pct": 0.385
@@ -15179,14 +15179,14 @@
      "value": 0.25,
      "games": 4,
      "lane": null,
-     "rank": 6,
+     "rank": 5,
      "n": 13,
      "pct": 0.577
     },
     "solo_kills": {
      "value": 0.5,
      "games": 2,
-     "lane": "MIDDLE",
+     "lane": "JUNGLE",
      "rank": 8,
      "n": 13,
      "pct": 0.5
@@ -15195,7 +15195,7 @@
      "value": 1.0,
      "games": 4,
      "lane": null,
-     "rank": 6,
+     "rank": 7,
      "n": 13,
      "pct": 0.538
     },
@@ -15251,7 +15251,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 6,
+     "rank": 3,
      "n": 13,
      "pct": 0.423
     },
@@ -15331,7 +15331,7 @@
      "value": 5.0,
      "games": 4,
      "lane": null,
-     "rank": 8,
+     "rank": 7,
      "n": 13,
      "pct": 0.423
     },
@@ -15554,12 +15554,12 @@
       "winrate": 0.0
      },
      {
-      "vs_champ": "Lulu",
+      "vs_champ": "Seraphine",
       "games": 1,
       "winrate": 0.0
      },
      {
-      "vs_champ": "Seraphine",
+      "vs_champ": "Lulu",
       "games": 1,
       "winrate": 0.0
      }
@@ -15793,7 +15793,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 11,
+     "rank": 12,
      "n": 13,
      "pct": 0.115
     },
@@ -15817,7 +15817,7 @@
      "value": 0.0,
      "games": 4,
      "lane": "UTILITY",
-     "rank": 5,
+     "rank": 6,
      "n": 13,
      "pct": 0.385
     },
@@ -15953,7 +15953,7 @@
      "value": 7.8,
      "games": 4,
      "lane": "UTILITY",
-     "rank": 13,
+     "rank": 12,
      "n": 13,
      "pct": 0.077
     },
@@ -16001,7 +16001,7 @@
      "value": 0.25,
      "games": 4,
      "lane": null,
-     "rank": 5,
+     "rank": 8,
      "n": 13,
      "pct": 0.577
     },
@@ -16458,7 +16458,7 @@
      "desc": "맞라인 상대보다 앞선 최대 CS",
      "value": 11.5,
      "pct": 0.308,
-     "rank": 10,
+     "rank": 9,
      "n": 13
     },
     {
@@ -16581,7 +16581,7 @@
      "value": 11.5,
      "games": 2,
      "lane": "MIDDLE",
-     "rank": 10,
+     "rank": 9,
      "n": 13,
      "pct": 0.308
     },
@@ -17136,12 +17136,12 @@
    "nemesis_victim": {
     "nemesis": [
      {
-      "vs_champ": "Yunara",
+      "vs_champ": "Kaisa",
       "games": 1,
       "winrate": 0.0
      },
      {
-      "vs_champ": "Kaisa",
+      "vs_champ": "Yunara",
       "games": 1,
       "winrate": 0.0
      }
@@ -17408,7 +17408,7 @@
      "value": 0.0,
      "games": 3,
      "lane": "BOTTOM",
-     "rank": 7,
+     "rank": 8,
      "n": 13,
      "pct": 0.385
     },
@@ -17416,7 +17416,7 @@
      "value": 1.33,
      "games": 3,
      "lane": "BOTTOM",
-     "rank": 9,
+     "rank": 8,
      "n": 13,
      "pct": 0.385
     },
@@ -17576,7 +17576,7 @@
      "value": 1.0,
      "games": 3,
      "lane": null,
-     "rank": 6,
+     "rank": 5,
      "n": 13,
      "pct": 0.577
     },
@@ -17584,7 +17584,7 @@
      "value": 0.67,
      "games": 3,
      "lane": null,
-     "rank": 4,
+     "rank": 5,
      "n": 13,
      "pct": 0.654
     },
@@ -17592,7 +17592,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 11,
+     "rank": 10,
      "n": 13,
      "pct": 0.192
     },
@@ -17656,7 +17656,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 10,
+     "rank": 9,
      "n": 13,
      "pct": 0.346
     },
@@ -17664,7 +17664,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 10,
+     "rank": 9,
      "n": 13,
      "pct": 0.423
     },
@@ -17688,7 +17688,7 @@
      "value": 3.67,
      "games": 3,
      "lane": null,
-     "rank": 8,
+     "rank": 7,
      "n": 13,
      "pct": 0.462
     },
@@ -17760,7 +17760,7 @@
      "value": 1.33,
      "games": 3,
      "lane": null,
-     "rank": 5,
+     "rank": 7,
      "n": 13,
      "pct": 0.577
     },
@@ -17958,17 +17958,17 @@
     "nemesis": [],
     "victim": [
      {
-      "vs_champ": "Urgot",
+      "vs_champ": "Zaahen",
+      "games": 1,
+      "winrate": 1.0
+     },
+     {
+      "vs_champ": "Sion",
       "games": 1,
       "winrate": 1.0
      },
      {
       "vs_champ": "Mordekaiser",
-      "games": 1,
-      "winrate": 1.0
-     },
-     {
-      "vs_champ": "Zaahen",
       "games": 1,
       "winrate": 1.0
      }
@@ -18201,7 +18201,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 7,
+     "rank": 8,
      "n": 13,
      "pct": 0.269
     },
@@ -18233,7 +18233,7 @@
      "value": 0.0,
      "games": 4,
      "lane": "TOP",
-     "rank": 6,
+     "rank": 4,
      "n": 13,
      "pct": 0.385
     },
@@ -18241,7 +18241,7 @@
      "value": 2.0,
      "games": 4,
      "lane": "TOP",
-     "rank": 3,
+     "rank": 2,
      "n": 13,
      "pct": 0.769
     },
@@ -18393,7 +18393,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 6,
+     "rank": 5,
      "n": 13,
      "pct": 0.346
     },
@@ -18417,7 +18417,7 @@
      "value": 0.25,
      "games": 4,
      "lane": null,
-     "rank": 8,
+     "rank": 4,
      "n": 13,
      "pct": 0.577
     },
@@ -18425,7 +18425,7 @@
      "value": 2.0,
      "games": 4,
      "lane": "TOP",
-     "rank": 2,
+     "rank": 1,
      "n": 13,
      "pct": 0.923
     },
@@ -18489,7 +18489,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 4,
+     "rank": 6,
      "n": 13,
      "pct": 0.423
     },
@@ -18569,7 +18569,7 @@
      "value": 5.0,
      "games": 4,
      "lane": null,
-     "rank": 7,
+     "rank": 8,
      "n": 13,
      "pct": 0.423
     },
@@ -18585,7 +18585,7 @@
      "value": 4.5,
      "games": 4,
      "lane": null,
-     "rank": 12,
+     "rank": 11,
      "n": 13,
      "pct": 0.154
     },
@@ -18799,12 +18799,12 @@
       "winrate": 1.0
      },
      {
-      "vs_champ": "Sylas",
+      "vs_champ": "LeeSin",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "LeeSin",
+      "vs_champ": "Sylas",
       "games": 1,
       "winrate": 1.0
      }
@@ -19069,7 +19069,7 @@
      "value": 0.0,
      "games": 4,
      "lane": "JUNGLE",
-     "rank": 4,
+     "rank": 5,
      "n": 13,
      "pct": 0.385
     },
@@ -19269,7 +19269,7 @@
      "value": 1.0,
      "games": 4,
      "lane": null,
-     "rank": 7,
+     "rank": 6,
      "n": 13,
      "pct": 0.538
     },
@@ -19317,7 +19317,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 6,
+     "rank": 5,
      "n": 13,
      "pct": 0.346
     },
@@ -19325,7 +19325,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 3,
+     "rank": 5,
      "n": 13,
      "pct": 0.423
     },
@@ -19612,12 +19612,12 @@
     "nemesis": [],
     "victim": [
      {
-      "vs_champ": "Milio",
+      "vs_champ": "Neeko",
       "games": 1,
       "winrate": 1.0
      },
      {
-      "vs_champ": "Neeko",
+      "vs_champ": "Milio",
       "games": 1,
       "winrate": 1.0
      },
@@ -19863,7 +19863,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 12,
+     "rank": 11,
      "n": 13,
      "pct": 0.115
     },
@@ -20023,7 +20023,7 @@
      "value": 7.8,
      "games": 4,
      "lane": "UTILITY",
-     "rank": 12,
+     "rank": 13,
      "n": 13,
      "pct": 0.077
     },
@@ -20047,7 +20047,7 @@
      "value": 0.0,
      "games": 4,
      "lane": null,
-     "rank": 5,
+     "rank": 6,
      "n": 13,
      "pct": 0.346
     },
@@ -20071,7 +20071,7 @@
      "value": 0.25,
      "games": 4,
      "lane": null,
-     "rank": 7,
+     "rank": 6,
      "n": 13,
      "pct": 0.577
     },
@@ -20239,7 +20239,7 @@
      "value": 4.5,
      "games": 4,
      "lane": null,
-     "rank": 11,
+     "rank": 12,
      "n": 13,
      "pct": 0.154
     },
@@ -20888,7 +20888,7 @@
      "value": 0.33,
      "games": 3,
      "lane": null,
-     "rank": 3,
+     "rank": 2,
      "n": 13,
      "pct": 0.846
     },
@@ -20952,7 +20952,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 9,
+     "rank": 10,
      "n": 13,
      "pct": 0.346
     },
@@ -20960,7 +20960,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 9,
+     "rank": 8,
      "n": 13,
      "pct": 0.423
     },
@@ -20984,7 +20984,7 @@
      "value": 3.67,
      "games": 3,
      "lane": null,
-     "rank": 7,
+     "rank": 8,
      "n": 13,
      "pct": 0.462
     },
@@ -21056,7 +21056,7 @@
      "value": 1.33,
      "games": 3,
      "lane": null,
-     "rank": 7,
+     "rank": 6,
      "n": 13,
      "pct": 0.577
     },
@@ -21375,7 +21375,7 @@
      "desc": "시야 점수",
      "value": 30.0,
      "pct": 0.462,
-     "rank": 8,
+     "rank": 7,
      "n": 13
     },
     {
@@ -21505,7 +21505,7 @@
      "value": 0.0,
      "games": 3,
      "lane": "MIDDLE",
-     "rank": 8,
+     "rank": 7,
      "n": 13,
      "pct": 0.385
     },
@@ -21513,7 +21513,7 @@
      "value": 1.33,
      "games": 3,
      "lane": "MIDDLE",
-     "rank": 8,
+     "rank": 9,
      "n": 13,
      "pct": 0.385
     },
@@ -21673,7 +21673,7 @@
      "value": 1.0,
      "games": 3,
      "lane": null,
-     "rank": 5,
+     "rank": 6,
      "n": 13,
      "pct": 0.577
     },
@@ -21681,7 +21681,7 @@
      "value": 0.67,
      "games": 3,
      "lane": null,
-     "rank": 6,
+     "rank": 4,
      "n": 13,
      "pct": 0.654
     },
@@ -21689,7 +21689,7 @@
      "value": 0.33,
      "games": 3,
      "lane": null,
-     "rank": 2,
+     "rank": 3,
      "n": 13,
      "pct": 0.846
     },
@@ -21761,7 +21761,7 @@
      "value": 0.0,
      "games": 3,
      "lane": null,
-     "rank": 8,
+     "rank": 10,
      "n": 13,
      "pct": 0.423
     },
@@ -21769,7 +21769,7 @@
      "value": 30.0,
      "games": 3,
      "lane": null,
-     "rank": 8,
+     "rank": 7,
      "n": 13,
      "pct": 0.462
     },
@@ -21857,7 +21857,7 @@
      "value": 1.33,
      "games": 3,
      "lane": null,
-     "rank": 6,
+     "rank": 5,
      "n": 13,
      "pct": 0.577
     },
@@ -22169,7 +22169,7 @@
      "value": 0.0,
      "games": 1,
      "lane": null,
-     "rank": 13,
+     "rank": 12,
      "n": 13,
      "pct": 0.269
     },
@@ -22225,7 +22225,7 @@
      "value": 0.0,
      "games": 1,
      "lane": "BOTTOM",
-     "rank": 6,
+     "rank": 7,
      "n": 13,
      "pct": 0.538
     },
@@ -22393,7 +22393,7 @@
      "value": 0.0,
      "games": 1,
      "lane": "BOTTOM",
-     "rank": 12,
+     "rank": 13,
      "n": 13,
      "pct": 0.154
     },
@@ -22449,7 +22449,7 @@
      "value": 0.0,
      "games": 1,
      "lane": null,
-     "rank": 12,
+     "rank": 13,
      "n": 13,
      "pct": 0.346
     },
@@ -22844,7 +22844,7 @@
      "value": 0.0,
      "games": 1,
      "lane": null,
-     "rank": 12,
+     "rank": 13,
      "n": 13,
      "pct": 0.269
     },
@@ -22900,7 +22900,7 @@
      "value": 0.0,
      "games": 1,
      "lane": "BOTTOM",
-     "rank": 7,
+     "rank": 6,
      "n": 13,
      "pct": 0.538
     },
@@ -23068,7 +23068,7 @@
      "value": 0.0,
      "games": 1,
      "lane": "BOTTOM",
-     "rank": 13,
+     "rank": 12,
      "n": 13,
      "pct": 0.154
     },
@@ -23124,7 +23124,7 @@
      "value": 0.0,
      "games": 1,
      "lane": null,
-     "rank": 13,
+     "rank": 12,
      "n": 13,
      "pct": 0.346
     },
