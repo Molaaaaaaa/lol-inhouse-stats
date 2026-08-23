@@ -145,8 +145,11 @@
   /* 물음표는 누를 수 있는 것 — 모바일엔 커서가 없어 시각 신호가 필요하다 */
   .qmark{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
   .qmark:active{opacity:.6}
-  a.mmrlink{color:inherit;text-decoration:none;border-bottom:1px dashed var(--dim);cursor:pointer}
-  a.mmrlink:hover{color:var(--acc);border-bottom-color:var(--acc)}
+  .mmrlink,.vslink{color:inherit;text-decoration:none;cursor:pointer;
+    border-bottom:1px dashed var(--dim);-webkit-tap-highlight-color:transparent}
+  .mmrlink:hover,.vslink:hover,.mmrlink:focus-visible,.vslink:focus-visible{
+    color:var(--acc);border-bottom-color:var(--acc);outline:none}
+  .mmrlink:active,.vslink:active{opacity:.6}
   /* 섹션 안 서브탭 — 한 화면에 한 주제만. 스크롤로 훑게 하지 않는다 */
   .subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
   .subtab{padding:6px 13px;border:1px solid var(--line);border-radius:999px;cursor:pointer;
@@ -309,8 +312,8 @@
 <body>
 <header>
   <h1>🎮 <span class="g">내전 해체 분석기</span></h1>
-  <select id="guildSel" title="서버"></select>
-  <button id="refresh" title="새로고침">🔄</button>
+  <select id="guildSel" data-tip="다른 서버(길드) 고르기"></select>
+  <button id="refresh" data-tip="최신 전적 다시 불러오기">🔄</button>
   <div class="meta" id="meta"></div>
 </header>
 
@@ -601,16 +604,29 @@ const TIP=(()=>{
   document.addEventListener('focusout',hide);
 
   // 탭/클릭 토글 — 같은 물음표를 다시 누르면 닫힌다.
-  // ⚠️ **캡처 단계**에서 잡고 전파를 끊는다. 물음표가 정렬 가능한 <th> 안에 있어서,
-  //    안 끊으면 설명을 보려고 누른 것이 표 정렬까지 바꿔 버린다(th.onclick 은 직접
-  //    할당돼 있어 버블 단계에서는 이미 늦다).
+  // ⚠️ **물음표(.qmark)에만** 적용한다. 설명이 붙은 버튼·링크까지 가로채면 눌러도
+  //    아무 일이 안 일어난다(MMR 계산 과정 열기 등이 죽는다).
+  // ⚠️ 물음표 쪽은 **캡처 단계**에서 전파를 끊어야 한다. 물음표가 정렬 가능한 <th>
+  //    안에 있어서, 안 끊으면 설명을 보려는 클릭이 표 정렬까지 바꿔 버린다
+  //    (th.onclick 은 직접 할당돼 있어 버블 단계에서는 이미 늦다).
   document.addEventListener('click',e=>{
-    const el=e.target.closest(TIPSEL);
-    if(!el){ hide(); return; }
-    e.stopPropagation(); e.preventDefault();
-    if(box._for===el && box.style.display==='block') hide();
-    else { show(el); box._for=el; }
+    const q=e.target.closest('.qmark');
+    if(q){
+      e.stopPropagation(); e.preventDefault();
+      if(box._for===q && box.style.display==='block') hide();
+      else { show(q); box._for=q; }
+      return;
+    }
+    // 물음표가 아니면 열려 있던 설명만 닫고, 클릭은 그대로 흘려보낸다
+    hide();
   }, true);
+  // 버튼처럼 쓰는 것들은 키보드로도 눌려야 한다
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Enter' && e.key!==' ') return;
+    const b=e.target.closest('[role="button"],.qmark');
+    if(!b) return;
+    e.preventDefault(); b.click();
+  });
   addEventListener('scroll',hide,true);
   addEventListener('resize',hide);
   return box;
@@ -672,8 +688,11 @@ function renderBoard(){
   renderTable($('#boardT'),rows,[
     {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v},
     {k:'mmr',h:'MMR',num:1,bar:1,hlp:'MMR',
-     fmt:(v,r)=>r._rid?`<a href="#" class="mmrlink" data-who="${r._rid}"
-       title="계산 과정 보기">${v}</a>`:v},
+     // ⚠️ <a href="#"> 를 쓰면 브라우저 상태줄에 링크 주소가 뜨고 주소창에 #이 남는다.
+     //    화면 안에서 이동하는 것뿐이므로 버튼으로 둔다. title= 도 쓰지 않는다 —
+     //    기본 툴팁은 1초쯤 지연되고 흰 OS 박스라 이 사이트 디자인과 따로 논다.
+     fmt:(v,r)=>r._rid?`<span class="mmrlink" role="button" tabindex="0"
+       data-who="${r._rid}" data-tip="누르면 이 MMR 이 어떻게 나왔는지 계산 과정을 펼칩니다">${v}</span>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
@@ -1206,7 +1225,8 @@ function renderPlayerVs(meId){
   // 동점이면 판수 많은 쪽이 위 — 안정 정렬이라 renderTable 이 다시 정렬해도 유지된다
   rows.sort((a,b)=>(b.vsGames||0)-(a.vsGames||0));
   renderTable(box,rows,[
-    {k:'opp',h:'상대',fmt:(v,r)=>`<a href="#" class="vslink" data-who="${r._oid}" title="둘만 자세히 보기">${v}</a>`},
+    {k:'opp',h:'상대',fmt:(v,r)=>`<span class="vslink" role="button" tabindex="0"`+
+      ` data-who="${r._oid}" data-tip="누르면 이 상대와의 상세를 봅니다">${v}</span>`},
     {k:'vsMargin',h:'맞대결',num:1,nullLast:1,
      fmt:(v,r)=>r.vs||'<span class="muted">—</span>',
      cls:r=>'num '+(r.vsMargin==null?'':(r.vsMargin>0?'neg':(r.vsMargin<0?'pos':'')))},
