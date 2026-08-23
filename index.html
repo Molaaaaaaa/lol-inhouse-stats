@@ -87,6 +87,30 @@
   .cmpleg{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:12.5px}
   .cmpleg span{display:inline-flex;align-items:center;gap:6px}
   .cmpleg i{width:14px;height:0;border-top:3px solid;border-radius:2px;display:inline-block}
+  /* 스코어보드 펼침 */
+  .sbrow{cursor:pointer}
+  .sbrow:hover{background:#141c27}
+  .sbrow.on{background:#16202d}
+  .sbname{display:inline-flex;align-items:center;gap:4px}
+  .sbcar{font-style:normal;font-size:9px;color:var(--dim);transition:.15s}
+  .sbrow.on .sbcar{transform:rotate(180deg);color:var(--acc)}
+  .sbdet>td{background:#0c121a;padding:12px 14px!important}
+  .pdwrap{font-size:12.5px}
+  .pdrow{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:6px 12px;align-items:center}
+  .pdk{color:var(--acc);font-weight:650;font-size:12px}
+  .pdbuild{display:flex;align-items:center;gap:2px;flex-wrap:wrap;margin-top:6px}
+  .pdit{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:1px}
+  .pdit i{font-style:normal;font-size:9px;color:var(--dim)}
+  .pdar{color:#3d4d66;font-size:11px;margin:0 1px;align-self:flex-start;padding-top:8px}
+  .pdstats{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));
+    gap:4px 12px;margin-top:6px}
+  .pdstat{display:flex;justify-content:space-between;gap:8px}
+  @media(max-width:520px){.pdrow{grid-template-columns:auto 1fr}}
+  .goldwrap{margin:6px 0}
+  .goldlegend{display:flex;justify-content:space-between;align-items:center;
+    font-size:11.5px;margin-bottom:2px}
+  .goldlegend .blue{color:#3aa0ee} .goldlegend .red{color:#e8833a}
+  .goldfoot{font-size:12px;text-align:right;margin-top:2px}
   /* 캐릭터 스탯 카드 — 도형(모양) + 막대(값)를 나란히 */
   .statwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   .axbars{flex:1;min-width:180px;display:flex;flex-direction:column;gap:7px}
@@ -112,6 +136,9 @@
   .sbar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#0c121a}
   .sbar i.b{background:#3aa0ee} .sbar i.r{background:#e8833a}
   .sidepl{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+  /* 물음표는 누를 수 있는 것 — 모바일엔 커서가 없어 시각 신호가 필요하다 */
+  .qmark{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  .qmark:active{opacity:.6}
   a.mmrlink{color:inherit;text-decoration:none;border-bottom:1px dashed var(--dim);cursor:pointer}
   a.mmrlink:hover{color:var(--acc);border-bottom-color:var(--acc)}
   /* 섹션 안 서브탭 — 한 화면에 한 주제만. 스크롤로 훑게 하지 않는다 */
@@ -123,7 +150,13 @@
   /* 지표 선택기 — 65개를 드롭다운에 넣으면 스크롤바가 손톱만 해진다 */
   .mpick{display:flex;flex-direction:column;gap:8px;width:100%}
   .mpick .grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-  .mpick .mets{display:flex;gap:6px;flex-wrap:wrap}
+  .mpick .mets{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+  /* 위 분류 줄과 아래 지표 줄이 그냥 나란히 있어서 '이게 저 분류의 지표들'인지
+     알 수 없었다 → 왼쪽에 accent 선과 분류 이름을 붙여 묶어 준다. */
+  .metswrap{display:flex;gap:10px;align-items:flex-start;
+    border-left:2px solid var(--acc);padding-left:10px;margin-left:2px}
+  .metsfrom{color:var(--acc);font-size:12px;font-weight:650;white-space:nowrap;
+    padding-top:6px;min-width:64px}
   .mpick input[type=search]{background:#0c121a;border:1px solid var(--line);border-radius:8px;
     color:var(--txt);padding:6px 11px;font-size:12.5px;min-width:170px}
   .mpick input[type=search]:focus{outline:none;border-color:var(--acc)}
@@ -132,6 +165,9 @@
   .mchip:hover{color:var(--txt);border-color:var(--dim)}
   .mchip.on{background:linear-gradient(90deg,var(--acc),#0a93a8);color:#04121a;
     border-color:transparent;font-weight:650}
+  /* 칩이 켜지면 배경이 밝아지는데 안의 개수 숫자는 .muted(어두운 회색)라 안 읽혔다.
+     글자색을 물려받되 살짝만 죽인다. */
+  .mchip.on .muted{color:inherit;opacity:.72;font-weight:600}
   .mpick .cnt{color:var(--dim);font-size:11.5px;margin-left:auto}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .mini{display:flex;align-items:center;gap:8px;margin:3px 0}
@@ -302,7 +338,8 @@
                aria-label="지표 검색">
         <span class="cnt" id="metricCount"></span>
       </div>
-      <div class="mets" id="metricChips"></div>
+      <div class="metswrap"><span class="metsfrom" id="metricFrom"></span>
+        <div class="mets" id="metricChips"></div></div>
       <div class="row" style="margin-top:2px">
         <span class="muted" style="font-size:12.5px">라인</span>
         <span id="laneBtns"></span>
@@ -501,8 +538,9 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
+  궁합:'같이 한 팀이었을 때의 전적입니다.\n궁합 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
   진영:'블루(왼쪽 아래)와 레드(오른쪽 위) 진영의 승률입니다.\n한 경기에 블루 하나 레드 하나라 두 진영 승수의 합이 경기 수이고,\n어느 쪽이 더 이겼는지는 상쇄되지 않는 실제 정보입니다.\n표본이 작으면 크게 흔들리니 경기 수를 같이 보세요.',
-  챔피언폭:'그 라인에서 서로 다른 챔피언을 몇 종 썼는지입니다.\n매판 다른 정도 = 챔피언 종 수 ÷ 판 수. 100%면 매판 다른 챔프,\n낮을수록 한 챔프를 반복해서 씁니다. 잘한다/못한다와는 무관합니다.',
+  챔피언폭:'그 라인에서 서로 다른 챔피언을 몇 종 썼는지입니다.\n챔프폭 = 챔피언 종 수 ÷ 판 수. 100%면 매판 다른 챔프,\n낮을수록 한 챔프를 반복해서 씁니다. 잘한다/못한다와는 무관합니다.',
   상대별:'맞대결 = 적으로 만난 판. 같은 팀 = 한편이었던 판.\n킬 주고받음 = (내가 잡은 수 : 나를 잡은 수), 맞대결한 판에서만 셉니다.\n기본 정렬은 상대가 나를 이긴 만큼(승수 차)이라 1판 1패가 4판 4패보다 위로 못 갑니다.\n맞대결이 0판인 상대는 맨 아래에 모읍니다.',
   동반사망:'같은 팀 두 사람이 10초 안에, 서로 2500 유닛 이내에서 죽은 횟수입니다.\n거리 조건이 없으면 맵 반대편에서 각자 죽은 것도 잡힙니다.\n판당 횟수로 세웁니다 — 총 횟수로 하면 많이 뛴 사람이 자동으로 위에 옵니다.\n데스가 많은 라인(정글)이 잘 걸리니 실력으로 읽지 마세요.',
   어시스트:'킬을 낸 사람과 그 킬에 어시를 준 사람 쌍을 셉니다.\n비중 = 이 어시 수 ÷ 받은 사람의 총 킬.\n원시 횟수만 보면 사실상 킬 수 차이라, 서포터와 정글러를 구분하는 것에 가깝습니다.\n같이 3판 이상 뛴 조합만 나옵니다.',
@@ -535,20 +573,40 @@ const TIP=(()=>{
     if(top+b.height>innerHeight-8) top=r.top-b.height-8;      // 아래가 좁으면 위로
     box.style.left=left+'px'; box.style.top=Math.max(8,top)+'px';
   };
-  // ⚠️ data-tip-key(카드 제목 물음표 11곳)를 여기서 안 받아서 **전부 죽어 있었다**.
-  //    mouseout 쪽은 이미 두 속성을 다 보고 있어 비대칭이었다.
-  document.addEventListener('mouseover',e=>{
-    const el=e.target.closest('[data-tip],[data-tip-key]'); if(el) show(el);
-  });
+  const hide=()=>{box.style.display='none'; box._for=null;};
+  const TIPSEL='[data-tip],[data-tip-key]';
+  // 손가락으로 쓰는 기기에서는 hover 가 없다. mouseover 를 그대로 두면 탭 한 번에
+  // 열렸다가 바로 뒤에 오는 click 이 닫아 버려서 아무것도 안 뜬 것처럼 보인다.
+  const hasHover=matchMedia('(hover: hover)').matches;
+
+  // ⚠️ data-tip-key(카드 제목 물음표)를 여기서 안 받아서 전부 죽어 있던 적이 있다.
+  if(hasHover){
+    document.addEventListener('mouseover',e=>{
+      const el=e.target.closest(TIPSEL); if(el){ show(el); box._for=el; }
+    });
+    document.addEventListener('mouseout',e=>{
+      if(e.target.closest(TIPSEL)) hide();
+    });
+  }
   // 키보드로도 열리게 — 마우스가 없으면 설명을 아예 못 보던 문제
   document.addEventListener('focusin',e=>{
-    const el=e.target.closest('[data-tip],[data-tip-key]'); if(el) show(el);
+    const el=e.target.closest(TIPSEL); if(el){ show(el); box._for=el; }
   });
-  document.addEventListener('focusout',()=>{box.style.display='none';});
-  document.addEventListener('mouseout',e=>{
-    if(e.target.closest('[data-tip],[data-tip-key]')) box.style.display='none';
-  });
-  addEventListener('scroll',()=>{box.style.display='none'},true);
+  document.addEventListener('focusout',hide);
+
+  // 탭/클릭 토글 — 같은 물음표를 다시 누르면 닫힌다.
+  // ⚠️ **캡처 단계**에서 잡고 전파를 끊는다. 물음표가 정렬 가능한 <th> 안에 있어서,
+  //    안 끊으면 설명을 보려고 누른 것이 표 정렬까지 바꿔 버린다(th.onclick 은 직접
+  //    할당돼 있어 버블 단계에서는 이미 늦다).
+  document.addEventListener('click',e=>{
+    const el=e.target.closest(TIPSEL);
+    if(!el){ hide(); return; }
+    e.stopPropagation(); e.preventDefault();
+    if(box._for===el && box.style.display==='block') hide();
+    else { show(el); box._for=el; }
+  }, true);
+  addEventListener('scroll',hide,true);
+  addEventListener('resize',hide);
   return box;
 })();
 const LANE_KO={TOP:'탑',JUNGLE:'정글',MIDDLE:'미드',BOTTOM:'원딜',UTILITY:'서폿'};
@@ -702,6 +760,8 @@ function buildRankControls(){
     : `<span class="muted" style="font-size:12.5px">'${metricQuery}' 에 맞는 지표가 없습니다.</span>`;
   $('#metricCount').textContent=q?`검색 ${hits.length}개 / 전체 ${flat.length}개`
                                  :`${flat.length}개 지표`;
+  // 아래 칩들이 '어느 분류의 지표인지' 항상 밝힌다
+  $('#metricFrom').textContent=q?`'${metricQuery}' 검색`:`${curGroup} 지표`;
 
   $('#metricGroups').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
     curGroup=btn.dataset.g; metricQuery=''; $('#metricSearch').value='';
@@ -829,7 +889,7 @@ function renderFun(){
     {k:'discord_name',h:'멤버'},{k:'lane',h:'라인',fmt:laneKo},
     {k:'champs',h:'챔피언',num:1,fmt:v=>`${v}종`},
     {k:'games',h:'판',num:1},
-    {k:'variety',h:'매판 다른 정도',num:1,bar:1,fmt:v=>pct(v)},
+    {k:'variety',h:'챔프폭',num:1,bar:1,fmt:v=>pct(v)},
   ],'games',-1);
 
   // 시간대 — 승률 열은 **구조적으로 항상 50%** 라 뺐다. 내전은 우리끼리 5대5라
@@ -992,10 +1052,24 @@ function renderPlayerBody(){
   if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
   const r=p.record||{}, f=p.form||{};
   const streak=f.streak?`<span class="pill ${f.dir==='W'?'good':'bad'}">${f.streak}${f.dir} 연속</span>`:'';
-  const best=(p.partners_best||[]).map(x=>`${x.partner} <span class="pos">${sgn(x.synergy)}</span>`).join(', ')||'—';
-  const worst=(p.partners_worst||[]).map(x=>`${x.partner} <span class="neg">${sgn(x.synergy)}</span>`).join(', ')||'—';
+  // 예전엔 시너지 점수만 덩그러니 있어서 그게 무슨 숫자인지 알 수 없었다
+  // → 같이 뛴 판수·승패를 먼저 보여주고, 시너지 점수는 괄호로.
+  const pf=(arr,cls)=>(arr||[]).map(x=>{
+    const g=x.games||0, w=Math.round((x.winrate||0)*g);
+    return `<div class="mini" style="justify-content:space-between">`+
+      `<span>${x.partner}</span>`+
+      `<span><b class="${x.winrate>=0.5?'pos':'neg'}">${w}승 ${g-w}패</b>`+
+      `<span class="muted"> · 같이 ${g}판 · 궁합 <span class="${cls}">${sgn(x.synergy)}</span></span></span></div>`;
+  }).join('')||'<span class="muted">—</span>';
+  const best=pf(p.partners_best,'pos'), worst=pf(p.partners_worst,'neg');
   const nv=p.nemesis_victim||{nemesis:[],victim:[]};
-  const nvf=arr=>(arr||[]).map(x=>`${champImg(x.vs_champ)}${champKo(x.vs_champ)} ${pct(x.winrate)}`).join(', ')||'—';
+  // 승률만 적으면 '0%'가 1판짜리인지 5판짜리인지 알 수 없다 → 판수와 승패를 같이.
+  const nvf=arr=>(arr||[]).map(x=>{
+    const g=x.games||0, w=Math.round((x.winrate||0)*g);
+    return `${champImg(x.vs_champ)}${champKo(x.vs_champ)} `+
+      `<b class="${x.winrate>=0.5?'pos':'neg'}">${w}승 ${g-w}패</b>`+
+      `<span class="muted"> (${g}판)</span>`;
+  }).join(', ')||'—';
   const nemesis=nvf(nv.nemesis), victim=nvf(nv.victim);
   let h=`<div class="row">
     <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
@@ -1026,8 +1100,8 @@ function renderPlayerBody(){
       </div>
       <div data-sub="🤝 파트너 · 상대 챔피언">
         <div class="grid2">
-          <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
-          <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
+          <div class="card"><h2>👍 잘 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="궁합" aria-label="궁합 설명">?</span></h2>${best}</div>
+          <div class="card"><h2>👎 안 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="궁합" aria-label="궁합 설명">?</span></h2>${worst}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
           <div class="card"><h2>상대하기 어려운 챔피언</h2>${nemesis}</div>
@@ -1327,22 +1401,62 @@ function runBalance(){
 const ROLE_COLOR={TOP:'#e8833a',JUNGLE:'#3aa0ee',MIDDLE:'#c8aa6e',BOTTOM:'#9b7ede',UTILITY:'#5ec8b0',UNKNOWN:'#9aa6b2'};
 function goldChart(tl){
   if(!tl||!tl.minutes||tl.minutes.length<2) return '';
-  const W=520,H=140,pad=26,xs=tl.minutes,ys=(tl.gold_diff||[]).map(v=>+v||0);
+  const xs=tl.minutes, ys=(tl.gold_diff||[]).map(v=>+v||0);
   if(ys.length<2) return '';
-  const maxAbs=Math.max(1000,...ys.map(v=>Math.abs(v)));
-  const X=i=>pad+(W-2*pad)*(i/(xs.length-1));
-  const Y=v=>H/2-(v/maxAbs)*(H/2-pad);
-  const pts=ys.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  const labels=xs.map((m,i)=>`<text x="${X(i)}" y="${H-6}" fill="#8a98ad" font-size="10" text-anchor="middle">${m}'</text>`).join('');
-  const last=ys[ys.length-1];
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="골드 격차 추이">
-    <title>골드 격차 추이 (파랑=블루팀 우세, 주황=레드팀 우세)</title>
-    <line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#243044"/>
-    <polyline points="${pts}" fill="none" stroke="${last>=0?'#3aa0ee':'#e8833a'}" stroke-width="2"/>
-    ${labels}
-    <text x="${W-pad}" y="14" fill="${last>=0?'#3aa0ee':'#e8833a'}" font-size="11" text-anchor="end">최종 ${last>=0?'+':''}${last.toLocaleString()}G</text>
-  </svg>`;
+  // ⚠️ gold_diff 는 **항상 블루(100) − 레드(200)** 다. 이긴 팀 기준이 아니다 —
+  //    경기마다 기준이 바뀌면 여러 판을 나란히 못 본다. 축에 눈금을 세우고 어느 쪽이
+  //    어느 팀인지 명시한다(예전엔 "최종 -50G" 만 있어 누구 기준인지 알 수 없었다).
+  const W=560,H=210, L=52, R=16, T=18, B=26;                 // 여백(왼쪽=y축 라벨)
+  const iw=W-L-R, ih=H-T-B;
+  const peak=Math.max(...ys.map(Math.abs));
+  // 눈금은 1000 단위로 올림해 사람이 읽는 수로
+  const stepG=peak<=2000?500:peak<=6000?1000:peak<=15000?2500:5000;
+  const top=Math.max(stepG, Math.ceil(peak/stepG)*stepG);
+  const X=i=>L+iw*(i/(xs.length-1));
+  const Y=v=>T+ih/2-(v/top)*(ih/2);
+  const pts=ys.map((v,i)=>[X(i),Y(v)]);
+  const line=pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
+  // 0선 기준 면적 — 위는 파랑, 아래는 주황. 0 지점에서 그라디언트를 끊는다.
+  const zero=Y(0), zf=((zero-T)/ih*100).toFixed(2);
+  const area=`${L},${zero} ${line} ${(L+iw).toFixed(1)},${zero}`;
+  let ticks='';
+  for(let g=-top; g<=top; g+=stepG){
+    const y=Y(g);
+    ticks+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}"`+
+      ` stroke="${g===0?'#3d4d66':'#1b2431'}"${g===0?'':' stroke-dasharray="2 4"'}/>`+
+      `<text x="${L-8}" y="${(y+3.5).toFixed(1)}" text-anchor="end" font-size="9.5"`+
+      ` fill="${g===0?'#8a98ad':'#5b6b7f'}">${g===0?'0':(g>0?'+':'−')+Math.abs(g/1000)+'K'}</text>`;
+  }
+  // x축은 5분 간격만 라벨(분당이라 다 찍으면 겹친다)
+  let xl='';
+  xs.forEach((m,i)=>{ if(m%5) return;
+    xl+=`<text x="${X(i).toFixed(1)}" y="${H-8}" fill="#5b6b7f" font-size="9.5" text-anchor="middle">${m}분</text>`;});
+  const last=ys[ys.length-1], lastX=X(ys.length-1), lastY=Y(last);
+  const side=last>=0?'블루':'레드', col=last>=0?'#3aa0ee':'#e8833a';
+  return `<div class="goldwrap">
+    <div class="goldlegend"><span class="blue">▲ 블루 우세</span>`+
+    `<span class="muted">골드 차이 (블루 − 레드)</span>`+
+    `<span class="red">▼ 레드 우세</span></div>
+    <svg class="chart" viewBox="0 0 ${W} ${H}" role="img"
+         aria-label="골드 차이 추이 — 위쪽은 블루팀 우세, 아래쪽은 레드팀 우세">
+      <defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3aa0ee" stop-opacity=".30"/>
+        <stop offset="${zf}%" stop-color="#3aa0ee" stop-opacity=".05"/>
+        <stop offset="${zf}%" stop-color="#e8833a" stop-opacity=".05"/>
+        <stop offset="100%" stop-color="#e8833a" stop-opacity=".30"/>
+      </linearGradient></defs>
+      ${ticks}
+      <polygon points="${area}" fill="url(#gg)"/>
+      <polyline points="${line}" fill="none" stroke="#8fa4bd" stroke-width="2"
+                stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="3.5" fill="${col}"/>
+      ${xl}
+    </svg>
+    <div class="goldfoot">최종 <b style="color:${col}">${side} +${Math.abs(last).toLocaleString()}G</b>
+      <span class="muted">· 최대 격차 ${peak.toLocaleString()}G</span></div>
+  </div>`;
 }
+
 function itemImg(id){
   if(!id||!DATA.patch||!/^\d+$/.test(String(id))) return '<span class="itemslot"></span>';
   return `<img class="itemslot" src="https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/item/${id}.png" loading="lazy" onerror="this.style.visibility='hidden'" alt="">`;
@@ -1357,13 +1471,55 @@ function dmgBars(d){
     `<div class="dmgbar"><i style="width:${(p.dmg/max*100).toFixed(0)}%;background:${col(t)}"></i></div></div>`).join('')+`</div>`;
   return `<div class="grid2">`+d.teams.map(colH).join('')+`</div>`;
 }
+// 소환사 주문 · 룬 계열 id → 이름. ddragon 은 CSP 로 이미지가 허용돼 있지만
+// 주문/룬 아이콘 경로는 버전마다 파일명이 달라 깨지기 쉬워서 글자로만 쓴다.
+const SPELL_KO={1:'정화',3:'탈진',4:'점멸',6:'유체화',7:'회복',11:'강타',12:'순간이동',
+  13:'総明',14:'점화',21:'방어막',32:'표식'};
+const PERK_KO={8000:'정밀',8100:'지배',8200:'마법',8300:'영감',8400:'결의'};
+const EX_LABEL=[
+  ['solo_kills','솔로킬'],['spree','최다 연속킬'],['first_blood','퍼블'],
+  ['plates','포탑 방패'],['turrets','포탑 관여'],
+  ['dragons','드래곤'],['barons','바론'],['heralds','전령'],['steals','스틸'],
+  ['dmg_physical','물리 피해',1],['dmg_magic','마법 피해',1],['dmg_true','고정 피해',1],
+  ['heal_shield','힐·실드',1],['gold_spent','사용 골드',1],['bounty','현상금 획득',1],
+  ['wards','와드 설치'],['control_wards','제어 와드'],['ward_kills','와드 제거'],
+  ['skillshots_hit','스킬샷 명중'],['skillshots_dodged','스킬샷 회피'],
+  ['immobilizations','적 행동불능'],
+  ['time_dead','죽어 있던 시간',2],['longest_living','최장 생존',2],
+];
+function playerDetailHTML(p){
+  const K=v=>v>=1000?(v/1000).toFixed(1)+'K':String(v);
+  const ex=p.extra||{};
+  const stats=EX_LABEL.filter(([k])=>+ex[k]>0).map(([k,lab,kind])=>{
+    const v=+ex[k]||0;
+    const disp=kind===2?mmss(v):kind===1?K(v):v;
+    return `<div class="pdstat"><span class="muted">${lab}</span><b>${disp}</b></div>`;
+  }).join('')||'<span class="muted">기록 없음</span>';
+  const build=(p.build||[]).length
+    ? `<div class="pdbuild">`+(p.build||[]).map(x=>
+        `<span class="pdit" data-tip="${x.minute}분">${itemImg(x.item)}`+
+        `<i>${x.minute}′</i></span>`).join('<span class="pdar">›</span>')+`</div>`
+    : '<span class="muted">구매 기록 없음</span>';
+  const sp=(p.spells||[]).filter(Boolean).map(x=>SPELL_KO[x]||('주문'+x)).join(' · ')||'—';
+  const pk=(p.perks||[]).filter(Boolean).map(x=>PERK_KO[x]||('룬'+x)).join(' · ')||'—';
+  return `<div class="pdwrap">
+    <div class="pdrow"><span class="pdk">소환사 주문</span><span>${sp}</span>
+      <span class="pdk">룬</span><span>${pk}</span></div>
+    <div class="pdk" style="margin-top:8px">아이템 구매 순서
+      <span class="muted" style="font-weight:400">— 산 순서입니다. 되판 것은 빠져 있어요.</span></div>
+    ${build}
+    <div class="pdk" style="margin-top:10px">이 판의 세부 기록</div>
+    <div class="pdstats">${stats}</div>
+  </div>`;
+}
 function scoreboard(d){
   const all=d.teams.flatMap(t=>t.players||[]);
   const has=k=>all.some(p=>+p[k]>0);      // 값이 하나도 없는 열은 빼는 게 정직하다
   const K=v=>(v/1000).toFixed(1)+'K';
   const cols=[
     {h:'라인',cell:p=>`<td class="lncell">${laneKo(p.lane)}</td>`,on:true},
-    {h:'플레이어',cell:p=>`<td>${champImg(p.champ)}${p.name}</td>`,on:true},
+    {h:'플레이어',cell:p=>`<td><span class="sbname">${champImg(p.champ)}${p.name}`+
+      `<i class="sbcar">▾</i></span></td>`,on:true},
     {h:'KDA',num:1,cell:p=>`<td class="num">${p.k}/${p.d}/${p.a}</td>`,on:true},
     {h:'CS',num:1,cell:p=>`<td class="num">${p.cs}</td>`,on:has('cs')},
     {h:'딜',num:1,cell:p=>`<td class="num">${K(p.dmg)}</td>`,on:has('dmg')},
@@ -1375,12 +1531,19 @@ function scoreboard(d){
      on:all.some(p=>(p.items||[]).length)},
   ].filter(c=>c.on);
   const head='<tr>'+cols.map(c=>`<th${c.num?' class="num"':''}>${c.h}</th>`).join('')+'</tr>';
-  const row=p=>'<tr>'+cols.map(c=>c.cell(p)).join('')+'</tr>';
+  // 선수 행을 누르면 바로 아래에 상세가 펼쳐진다. 표 밖으로 띄우면 어느 선수 것인지
+  // 헷갈리므로 같은 <tbody> 안에 붙인다.
+  const row=(p,key)=>'<tr class="sbrow" data-pd="'+key+'">'+cols.map(c=>c.cell(p)).join('')+'</tr>'+
+    `<tr class="sbdet hidden" data-pdfor="${key}"><td colspan="${cols.length}">`+
+    playerDetailHTML(p)+`</td></tr>`;
+  let n=0;
   return `<div style="overflow-x:auto"><table class="sb"><thead>${head}</thead><tbody>`+
-    d.teams.map(t=>`<tr class="sbteam"><td colspan="${cols.length}">${t.team_id===100?'🔵 A팀':'🔴 B팀'} ${t.win?'(승)':'(패)'}</td></tr>`+
-      (t.players||[]).slice().sort((a,b)=>laneIdx(a.lane)-laneIdx(b.lane)).map(row).join('')).join('')+
+    d.teams.map(t=>`<tr class="sbteam"><td colspan="${cols.length}">${t.team_id===100?'🔵 블루팀':'🔴 레드팀'} ${t.win?'(승)':'(패)'}</td></tr>`+
+      (t.players||[]).slice().sort((a,b)=>laneIdx(a.lane)-laneIdx(b.lane))
+        .map(p=>row(p,'p'+(n++))).join('')).join('')+
     `</tbody></table></div>`;
 }
+
 function matchDetailHTML(d){
   if(!d||!d.teams||d.teams.length<2) return goldChart((d&&d.timeline)||{});
   const A=d.teams[0],B=d.teams[1],o=t=>t.objectives||{};
@@ -1834,6 +1997,15 @@ $('#playerSearch').addEventListener('input',e=>{
 $('#cmpSearchA').addEventListener('input',e=>{fillPlayerSelect($('#cmpA'),e.target.value);renderCompare();});
 $('#cmpSearchB').addEventListener('input',e=>{fillPlayerSelect($('#cmpB'),e.target.value);renderCompare();});
 $('#playerSel').addEventListener('change',renderPlayerBody);
+// 스코어보드 선수 행 → 그 판 상세 펼치기/접기
+document.addEventListener('click',e=>{
+  const tr=e.target.closest('tr.sbrow'); if(!tr) return;
+  const det=tr.parentElement.querySelector(`tr.sbdet[data-pdfor="${tr.dataset.pd}"]`);
+  if(!det) return;
+  const open=det.classList.contains('hidden');
+  det.classList.toggle('hidden',!open);
+  tr.classList.toggle('on',open);
+});
 $('#playerBody').addEventListener('click',e=>{
   const a=e.target.closest('.vslink'); if(!a) return;
   e.preventDefault(); openCompare($('#playerSel').value, a.dataset.who);
