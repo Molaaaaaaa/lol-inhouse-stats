@@ -338,7 +338,7 @@
     <div class="tab" data-t="math">📐 계산식</div>
   </div>
 
-  <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div>
+  <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div><div id="boardNote"></div>
     <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). 헤더 클릭으로 재정렬.</div></div></section>
 
   <section id="rank" class="view hidden"><div class="card">
@@ -704,7 +704,9 @@ function renderBoard(){
     {k:'kda',h:'KDA',num:1},{k:'kp',h:'킬관여',num:1,fmt:pct},
     {k:'dpm',h:'DPM',num:1,bar:1},
   ],'ci_lower',-1);
-  $('#boardT').insertAdjacentHTML('beforeend',minGamesNote());
+  // ⚠️ renderTable 이 컨테이너 innerHTML 을 덮으므로 안쪽에 붙이면 **정렬 한 번에
+  //    사라지고 안 돌아온다**. 19명 중 18명만 보이는 이유를 밝히는 유일한 문구다.
+  $('#boardNote').innerHTML=minGamesNote();
 }
 
 // 지표 목록·라벨·포맷은 **서버가 준 것만** 쓴다. 예전엔 여기에도 배열을 두고
@@ -970,8 +972,10 @@ function renderFun(){
   renderTable($('#funDeath'),F.deaths||[],[
     {k:'discord_name',h:'멤버'},
     {k:'games',h:'판',num:1},
-    {k:'fb_given',h:'처음 죽은 비율',num:1,fmt:(v,r)=>r.deaths?pct(v):'-',
-     cls:r=>'num '+(r.deaths&&r.fb_given>0.2?'neg':'')},
+    // ⚠️ 분모는 games 다. death_stats 는 deaths 를 안 내보내는데 그걸 게이트로 써서
+    //    19행 전부 '-' 로 나오고 있었다(값은 멀쩡히 있었다).
+    {k:'fb_given',h:'처음 죽은 비율',num:1,fmt:(v,r)=>r.games?pct(v):'-',
+     cls:r=>'num '+(r.games&&r.fb_given>0.2?'neg':'')},
     {k:'first_death_min',h:'첫 데스',num:1,fmt:v=>v==null?'-':`${v}분`},
     {k:'bounty_given',h:'내준 현상금',num:1,fmt:v=>v==null?'-':(+v).toLocaleString(),bar:1},
   ],'bounty_given',-1);
@@ -1119,7 +1123,7 @@ function renderPlayerBody(){
           <div><h2>능력치 <span class="qmark" tabindex="0" role="button" data-tip="우리 방 16명 안에서의 등급입니다(0.5~5.0).&#10;바깥쪽일수록 방에서 상위권.&#10;점선은 방 평균 2.75." aria-label="능력치 설명">?</span></h2>${radar(p,$('#playerSel').value)}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
-          <div><h2>라인별 전적</h2><div id="plLane"></div></div>
+          <div><h2>라인별 전적</h2><div id="plLane"></div><div id="plLaneNote"></div></div>
           <div><h2>챔피언</h2><div id="plChamp"></div></div>
         </div>
       </div>
@@ -1127,7 +1131,7 @@ function renderPlayerBody(){
         <h2>상대별 전적<span class="qmark" tabindex="0" role="button" data-tip-key="상대별" aria-label="상대별 전적 설명">?</span></h2>
         <p class="muted">위에 있을수록 나를 많이 이긴 상대입니다. 판수를 먼저 보세요 —
           이 방은 한 상대와 최대 6판밖에 안 붙어서 <b>4승 0패도 4판짜리</b>입니다.</p>
-        <div id="plVs"></div>
+        <div id="plVs"></div><div id="plVsNote"></div>
       </div>
       <div data-sub="📜 최근 · 시간대">
         <div><h2>최근 경기</h2><div id="plRecent"></div></div>
@@ -1173,9 +1177,10 @@ function renderPlayerBody(){
   ],'games',-1);
   // 통합값과 라인별이 왜 다른지 한 줄로 — 안 적으면 "숫자가 안 맞는다"로 읽힌다
   const lanesN=(p.lanes||[]).length;
-  if(lanesN>1) $('#plLane').insertAdjacentHTML('beforeend',
+  if(lanesN>1) $('#plLaneNote').innerHTML=(
     `<p class="muted" style="font-size:11.5px;margin:6px 0 0">위 요약의 DPM ${r.dpm} 은 `+
     `${lanesN}개 라인을 합친 값입니다. 라인마다 하는 일이 달라서 여기 숫자와 다릅니다.</p>`);
+  else $('#plLaneNote').innerHTML='';
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},
     {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
@@ -1261,9 +1266,10 @@ function renderPlayerVs(meId){
   ],'vsMargin',-1);
   const tot=rows.filter(r=>r.vsGames).reduce((t,r)=>({
     w:t.w+(+r.vs.match(/<b>(\d+)승/)[1]),n:t.n+r.vsGames}),{w:0,n:0});
-  box.insertAdjacentHTML('beforeend',
+  const note=$('#plVsNote');
+  if(note) note.innerHTML=
     `<p class="muted" style="font-size:12px;margin:8px 0 0">맞대결 합계 ${tot.n}판 ${tot.w}승 ${tot.n-tot.w}패`+
-    ` · 이름을 누르면 그 상대와의 상세를 봅니다.</p>`);
+    ` · 이름을 누르면 그 상대와의 상세를 봅니다.</p>`;
 }
 // 두 명 상세(비교 탭)로 이동. 검색 필터가 걸려 있으면 option 이 없어 값 대입이
 // 조용히 실패하므로 반드시 먼저 비운다.
@@ -1343,10 +1349,14 @@ function renderCompare(){
     `<p class="muted" style="font-size:12px;margin:6px 0 0">같은 편이었던 판 ${rec.with_games}회 · 그때 승률 ${pct(rec.with_winrate)}</p>`:'';
   // 능력치 겹쳐 그리기 — 도형이 겹쳐도 축마다 숫자를 둘 다 적어 읽힌다.
   //    색만으로 구분하지 않게 B 는 점선으로 그린다(색각 대응).
+  // ⚠️ 여기서 던지면 아래 innerHTML 대입 전이라 **이전 두 사람 화면이 그대로 남는다**.
+  //    실패해도 조용히 넘어가지 말고 자리를 비워 둔다.
+  let radarHTML='';
+  try{ radarHTML=radarSVG([{name:a.name,profile:a.profile,color:'#3aa0ee'},
+                           {name:b.name,profile:b.profile,color:'#e8833a'}]); }
+  catch(err){ radarHTML='<span class="muted">능력치를 그릴 수 없습니다</span>'; }
   const both=(a.profile||[]).length>=3&&(b.profile||[]).length>=3
-    ? `<div class="cmpradar">`+
-      radarSVG([{name:a.name,profile:a.profile,color:'#3aa0ee'},
-                {name:b.name,profile:b.profile,color:'#e8833a'}])+
+    ? `<div class="cmpradar">`+radarHTML+
       `<div class="cmpleg">`+
       `<span><i style="background:#3aa0ee"></i>${a.name} <span class="muted">${ra.games}판</span></span>`+
       `<span><i style="background:#e8833a;border-style:dashed"></i>${b.name} <span class="muted">${rb.games}판</span></span>`+
@@ -1724,7 +1734,21 @@ function poly(pts){return pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join('
 
 // series: [{name, profile, color}] — 한 명이면 그냥 한 명, 두 명이면 겹쳐 그린다.
 function radarSVG(series,opt){
-  const base=(series[0]&&series[0].profile||[]).filter(a=>a.score!=null);
+  // ⚠️ 축을 **키로** 짝지어야 한다. 예전엔 시리즈마다 자기 배열 인덱스로 꼭짓점을
+  //    골라서, 축 수가 다른 두 사람을 비교하면 (a) 왼쪽이 적으면 예외가 나 화면에
+  //    **이전 두 사람이 그대로 남고** (b) 왼쪽이 많으면 결손 축 뒤 값이 한 칸씩
+  //    밀려 도형과 라벨 숫자가 서로를 반박했다. 실측 342쌍 중 100쌍이 해당.
+  //    축 결손은 판수가 모자라 생기므로 사람이 새로 들어올 때마다 재발한다.
+  const keys=[];
+  series.forEach(sr=>(sr.profile||[]).forEach(a=>{
+    if(a.score!=null && !keys.includes(a.key)) keys.push(a.key);
+  }));
+  const base=keys.map(k=>{
+    for(const sr of series){
+      const m=(sr.profile||[]).find(a=>a.key===k&&a.score!=null);
+      if(m) return m;
+    }
+  }).filter(Boolean);
   if(base.length<3) return '<span class="muted">판수가 모자라 능력치를 그릴 수 없습니다</span>';
   const SC=SCALE(), MAX=SC.max||5, RINGS=SC.rings||5;
   const N=base.length, cx=118, cy=112, R=70;
@@ -1737,14 +1761,21 @@ function radarSVG(series,opt){
   // 방 평균선
   const avg=(SC.room_avg||2.75)/MAX;
   g+=`<polygon points="${poly(axisPts(N,cx,cy,R,avg))}" fill="none" stroke="#3d4d66" stroke-dasharray="3 3"/>`;
+  const ringPts=axisPts(N,cx,cy,R,1);
   series.forEach((sr,si)=>{
-    const ax=(sr.profile||[]).filter(a=>a.score!=null);
-    if(ax.length<3) return;
-    const pts=ax.map((a,i)=>axisPts(N,cx,cy,R,Math.max(.04,a.score/MAX))[i]);
+    const byKey=new Map((sr.profile||[]).filter(a=>a.score!=null).map(a=>[a.key,a]));
+    if(byKey.size<3) return;
+    // 그 사람에게 없는 축은 중심(0)으로 접는다 — '데이터 없음'과 '0점'은 라벨에서 가른다
+    const pts=base.map((b,i)=>{
+      const a=byKey.get(b.key);
+      return axisPts(N,cx,cy,R,a?Math.max(.04,a.score/MAX):0)[i];
+    });
     g+=`<polygon points="${poly(pts)}" fill="${sr.color}2e" stroke="${sr.color}" stroke-width="2"`+
        (si?' stroke-dasharray="5 3"':'')+`/>`;
     pts.forEach((q,i)=>{
-      const a=ax[i], v=fmtMetric(a.parts&&a.parts[0]?a.parts[0].key:a.key,
+      const a=byKey.get(base[i].key);
+      if(!a) return;                       // 없는 축엔 점을 찍지 않는다
+      const v=fmtMetric(a.parts&&a.parts[0]?a.parts[0].key:a.key,
                                  a.parts&&a.parts[0]?a.parts[0].value:a.value);
       const detail=(a.parts||[]).map(x=>`${x.label} ${fmtMetric(x.key,x.value)} (${x.rank}/${x.n})`).join(' / ');
       g+=`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="3.5" fill="${sr.color}"`+
@@ -1755,9 +1786,10 @@ function radarSVG(series,opt){
   base.forEach((a,i)=>{
     const q=axisPts(N,cx,cy,R,1.30)[i];
     const nums=series.map(sr=>{
-      const m=(sr.profile||[]).find(x=>x.key===a.key);
-      return m?`<tspan fill="${sr.color}">${m.score}</tspan>`:'';
-    }).filter(Boolean).join('<tspan fill="#5b6b7f"> / </tspan>');
+      const m=(sr.profile||[]).find(x=>x.key===a.key&&x.score!=null);
+      // 없는 축은 '—' 로 — 빈칸으로 두면 0점과 구분이 안 된다
+      return `<tspan fill="${m?sr.color:'#5b6b7f'}">${m?m.score:'—'}</tspan>`;
+    }).join('<tspan fill="#5b6b7f"> / </tspan>');
     const thin=(a.games!=null&&a.games<5);
     g+=`<text x="${q[0].toFixed(1)}" y="${(q[1]-2).toFixed(1)}" text-anchor="middle"`+
        ` font-size="10" fill="${thin?'#5b6b7f':'#9aa6b2'}">${a.label}</text>`+
