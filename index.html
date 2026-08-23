@@ -178,6 +178,9 @@
      글자색을 물려받되 살짝만 죽인다. */
   .mchip.on .muted{color:inherit;opacity:.72;font-weight:600}
   .mpick .cnt{color:var(--dim);font-size:11.5px;margin-left:auto}
+  .metdesc{color:var(--dim);font-size:12.5px;line-height:1.6;margin:2px 0 0;
+    padding-left:12px;border-left:2px solid #243044}
+  .metdesc b{color:var(--txt)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .mini{display:flex;align-items:center;gap:8px;margin:3px 0}
   .mini .lane{width:64px;color:var(--dim);font-size:12px}
@@ -349,6 +352,7 @@
       </div>
       <div class="metswrap"><span class="metsfrom" id="metricFrom"></span>
         <div class="mets" id="metricChips"></div></div>
+      <p class="metdesc" id="metricDesc"></p>
       <div class="row" style="margin-top:2px">
         <span class="muted" style="font-size:12.5px">라인</span>
         <span id="laneBtns"></span>
@@ -707,6 +711,7 @@ function renderBoard(){
 // publish 에도 두어서, 한쪽만 고치면 조용히 어긋났다.
 const mLabel=k=>((DATA.metric_meta||{})[k]||{}).label||k;
 const mFmt=k=>((DATA.metric_meta||{})[k]||{}).fmt||'';
+const mDesc=k=>((DATA.metric_meta||{})[k]||{}).desc||'';
 const lowerBetter=k=>(DATA.lower_better||[]).includes(k);
 const mmss=v=>{const n=Math.round(+v||0);return `${Math.floor(n/60)}:${String(n%60).padStart(2,'0')}`;};
 function fmtMetric(k,v){
@@ -787,6 +792,11 @@ function buildRankControls(){
                                  :`${flat.length}개 지표`;
   // 아래 칩들이 '어느 분류의 지표인지' 항상 밝힌다
   $('#metricFrom').textContent=q?`'${metricQuery}' 검색`:`${curGroup} 지표`;
+  // 라벨만으로는 '골드 효율' 같은 게 뭘 재는지 알 수 없다 → 고른 지표의 뜻을 항상 띄운다
+  // 설명 안의 **강조** 를 굵게. sanitize 를 거친 문자열이라 태그는 이미 이스케이프돼 있어
+  // 여기서 <b> 만 되살려도 새 주입 경로가 생기지 않는다.
+  const dsc=mDesc(curMetric).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  $('#metricDesc').innerHTML=dsc?`<b>${mLabel(curMetric)}</b> — ${dsc}`:'';
 
   $('#metricGroups').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
     curGroup=btn.dataset.g; metricQuery=''; $('#metricSearch').value='';
@@ -1151,8 +1161,21 @@ function renderPlayerBody(){
   showSubtab($('#plPanes'), plSubIdx);
   $('#plPanes').querySelectorAll(':scope > .subtabs .subtab')
     .forEach((b,i)=>b.addEventListener('click',()=>{plSubIdx=i;}));
-  renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
-    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},{k:'kda',h:'KDA',num:1}],'games',-1);
+  // ⚠️ 라인마다 지표가 통째로 다르다. 미드·탑·서폿을 3판씩 도는 사람의 통합 DPM 은
+  //    어느 라인 얘기도 아니게 된다 → 라인별로 같이 보여준다.
+  renderTable($('#plLane'),p.lanes,[
+    {k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'kda',h:'KDA',num:1},
+    {k:'dpm',h:'DPM',num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
+    {k:'kp',h:'킬관여',num:1,fmt:v=>v==null?'-':pct(v)},
+    {k:'cs',h:'CS',num:1,fmt:v=>v==null?'-':Math.round(v)},
+  ],'games',-1);
+  // 통합값과 라인별이 왜 다른지 한 줄로 — 안 적으면 "숫자가 안 맞는다"로 읽힌다
+  const lanesN=(p.lanes||[]).length;
+  if(lanesN>1) $('#plLane').insertAdjacentHTML('beforeend',
+    `<p class="muted" style="font-size:11.5px;margin:6px 0 0">위 요약의 DPM ${r.dpm} 은 `+
+    `${lanesN}개 라인을 합친 값입니다. 라인마다 하는 일이 달라서 여기 숫자와 다릅니다.</p>`);
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},
     {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
