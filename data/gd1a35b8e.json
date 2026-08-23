@@ -2,7 +2,7 @@
  "guild_id": "gd1a35b8e",
  "name": "조 C 방",
  "patch": "16.16.1",
- "timestamp": "2026-08-22T20:41:04+00:00",
+ "timestamp": "2026-08-23T10:47:18+00:00",
  "summary": {
   "total_games": 7,
   "player_count": 16,
@@ -6158,6 +6158,11 @@
    "label": "고정 피해",
    "lane": false,
    "fmt": "k"
+  },
+  "winrate": {
+   "label": "승률",
+   "lane": false,
+   "fmt": "pct"
   }
  },
  "lower_better": [
@@ -7082,6 +7087,12 @@
  "min_days": 1,
  "min_days_excluded": 0,
  "min_games_lane": 3,
+ "profile_scale": {
+  "max": 5.0,
+  "step": 0.5,
+  "rings": 5,
+  "room_avg": 2.75
+ },
  "champion_matchups": [
   {
    "champ": "Ashe",
@@ -11960,19 +11971,11 @@
     "games": 3
    },
    {
-    "giver": "jekjek",
-    "taker": "광명시25살최문선",
-    "assists": 13,
-    "taker_kills": 41.0,
-    "share": 0.317,
-    "games": 4
-   },
-   {
-    "giver": "코 파",
-    "taker": "몰 매",
-    "assists": 13,
-    "taker_kills": 46.0,
-    "share": 0.283,
+    "giver": "빛나는 마빡",
+    "taker": "말듣쓰",
+    "assists": 6,
+    "taker_kills": 17.0,
+    "share": 0.353,
     "games": 3
    },
    {
@@ -11984,12 +11987,12 @@
     "games": 3
    },
    {
-    "giver": "qkdlvj3",
-    "taker": "몰 매",
-    "assists": 10,
-    "taker_kills": 46.0,
-    "share": 0.217,
-    "games": 3
+    "giver": "jekjek",
+    "taker": "광명시25살최문선",
+    "assists": 13,
+    "taker_kills": 41.0,
+    "share": 0.317,
+    "games": 4
    },
    {
     "giver": "앙앙맹",
@@ -11997,22 +12000,6 @@
     "assists": 9,
     "taker_kills": 30.0,
     "share": 0.3,
-    "games": 3
-   },
-   {
-    "giver": "몰 매",
-    "taker": "도야짬뽕누룽지탕",
-    "assists": 9,
-    "taker_kills": 38.0,
-    "share": 0.237,
-    "games": 3
-   },
-   {
-    "giver": "빛나는 마빡",
-    "taker": "말듣쓰",
-    "assists": 6,
-    "taker_kills": 17.0,
-    "share": 0.353,
     "games": 3
    },
    {
@@ -12024,11 +12011,11 @@
     "games": 4
    },
    {
-    "giver": "광명시25살최문선",
+    "giver": "코 파",
     "taker": "몰 매",
-    "assists": 6,
+    "assists": 13,
     "taker_kills": 46.0,
-    "share": 0.13,
+    "share": 0.283,
     "games": 3
    },
    {
@@ -12038,6 +12025,30 @@
     "taker_kills": 20.0,
     "share": 0.25,
     "games": 4
+   },
+   {
+    "giver": "몰 매",
+    "taker": "도야짬뽕누룽지탕",
+    "assists": 9,
+    "taker_kills": 38.0,
+    "share": 0.237,
+    "games": 3
+   },
+   {
+    "giver": "qkdlvj3",
+    "taker": "몰 매",
+    "assists": 10,
+    "taker_kills": 46.0,
+    "share": 0.217,
+    "games": 3
+   },
+   {
+    "giver": "용기사",
+    "taker": "도야짬뽕누룽지탕",
+    "assists": 5,
+    "taker_kills": 38.0,
+    "share": 0.132,
+    "games": 3
    }
   ],
   "sprees": {
@@ -12064,7 +12075,7 @@
      "name": "앙앙맹",
      "champ": "Viego",
      "streak": 10,
-     "minute": 25
+     "minute": 21
     },
     {
      "name": "내 이름은 정준토",
@@ -12093,12 +12104,12 @@
    ],
    "stoppers": [
     {
-     "stopper": "jekjek",
+     "stopper": "광명시25살최문선",
      "runner": "qkdlvj3",
      "streak": 12
     },
     {
-     "stopper": "내 이름은 정준토",
+     "stopper": "도야짬뽕누룽지탕",
      "runner": "앙앙맹",
      "streak": 10
     },
@@ -12123,17 +12134,289 @@
      "streak": 5
     },
     {
-     "stopper": "몰 매",
+     "stopper": "말듣쓰",
      "runner": "jekjek",
      "streak": 5
     },
     {
-     "stopper": "윙봉현",
-     "runner": "앙앙맹",
+     "stopper": "앙앙맹",
+     "runner": "qkdlvj3",
      "streak": 5
     }
    ]
-  }
+  },
+  "sides": {
+   "team": [
+    {
+     "side": "BLUE",
+     "games": 7,
+     "wins": 4,
+     "winrate": 0.571
+    },
+    {
+     "side": "RED",
+     "games": 7,
+     "wins": 3,
+     "winrate": 0.429
+    }
+   ],
+   "players": [
+    {
+     "discord_name": "jekjek",
+     "blue_g": 2,
+     "blue_w": 0,
+     "red_g": 5,
+     "red_w": 1
+    },
+    {
+     "discord_name": "qkdlvj3",
+     "blue_g": 1,
+     "blue_w": 1,
+     "red_g": 2,
+     "red_w": 1
+    },
+    {
+     "discord_name": "광명시25살최문선",
+     "blue_g": 3,
+     "blue_w": 1,
+     "red_g": 4,
+     "red_w": 1
+    },
+    {
+     "discord_name": "내 이름은 정준토",
+     "blue_g": 3,
+     "blue_w": 2,
+     "red_g": 1,
+     "red_w": 1
+    },
+    {
+     "discord_name": "대오주인",
+     "blue_g": 1,
+     "blue_w": 0,
+     "red_g": 3,
+     "red_w": 0
+    },
+    {
+     "discord_name": "도야짬뽕누룽지탕",
+     "blue_g": 3,
+     "blue_w": 2,
+     "red_g": 2,
+     "red_w": 2
+    },
+    {
+     "discord_name": "뚠댕뚠냥",
+     "blue_g": 2,
+     "blue_w": 1,
+     "red_g": 1,
+     "red_w": 0
+    },
+    {
+     "discord_name": "말듣쓰",
+     "blue_g": 3,
+     "blue_w": 3,
+     "red_g": 1,
+     "red_w": 1
+    },
+    {
+     "discord_name": "몰 매",
+     "blue_g": 4,
+     "blue_w": 2,
+     "red_g": 3,
+     "red_w": 1
+    },
+    {
+     "discord_name": "빛나는 마빡",
+     "blue_g": 3,
+     "blue_w": 3,
+     "red_g": 1,
+     "red_w": 1
+    },
+    {
+     "discord_name": "앙앙맹",
+     "blue_g": 2,
+     "blue_w": 2,
+     "red_g": 4,
+     "red_w": 2
+    },
+    {
+     "discord_name": "용기사",
+     "blue_g": 2,
+     "blue_w": 1,
+     "red_g": 1,
+     "red_w": 1
+    },
+    {
+     "discord_name": "윙봉현",
+     "blue_g": 1,
+     "blue_w": 0,
+     "red_g": 2,
+     "red_w": 1
+    },
+    {
+     "discord_name": "조 C",
+     "blue_g": 3,
+     "blue_w": 2,
+     "red_g": 3,
+     "red_w": 2
+    },
+    {
+     "discord_name": "코 파",
+     "blue_g": 2,
+     "blue_w": 0,
+     "red_g": 1,
+     "red_w": 0
+    }
+   ]
+  },
+  "champ_pool": [
+   {
+    "discord_name": "jekjek",
+    "lane": "TOP",
+    "champs": 7,
+    "games": 7,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "qkdlvj3",
+    "lane": "BOTTOM",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "lane": "JUNGLE",
+    "champs": 2,
+    "games": 2,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "광명시25살최문선",
+    "lane": "MIDDLE",
+    "champs": 4,
+    "games": 5,
+    "variety": 0.8
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "lane": "BOTTOM",
+    "champs": 1,
+    "games": 1,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "내 이름은 정준토",
+    "lane": "MIDDLE",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "대오주인",
+    "lane": "UTILITY",
+    "champs": 4,
+    "games": 4,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "lane": "BOTTOM",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "도야짬뽕누룽지탕",
+    "lane": "MIDDLE",
+    "champs": 2,
+    "games": 2,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "뚠댕뚠냥",
+    "lane": "BOTTOM",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "말듣쓰",
+    "lane": "TOP",
+    "champs": 4,
+    "games": 4,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "몰 매",
+    "lane": "JUNGLE",
+    "champs": 6,
+    "games": 7,
+    "variety": 0.857
+   },
+   {
+    "discord_name": "빛나는 마빡",
+    "lane": "UTILITY",
+    "champs": 3,
+    "games": 4,
+    "variety": 0.75
+   },
+   {
+    "discord_name": "앙앙맹",
+    "lane": "JUNGLE",
+    "champs": 5,
+    "games": 5,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "앙앙맹",
+    "lane": "MIDDLE",
+    "champs": 1,
+    "games": 1,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "용기사",
+    "lane": "TOP",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "우체국집배원",
+    "lane": "BOTTOM",
+    "champs": 1,
+    "games": 1,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "윙봉현",
+    "lane": "BOTTOM",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "조 C",
+    "lane": "MIDDLE",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "조 C",
+    "lane": "UTILITY",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   },
+   {
+    "discord_name": "코 파",
+    "lane": "UTILITY",
+    "champs": 3,
+    "games": 3,
+    "variety": 1.0
+   }
+  ]
  },
  "champ_ko": {
   "Aatrox": "아트록스",
@@ -15871,13 +16154,13 @@
    "strength": 0.052,
    "mmr": 1013,
    "lanes": {
-    "BOTTOM": {
-     "strength": 0.092,
-     "mmr": 1023
-    },
     "MIDDLE": {
      "strength": 0.081,
      "mmr": 1020
+    },
+    "BOTTOM": {
+     "strength": 0.092,
+     "mmr": 1023
     }
    },
    "main_lane": "MIDDLE",
@@ -15996,13 +16279,13 @@
    "strength": 0.143,
    "mmr": 1036,
    "lanes": {
-    "BOTTOM": {
-     "strength": 0.171,
-     "mmr": 1043
-    },
     "MIDDLE": {
      "strength": 0.209,
      "mmr": 1052
+    },
+    "BOTTOM": {
+     "strength": 0.171,
+     "mmr": 1043
     }
    },
    "main_lane": "BOTTOM",
@@ -16546,13 +16829,13 @@
    "strength": 0.19,
    "mmr": 1047,
    "lanes": {
-    "MIDDLE": {
-     "strength": 0.161,
-     "mmr": 1040
-    },
     "UTILITY": {
      "strength": 0.275,
      "mmr": 1069
+    },
+    "MIDDLE": {
+     "strength": 0.161,
+     "mmr": 1040
     }
    },
    "main_lane": "MIDDLE",
@@ -16683,76 +16966,33 @@
   }
  },
  "h2h": {
-  "p3|p15": {
-   "vs_games": 4,
-   "a_wins": 1,
-   "b_wins": 3,
-   "a_winrate": 0.25,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Annie",
-     "b_champ": "Pyke",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Viktor",
-     "b_champ": "Milio",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Yone",
-     "same_lane": true,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Cassiopeia",
-     "same_lane": true,
-     "a_win": false
-    }
-   ]
-  },
-  "p14|p16": {
-   "vs_games": 1,
-   "a_wins": 1,
+  "p11|p16": {
+   "vs_games": 3,
+   "a_wins": 3,
    "b_wins": 0,
    "a_winrate": 1.0,
-   "with_games": 2,
+   "with_games": 0,
    "with_wins": 0,
-   "with_winrate": 0.0,
+   "with_winrate": null,
    "lanes": [
     {
-     "lane": "BOTTOM",
-     "a_champ": "Sivir",
+     "lane": "JUNGLE",
+     "a_champ": "Viego",
      "b_champ": "Senna",
      "same_lane": false,
      "a_win": true
-    }
-   ]
-  },
-  "p3|p16": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
+    },
     {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Senna",
+     "lane": "JUNGLE",
+     "a_champ": "Lillia",
+     "b_champ": "Karma",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Taliyah",
+     "b_champ": "Lulu",
      "same_lane": false,
      "a_win": true
     }
@@ -16790,39 +17030,142 @@
     }
    ]
   },
-  "p3|p9": {
-   "vs_games": 3,
+  "p11|p12": {
+   "vs_games": 1,
    "a_wins": 1,
-   "b_wins": 2,
-   "a_winrate": 0.333,
-   "with_games": 4,
-   "with_wins": 1,
-   "with_winrate": 0.25,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
    "lanes": [
     {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Vi",
+     "lane": "JUNGLE",
+     "a_champ": "Viego",
+     "b_champ": "Rumble",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p11|p15": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 5,
+   "with_wins": 4,
+   "with_winrate": 0.8,
+   "lanes": []
+  },
+  "p11|p14": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Lillia",
+     "b_champ": "Yunara",
      "same_lane": false,
      "a_win": true
     },
     {
      "lane": "JUNGLE",
-     "a_champ": "JarvanIV",
-     "b_champ": "Graves",
-     "same_lane": true,
+     "a_champ": "Taliyah",
+     "b_champ": "Zeri",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p15": {
+   "vs_games": 3,
+   "a_wins": 0,
+   "b_wins": 3,
+   "a_winrate": 0.0,
+   "with_games": 3,
+   "with_wins": 1,
+   "with_winrate": 0.333,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Kled",
+     "b_champ": "Pyke",
+     "same_lane": false,
      "a_win": false
     },
     {
-     "lane": "JUNGLE",
-     "a_champ": "LeeSin",
-     "b_champ": "Zyra",
-     "same_lane": true,
+     "lane": "TOP",
+     "a_champ": "Skarner",
+     "b_champ": "Milio",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Cassiopeia",
+     "same_lane": false,
      "a_win": false
     }
    ]
   },
-  "p3|p14": {
+  "p4|p15": {
+   "vs_games": 2,
+   "a_wins": 1,
+   "b_wins": 1,
+   "a_winrate": 0.5,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Sylas",
+     "b_champ": "Bard",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p6|p15": {
+   "vs_games": 2,
+   "a_wins": 1,
+   "b_wins": 1,
+   "a_winrate": 0.5,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Corki",
+     "b_champ": "Bard",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Zoe",
+     "same_lane": true,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p14": {
    "vs_games": 0,
    "a_wins": 0,
    "b_wins": 0,
@@ -16831,6 +17174,584 @@
    "with_wins": 1,
    "with_winrate": 0.333,
    "lanes": []
+  },
+  "p4|p14": {
+   "vs_games": 3,
+   "a_wins": 2,
+   "b_wins": 1,
+   "a_winrate": 0.667,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Sylas",
+     "b_champ": "Sivir",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Hwei",
+     "b_champ": "Yunara",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Yone",
+     "b_champ": "Zeri",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p6|p14": {
+   "vs_games": 3,
+   "a_wins": 2,
+   "b_wins": 1,
+   "a_winrate": 0.667,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Corki",
+     "b_champ": "Sivir",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Jhin",
+     "b_champ": "Yunara",
+     "same_lane": true,
+     "a_win": true
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Lucian",
+     "b_champ": "Zeri",
+     "same_lane": true,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p3": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 6,
+   "with_wins": 1,
+   "with_winrate": 0.167,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Aurora",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p16": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Ornn",
+     "b_champ": "Senna",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p16": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Hwei",
+     "b_champ": "Karma",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Yone",
+     "b_champ": "Lulu",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p6|p16": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Jhin",
+     "b_champ": "Karma",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Lucian",
+     "b_champ": "Lulu",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p9": {
+   "vs_games": 4,
+   "a_wins": 1,
+   "b_wins": 3,
+   "a_winrate": 0.25,
+   "with_games": 3,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Ornn",
+     "b_champ": "Vi",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Naafiri",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Graves",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Zyra",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p4|p9": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Hwei",
+     "b_champ": "Naafiri",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Yone",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p6|p9": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 3,
+   "with_wins": 2,
+   "with_winrate": 0.667,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Jhin",
+     "b_champ": "Naafiri",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Lucian",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p11": {
+   "vs_games": 3,
+   "a_wins": 0,
+   "b_wins": 3,
+   "a_winrate": 0.0,
+   "with_games": 3,
+   "with_wins": 1,
+   "with_winrate": 0.333,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Kled",
+     "b_champ": "Lillia",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Skarner",
+     "b_champ": "Taliyah",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p4|p11": {
+   "vs_games": 2,
+   "a_wins": 1,
+   "b_wins": 1,
+   "a_winrate": 0.5,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Sylas",
+     "b_champ": "Viego",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p6|p11": {
+   "vs_games": 2,
+   "a_wins": 1,
+   "b_wins": 1,
+   "a_winrate": 0.5,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Corki",
+     "b_champ": "Viego",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Ryze",
+     "b_champ": "Taliyah",
+     "same_lane": true,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p6": {
+   "vs_games": 5,
+   "a_wins": 1,
+   "b_wins": 4,
+   "a_winrate": 0.2,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Ornn",
+     "b_champ": "Corki",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Kled",
+     "b_champ": "Jhin",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Skarner",
+     "b_champ": "Lucian",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Ryze",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Aurora",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p4|p6": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 3,
+   "with_wins": 2,
+   "with_winrate": 0.667,
+   "lanes": []
+  },
+  "p1|p12": {
+   "vs_games": 3,
+   "a_wins": 1,
+   "b_wins": 2,
+   "a_winrate": 0.333,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Ornn",
+     "b_champ": "Rumble",
+     "same_lane": true,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Kled",
+     "b_champ": "Renekton",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Skarner",
+     "b_champ": "KSante",
+     "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p4": {
+   "vs_games": 4,
+   "a_wins": 1,
+   "b_wins": 3,
+   "a_winrate": 0.25,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Ornn",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Kled",
+     "b_champ": "Hwei",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Skarner",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Kaisa",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p4|p12": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 3,
+   "with_wins": 2,
+   "with_winrate": 0.667,
+   "lanes": []
+  },
+  "p6|p12": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 3,
+   "with_wins": 2,
+   "with_winrate": 0.667,
+   "lanes": []
+  },
+  "p12|p15": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Rumble",
+     "b_champ": "Bard",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p12|p14": {
+   "vs_games": 3,
+   "a_wins": 2,
+   "b_wins": 1,
+   "a_winrate": 0.667,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Rumble",
+     "b_champ": "Sivir",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Renekton",
+     "b_champ": "Yunara",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "KSante",
+     "b_champ": "Zeri",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p12|p16": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Renekton",
+     "b_champ": "Karma",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "KSante",
+     "b_champ": "Lulu",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p9|p16": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 3,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p9|p12": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Naafiri",
+     "b_champ": "Renekton",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Kindred",
+     "b_champ": "KSante",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
   },
   "p3|p4": {
    "vs_games": 3,
@@ -16910,63 +17831,6 @@
     }
    ]
   },
-  "p14|p15": {
-   "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Yunara",
-     "b_champ": "Pyke",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Zeri",
-     "b_champ": "Milio",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p3|p12": {
-   "vs_games": 3,
-   "a_wins": 1,
-   "b_wins": 2,
-   "a_winrate": 0.333,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Rumble",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Annie",
-     "b_champ": "Renekton",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Viktor",
-     "b_champ": "KSante",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
   "p3|p11": {
    "vs_games": 4,
    "a_wins": 1,
@@ -17003,772 +17867,6 @@
      "b_champ": "Kindred",
      "same_lane": false,
      "a_win": false
-    }
-   ]
-  },
-  "p6|p16": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Jhin",
-     "b_champ": "Karma",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Lucian",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p6|p14": {
-   "vs_games": 3,
-   "a_wins": 2,
-   "b_wins": 1,
-   "a_winrate": 0.667,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Corki",
-     "b_champ": "Sivir",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Jhin",
-     "b_champ": "Yunara",
-     "same_lane": true,
-     "a_win": true
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Lucian",
-     "b_champ": "Zeri",
-     "same_lane": true,
-     "a_win": true
-    }
-   ]
-  },
-  "p6|p15": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Corki",
-     "b_champ": "Bard",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Zoe",
-     "same_lane": true,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p14": {
-   "vs_games": 3,
-   "a_wins": 2,
-   "b_wins": 1,
-   "a_winrate": 0.667,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Sylas",
-     "b_champ": "Sivir",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Hwei",
-     "b_champ": "Yunara",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Yone",
-     "b_champ": "Zeri",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p9": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Hwei",
-     "b_champ": "Naafiri",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Yone",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p6|p9": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 3,
-   "with_wins": 2,
-   "with_winrate": 0.667,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Jhin",
-     "b_champ": "Naafiri",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Lucian",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p15": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Sylas",
-     "b_champ": "Bard",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p6": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 3,
-   "with_wins": 2,
-   "with_winrate": 0.667,
-   "lanes": []
-  },
-  "p6|p11": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Corki",
-     "b_champ": "Viego",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Ryze",
-     "b_champ": "Taliyah",
-     "same_lane": true,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p11": {
-   "vs_games": 2,
-   "a_wins": 1,
-   "b_wins": 1,
-   "a_winrate": 0.5,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Sylas",
-     "b_champ": "Viego",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p16": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Hwei",
-     "b_champ": "Karma",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Yone",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p12": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 3,
-   "with_wins": 2,
-   "with_winrate": 0.667,
-   "lanes": []
-  },
-  "p6|p12": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 3,
-   "with_wins": 2,
-   "with_winrate": 0.667,
-   "lanes": []
-  },
-  "p1|p3": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 6,
-   "with_wins": 1,
-   "with_winrate": 0.167,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Aurora",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p9": {
-   "vs_games": 4,
-   "a_wins": 1,
-   "b_wins": 3,
-   "a_winrate": 0.25,
-   "with_games": 3,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Ornn",
-     "b_champ": "Vi",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Naafiri",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Graves",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Zyra",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p11": {
-   "vs_games": 3,
-   "a_wins": 0,
-   "b_wins": 3,
-   "a_winrate": 0.0,
-   "with_games": 3,
-   "with_wins": 1,
-   "with_winrate": 0.333,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Kled",
-     "b_champ": "Lillia",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Skarner",
-     "b_champ": "Taliyah",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p6": {
-   "vs_games": 5,
-   "a_wins": 1,
-   "b_wins": 4,
-   "a_winrate": 0.2,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Ornn",
-     "b_champ": "Corki",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Kled",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Skarner",
-     "b_champ": "Lucian",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Ryze",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Aurora",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p4": {
-   "vs_games": 4,
-   "a_wins": 1,
-   "b_wins": 3,
-   "a_winrate": 0.25,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Ornn",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Kled",
-     "b_champ": "Hwei",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Skarner",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Kaisa",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p15": {
-   "vs_games": 3,
-   "a_wins": 0,
-   "b_wins": 3,
-   "a_winrate": 0.0,
-   "with_games": 3,
-   "with_wins": 1,
-   "with_winrate": 0.333,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Kled",
-     "b_champ": "Pyke",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Skarner",
-     "b_champ": "Milio",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
-     "b_champ": "Cassiopeia",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p14": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 3,
-   "with_wins": 1,
-   "with_winrate": 0.333,
-   "lanes": []
-  },
-  "p1|p12": {
-   "vs_games": 3,
-   "a_wins": 1,
-   "b_wins": 2,
-   "a_winrate": 0.333,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Ornn",
-     "b_champ": "Rumble",
-     "same_lane": true,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Kled",
-     "b_champ": "Renekton",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Skarner",
-     "b_champ": "KSante",
-     "same_lane": true,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p16": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Ornn",
-     "b_champ": "Senna",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p12|p15": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Rumble",
-     "b_champ": "Bard",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p11|p14": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Lillia",
-     "b_champ": "Yunara",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Taliyah",
-     "b_champ": "Zeri",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p9|p14": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Vi",
-     "b_champ": "Sivir",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p9|p16": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 3,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p9|p15": {
-   "vs_games": 6,
-   "a_wins": 2,
-   "b_wins": 4,
-   "a_winrate": 0.333,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Vi",
-     "b_champ": "Bard",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Naafiri",
-     "b_champ": "Pyke",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Kindred",
-     "b_champ": "Milio",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Naafiri",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Qiyana",
-     "b_champ": "Cassiopeia",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Zyra",
-     "b_champ": "Zoe",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p12|p14": {
-   "vs_games": 3,
-   "a_wins": 2,
-   "b_wins": 1,
-   "a_winrate": 0.667,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Rumble",
-     "b_champ": "Sivir",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Renekton",
-     "b_champ": "Yunara",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "KSante",
-     "b_champ": "Zeri",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p9|p12": {
-   "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Naafiri",
-     "b_champ": "Renekton",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Kindred",
-     "b_champ": "KSante",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p12|p16": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Renekton",
-     "b_champ": "Karma",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "KSante",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": true
     }
    ]
   },
@@ -17825,19 +17923,351 @@
     }
    ]
   },
-  "p11|p15": {
+  "p3|p12": {
+   "vs_games": 3,
+   "a_wins": 1,
+   "b_wins": 2,
+   "a_winrate": 0.333,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Rumble",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Annie",
+     "b_champ": "Renekton",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Viktor",
+     "b_champ": "KSante",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p3|p9": {
+   "vs_games": 3,
+   "a_wins": 1,
+   "b_wins": 2,
+   "a_winrate": 0.333,
+   "with_games": 4,
+   "with_wins": 1,
+   "with_winrate": 0.25,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Vi",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "JarvanIV",
+     "b_champ": "Graves",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "LeeSin",
+     "b_champ": "Zyra",
+     "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p14|p16": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Sivir",
+     "b_champ": "Senna",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p3|p16": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Senna",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p9|p14": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Vi",
+     "b_champ": "Sivir",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p9|p15": {
+   "vs_games": 6,
+   "a_wins": 2,
+   "b_wins": 4,
+   "a_winrate": 0.333,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Vi",
+     "b_champ": "Bard",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Naafiri",
+     "b_champ": "Pyke",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Kindred",
+     "b_champ": "Milio",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Naafiri",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Qiyana",
+     "b_champ": "Cassiopeia",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Zyra",
+     "b_champ": "Zoe",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p3|p15": {
+   "vs_games": 4,
+   "a_wins": 1,
+   "b_wins": 3,
+   "a_winrate": 0.25,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Annie",
+     "b_champ": "Pyke",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Viktor",
+     "b_champ": "Milio",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Yone",
+     "same_lane": true,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
+     "b_champ": "Cassiopeia",
+     "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p14|p15": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Yunara",
+     "b_champ": "Pyke",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Zeri",
+     "b_champ": "Milio",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p3|p14": {
    "vs_games": 0,
    "a_wins": 0,
    "b_wins": 0,
    "a_winrate": null,
-   "with_games": 5,
-   "with_wins": 4,
-   "with_winrate": 0.8,
+   "with_games": 3,
+   "with_wins": 1,
+   "with_winrate": 0.333,
    "lanes": []
   },
-  "p11|p16": {
-   "vs_games": 3,
-   "a_wins": 3,
+  "p11|p13": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p1|p8": {
+   "vs_games": 4,
+   "a_wins": 0,
+   "b_wins": 4,
+   "a_winrate": 0.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Darius",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Nasus",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Jax",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Shen",
+     "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p1|p5": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 4,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p4|p8": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p8|p10": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 4,
+   "with_wins": 4,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p5|p15": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Cassiopeia",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p8|p13": {
+   "vs_games": 1,
+   "a_wins": 1,
    "b_wins": 0,
    "a_winrate": 1.0,
    "with_games": 0,
@@ -17845,41 +18275,388 @@
    "with_winrate": null,
    "lanes": [
     {
-     "lane": "JUNGLE",
-     "a_champ": "Viego",
-     "b_champ": "Senna",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Lillia",
-     "b_champ": "Karma",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Taliyah",
-     "b_champ": "Lulu",
+     "lane": "TOP",
+     "a_champ": "Darius",
+     "b_champ": "Jhin",
      "same_lane": false,
      "a_win": true
     }
    ]
   },
-  "p11|p12": {
+  "p5|p8": {
+   "vs_games": 4,
+   "a_wins": 0,
+   "b_wins": 4,
+   "a_winrate": 0.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Soraka",
+     "b_champ": "Darius",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Nasus",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Rakan",
+     "b_champ": "Jax",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Neeko",
+     "b_champ": "Shen",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p5|p9": {
+   "vs_games": 3,
+   "a_wins": 0,
+   "b_wins": 3,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Soraka",
+     "b_champ": "Naafiri",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Rakan",
+     "b_champ": "Graves",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Neeko",
+     "b_champ": "Zyra",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p10|p15": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Lulu",
+     "b_champ": "Zoe",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p10|p13": {
    "vs_games": 1,
    "a_wins": 1,
    "b_wins": 0,
    "a_winrate": 1.0,
-   "with_games": 2,
-   "with_wins": 2,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Jhin",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p1|p13": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p5|p13": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p4|p13": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Jhin",
+     "same_lane": true,
+     "a_win": true
+    }
+   ]
+  },
+  "p8|p11": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
    "with_winrate": 1.0,
    "lanes": [
     {
-     "lane": "JUNGLE",
-     "a_champ": "Viego",
-     "b_champ": "Rumble",
+     "lane": "TOP",
+     "a_champ": "Darius",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Jax",
+     "b_champ": "Taliyah",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p5|p11": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Kindred",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p10|p11": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Sylas",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Leona",
+     "b_champ": "Taliyah",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p13|p15": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": []
+  },
+  "p1|p10": {
+   "vs_games": 4,
+   "a_wins": 0,
+   "b_wins": 4,
+   "a_winrate": 0.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Mordekaiser",
+     "b_champ": "Leona",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Urgot",
+     "b_champ": "Seraphine",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Zaahen",
+     "b_champ": "Leona",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Sion",
+     "b_champ": "Lulu",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p5|p10": {
+   "vs_games": 4,
+   "a_wins": 0,
+   "b_wins": 4,
+   "a_winrate": 0.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "UTILITY",
+     "a_champ": "Soraka",
+     "b_champ": "Leona",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Milio",
+     "b_champ": "Seraphine",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Rakan",
+     "b_champ": "Leona",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "UTILITY",
+     "a_champ": "Neeko",
+     "b_champ": "Lulu",
+     "same_lane": true,
+     "a_win": false
+    }
+   ]
+  },
+  "p8|p9": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 3,
+   "with_wins": 3,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Nasus",
+     "b_champ": "Qiyana",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p5": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Soraka",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p4|p10": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": []
+  },
+  "p8|p15": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "TOP",
+     "a_champ": "Darius",
+     "b_champ": "Yone",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "TOP",
+     "a_champ": "Shen",
+     "b_champ": "Zoe",
      "same_lane": false,
      "a_win": true
     }
@@ -17914,6 +18691,60 @@
      "b_champ": "Shen",
      "same_lane": false,
      "a_win": false
+    }
+   ]
+  },
+  "p3|p5": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 3,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Soraka",
+     "same_lane": false,
+     "a_win": true
+    }
+   ]
+  },
+  "p9|p10": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 3,
+   "with_wins": 3,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Qiyana",
+     "b_champ": "Seraphine",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p9|p13": {
+   "vs_games": 1,
+   "a_wins": 1,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "JUNGLE",
+     "a_champ": "Naafiri",
+     "b_champ": "Jhin",
+     "same_lane": false,
+     "a_win": true
     }
    ]
   },
@@ -17967,549 +18798,26 @@
     }
    ]
   },
-  "p3|p5": {
-   "vs_games": 1,
-   "a_wins": 1,
+  "p2|p3": {
+   "vs_games": 2,
+   "a_wins": 2,
    "b_wins": 0,
    "a_winrate": 1.0,
-   "with_games": 3,
+   "with_games": 1,
    "with_wins": 0,
    "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Soraka",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p4|p10": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p4|p5": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
    "lanes": [
     {
      "lane": "BOTTOM",
      "a_champ": "Kaisa",
-     "b_champ": "Soraka",
+     "b_champ": "JarvanIV",
      "same_lane": false,
      "a_win": true
-    }
-   ]
-  },
-  "p4|p8": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p4|p13": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
+    },
     {
      "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Jhin",
-     "same_lane": true,
-     "a_win": true
-    }
-   ]
-  },
-  "p5|p8": {
-   "vs_games": 4,
-   "a_wins": 0,
-   "b_wins": 4,
-   "a_winrate": 0.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Soraka",
-     "b_champ": "Darius",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Nasus",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Rakan",
-     "b_champ": "Jax",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Neeko",
-     "b_champ": "Shen",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p1|p5": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 4,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p1|p10": {
-   "vs_games": 4,
-   "a_wins": 0,
-   "b_wins": 4,
-   "a_winrate": 0.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Leona",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
-     "b_champ": "Seraphine",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Leona",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p5|p9": {
-   "vs_games": 3,
-   "a_wins": 0,
-   "b_wins": 3,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Soraka",
-     "b_champ": "Naafiri",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Rakan",
-     "b_champ": "Graves",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Neeko",
-     "b_champ": "Zyra",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p8|p11": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Darius",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Jax",
-     "b_champ": "Taliyah",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p5|p10": {
-   "vs_games": 4,
-   "a_wins": 0,
-   "b_wins": 4,
-   "a_winrate": 0.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Soraka",
-     "b_champ": "Leona",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Seraphine",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Rakan",
-     "b_champ": "Leona",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Neeko",
-     "b_champ": "Lulu",
-     "same_lane": true,
-     "a_win": false
-    }
-   ]
-  },
-  "p5|p15": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Cassiopeia",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p5|p11": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Milio",
-     "b_champ": "Kindred",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p8|p10": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 4,
-   "with_wins": 4,
-   "with_winrate": 1.0,
-   "lanes": []
-  },
-  "p8|p9": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 3,
-   "with_wins": 3,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Nasus",
-     "b_champ": "Qiyana",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p8|p15": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Darius",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Shen",
-     "b_champ": "Zoe",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p13|p15": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p1|p13": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p5|p13": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p8|p13": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Darius",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p1|p8": {
-   "vs_games": 4,
-   "a_wins": 0,
-   "b_wins": 4,
-   "a_winrate": 0.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "TOP",
-     "a_champ": "Mordekaiser",
-     "b_champ": "Darius",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Urgot",
-     "b_champ": "Nasus",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Zaahen",
-     "b_champ": "Jax",
-     "same_lane": true,
-     "a_win": false
-    },
-    {
-     "lane": "TOP",
-     "a_champ": "Sion",
-     "b_champ": "Shen",
-     "same_lane": true,
-     "a_win": false
-    }
-   ]
-  },
-  "p10|p11": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Sylas",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Taliyah",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p11|p13": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": []
-  },
-  "p9|p13": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Naafiri",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p10|p13": {
-   "vs_games": 1,
-   "a_wins": 1,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Jhin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p9|p10": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 3,
-   "with_wins": 3,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "JUNGLE",
-     "a_champ": "Qiyana",
-     "b_champ": "Seraphine",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p10|p15": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "UTILITY",
-     "a_champ": "Leona",
-     "b_champ": "Yone",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "UTILITY",
-     "a_champ": "Lulu",
-     "b_champ": "Zoe",
+     "a_champ": "Yunara",
+     "b_champ": "LeeSin",
      "same_lane": false,
      "a_win": true
     }
@@ -18525,35 +18833,21 @@
    "with_winrate": 0.667,
    "lanes": []
   },
-  "p2|p7": {
-   "vs_games": 3,
-   "a_wins": 2,
+  "p2|p8": {
+   "vs_games": 1,
+   "a_wins": 0,
    "b_wins": 1,
-   "a_winrate": 0.667,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 2,
+   "with_winrate": 1.0,
    "lanes": [
     {
      "lane": "BOTTOM",
      "a_champ": "Lucian",
-     "b_champ": "Ashe",
-     "same_lane": true,
+     "b_champ": "Nasus",
+     "same_lane": false,
      "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "Xayah",
-     "same_lane": true,
-     "a_win": true
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Yunara",
-     "b_champ": "Ezreal",
-     "same_lane": true,
-     "a_win": true
     }
    ]
   },
@@ -18607,24 +18901,6 @@
     }
    ]
   },
-  "p2|p10": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 2,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Lucian",
-     "b_champ": "Seraphine",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
   "p2|p15": {
    "vs_games": 2,
    "a_wins": 1,
@@ -18650,32 +18926,7 @@
     }
    ]
   },
-  "p2|p3": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 1,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Kaisa",
-     "b_champ": "JarvanIV",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Yunara",
-     "b_champ": "LeeSin",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
-  "p2|p8": {
+  "p2|p10": {
    "vs_games": 1,
    "a_wins": 0,
    "b_wins": 1,
@@ -18687,11 +18938,163 @@
     {
      "lane": "BOTTOM",
      "a_champ": "Lucian",
-     "b_champ": "Nasus",
+     "b_champ": "Seraphine",
      "same_lane": false,
      "a_win": false
     }
    ]
+  },
+  "p2|p7": {
+   "vs_games": 3,
+   "a_wins": 2,
+   "b_wins": 1,
+   "a_winrate": 0.667,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Lucian",
+     "b_champ": "Ashe",
+     "same_lane": true,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Kaisa",
+     "b_champ": "Xayah",
+     "same_lane": true,
+     "a_win": true
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Yunara",
+     "b_champ": "Ezreal",
+     "same_lane": true,
+     "a_win": true
+    }
+   ]
+  },
+  "p7|p10": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Xayah",
+     "b_champ": "Leona",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Ezreal",
+     "b_champ": "Lulu",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p7|p8": {
+   "vs_games": 2,
+   "a_wins": 0,
+   "b_wins": 2,
+   "a_winrate": 0.0,
+   "with_games": 1,
+   "with_wins": 1,
+   "with_winrate": 1.0,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Xayah",
+     "b_champ": "Jax",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Ezreal",
+     "b_champ": "Shen",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p3|p7": {
+   "vs_games": 1,
+   "a_wins": 0,
+   "b_wins": 1,
+   "a_winrate": 0.0,
+   "with_games": 2,
+   "with_wins": 0,
+   "with_winrate": 0.0,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Vladimir",
+     "b_champ": "Ashe",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p7|p11": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
+   "lanes": []
+  },
+  "p7|p9": {
+   "vs_games": 3,
+   "a_wins": 1,
+   "b_wins": 2,
+   "a_winrate": 0.333,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Ashe",
+     "b_champ": "Qiyana",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Xayah",
+     "b_champ": "Graves",
+     "same_lane": false,
+     "a_win": false
+    },
+    {
+     "lane": "BOTTOM",
+     "a_champ": "Ezreal",
+     "b_champ": "Zyra",
+     "same_lane": false,
+     "a_win": false
+    }
+   ]
+  },
+  "p7|p15": {
+   "vs_games": 0,
+   "a_wins": 0,
+   "b_wins": 0,
+   "a_winrate": null,
+   "with_games": 2,
+   "with_wins": 1,
+   "with_winrate": 0.5,
+   "lanes": []
   },
   "p5|p7": {
    "vs_games": 1,
@@ -18754,151 +19157,6 @@
     }
    ]
   },
-  "p3|p7": {
-   "vs_games": 1,
-   "a_wins": 0,
-   "b_wins": 1,
-   "a_winrate": 0.0,
-   "with_games": 2,
-   "with_wins": 0,
-   "with_winrate": 0.0,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Vladimir",
-     "b_champ": "Ashe",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p7|p10": {
-   "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Xayah",
-     "b_champ": "Leona",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Ezreal",
-     "b_champ": "Lulu",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p7|p11": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": []
-  },
-  "p7|p9": {
-   "vs_games": 3,
-   "a_wins": 1,
-   "b_wins": 2,
-   "a_winrate": 0.333,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Ashe",
-     "b_champ": "Qiyana",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Xayah",
-     "b_champ": "Graves",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Ezreal",
-     "b_champ": "Zyra",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p7|p8": {
-   "vs_games": 2,
-   "a_wins": 0,
-   "b_wins": 2,
-   "a_winrate": 0.0,
-   "with_games": 1,
-   "with_wins": 1,
-   "with_winrate": 1.0,
-   "lanes": [
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Xayah",
-     "b_champ": "Jax",
-     "same_lane": false,
-     "a_win": false
-    },
-    {
-     "lane": "BOTTOM",
-     "a_champ": "Ezreal",
-     "b_champ": "Shen",
-     "same_lane": false,
-     "a_win": false
-    }
-   ]
-  },
-  "p7|p15": {
-   "vs_games": 0,
-   "a_wins": 0,
-   "b_wins": 0,
-   "a_winrate": null,
-   "with_games": 2,
-   "with_wins": 1,
-   "with_winrate": 0.5,
-   "lanes": []
-  },
-  "p6|p7": {
-   "vs_games": 2,
-   "a_wins": 2,
-   "b_wins": 0,
-   "a_winrate": 1.0,
-   "with_games": 0,
-   "with_wins": 0,
-   "with_winrate": null,
-   "lanes": [
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Ryze",
-     "b_champ": "Xayah",
-     "same_lane": false,
-     "a_win": true
-    },
-    {
-     "lane": "MIDDLE",
-     "a_champ": "Aurora",
-     "b_champ": "Ezreal",
-     "same_lane": false,
-     "a_win": true
-    }
-   ]
-  },
   "p6|p10": {
    "vs_games": 0,
    "a_wins": 0,
@@ -18951,6 +19209,31 @@
      "b_champ": "Aurora",
      "same_lane": false,
      "a_win": false
+    }
+   ]
+  },
+  "p6|p7": {
+   "vs_games": 2,
+   "a_wins": 2,
+   "b_wins": 0,
+   "a_winrate": 1.0,
+   "with_games": 0,
+   "with_wins": 0,
+   "with_winrate": null,
+   "lanes": [
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Ryze",
+     "b_champ": "Xayah",
+     "same_lane": false,
+     "a_win": true
+    },
+    {
+     "lane": "MIDDLE",
+     "a_champ": "Aurora",
+     "b_champ": "Ezreal",
+     "same_lane": false,
+     "a_win": true
     }
    ]
   }
@@ -19274,76 +19557,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.143,
-     "pct": 0.219,
-     "rank": 13,
-     "n": 16
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 3.0,
+     "pct": 0.5,
+     "rank": 8,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 684.59,
+       "rank": 10,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.214,
+       "rank": 7,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 1.76,
-     "pct": 0.167,
-     "rank": 13,
-     "n": 15
+     "key": "laning",
+     "label": "라인전",
+     "desc": "15분 맞라인 CS 차이",
+     "score": 2.0,
+     "pct": 0.367,
+     "rank": 10,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -2.9,
+       "rank": 10,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kp",
-     "label": "킬관여",
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 2.5,
+     "pct": 0.433,
+     "rank": 9,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 156.71,
+       "rank": 9,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 4.86,
+       "rank": 9,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
      "desc": "팀 킬 중 관여한 비율",
-     "value": 0.368,
+     "score": 1.0,
      "pct": 0.1,
      "rank": 14,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 684.59,
-     "pct": 0.367,
-     "rank": 10,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.214,
-     "pct": 0.567,
-     "rank": 7,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
-     "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 15.29,
-     "pct": 0.367,
-     "rank": 10,
-     "n": 15
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.368,
+       "rank": 14,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 23.57,
+     "score": 1.5,
      "pct": 0.233,
      "rank": 12,
-     "n": 15
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 23.57,
+       "rank": 12,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 156.71,
-     "pct": 0.433,
-     "rank": 9,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 1.5,
+     "pct": 0.219,
+     "rank": 13,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.143,
+       "rank": 13,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -20088,76 +20427,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.667,
-     "pct": 0.625,
-     "rank": 5,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 4.07,
-     "pct": 0.767,
-     "rank": 4,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.66,
-     "pct": 0.833,
-     "rank": 3,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 1292.7,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 5.0,
      "pct": 0.967,
      "rank": 1,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 1292.7,
+       "rank": 1,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.321,
+       "rank": 1,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.321,
-     "pct": 0.967,
-     "rank": 1,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 38.4,
+     "desc": "15분 맞라인 CS 차이",
+     "score": 4.5,
      "pct": 0.9,
      "rank": 2,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 9.3,
+       "rank": 2,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 3.5,
+     "pct": 0.7,
+     "rank": 5,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 116.0,
+       "rank": 5,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 4.67,
+       "rank": 5,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 4.5,
+     "pct": 0.833,
+     "rank": 3,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.66,
+       "rank": 3,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 30.0,
+     "score": 2.5,
      "pct": 0.433,
      "rank": 9,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 30.0,
+       "rank": 9,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 116.0,
-     "pct": 0.7,
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 3.5,
+     "pct": 0.625,
      "rank": 5,
-     "n": 15
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.667,
+       "rank": 5,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -21005,76 +21400,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.286,
-     "pct": 0.281,
-     "rank": 12,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 2.39,
-     "pct": 0.567,
-     "rank": 7,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.474,
-     "pct": 0.367,
-     "rank": 10,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 711.57,
-     "pct": 0.5,
-     "rank": 8,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.201,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 2.5,
      "pct": 0.433,
      "rank": 9,
-     "n": 15
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 711.57,
+       "rank": 8,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.201,
+       "rank": 9,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 37.3,
-     "pct": 0.833,
-     "rank": 3,
-     "n": 15
+     "desc": "15분 맞라인 CS 차이",
+     "score": 3.5,
+     "pct": 0.633,
+     "rank": 6,
+     "n": 15,
+     "games": 5,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 4.6,
+       "rank": 6,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 3.0,
+     "pct": 0.567,
+     "rank": 7,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 139.43,
+       "rank": 7,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 4.71,
+       "rank": 7,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 2.0,
+     "pct": 0.367,
+     "rank": 10,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.474,
+       "rank": 10,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 32.14,
+     "score": 3.5,
      "pct": 0.633,
      "rank": 6,
-     "n": 15
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 32.14,
+       "rank": 6,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 139.43,
-     "pct": 0.567,
-     "rank": 7,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 1.5,
+     "pct": 0.281,
+     "rank": 12,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.286,
+       "rank": 12,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -21835,76 +22286,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.0,
-     "pct": 0.094,
-     "rank": 14,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 1.37,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 0.5,
      "pct": 0.033,
      "rank": 15,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 250.95,
+       "rank": 15,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.081,
+       "rank": 15,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.505,
+     "key": "laning",
+     "label": "라인전",
+     "desc": "15분 맞라인 CS 차이",
+     "score": 2.5,
      "pct": 0.433,
      "rank": 9,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -2.0,
+       "rank": 9,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 250.95,
-     "pct": 0.033,
-     "rank": 15,
-     "n": 15
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 1.5,
+     "pct": 0.233,
+     "rank": 12,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 168.25,
+       "rank": 11,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 7.5,
+       "rank": 14,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.081,
-     "pct": 0.033,
-     "rank": 15,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
-     "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 2.75,
-     "pct": 0.033,
-     "rank": 15,
-     "n": 15
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 2.5,
+     "pct": 0.433,
+     "rank": 9,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.505,
+       "rank": 9,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 89.75,
+     "score": 4.5,
      "pct": 0.833,
      "rank": 3,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 89.75,
+       "rank": 3,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 168.25,
-     "pct": 0.3,
-     "rank": 11,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 1.0,
+     "pct": 0.094,
+     "rank": 14,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.0,
+       "rank": 14,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -22724,76 +23231,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.8,
-     "pct": 0.844,
-     "rank": 3,
-     "n": 16
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 4.0,
+     "pct": 0.767,
+     "rank": 4,
+     "n": 15,
+     "games": 5,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 892.62,
+       "rank": 3,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.227,
+       "rank": 5,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 3.25,
-     "pct": 0.7,
-     "rank": 5,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.524,
-     "pct": 0.5,
-     "rank": 8,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 892.62,
-     "pct": 0.833,
-     "rank": 3,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.227,
-     "pct": 0.7,
-     "rank": 5,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 20.67,
+     "desc": "15분 맞라인 CS 차이",
+     "score": 4.0,
+     "pct": 0.767,
+     "rank": 4,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 8.3,
+       "rank": 4,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 3.0,
      "pct": 0.5,
      "rank": 8,
-     "n": 15
+     "n": 15,
+     "games": 5,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 133.2,
+       "rank": 6,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 4.8,
+       "rank": 8,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 3.0,
+     "pct": 0.5,
+     "rank": 8,
+     "n": 15,
+     "games": 5,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.524,
+       "rank": 8,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 29.0,
+     "score": 2.0,
      "pct": 0.367,
      "rank": 10,
-     "n": 15
+     "n": 15,
+     "games": 5,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 29.0,
+       "rank": 10,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 133.2,
-     "pct": 0.633,
-     "rank": 6,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 4.5,
+     "pct": 0.844,
+     "rank": 3,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.8,
+       "rank": 3,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -23543,76 +24106,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.333,
-     "pct": 0.375,
-     "rank": 10,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 1.8,
-     "pct": 0.3,
-     "rank": 11,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.62,
-     "pct": 0.7,
-     "rank": 5,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 883.4,
-     "pct": 0.767,
-     "rank": 4,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.254,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 4.5,
      "pct": 0.833,
      "rank": 3,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 883.4,
+       "rank": 4,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.254,
+       "rank": 3,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 15.0,
-     "pct": 0.3,
-     "rank": 11,
-     "n": 15
+     "desc": "15분 맞라인 CS 차이",
+     "score": 1.0,
+     "pct": 0.167,
+     "rank": 13,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -9.3,
+       "rank": 13,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 0.5,
+     "pct": 0.067,
+     "rank": 14,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 193.67,
+       "rank": 13,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 8.33,
+       "rank": 15,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 3.5,
+     "pct": 0.7,
+     "rank": 5,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.62,
+       "rank": 5,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 21.67,
+     "score": 1.0,
      "pct": 0.167,
      "rank": 13,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 21.67,
+       "rank": 13,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 193.67,
-     "pct": 0.167,
-     "rank": 13,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 2.0,
+     "pct": 0.375,
+     "rank": 10,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.333,
+       "rank": 10,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -24376,76 +24995,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 1.0,
-     "pct": 0.938,
-     "rank": 1,
-     "n": 16
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 1.5,
+     "pct": 0.233,
+     "rank": 12,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 654.05,
+       "rank": 11,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.162,
+       "rank": 13,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 1.9,
-     "pct": 0.367,
-     "rank": 10,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.314,
+     "key": "laning",
+     "label": "라인전",
+     "desc": "15분 맞라인 CS 차이",
+     "score": 0.5,
      "pct": 0.033,
      "rank": 15,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -11.3,
+       "rank": 15,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 654.05,
-     "pct": 0.3,
-     "rank": 11,
-     "n": 15
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 2.0,
+     "pct": 0.367,
+     "rank": 10,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 157.75,
+       "rank": 10,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 5.0,
+       "rank": 10,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.162,
-     "pct": 0.167,
-     "rank": 13,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
-     "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 20.25,
-     "pct": 0.433,
-     "rank": 9,
-     "n": 15
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 0.5,
+     "pct": 0.033,
+     "rank": 15,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.314,
+       "rank": 15,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 21.5,
+     "score": 1.0,
      "pct": 0.1,
      "rank": 14,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 21.5,
+       "rank": 14,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 157.75,
-     "pct": 0.367,
-     "rank": 10,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 5.0,
+     "pct": 0.938,
+     "rank": 1,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 1.0,
+       "rank": 1,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -25292,76 +25967,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.429,
-     "pct": 0.469,
-     "rank": 9,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 2.09,
-     "pct": 0.433,
-     "rank": 9,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.554,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 3.0,
      "pct": 0.567,
      "rank": 7,
-     "n": 15
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 752.56,
+       "rank": 7,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.205,
+       "rank": 8,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 752.56,
-     "pct": 0.567,
-     "rank": 7,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.205,
-     "pct": 0.5,
-     "rank": 8,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 29.04,
-     "pct": 0.767,
-     "rank": 4,
-     "n": 15
+     "desc": "15분 맞라인 CS 차이",
+     "score": 4.5,
+     "pct": 0.833,
+     "rank": 3,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 8.4,
+       "rank": 3,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 1.0,
+     "pct": 0.167,
+     "rank": 13,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 203.71,
+       "rank": 14,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 6.14,
+       "rank": 12,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 3.0,
+     "pct": 0.567,
+     "rank": 7,
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.554,
+       "rank": 7,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 39.57,
+     "score": 3.5,
      "pct": 0.7,
      "rank": 5,
-     "n": 15
+     "n": 15,
+     "games": 7,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 39.57,
+       "rank": 5,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 203.71,
-     "pct": 0.1,
-     "rank": 14,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 2.5,
+     "pct": 0.469,
+     "rank": 9,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.429,
+       "rank": 9,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -26118,76 +26849,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 1.0,
-     "pct": 0.938,
-     "rank": 2,
-     "n": 16
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 1.0,
+     "pct": 0.1,
+     "rank": 14,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 363.45,
+       "rank": 14,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.091,
+       "rank": 14,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 5.93,
-     "pct": 0.9,
-     "rank": 2,
-     "n": 15
+     "key": "laning",
+     "label": "라인전",
+     "desc": "15분 맞라인 CS 차이",
+     "score": 3.0,
+     "pct": 0.5,
+     "rank": 8,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 2.0,
+       "rank": 8,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kp",
-     "label": "킬관여",
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 4.5,
+     "pct": 0.867,
+     "rank": 2,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 102.0,
+       "rank": 2,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 3.75,
+       "rank": 3,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
      "desc": "팀 킬 중 관여한 비율",
-     "value": 0.742,
+     "score": 5.0,
      "pct": 0.967,
      "rank": 1,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 363.45,
-     "pct": 0.1,
-     "rank": 14,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.091,
-     "pct": 0.1,
-     "rank": 14,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
-     "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 7.25,
-     "pct": 0.1,
-     "rank": 14,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.742,
+       "rank": 1,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 108.0,
+     "score": 5.0,
      "pct": 0.933,
      "rank": 1,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 108.0,
+       "rank": 1,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 102.0,
-     "pct": 0.9,
-     "rank": 2,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 5.0,
+     "pct": 0.938,
+     "rank": 1,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 1.0,
+       "rank": 2,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -27027,76 +27814,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.667,
-     "pct": 0.625,
-     "rank": 6,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 7.07,
-     "pct": 0.967,
-     "rank": 1,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.65,
-     "pct": 0.767,
-     "rank": 4,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 825.48,
-     "pct": 0.633,
-     "rank": 6,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.239,
-     "pct": 0.767,
-     "rank": 4,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
-     "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 28.53,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 3.5,
      "pct": 0.7,
      "rank": 5,
-     "n": 15
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 825.48,
+       "rank": 6,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.239,
+       "rank": 4,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "laning",
+     "label": "라인전",
+     "desc": "15분 맞라인 CS 차이",
+     "score": 2.0,
+     "pct": 0.3,
+     "rank": 11,
+     "n": 15,
+     "games": 5,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -5.4,
+       "rank": 11,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 5.0,
+     "pct": 0.967,
+     "rank": 1,
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 89.0,
+       "rank": 1,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 2.5,
+       "rank": 1,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 4.0,
+     "pct": 0.767,
+     "rank": 4,
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.65,
+       "rank": 4,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 31.83,
+     "score": 3.0,
      "pct": 0.5,
      "rank": 8,
-     "n": 15
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 31.83,
+       "rank": 8,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 89.0,
-     "pct": 0.967,
-     "rank": 1,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 3.5,
+     "pct": 0.625,
+     "rank": 5,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.667,
+       "rank": 6,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -27936,76 +28779,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.667,
-     "pct": 0.625,
-     "rank": 7,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 4.86,
-     "pct": 0.833,
-     "rank": 3,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.596,
-     "pct": 0.633,
-     "rank": 6,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 709.3,
-     "pct": 0.433,
-     "rank": 9,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.199,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 2.0,
      "pct": 0.367,
      "rank": 10,
-     "n": 15
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 709.3,
+       "rank": 9,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.199,
+       "rank": 10,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 25.0,
-     "pct": 0.567,
-     "rank": 7,
-     "n": 15
+     "desc": "15분 맞라인 CS 차이",
+     "score": 3.5,
+     "pct": 0.7,
+     "rank": 5,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 7.0,
+       "rank": 5,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 4.5,
+     "pct": 0.867,
+     "rank": 2,
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 108.17,
+       "rank": 3,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 3.5,
+       "rank": 2,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 3.5,
+     "pct": 0.633,
+     "rank": 6,
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.596,
+       "rank": 6,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 66.83,
+     "score": 4.0,
      "pct": 0.767,
      "rank": 4,
-     "n": 15
+     "n": 15,
+     "games": 6,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 66.83,
+       "rank": 4,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 108.17,
-     "pct": 0.833,
-     "rank": 3,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 3.5,
+     "pct": 0.625,
+     "rank": 5,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.667,
+       "rank": 7,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -28791,76 +29690,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.75,
-     "pct": 0.781,
-     "rank": 4,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 1.79,
-     "pct": 0.233,
-     "rank": 12,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.405,
-     "pct": 0.233,
-     "rank": 12,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 586.05,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 1.0,
      "pct": 0.167,
      "rank": 13,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 586.05,
+       "rank": 13,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.167,
+       "rank": 12,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.167,
-     "pct": 0.233,
-     "rank": 12,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 10.27,
-     "pct": 0.167,
-     "rank": 13,
-     "n": 15
+     "desc": "15분 맞라인 CS 차이",
+     "score": 1.0,
+     "pct": 0.1,
+     "rank": 14,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -10.0,
+       "rank": 14,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 2.0,
+     "pct": 0.3,
+     "rank": 11,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 169.5,
+       "rank": 12,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 6.0,
+       "rank": 11,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 1.5,
+     "pct": 0.233,
+     "rank": 12,
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.405,
+       "rank": 12,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 25.75,
+     "score": 2.0,
      "pct": 0.3,
      "rank": 11,
-     "n": 15
+     "n": 15,
+     "games": 4,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 25.75,
+       "rank": 11,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 169.5,
-     "pct": 0.233,
-     "rank": 12,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 4.0,
+     "pct": 0.781,
+     "rank": 4,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.75,
+       "rank": 4,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -29474,13 +30429,23 @@
    ],
    "profile": [
     {
-     "key": "winrate",
+     "key": "win",
      "label": "승률",
      "desc": "이긴 판 비율",
-     "value": 0.0,
+     "score": 1.0,
      "pct": 0.094,
-     "rank": 15,
-     "n": 16
+     "rank": 14,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.0,
+       "rank": 15,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -29713,76 +30678,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.333,
-     "pct": 0.375,
-     "rank": 11,
-     "n": 16
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 3.5,
+     "pct": 0.633,
+     "rank": 6,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 872.67,
+       "rank": 5,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.222,
+       "rank": 6,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 1.59,
-     "pct": 0.1,
+     "key": "laning",
+     "label": "라인전",
+     "desc": "15분 맞라인 CS 차이",
+     "score": 1.5,
+     "pct": 0.233,
+     "rank": 12,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": -8.3,
+       "rank": 12,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 0.5,
+     "pct": 0.067,
      "rank": 14,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 216.67,
+       "rank": 15,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 7.33,
+       "rank": 13,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "kp",
-     "label": "킬관여",
+     "key": "fight",
+     "label": "교전",
      "desc": "팀 킬 중 관여한 비율",
-     "value": 0.444,
+     "score": 2.0,
      "pct": 0.3,
      "rank": 11,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 872.67,
-     "pct": 0.7,
-     "rank": 5,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.222,
-     "pct": 0.633,
-     "rank": 6,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
-     "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 25.33,
-     "pct": 0.633,
-     "rank": 6,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.444,
+       "rank": 11,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 20.0,
+     "score": 0.5,
      "pct": 0.033,
      "rank": 15,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 20.0,
+       "rank": 15,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 216.67,
-     "pct": 0.033,
-     "rank": 15,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 2.0,
+     "pct": 0.375,
+     "rank": 10,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.333,
+       "rank": 11,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -30526,76 +31547,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.0,
-     "pct": 0.094,
-     "rank": 16,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 2.86,
-     "pct": 0.633,
-     "rank": 6,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.711,
-     "pct": 0.9,
-     "rank": 2,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 619.53,
-     "pct": 0.233,
-     "rank": 12,
-     "n": 15
-    },
-    {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.182,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 2.0,
      "pct": 0.3,
      "rank": 11,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 619.53,
+       "rank": 12,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.182,
+       "rank": 11,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 11.7,
-     "pct": 0.233,
-     "rank": 12,
-     "n": 15
+     "desc": "15분 맞라인 CS 차이",
+     "score": 3.0,
+     "pct": 0.567,
+     "rank": 7,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 4.0,
+       "rank": 7,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 4.0,
+     "pct": 0.767,
+     "rank": 4,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 110.0,
+       "rank": 4,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 4.67,
+       "rank": 6,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 4.5,
+     "pct": 0.9,
+     "rank": 2,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.711,
+       "rank": 2,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 108.0,
+     "score": 5.0,
      "pct": 0.933,
-     "rank": 2,
-     "n": 15
+     "rank": 1,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 108.0,
+       "rank": 2,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 110.0,
-     "pct": 0.767,
-     "rank": 4,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 1.0,
+     "pct": 0.094,
+     "rank": 14,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.0,
+       "rank": 16,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {
@@ -31340,76 +32417,132 @@
    ],
    "profile": [
     {
-     "key": "winrate",
-     "label": "승률",
-     "desc": "이긴 판 비율",
-     "value": 0.667,
-     "pct": 0.625,
-     "rank": 8,
-     "n": 16
-    },
-    {
-     "key": "kda",
-     "label": "KDA",
-     "desc": "(킬+어시)/데스",
-     "value": 2.31,
-     "pct": 0.5,
-     "rank": 8,
-     "n": 15
-    },
-    {
-     "key": "kp",
-     "label": "킬관여",
-     "desc": "팀 킬 중 관여한 비율",
-     "value": 0.4,
-     "pct": 0.167,
-     "rank": 13,
-     "n": 15
-    },
-    {
-     "key": "dpm",
-     "label": "분당 딜",
-     "desc": "챔피언에게 넣은 분당 피해",
-     "value": 957.8,
+     "key": "attack",
+     "label": "공격",
+     "desc": "분당 딜과 팀 내 딜 비중",
+     "score": 4.5,
      "pct": 0.9,
      "rank": 2,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "dpm",
+       "label": "분당 딜",
+       "value": 957.8,
+       "rank": 2,
+       "n": 15
+      },
+      {
+       "key": "dmg_share",
+       "label": "딜 비중",
+       "value": 0.27,
+       "rank": 2,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "dmg_share",
-     "label": "딜 비중",
-     "desc": "팀 전체 딜 중 내 몫",
-     "value": 0.27,
-     "pct": 0.9,
-     "rank": 2,
-     "n": 15
-    },
-    {
-     "key": "cs_adv_lane",
+     "key": "laning",
      "label": "라인전",
-     "desc": "맞라인 상대보다 앞선 최대 CS",
-     "value": 39.83,
+     "desc": "15분 맞라인 CS 차이",
+     "score": 5.0,
      "pct": 0.967,
      "rank": 1,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "cs_diff_15",
+       "label": "CS차@15",
+       "value": 21.7,
+       "rank": 1,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "survive",
+     "label": "생존",
+     "desc": "덜 죽고 덜 누워 있기",
+     "score": 3.5,
+     "pct": 0.633,
+     "rank": 6,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "time_dead",
+       "label": "죽어 있던 시간",
+       "value": 145.67,
+       "rank": 8,
+       "n": 15
+      },
+      {
+       "key": "deaths_per_game",
+       "label": "판당 데스",
+       "value": 4.33,
+       "rank": 4,
+       "n": 15
+      }
+     ]
+    },
+    {
+     "key": "fight",
+     "label": "교전",
+     "desc": "팀 킬 중 관여한 비율",
+     "score": 1.0,
+     "pct": 0.167,
+     "rank": 13,
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "kp",
+       "label": "킬 관여",
+       "value": 0.4,
+       "rank": 13,
+       "n": 15
+      }
+     ]
     },
     {
      "key": "vision",
      "label": "시야",
      "desc": "시야 점수",
-     "value": 32.0,
+     "score": 3.0,
      "pct": 0.567,
      "rank": 7,
-     "n": 15
+     "n": 15,
+     "games": 3,
+     "parts": [
+      {
+       "key": "vision",
+       "label": "시야 점수",
+       "value": 32.0,
+       "rank": 7,
+       "n": 15
+      }
+     ]
     },
     {
-     "key": "time_dead",
-     "label": "생존",
-     "desc": "죽어 있던 시간(짧을수록 좋음)",
-     "value": 145.67,
-     "pct": 0.5,
-     "rank": 8,
-     "n": 15
+     "key": "win",
+     "label": "승률",
+     "desc": "이긴 판 비율",
+     "score": 3.5,
+     "pct": 0.625,
+     "rank": 5,
+     "n": 16,
+     "games": null,
+     "parts": [
+      {
+       "key": "winrate",
+       "label": "승률",
+       "value": 0.667,
+       "rank": 8,
+       "n": 16
+      }
+     ]
     }
    ],
    "metrics": {

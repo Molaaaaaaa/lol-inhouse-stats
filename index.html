@@ -83,6 +83,35 @@
   .mathwrap td.num,.mathwrap th.num{text-align:right;
     font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .mathwrap b.acc{color:var(--acc)}
+  .cmpradar{display:flex;flex-direction:column;align-items:center;gap:8px;margin:12px 0 4px}
+  .cmpleg{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:12.5px}
+  .cmpleg span{display:inline-flex;align-items:center;gap:6px}
+  .cmpleg i{width:14px;height:0;border-top:3px solid;border-radius:2px;display:inline-block}
+  /* 캐릭터 스탯 카드 — 도형(모양) + 막대(값)를 나란히 */
+  .statwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .axbars{flex:1;min-width:180px;display:flex;flex-direction:column;gap:7px}
+  .axrow{display:grid;grid-template-columns:52px 34px 1fr;align-items:center;gap:8px;
+    font-size:12.5px;cursor:default}
+  .axrow.thin{opacity:.55}
+  .axrow .axl{color:var(--dim)}
+  .axrow .axv{text-align:right;font-weight:700;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .axb{height:7px;border-radius:4px;background:#0c121a;overflow:hidden}
+  .axb i{display:block;height:100%;background:linear-gradient(90deg,#3aa0ee,#0bc5d4)}
+  .stathead{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .stathead .pill.acc{background:rgba(11,197,212,.14);color:var(--acc);border-color:transparent}
+  /* 진영별 성적 — 파랑/주황은 이 사이트의 승/패 색과 겹치지 않게 브랜드 2색을 쓴다 */
+  .sidewrap{display:flex;flex-direction:column;gap:8px}
+  .siderow{display:grid;grid-template-columns:56px 1fr 56px;align-items:center;gap:10px}
+  .siderow.num{font-size:12.5px}
+  .siderow .sn{font-size:12.5px;font-weight:650}
+  .siderow .sn.red,.siderow .sv.red{text-align:right}
+  .sn.blue,.sv.blue{color:#3aa0ee} .sn.red,.sv.red{color:#e8833a}
+  .sv{font-weight:750;font-size:15px}
+  .siderow .muted{text-align:center;font-size:12px}
+  .sbar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#0c121a}
+  .sbar i.b{background:#3aa0ee} .sbar i.r{background:#e8833a}
+  .sidepl{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
   a.mmrlink{color:inherit;text-decoration:none;border-bottom:1px dashed var(--dim);cursor:pointer}
   a.mmrlink:hover{color:var(--acc);border-bottom-color:var(--acc)}
   /* 섹션 안 서브탭 — 한 화면에 한 주제만. 스크롤로 훑게 하지 않는다 */
@@ -253,7 +282,7 @@
     <div class="tab" data-t="syn">🤝 시너지</div>
     <div class="tab" data-t="champ">🧙 챔피언</div>
     <div class="tab" data-t="records">🏅 기록실</div>
-    <div class="tab" data-t="fun">🎲 재미</div>
+    <div class="tab" data-t="fun">🔍 심화</div>
     <div class="tab" data-t="matches">📜 경기</div>
     <div class="tab" data-t="player">👤 플레이어</div>
     <div class="tab" data-t="compare">⚖️ 비교</div>
@@ -295,7 +324,7 @@
     <div class="card" data-sub="🧙 메타"><h2>🧙 챔피언 메타 (서버 전체)</h2>
       <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
       <div id="champT"></div></div>
-    <div class="card" data-sub="⚔️ 매치업"><h2>⚔️ 챔프 매치업 (같은 라인 맞대결)</h2><div id="champMatchT"></div></div>
+    <div class="card" data-sub="⚔️ 매치업"><h2>같은 라인 챔피언 매치업</h2><div id="champMatchT"></div></div>
     <div class="card" data-sub="🚫 밴"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
   </section>
 
@@ -308,44 +337,46 @@
   </section>
 
   <section id="fun" class="view hidden" data-subtabs>
-    <div data-sub="⚔️ 맞대결">
-      <div class="card"><h2>⚔️ 상대 전적<span class="qmark" tabindex="0" role="button" data-tip-key="상대전적" aria-label="상대 전적 설명">?</span></h2>
-        <p class="muted">적으로 만난 판에서 <b>누가 이겼나</b>. 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.</p>
-        <div id="funH2H"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🗡️ 킬 관계<span class="qmark" tabindex="0" role="button" data-tip-key="킬관계" aria-label="킬 관계 설명">?</span></h2>
-        <p class="muted">적으로 만났을 때 누가 누구를 더 많이 <b>잡았나</b>(킬 기준). 승패와는 별개입니다.</p>
-        <div id="funRivals"></div></div>
+    <div data-sub="🔵 진영 · 챔피언 폭">
+      <div class="card"><h2>🔵 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
+        <p class="muted">시간대별 승률과 달리 이건 <b>구조적으로 50%가 아니다</b> —
+          한 경기에 블루 하나 레드 하나라 어느 쪽이 더 이겼는지가 실제 정보입니다.</p>
+        <div id="funSide"></div></div>
+      <div class="card" style="margin-top:10px"><h2>🧙 라인별 챔피언 폭<span class="qmark" tabindex="0" role="button" data-tip-key="챔피언폭" aria-label="챔피언 폭 설명">?</span></h2>
+        <p class="muted">몇 판을 몇 종으로 돌렸나. 7판에 7종이면 매판 다른 챔피언,
+          7판에 2종이면 장인입니다.</p>
+        <div id="funPool"></div></div>
     </div>
-    <div class="grid2" data-sub="🌙 언제 · 얼마나">
+    <div class="grid2" data-sub="🌙 시간대 · 경기 길이">
       <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
       <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" tabindex="0" role="button" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
     </div>
-    <div data-sub="🔄 역전 · 죽음">
-      <div class="card"><h2>🔄 역전과 던짐<span class="qmark" tabindex="0" role="button" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
+    <div data-sub="🔄 역전 · 데스">
+      <div class="card"><h2>🔄 역전 · 리드 실패<span class="qmark" tabindex="0" role="button" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
         <div id="funComeback"></div></div>
-      <div class="card" style="margin-top:10px"><h2>💀 죽음의 기술<span class="qmark" tabindex="0" role="button" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2>💀 데스 분석<span class="qmark" tabindex="0" role="button" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
         <div id="funDeath"></div></div>
       <div class="card" style="margin-top:10px"><h2>🗺️ 데스 히트맵<span class="qmark" tabindex="0" role="button" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
         <div id="funHeat"></div></div>
     </div>
-    <div data-sub="🍻 술안주">
-      <div class="card"><h2>💀 같이 죽는 커플<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
+    <div data-sub="🤝 관계">
+      <div class="card"><h2>💀 동반 사망<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
         <p class="muted">같은 팀 두 사람이 <b>10초 안에, 가까운 데서</b> 같이 죽은 횟수입니다.
           맵 반대편에서 각자 죽은 건 빠집니다. 실력 지표가 아니라 커플 인증입니다.</p>
         <div id="funCouple"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🍚 밥상과 숟가락<span class="qmark" tabindex="0" role="button" data-tip-key="밥상" aria-label="밥상 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2>🤝 어시스트 관계<span class="qmark" tabindex="0" role="button" data-tip-key="밥상" aria-label="밥상 설명">?</span></h2>
         <p class="muted">누가 누구 킬을 깔아 줬나(어시스트 기준). 옆의 <b>비중</b>은 받은 사람
           전체 킬 중 이 사람 어시가 낀 비율입니다 — 원시 횟수는 그냥 킬 많은 사람이 위로 옵니다.</p>
         <div id="funAssist"></div></div>
       <div class="grid2" style="margin-top:10px">
         <div class="card"><h2>🔥 최장 연속킬</h2><div id="funSpree"></div></div>
-        <div class="card"><h2>🛑 폭주 저지</h2>
+        <div class="card"><h2>🛑 연속킬 저지</h2>
           <p class="muted">한참 달리던 사람을 처음 끊은 사람입니다. 아무도 못 끊고 끝난 폭주도 많아 따로 냅니다.</p>
           <div id="funStopper"></div></div>
       </div>
     </div>
-    <div class="grid2" data-sub="🧭 움직임 · 용">
-      <div class="card"><h2>🧭 로밍 지수<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
+    <div class="grid2" data-sub="🧭 로밍 · 한타 · 오브젝트">
+      <div class="card"><h2>🧭 로밍 비율<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
       <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
       <div class="card"><h2>🐲 용 종류별 성적</h2><div id="funDragon"></div></div>
     </div>
@@ -440,7 +471,12 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   cols.forEach(c=>{ if(c.bar){ maxes[c.k]=Math.max(...rows.map(r=>+r[c.k]||0),0.0001); }});
   let data=rows.slice();
   if(sortKey){
+    // nullLast: 값이 없는 행을 정렬 방향과 상관없이 맨 아래로. 옵트인이라
+    // 기존 표는 영향 없다. 안 그러면 '맞대결 0판' 이 마진 0 으로 중간에 낌다.
+    const sc=cols.find(c=>c.k===sortKey)||{};
     data.sort((a,b)=>{ let x=a[sortKey],y=b[sortKey];
+      if(sc.nullLast){ const nx=(x==null),ny=(y==null);
+        if(nx||ny) return (nx&&ny)?0:(nx?1:-1); }
       if(typeof x==='number'||typeof y==='number') return ((+x||0)-(+y||0))*sortDir;
       return String(x).localeCompare(String(y))*sortDir; });
   }
@@ -465,6 +501,9 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
+  진영:'블루(왼쪽 아래)와 레드(오른쪽 위) 진영의 승률입니다.\n한 경기에 블루 하나 레드 하나라 두 진영 승수의 합이 경기 수이고,\n어느 쪽이 더 이겼는지는 상쇄되지 않는 실제 정보입니다.\n표본이 작으면 크게 흔들리니 경기 수를 같이 보세요.',
+  챔피언폭:'그 라인에서 서로 다른 챔피언을 몇 종 썼는지입니다.\n매판 다른 정도 = 챔피언 종 수 ÷ 판 수. 100%면 매판 다른 챔프,\n낮을수록 한 챔프를 반복해서 씁니다. 잘한다/못한다와는 무관합니다.',
+  상대별:'맞대결 = 적으로 만난 판. 같은 팀 = 한편이었던 판.\n킬 주고받음 = (내가 잡은 수 : 나를 잡은 수), 맞대결한 판에서만 셉니다.\n기본 정렬은 상대가 나를 이긴 만큼(승수 차)이라 1판 1패가 4판 4패보다 위로 못 갑니다.\n맞대결이 0판인 상대는 맨 아래에 모읍니다.',
   동반사망:'같은 팀 두 사람이 10초 안에, 서로 2500 유닛 이내에서 죽은 횟수입니다.\n거리 조건이 없으면 맵 반대편에서 각자 죽은 것도 잡힙니다.\n판당 횟수로 세웁니다 — 총 횟수로 하면 많이 뛴 사람이 자동으로 위에 옵니다.\n데스가 많은 라인(정글)이 잘 걸리니 실력으로 읽지 마세요.',
   밥상:'킬을 낸 사람과 그 킬에 어시를 준 사람 쌍을 셉니다.\n비중 = 이 어시 수 ÷ 받은 사람의 총 킬.\n원시 횟수만 보면 사실상 킬 수 차이라, 서포터와 정글러를 구분하는 것에 가깝습니다.\n같이 3판 이상 뛴 조합만 나옵니다.',
   신뢰성:'승률을 그대로 믿으면 2판 2승(100%)이 20판 14승(70%)보다 위로 갑니다.\nWilson 신뢰구간의 아래끝을 써서 표본이 적을수록 더 깎아 내립니다.\n판수가 쌓일수록 실제 승률에 가까워집니다. 리더보드 정렬 기준입니다.',
@@ -545,6 +584,9 @@ function openMathFor(id){
   if(!id||!(DATA.ratings||{})[id]) return;
   $('#mathWho').value=id; renderMathMmr();
   activateTab(document.querySelector('#tabs .tab[data-t="math"]'));
+  // ⚠️ 탭만 켜면 모자란다 — 사용자가 전에 '나머지 지표'를 봤으면 MMR 검산
+  //    패널은 hidden 인 채라 링크가 먹통처럼 보인다(실측 재현).
+  showSubtab($('#math'), 0);
   $('#math').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderBoard(){
@@ -767,26 +809,28 @@ function barCell(v,max,txt){
 }
 function renderFun(){
   const F=DATA.fun||{};
-  // 상대 전적 — 적으로 만난 판의 승패(h2h). 킬이 아니라 '그 판을 이겼나'다.
-  const nameOf=k=>((DATA.players||{})[k]||{}).name||k;
-  const pairs=Object.entries(DATA.h2h||{})
-    .map(([k,v])=>{const [a,b]=k.split('|');
-      return {a:nameOf(a),b:nameOf(b),aw:v.a_wins||0,bw:v.b_wins||0,n:v.vs_games||0};})
-    .filter(x=>x.n>0)
-    .map(x=>x.aw>=x.bw?x:{a:x.b,b:x.a,aw:x.bw,bw:x.aw,n:x.n})   // 이긴 쪽을 왼쪽에
-    .sort((x,y)=>(y.aw-y.bw)-(x.aw-x.bw)||y.n-x.n).slice(0,14);
-  $('#funH2H').innerHTML=pairs.length? pairs.map(r=>
-    `<div class="rival"><span class="rn">${r.a}</span>`+
-    `<span class="rk">${r.aw} <span class="muted">:</span> ${r.bw}</span>`+
-    `<span class="rn right">${r.b}</span></div>`).join('')
-    : '<p class="muted">아직 적으로 만난 조합이 없습니다.</p>';
-  // 킬 관계 — 누가 누구를 많이 잡았나(승패와 별개)
-  const rv=F.rivals||[];
-  $('#funRivals').innerHTML=rv.length? rv.map(r=>
-    `<div class="rival"><span class="rn">${r.strong}</span>`+
-    `<span class="rk">${r.kills} <span class="muted">:</span> ${r.back}</span>`+
-    `<span class="rn right">${r.weak}</span></div>`).join('')
-    : '<p class="muted">아직 서로 3킬 이상 주고받은 조합이 없습니다.</p>';
+  // 진영별 — 시간대별과 달리 이건 상쇄되지 않는다(한 경기에 블루 1 · 레드 1).
+  const SD=(F.sides||{});
+  const st=(SD.team||[]);
+  const blue=st.find(x=>x.side==='BLUE')||{games:0,wins:0,winrate:0};
+  const red =st.find(x=>x.side==='RED') ||{games:0,wins:0,winrate:0};
+  const bw=Math.round((blue.winrate||0)*100), rw=Math.round((red.winrate||0)*100);
+  $('#funSide').innerHTML = (blue.games||red.games)
+    ? `<div class="sidewrap"><div class="siderow">`+
+      `<span class="sn blue">블루</span>`+
+      `<span class="sbar"><i class="b" style="width:${bw}%"></i><i class="r" style="width:${100-bw}%"></i></span>`+
+      `<span class="sn red">레드</span></div>`+
+      `<div class="siderow num"><span class="sv blue">${bw}%</span>`+
+      `<span class="muted">${blue.games}경기 · ${blue.wins}승 vs ${red.wins}승</span>`+
+      `<span class="sv red">${rw}%</span></div></div>`+
+      renderSidePlayers(SD.players||[])
+    : '<p class="muted">데이터 없음</p>';
+  renderTable($('#funPool'),(F.champ_pool||[]).slice(),[
+    {k:'discord_name',h:'멤버'},{k:'lane',h:'라인',fmt:laneKo},
+    {k:'champs',h:'챔피언',num:1,fmt:v=>`${v}종`},
+    {k:'games',h:'판',num:1},
+    {k:'variety',h:'매판 다른 정도',num:1,bar:1,fmt:v=>pct(v)},
+  ],'games',-1);
 
   // 시간대 — 승률 열은 **구조적으로 항상 50%** 라 뺐다. 내전은 우리끼리 5대5라
   // 어느 시간대든 승과 패가 정확히 상쇄된다(실측: 네 구간 전부 0.5). 정보가 0인 열을
@@ -823,7 +867,7 @@ function renderFun(){
      // 열세였던 판이 0인데 '역전 0%'로 찍으면 못 한 게 아니라 기회가 없던 것이다
      fmt:(v,r)=>r.behind_g?pct(v):'-',cls:r=>'num '+(r.behind_g?'pos':'')},
     {k:'ahead_g',h:'우세 판',num:1},
-    {k:'throw_rate',h:'날린 비율',num:1,
+    {k:'throw_rate',h:'리드 실패율',num:1,
      fmt:(v,r)=>r.ahead_g?pct(v):'-',cls:r=>'num '+(r.ahead_g?'neg':'')},
   ],'throw_rate',-1);
 
@@ -831,23 +875,23 @@ function renderFun(){
   renderTable($('#funDeath'),F.deaths||[],[
     {k:'discord_name',h:'멤버'},
     {k:'games',h:'판',num:1},
-    {k:'fb_given',h:'퍼블 헌납률',num:1,fmt:(v,r)=>r.deaths?pct(v):'-',
+    {k:'fb_given',h:'처음 죽은 비율',num:1,fmt:(v,r)=>r.deaths?pct(v):'-',
      cls:r=>'num '+(r.deaths&&r.fb_given>0.2?'neg':'')},
     {k:'first_death_min',h:'첫 데스',num:1,fmt:v=>v==null?'-':`${v}분`},
-    {k:'bounty_given',h:'헌납 현상금',num:1,fmt:v=>v==null?'-':(+v).toLocaleString(),bar:1},
+    {k:'bounty_given',h:'내준 현상금',num:1,fmt:v=>v==null?'-':(+v).toLocaleString(),bar:1},
   ],'bounty_given',-1);
 
   // 술안주 — 같이 죽는 커플 / 밥상과 숟가락 / 폭주
   renderTable($('#funCouple'),F.co_deaths||[],[
-    {k:'a',h:'커플',fmt:(v,r)=>`${r.a} <span class="muted">＋</span> ${r.b}`},
+    {k:'a',h:'조합',fmt:(v,r)=>`${r.a} <span class="muted">＋</span> ${r.b}`},
     {k:'games',h:'같이 뛴 판',num:1},
     {k:'n',h:'동반 사망',num:1},
     {k:'per_game',h:'판당',num:1,bar:1,fmt:v=>(+v).toFixed(2)},
   ],'per_game',-1);
   renderTable($('#funAssist'),F.assist_flow||[],[
-    {k:'giver',h:'깔아 준 사람'},{k:'taker',h:'먹은 사람'},
+    {k:'giver',h:'어시스트 준 사람'},{k:'taker',h:'킬을 낸 사람'},
     {k:'assists',h:'어시',num:1},
-    {k:'share',h:'그 사람 킬 중',num:1,fmt:v=>pct(v),bar:1},
+    {k:'share',h:'그 사람 킬 대비',num:1,fmt:v=>pct(v),bar:1},
     {k:'games',h:'같이 뛴 판',num:1},
   ],'assists',-1);
   const SP=F.sprees||{};
@@ -857,14 +901,14 @@ function renderFun(){
     {k:'minute',h:'시점',num:1,fmt:v=>`${v}분`},
   ],'streak',-1);
   renderTable($('#funStopper'),SP.stoppers||[],[
-    {k:'stopper',h:'끊은 사람'},{k:'runner',h:'폭주하던 사람'},
-    {k:'streak',h:'그때 연속킬',num:1,bar:1},
+    {k:'stopper',h:'저지한 사람'},{k:'runner',h:'연속킬 중이던 사람'},
+    {k:'streak',h:'당시 연속킬',num:1,bar:1},
   ],'streak',-1);
 
   // 로밍
   renderTable($('#funRoam'),F.roaming||[],[
     {k:'discord_name',h:'멤버'},{k:'lane',h:'라인',fmt:laneKo},
-    {k:'roam_rate',h:'자리 이탈',num:1,fmt:v=>pct(v),bar:1},
+    {k:'roam_rate',h:'로밍 비율',num:1,fmt:v=>pct(v),bar:1},
   ],'roam_rate',-1);
 
   // 한타
@@ -942,6 +986,7 @@ function fillPlayerSelect(sel,q){
   if(ids.includes(keep)) sel.value=keep;      // 검색해도 보던 사람은 유지
   return ids.length;
 }
+let plSubIdx=0;      // 플레이어 탭에서 마지막으로 보던 서브탭
 function renderPlayerBody(){
   const p=(DATA.players||{})[$('#playerSel').value];
   if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
@@ -962,25 +1007,31 @@ function renderPlayerBody(){
       <div data-sub="📊 요약">
         <div class="grid2">
           <div><h2>라인 분포</h2>${donut(p.role_dist)}</div>
-          <div><h2>능력치 <span class="qmark" data-tip="우리 방 안에서의 백분위입니다.&#10;바깥쪽일수록 방에서 상위권.&#10;점선은 방 평균(50%)." aria-label="능력치 설명">?</span></h2>${radar(r,p.profile)}</div>
+          <div><h2>능력치 <span class="qmark" tabindex="0" role="button" data-tip="우리 방 16명 안에서의 등급입니다(0.5~5.0).&#10;바깥쪽일수록 방에서 상위권.&#10;점선은 방 평균 2.75." aria-label="능력치 설명">?</span></h2>${radar(p,$('#playerSel').value)}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
           <div><h2>라인별 전적</h2><div id="plLane"></div></div>
           <div><h2>챔피언</h2><div id="plChamp"></div></div>
         </div>
       </div>
+      <div data-sub="⚔️ 상대별 전적">
+        <h2>상대별 전적<span class="qmark" tabindex="0" role="button" data-tip-key="상대별" aria-label="상대별 전적 설명">?</span></h2>
+        <p class="muted">위에 있을수록 나를 많이 이긴 상대입니다. 판수를 먼저 보세요 —
+          이 방은 한 상대와 최대 6판밖에 안 붙어서 <b>4승 0패도 4판짜리</b>입니다.</p>
+        <div id="plVs"></div>
+      </div>
       <div data-sub="📜 최근 · 시간대">
         <div><h2>최근 경기</h2><div id="plRecent"></div></div>
         <div style="margin-top:10px"><h2>🌙 시간대별 승률</h2>${hourBars(p.by_hour)}</div>
       </div>
-      <div data-sub="🤝 궁합 · 천적">
+      <div data-sub="🤝 파트너 · 상대 챔피언">
         <div class="grid2">
           <div class="card"><h2>👍 시너지 좋은 파트너</h2>${best}</div>
           <div class="card"><h2>👎 시너지 나쁜 파트너</h2>${worst}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
-          <div class="card"><h2>😈 천적 챔피언 (자주 짐)</h2>${nemesis}</div>
-          <div class="card"><h2>🍚 밥 챔피언 (자주 이김)</h2>${victim}</div>
+          <div class="card"><h2>상대하기 어려운 챔피언</h2>${nemesis}</div>
+          <div class="card"><h2>상대하기 쉬운 챔피언</h2>${victim}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
           <div class="card"><h2>💀 나를 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed_by)}</div>
@@ -993,8 +1044,14 @@ function renderPlayerBody(){
       </div>
     </div>`;
   $('#playerBody').innerHTML=h;
-  // 사람을 바꿀 때마다 innerHTML 을 새로 쓰므로 서브탭도 매번 다시 만든다
+  // 사람을 바꿀 때마다 innerHTML 을 새로 쓰므로 서브탭도 매번 다시 만든다.
+  // ⚠️ 그대로두면 '세부 지표'를 보다 사람을 바꿔도 '요약'으로 튕긴다
+  //    → 보던 칸을 기억했다 복원한다.
   buildSubtabs($('#plPanes'));
+  renderPlayerVs($('#playerSel').value);
+  showSubtab($('#plPanes'), plSubIdx);
+  $('#plPanes').querySelectorAll(':scope > .subtabs .subtab')
+    .forEach((b,i)=>b.addEventListener('click',()=>{plSubIdx=i;}));
   renderTable($('#plLane'),p.lanes,[{k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},{k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
@@ -1005,6 +1062,95 @@ function renderPlayerBody(){
     [{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},{k:'lane',h:'라인',fmt:laneKo},
      {k:'res',h:'결과',cls:r=>r.win?'pos':'neg'},{k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1}],null,-1);
   renderPlayerMetrics(p);
+}
+// ---------- '나 기준' 상대별 전적 ----------
+// 왜 이 형태인가: 예전엔 상대 전적과 킬 관계가 **따로 두 카드**였는데, 둘 다 "왼쪽이
+// 이긴/센 쪽"이라 행마다 주어가 바뀌었다. 그래서 같은 두 사람이 위아래 카드에서 좌우가
+// 뒤집혀 서로를 반박했다(실측 12쌍 중 3쌍). 여기서는 왼쪽이 **항상 상대**로 고정이라
+// 그 모순이 구조적으로 불가능하다. 그리고 76쌍 중 14쌍만 보이던 것도 전수로 바뀐다.
+function killPairs(){
+  const N2I={}; Object.entries(DATA.players||{}).forEach(([id,p])=>{N2I[p.name]=id;});
+  const K={};
+  ((DATA.fun||{}).kill_matrix||[]).forEach(r=>{
+    const a=N2I[r.killer], b=N2I[r.victim];
+    if(a&&b) K[a+'|'+b]=+r.kills||0;      // 방향 그대로 보존
+  });
+  return K;
+}
+// 사람별 진영 성적 — 양쪽을 다 뛴 사람만 나온다(한쪽만 뛰었으면 비교가 성립 안 함).
+// 표본이 판당 1~5판이라 순위표가 아니라 "이런 경향이 있다" 정도로만 읽어야 한다.
+function renderSidePlayers(list){
+  if(!list||!list.length) return '';
+  const rows=list.map(x=>{
+    const bw=x.blue_g?x.blue_w/x.blue_g:null, rw=x.red_g?x.red_w/x.red_g:null;
+    return {...x, gap:(bw!=null&&rw!=null)?(bw-rw):null};
+  }).filter(x=>x.gap!=null).sort((a,b)=>Math.abs(b.gap)-Math.abs(a.gap)).slice(0,6);
+  if(!rows.length) return '';
+  return `<div class="sidepl"><div class="muted" style="font-size:12px;margin-bottom:6px">`+
+    `진영을 많이 타는 사람 (양쪽 다 뛴 사람만)</div>`+
+    rows.map(x=>`<div class="mini" style="justify-content:space-between">`+
+      `<span>${x.discord_name}</span>`+
+      `<span class="muted">블루 ${x.blue_g}판 ${x.blue_w}승 · 레드 ${x.red_g}판 ${x.red_w}승 `+
+      `<b class="${x.gap>0?'':'neg'}">${x.gap>0?'블루':'레드'}에서 +${Math.round(Math.abs(x.gap)*100)}%p</b></span>`+
+      `</div>`).join('')+`</div>`;
+}
+function renderPlayerVs(meId){
+  const box=$('#plVs'); if(!box) return;
+  const P=DATA.players||{}, H=DATA.h2h||{}, K=killPairs();
+  if(!P[meId]){ box.innerHTML='<p class="muted">기록 없음</p>'; return; }
+  const rows=[];
+  Object.keys(P).forEach(oppId=>{
+    if(oppId===meId) return;
+    // h2h 키는 단방향(a<b)이라 어느 쪽에 있는지 찾아야 한다
+    const fwd=H[meId+'|'+oppId], rev=H[oppId+'|'+meId];
+    const v=fwd||rev; if(!v) return;
+    const meIsA=!!fwd;
+    const myW = meIsA?(v.a_wins||0):(v.b_wins||0);
+    const opW = meIsA?(v.b_wins||0):(v.a_wins||0);
+    const vg  = v.vs_games||0;
+    // ⚠️ with_wins 는 뒤집지 않는다 — 같은 팀이면 둘이 같이 이기고 같이 진다.
+    const wg=v.with_games||0, ww=v.with_wins||0;
+    const kGot=K[meId+'|'+oppId]||0, kLost=K[oppId+'|'+meId]||0;
+    rows.push({
+      opp:P[oppId].name, _oid:oppId,
+      vs: vg?`${vg}판 <b>${myW}승 ${opW}패</b>`:null,
+      vsMargin: vg?(opW-myW):null,          // 상대가 나를 이긴 만큼. 클수록 위
+      vsGames: vg,
+      wt: wg?`${wg}판 ${ww}승 ${wg-ww}패`:null,
+      wtMargin: wg?(ww-(wg-ww)):null,
+      kill: vg?`${kGot} : ${kLost}`:null,
+      killDiff: vg?(kGot-kLost):null,
+    });
+  });
+  if(!rows.length){ box.innerHTML='<p class="muted">아직 만난 상대가 없습니다.</p>'; return; }
+  // 동점이면 판수 많은 쪽이 위 — 안정 정렬이라 renderTable 이 다시 정렬해도 유지된다
+  rows.sort((a,b)=>(b.vsGames||0)-(a.vsGames||0));
+  renderTable(box,rows,[
+    {k:'opp',h:'상대',fmt:(v,r)=>`<a href="#" class="vslink" data-who="${r._oid}" title="둘만 자세히 보기">${v}</a>`},
+    {k:'vsMargin',h:'맞대결',num:1,nullLast:1,
+     fmt:(v,r)=>r.vs||'<span class="muted">—</span>',
+     cls:r=>'num '+(r.vsMargin==null?'':(r.vsMargin>0?'neg':(r.vsMargin<0?'pos':'')))},
+    {k:'wtMargin',h:'같은 팀',num:1,nullLast:1,
+     fmt:(v,r)=>r.wt||'<span class="muted">—</span>',cls:()=>'num muted'},
+    {k:'killDiff',h:'킬 주고받음',num:1,nullLast:1,
+     fmt:(v,r)=>r.kill||'<span class="muted">—</span>',
+     cls:r=>'num '+(r.killDiff==null?'':(r.killDiff>0?'pos':(r.killDiff<0?'neg':'')))},
+  ],'vsMargin',-1);
+  const tot=rows.filter(r=>r.vsGames).reduce((t,r)=>({
+    w:t.w+(+r.vs.match(/<b>(\d+)승/)[1]),n:t.n+r.vsGames}),{w:0,n:0});
+  box.insertAdjacentHTML('beforeend',
+    `<p class="muted" style="font-size:12px;margin:8px 0 0">맞대결 합계 ${tot.n}판 ${tot.w}승 ${tot.n-tot.w}패`+
+    ` · 이름을 누르면 그 상대와의 상세를 봅니다.</p>`);
+}
+// 두 명 상세(비교 탭)로 이동. 검색 필터가 걸려 있으면 option 이 없어 값 대입이
+// 조용히 실패하므로 반드시 먼저 비운다.
+function openCompare(a,b){
+  const P=DATA.players||{}; if(!P[a]||!P[b]) return;
+  $('#cmpSearchA').value=''; $('#cmpSearchB').value='';
+  fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
+  $('#cmpA').value=a; $('#cmpB').value=b; renderCompare();
+  activateTab(document.querySelector('#tabs .tab[data-t="compare"]'));
+  $('#compare').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function kcList(arr){
   return (arr||[]).length
@@ -1053,14 +1199,18 @@ function renderCompare(){
     <td class="num ${(+va>+vb)?'pos':''}">${fmt?fmt(va):(va??'-')}</td>
     <td class="cmpl">${label}</td>
     <td class="num ${(+vb>+va)?'pos':''}">${fmt?fmt(vb):(vb??'-')}</td></tr>`;
-  // 맞대결 요약 — 승수 막대로 한눈에
-  const barW=vs?Math.round(aw/vs*100):50;
+  // ⚠️ 예전엔 같은 맞대결 숫자를 **세 번**(숫자·막대·표) 보여줬고, 막대의 파랑/주황이
+  //    누구인지 범례가 없었으며, 맞대결 0판(전체 쌍의 37%)에서도 **반반 막대**를 그려
+  //    "50:50 호각"으로 읽혔다. 숫자 한 번만 남기고 막대는 뺀다.
+  const K=killPairs();
+  const kGot=K[ka+'|'+kb]||0, kLost=K[kb+'|'+ka]||0;
   const head=`<div class="cmphead">
       <div class="cmpname">${a.name}</div>
       <div class="cmpvs">${vs?`${aw} <span class="muted">:</span> ${bw}`:'—'}<div class="muted">맞대결 ${vs}판</div></div>
       <div class="cmpname right">${b.name}</div>
-    </div>
-    <div class="cmpbar"><span style="width:${barW}%"></span></div>`;
+    </div>`+
+    (vs?`<p class="muted" style="font-size:12px;text-align:center;margin:6px 0 0">`+
+        `킬 주고받음 ${kGot} : ${kLost}</p>`:'');
   const lanes=(rec&&rec.lanes||[]).filter(x=>x.same_lane);
   const laneNote=lanes.length?`<p class="muted" style="font-size:12px;margin:10px 0 0">`+
       `같은 라인에서 붙은 판 ${lanes.length}회 — `+
@@ -1068,9 +1218,19 @@ function renderCompare(){
         ` <span class="${(flip? !x.a_win : x.a_win)?'pos':'neg'}">${(flip? !x.a_win : x.a_win)?'승':'패'}</span>`).join(' · ')+`</p>`:'';
   const withNote=rec&&rec.with_games?
     `<p class="muted" style="font-size:12px;margin:6px 0 0">같은 편이었던 판 ${rec.with_games}회 · 그때 승률 ${pct(rec.with_winrate)}</p>`:'';
-  $('#cmpBody').innerHTML=head+
+  // 능력치 겹쳐 그리기 — 도형이 겹쳐도 축마다 숫자를 둘 다 적어 읽힌다.
+  //    색만으로 구분하지 않게 B 는 점선으로 그린다(색각 대응).
+  const both=(a.profile||[]).length>=3&&(b.profile||[]).length>=3
+    ? `<div class="cmpradar">`+
+      radarSVG([{name:a.name,profile:a.profile,color:'#3aa0ee'},
+                {name:b.name,profile:b.profile,color:'#e8833a'}])+
+      `<div class="cmpleg">`+
+      `<span><i style="background:#3aa0ee"></i>${a.name} <span class="muted">${ra.games}판</span></span>`+
+      `<span><i style="background:#e8833a;border-style:dashed"></i>${b.name} <span class="muted">${rb.games}판</span></span>`+
+      `</div></div>`
+    : '';
+  $('#cmpBody').innerHTML=head+both+
     `<table class="cmp"><colgroup><col><col class="mid"><col></colgroup><tbody>
-      ${row('맞대결 승률',awr,awr==null?null:1-awr,v=>v==null?'-':pct(v))}
       ${row('전체 판수',ra.games,rb.games)}
       ${row('전체 승률',ra.winrate,rb.winrate,pct)}
       ${row('KDA',ra.kda,rb.kda)}
@@ -1291,28 +1451,106 @@ function donut(dist){
 }
 // 축의 길이는 **우리 방 안에서의 백분위**다. 절대값(DPM 700)은 판수·메타·라인에 따라
 // 출렁여서 사람마다 비교가 안 되지만, "상위 몇 %"는 바로 읽힌다. 값은 툴팁에 그대로 둔다.
-const AXIS_FMT={winrate:pct,kp:pct,dmg_share:pct,gold_share:pct};
-function radar(rec,profile){
-  const ax=(profile||[]).filter(a=>a.pct!=null);
-  if(ax.length<3) return '<span class="muted">판수가 모자라 능력치를 그릴 수 없습니다</span>';
-  const N=ax.length,cx=104,cy=100,R=64;
-  const pt=(i,f)=>{const a=-Math.PI/2+i*2*Math.PI/N;return [cx+R*f*Math.cos(a),cy+R*f*Math.sin(a)];};
-  let grid='';
-  for(let g=1;g<=4;g++) grid+=`<polygon points="${ax.map((_,i)=>pt(i,g/4).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#243044"/>`;
-  grid+=ax.map((_,i)=>{const[x,y]=pt(i,1);return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#1d2735"/>`;}).join('');
-  // 50%(방 평균) 선을 점선으로 — 안쪽이면 평균 이하라는 게 한눈에 보인다
-  grid+=`<polygon points="${ax.map((_,i)=>pt(i,0.5).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#3d4d66" stroke-dasharray="3 3"/>`;
-  const poly=ax.map((a,i)=>pt(i,Math.max(0.06,a.pct)).map(n=>n.toFixed(1)).join(',')).join(' ');
-  const dots=ax.map((a,i)=>{const[x,y]=pt(i,Math.max(0.06,a.pct));
-    const f=AXIS_FMT[a.key], v=f?f(a.value):a.value;
-    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="#3aa0ee"`+
-      ` data-tip="${a.label} ${v}&#10;방 안에서 상위 ${Math.round((1-a.pct)*100)}%&#10;${a.desc}"/>`;}).join('');
-  const labels=ax.map((a,i)=>{const[x,y]=pt(i,1.3);
-    return `<text x="${x.toFixed(0)}" y="${(y+3).toFixed(0)}" fill="#8a98ad" font-size="9.5" text-anchor="middle">${a.label}</text>`;}).join('');
-  return `<svg style="max-width:210px;width:100%" viewBox="0 0 208 200" role="img" aria-label="능력치 레이더">`+
-    `${grid}<polygon points="${poly}" fill="rgba(58,160,238,.32)" stroke="#3aa0ee" stroke-width="2"/>${dots}${labels}</svg>`+
-    `<p class="muted" style="font-size:11px;margin:2px 0 0">점선 = 방 평균(50%). 점에 올리면 실제 값이 나옵니다.</p>`;
+// ---------- 캐릭터 스탯 카드 ----------
+// 축 길이는 **우리 방 안에서의 등급**(0.5~5.0)이다. 절대값(DPM 700)은 판수·메타·라인에
+// 따라 출렁여 사람마다 비교가 안 되지만, "이 방에서 몇 등급"은 바로 읽힌다.
+// 포맷은 DATA.metric_meta 만 쓴다 — 예전엔 여기 AXIS_FMT 배열을 따로 두어서,
+// 축이 바뀌었는데 그건 안 고쳐져 레이더만 "생존 156.71"(초 원시값)을 찍고 있었다.
+const SCALE=()=>DATA.profile_scale||{max:5,step:.5,rings:5,room_avg:2.75};
+function axisPts(N,cx,cy,R,f){
+  const out=[];
+  for(let i=0;i<N;i++){const a=-Math.PI/2+i*2*Math.PI/N;
+    out.push([cx+R*f*Math.cos(a), cy+R*f*Math.sin(a)]);}
+  return out;
 }
+function poly(pts){return pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');}
+
+// series: [{name, profile, color}] — 한 명이면 그냥 한 명, 두 명이면 겹쳐 그린다.
+function radarSVG(series,opt){
+  const base=(series[0]&&series[0].profile||[]).filter(a=>a.score!=null);
+  if(base.length<3) return '<span class="muted">판수가 모자라 능력치를 그릴 수 없습니다</span>';
+  const SC=SCALE(), MAX=SC.max||5, RINGS=SC.rings||5;
+  const N=base.length, cx=118, cy=112, R=70;
+  let g='';
+  // 등급 격자 — 1,2,3,4,5 링. 임의 4겹이 아니라 눈금 자체라 "저건 4쯤"이 바로 읽힌다
+  for(let r=1;r<=RINGS;r++)
+    g+=`<polygon points="${poly(axisPts(N,cx,cy,R,r/RINGS))}" fill="none" stroke="#243044"/>`;
+  for(let i=0;i<N;i++){const q=axisPts(N,cx,cy,R,1)[i];
+    g+=`<line x1="${cx}" y1="${cy}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="#1d2735"/>`;}
+  // 방 평균선
+  const avg=(SC.room_avg||2.75)/MAX;
+  g+=`<polygon points="${poly(axisPts(N,cx,cy,R,avg))}" fill="none" stroke="#3d4d66" stroke-dasharray="3 3"/>`;
+  series.forEach((sr,si)=>{
+    const ax=(sr.profile||[]).filter(a=>a.score!=null);
+    if(ax.length<3) return;
+    const pts=ax.map((a,i)=>axisPts(N,cx,cy,R,Math.max(.04,a.score/MAX))[i]);
+    g+=`<polygon points="${poly(pts)}" fill="${sr.color}2e" stroke="${sr.color}" stroke-width="2"`+
+       (si?' stroke-dasharray="5 3"':'')+`/>`;
+    pts.forEach((q,i)=>{
+      const a=ax[i], v=fmtMetric(a.parts&&a.parts[0]?a.parts[0].key:a.key,
+                                 a.parts&&a.parts[0]?a.parts[0].value:a.value);
+      const detail=(a.parts||[]).map(x=>`${x.label} ${fmtMetric(x.key,x.value)} (${x.rank}/${x.n})`).join(' / ');
+      g+=`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="3.5" fill="${sr.color}"`+
+         ` data-tip="${a.label} ${a.score} / ${MAX}&#10;${a.rank}/${a.n}위 · ${a.games||'?'}판&#10;${detail||v}&#10;${a.desc}"></circle>`;
+    });
+  });
+  // 축 라벨 + 등급 숫자. 두 명이면 둘 다 적는다 — 폴리곤이 겹쳐도 숫자는 읽힌다
+  base.forEach((a,i)=>{
+    const q=axisPts(N,cx,cy,R,1.30)[i];
+    const nums=series.map(sr=>{
+      const m=(sr.profile||[]).find(x=>x.key===a.key);
+      return m?`<tspan fill="${sr.color}">${m.score}</tspan>`:'';
+    }).filter(Boolean).join('<tspan fill="#5b6b7f"> / </tspan>');
+    const thin=(a.games!=null&&a.games<5);
+    g+=`<text x="${q[0].toFixed(1)}" y="${(q[1]-2).toFixed(1)}" text-anchor="middle"`+
+       ` font-size="10" fill="${thin?'#5b6b7f':'#9aa6b2'}">${a.label}</text>`+
+       `<text x="${q[0].toFixed(1)}" y="${(q[1]+10).toFixed(1)}" text-anchor="middle"`+
+       ` font-size="10.5" font-weight="650">${nums}</text>`;
+  });
+  return `<svg viewBox="0 0 236 232" style="width:100%;max-width:250px;flex:none" role="img"`+
+         ` aria-label="능력치">${g}</svg>`;
+}
+
+// op.gg 스타일 — 레이더 옆에 같은 축을 막대로 다시 보여준다. 도형은 모양을,
+// 막대는 정확한 값을 담당한다. 둘 다 있어야 "어느 쪽이 긴가"와 "몇인가"에 같이 답한다.
+function axisBars(p){
+  const SC=SCALE(), MAX=SC.max||5;
+  const ax=(p.profile||[]).filter(a=>a.score!=null);
+  if(!ax.length) return '';
+  return `<div class="axbars">`+ax.map(a=>{
+    const w=Math.max(3,Math.round(a.score/MAX*100));
+    const thin=(a.games!=null&&a.games<5);
+    const detail=(a.parts||[]).map(x=>`${x.label} ${fmtMetric(x.key,x.value)}`).join(' · ');
+    return `<div class="axrow${thin?' thin':''}" data-tip="${a.rank}/${a.n}위 · ${a.games||'?'}판&#10;${detail}&#10;${a.desc}">`+
+      `<span class="axl">${a.label}</span>`+
+      `<span class="axv">${a.score.toFixed(1)}</span>`+
+      `<span class="axb"><i style="width:${w}%"></i></span></div>`;
+  }).join('')+`</div>`;
+}
+
+// 스탯 카드 한 줄 요약 — 나루토 인물집의 '合計' 자리. 다만 **순위로 쓰지 않는다.**
+// 방 전체 합이 구조적으로 상수라(등수로만 정해진다) 다 같이 늘어도 안 오르고,
+// MMR 과도 상관이 중간(r≈0.5)이라 나란히 놓으면 모순으로 읽힌다.
+function statHead(p,ratingName){
+  const SC=SCALE(), MAX=SC.max||5;
+  const ax=(p.profile||[]).filter(a=>a.score!=null);
+  if(!ax.length) return '';
+  const tot=ax.reduce((t,a)=>t+a.score,0), full=ax.length*MAX;
+  const best=ax.slice().sort((x,y)=>y.score-x.score).slice(0,2);
+  const lane=((DATA.ratings||{})[ratingName]||{}).main_lane;
+  return `<div class="stathead"><span class="pill">${p.record?p.record.games:'?'}판</span>`+
+    (lane?`<span class="pill">${laneKo(lane)}</span>`:'')+
+    `<span class="pill">특기 ${best.map(b=>`${b.label} ${b.score.toFixed(1)}`).join(' · ')}</span>`+
+    `<span class="pill acc">합계 ${tot.toFixed(1)} / ${full}</span></div>`+
+    `<p class="muted" style="font-size:11.5px;margin:6px 0 0">합계는 이 방 안에서의 등수를 더한 값입니다 —`+
+    ` 승패를 반영하는 MMR 과는 다른 숫자이고, 다 같이 실력이 늘어도 오르지 않습니다.`+
+    ` 경기 하나만 빼도 등급이 0.5쯤 움직이니 작은 차이는 아직 의미가 없습니다.</p>`;
+}
+function radar(p,ratingKey){
+  return `<div class="statwrap">${radarSVG([{name:'',profile:p.profile,color:'#3aa0ee'}])}`+
+         `${axisBars(p)}</div>`+statHead(p,ratingKey);
+}
+
 const fmtDur=sec=>{
   const n=+sec; if(!n||!isFinite(n)) return '-';
   return `${Math.floor(n/60)}분 ${String(Math.round(n%60)).padStart(2,'0')}초`;
@@ -1407,7 +1645,11 @@ function renderMathMmr(){
       ${okMmr?'':' <span class="neg">⚠ 반올림이 안 맞습니다</span>'}</p>
 
     <h3>라인별 MMR</h3>
-    <p class="fml">라인 MMR = ${C.mmr_base} + ${C.mmr_scale} × (실력점수 + ${C.lane_adj_weight}×(그 라인 승률 − 0.5))</p>
+    <p class="fml">라인 MMR = ${C.mmr_base} + ${C.mmr_scale} × (실력점수 + ${C.lane_adj_weight}×(보정승률 − 0.5))<br>
+      보정승률 = (그 라인 승 + ${C.lane_adj_k}×0.5) ÷ (그 라인 판 + ${C.lane_adj_k})</p>
+    <p class="muted">라인 승률을 그대로 쓰면 <b>1판짜리 라인이 ±50 MMR</b>을 움직입니다 —
+      전체 실력 폭이 140 정도니 3분의 1을 한 판이 정하는 셈입니다.
+      그래서 판수로 0.5 쪽에 끌어당깁니다(1판 전승이면 ±50 이 아니라 ±10).</p>
     <p class="fml">${Object.entries(r.lanes||{}).map(([ln,v])=>
       `${LANE_KO[ln]||ln} <b>${v.mmr}</b>`).join(' &nbsp;·&nbsp; ')||'—'}</p>
   </div>`;
@@ -1461,7 +1703,8 @@ function renderMathRest(){
     <h3>상수 (코드에서 그대로 가져옴)</h3>
     <p class="fml">α의 K = ${C.blend_k} · 퍼포먼스 수축 K = ${C.perf_shrink_k}
       · 퍼포먼스 가중 = ${C.perf_weight} · 폼 가중 = ${C.form_weight}
-      · 라인 보정 = ${C.lane_adj_weight} · MMR = ${C.mmr_base} + ${C.mmr_scale}×실력점수</p>
+      · 라인 보정 = ${C.lane_adj_weight} (수축 K = ${C.lane_adj_k})
+      · MMR = ${C.mmr_base} + ${C.mmr_scale}×실력점수</p>
   </div>`;
 }
 
@@ -1529,6 +1772,13 @@ async function loadGuild(gid){
 // ---------- 섹션 안 서브탭 ----------
 // 한 탭에 카드를 세로로 쌓아 두면 "밑에 뭐가 더 있는지" 알 수 없고 스크롤만 길어진다.
 // data-subtabs 를 단 섹션의 직계 자식 중 data-sub 가 있는 것만 한 번에 하나씩 보여준다.
+// 특정 서브탭을 프로그램으로 켜기. 버튼을 찾아 click() 하므로 상태가 한 곳에만 산다.
+// scrollIntoView 를 피하려고 직접 토글하지 않는다 — 버튼과 패널이 어긋나면 더 나쁘다.
+function showSubtab(sec, idx){
+  const bar = sec && sec.querySelector(':scope > .subtabs');
+  const btn = bar && bar.querySelectorAll('.subtab')[idx];
+  if(btn && !btn.classList.contains('on')) btn.click();
+}
 function buildSubtabs(root){
   const scope=root?[root]:[...document.querySelectorAll('section[data-subtabs]')];
   scope.forEach(sec=>{
@@ -1584,6 +1834,10 @@ $('#playerSearch').addEventListener('input',e=>{
 $('#cmpSearchA').addEventListener('input',e=>{fillPlayerSelect($('#cmpA'),e.target.value);renderCompare();});
 $('#cmpSearchB').addEventListener('input',e=>{fillPlayerSelect($('#cmpB'),e.target.value);renderCompare();});
 $('#playerSel').addEventListener('change',renderPlayerBody);
+$('#playerBody').addEventListener('click',e=>{
+  const a=e.target.closest('.vslink'); if(!a) return;
+  e.preventDefault(); openCompare($('#playerSel').value, a.dataset.who);
+});
 $('#mathWho').addEventListener('change',renderMathMmr);
 $('#boardT').addEventListener('click',e=>{
   const a=e.target.closest('.mmrlink'); if(!a) return;
