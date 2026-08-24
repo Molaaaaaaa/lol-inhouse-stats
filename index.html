@@ -6,6 +6,12 @@
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
+     (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
+     X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
+     meta 로 실제 동작하는 것만 여기 둔다 — CSP(위)와 referrer 가 그것이다.
+     Cloudflare 로 옮기면 worker.js + _headers 가 나머지를 붙인다. -->
+<meta name="referrer" content="no-referrer" />
 <title>내전 해체 분석기</title>
 <link rel="icon" href="data:," />
 <style>
