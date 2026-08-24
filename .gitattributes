@@ -1,0 +1,4 @@
+# 공개 JSON 은 compact 로 발행된다(폰에서 파싱하는 바이트를 줄이려고).
+# 그래도 diff 는 읽혀야 하니, git 이 비교할 때만 pretty-print 하게 한다.
+# 한 번만: git config diff.json.textconv "python -m json.tool"
+*.json diff=json
