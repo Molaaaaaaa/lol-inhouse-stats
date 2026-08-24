@@ -264,10 +264,14 @@
   .hourbars .hb{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:help}
   .hourbars .hb span{display:block;width:100%;border-radius:3px 3px 0 0;min-height:4px}
   .hourbars .hb b{font-size:9px;color:var(--dim);font-weight:400}
+  #warnBar{border:1px solid #d9a23955;background:#d9a23914;color:#e8b34a;
+    border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:13px;line-height:1.6}
   .mgroup{margin-top:10px}
   .mgh{font-size:12px;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:4px}
   .mrow{display:grid;grid-template-columns:1fr 84px 90px 52px;align-items:center;gap:8px;padding:3px 0;font-size:13px}
   .mrow .ml{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mrow .lnt{margin-left:6px;font-size:10px;color:var(--dim);border:1px solid var(--line);
+    border-radius:4px;padding:0 4px;vertical-align:1px}
   .mrow .mv{text-align:right;font-variant-numeric:tabular-nums}
   .mrow .mb{height:6px;border-radius:3px;background:var(--panel2);overflow:hidden}
   .mrow .mb i{display:block;height:100%;background:var(--acc)}
@@ -304,6 +308,17 @@
   @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
   @media(max-width:480px){
     .wrap{padding:12px}.hide-sm{display:none}
+    /* 좁은 화면에서 두 팀을 가로로 나눠 가지면 한 팀에 100px 밖에 안 돌아가
+       아이콘(22px) 5개가 서로 겹치고 마지막이 잘린다 → 세로로 쌓는다. */
+    .match{flex-wrap:wrap;gap:6px}
+    .match .team{flex:1 0 100%}
+    .match .vs{display:none}
+    /* 닉네임은 여기서 포기한다 — 칸을 균등하게 줘도 한 칸이 15.8px(말줄임표 하나)라
+       읽히지 않는다(실측). 대신 아이콘을 온전히 살리고, 이름·챔피언은 행을 눌러
+       펼치는 스코어보드에서 전부 본다. */
+    .team .pl{flex:0 0 auto}
+    .team .pl img{flex:0 0 auto}
+    .team .pn{display:none}
     table:not(.sb):not(.heat) thead{display:none}
     table:not(.sb):not(.heat) tbody tr{display:block;border:1px solid var(--line);border-radius:10px;
       margin-bottom:8px;padding:4px 10px;background:var(--panel2)}
@@ -322,6 +337,7 @@
 
 <div class="wrap">
   <noscript><div class="card">이 페이지는 자바스크립트로 전적을 불러옵니다. 브라우저에서 JS를 허용해 주세요.</div></noscript>
+  <div id="warnBar" class="hidden"></div>
   <div class="kpis" id="kpis"></div>
 
   <div class="tabs" id="tabs">
@@ -339,7 +355,7 @@
   </div>
 
   <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div><div id="boardNote"></div>
-    <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). 헤더 클릭으로 재정렬.</div></div></section>
+    <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div></section>
 
   <section id="rank" class="view hidden"><div class="card">
     <div class="mpick">
@@ -613,8 +629,12 @@ const TIP=(()=>{
   // ⚠️ 물음표 쪽은 **캡처 단계**에서 전파를 끊어야 한다. 물음표가 정렬 가능한 <th>
   //    안에 있어서, 안 끊으면 설명을 보려는 클릭이 표 정렬까지 바꿔 버린다
   //    (th.onclick 은 직접 할당돼 있어 버블 단계에서는 이미 늦다).
+  // 표시 전용 요소(육각형 축 막대·레이더 꼭짓점·타임라인 점). 이것들은 눌러도
+  // 원래 아무 일도 안 하므로 탭을 가로채도 잃는 동작이 없다.
+  // circle 은 레이더와 K/D/A 타임라인에만 쓰인다.
+  const TAPSEL='.axrow,circle[data-tip]';
   document.addEventListener('click',e=>{
-    const q=e.target.closest('.qmark');
+    const q=e.target.closest('.qmark') || (hasHover?null:e.target.closest(TAPSEL));
     if(q){
       e.stopPropagation(); e.preventDefault();
       if(box._for===q && box.style.display==='block') hide();
@@ -635,6 +655,8 @@ const TIP=(()=>{
   addEventListener('resize',hide);
   return box;
 })();
+// 마우스가 없는 기기에서 "마우스를 올리면"이라고 적으면 방법이 없는 안내가 된다.
+const TAPHINT=matchMedia('(hover: hover)').matches?'올리면':'누르면';
 const LANE_KO={TOP:'탑',JUNGLE:'정글',MIDDLE:'미드',BOTTOM:'원딜',UTILITY:'서폿'};
 const LANE_SEQ=['TOP','JUNGLE','MIDDLE','BOTTOM','UTILITY'];
 const laneKo=l=>LANE_KO[l]||l||'?';
@@ -1305,7 +1327,10 @@ function renderPlayerMetrics(p){
   el.innerHTML=groups.map(g=>
     `<div class="mgroup"><div class="mgh">${g.group}</div>`+
     g.metrics.map(k=>{const c=m[k];
-      return `<div class="mrow"><span class="ml">${mLabel(k)}</span>`+
+      // 라인별로 쪼개지는 지표는 **한 라인 값**이 대표로 올라온다 → 어느 라인인지 밝힌다.
+      // 안 밝히면 여러 라인을 도는 사람의 값이 '전 판 종합'으로 읽힌다.
+      const lt=c.lane?`<span class="lnt" data-tip="${laneKo(c.lane)}에서 뛴 ${c.games||'?'}판 기준입니다.&#10;라인마다 값의 의미가 달라 섞지 않고 한 라인만 씁니다.">${laneKo(c.lane)}</span>`:'';
+      return `<div class="mrow"><span class="ml">${mLabel(k)}${lt}</span>`+
         `<span class="mv">${fmtMetric(k,c.value)}</span>`+
         `<span class="mb"><i style="width:${(c.pct*100).toFixed(0)}%"></i></span>`+
         `<span class="mr">${c.rank}/${c.n}</span></div>`;}).join('')+
@@ -1579,7 +1604,7 @@ function kdaTimeline(p,dur){
   }).join('');
   const cnt=t=>ev.filter(x=>x.t===t).length;
   return `<div class="pdk" style="margin-top:10px">킬 · 데스 · 어시 타임라인
-      <span class="muted" style="font-weight:400">— 점에 마우스를 올리면 상대가 나옵니다</span></div>
+      <span class="muted" style="font-weight:400">— 점을 ${TAPHINT} 상대가 나옵니다</span></div>
     <div class="kdatl"><div class="kdakey">
       <span><i style="background:#3aa0ee"></i>킬 ${cnt('K')}</span>
       <span><i style="background:#e8833a"></i>데스 ${cnt('D')}</span>
@@ -1999,6 +2024,11 @@ function renderMathRest(){
 
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
+  // ⚠️ 발행 쪽은 경고를 실어 보내는데(예: 표시명이 겹쳐 두 사람 통계가 섞임) 화면이
+  //    한 번도 읽지 않아 로그에만 남았다. 통계가 섞이는 건 화면에서 밝혀야 한다.
+  const wb=$('#warnBar'), ws=DATA.warnings||[];
+  wb.innerHTML=ws.map(w=>`<div>⚠️ ${esc(w)}</div>`).join('');
+  wb.classList.toggle('hidden', !ws.length);
   renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
   buildChampLaneBtns(); renderChamp(); renderRecords(); renderFun(); renderMatches();
   fillPlayerSelect($('#playerSel')); renderPlayerBody();

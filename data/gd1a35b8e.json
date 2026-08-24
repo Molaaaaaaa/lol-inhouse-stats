@@ -1150,103 +1150,6 @@
    "winrate": 0.0
   }
  ],
- "elo": [
-  {
-   "discord_name": "말듣쓰",
-   "games": 4,
-   "rating": 1046.3
-  },
-  {
-   "discord_name": "빛나는 마빡",
-   "games": 4,
-   "rating": 1046.3
-  },
-  {
-   "discord_name": "조 C",
-   "games": 9,
-   "rating": 1035.9
-  },
-  {
-   "discord_name": "도야짬뽕누룽지탕",
-   "games": 7,
-   "rating": 1032.4
-  },
-  {
-   "discord_name": "용기사",
-   "games": 6,
-   "rating": 1020.7
-  },
-  {
-   "discord_name": "내 이름은 정준토",
-   "games": 4,
-   "rating": 1020.2
-  },
-  {
-   "discord_name": "앙앙맹",
-   "games": 7,
-   "rating": 1013.5
-  },
-  {
-   "discord_name": "주 암",
-   "games": 3,
-   "rating": 1011.6
-  },
-  {
-   "discord_name": "현 우",
-   "games": 3,
-   "rating": 1011.6
-  },
-  {
-   "discord_name": "qkdlvj3",
-   "games": 3,
-   "rating": 1011.4
-  },
-  {
-   "discord_name": "우체국집배원",
-   "games": 1,
-   "rating": 988.8
-  },
-  {
-   "discord_name": "뚠댕뚠냥",
-   "games": 3,
-   "rating": 988.6
-  },
-  {
-   "discord_name": "도영 둘 도영도영",
-   "games": 3,
-   "rating": 988.4
-  },
-  {
-   "discord_name": "윙봉현",
-   "games": 6,
-   "rating": 979.3
-  },
-  {
-   "discord_name": "광명시25살최문선",
-   "games": 10,
-   "rating": 978.6
-  },
-  {
-   "discord_name": "몰 매",
-   "games": 10,
-   "rating": 975.3
-  },
-  {
-   "discord_name": "코 파",
-   "games": 3,
-   "rating": 964.3
-  },
-  {
-   "discord_name": "대오주인",
-   "games": 4,
-   "rating": 953.7
-  },
-  {
-   "discord_name": "jekjek",
-   "games": 10,
-   "rating": 933.1
-  }
- ],
  "fun": {
   "assist_flow": [
    {
@@ -5883,92 +5786,6 @@
     "victim": "앙앙맹"
    }
   ],
-  "rivals": [
-   {
-    "back": 5,
-    "diff": 14,
-    "kills": 19,
-    "strong": "도야짬뽕누룽지탕",
-    "weak": "윙봉현"
-   },
-   {
-    "back": 5,
-    "diff": 12,
-    "kills": 17,
-    "strong": "앙앙맹",
-    "weak": "몰 매"
-   },
-   {
-    "back": 0,
-    "diff": 11,
-    "kills": 11,
-    "strong": "qkdlvj3",
-    "weak": "대오주인"
-   },
-   {
-    "back": 7,
-    "diff": 10,
-    "kills": 17,
-    "strong": "광명시25살최문선",
-    "weak": "몰 매"
-   },
-   {
-    "back": 3,
-    "diff": 10,
-    "kills": 13,
-    "strong": "qkdlvj3",
-    "weak": "뚠댕뚠냥"
-   },
-   {
-    "back": 2,
-    "diff": 9,
-    "kills": 11,
-    "strong": "조 C",
-    "weak": "jekjek"
-   },
-   {
-    "back": 2,
-    "diff": 7,
-    "kills": 9,
-    "strong": "광명시25살최문선",
-    "weak": "내 이름은 정준토"
-   },
-   {
-    "back": 0,
-    "diff": 7,
-    "kills": 7,
-    "strong": "앙앙맹",
-    "weak": "jekjek"
-   },
-   {
-    "back": 6,
-    "diff": 6,
-    "kills": 12,
-    "strong": "광명시25살최문선",
-    "weak": "도야짬뽕누룽지탕"
-   },
-   {
-    "back": 0,
-    "diff": 6,
-    "kills": 6,
-    "strong": "도야짬뽕누룽지탕",
-    "weak": "주 암"
-   },
-   {
-    "back": 0,
-    "diff": 5,
-    "kills": 5,
-    "strong": "jekjek",
-    "weak": "빛나는 마빡"
-   },
-   {
-    "back": 0,
-    "diff": 5,
-    "kills": 5,
-    "strong": "광명시25살최문선",
-    "weak": "윙봉현"
-   }
-  ],
   "roaming": [
    {
     "discord_name": "조 C",
@@ -6263,7 +6080,7 @@
     },
     {
      "champ": "Kindred",
-     "minute": 28,
+     "minute": 27,
      "name": "앙앙맹",
      "streak": 13
     },
@@ -11688,8 +11505,8 @@
      "games": 10,
      "lane": "JUNGLE",
      "n": 16,
-     "pct": 0.719,
-     "rank": 5,
+     "pct": 0.781,
+     "rank": 4,
      "value": 6022.3
     },
     "gold25": {
@@ -11729,7 +11546,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.611,
-     "rank": 8,
+     "rank": 7,
      "value": 0.216
     },
     "gpm": {
@@ -11817,7 +11634,7 @@
      "lane": "JUNGLE",
      "n": 16,
      "pct": 0.438,
-     "rank": 10,
+     "rank": 9,
      "value": 1.4
     },
     "longest_living": {
@@ -11969,7 +11786,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.389,
-     "rank": 12,
+     "rank": 11,
      "value": 0.4
     },
     "xp10": {
@@ -12254,7 +12071,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 12,
+       "rank": 11,
        "value": 0.4
       }
      ],
@@ -12489,7 +12306,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 16,
+     "rank": 14,
      "value": 0.0
     },
     "control_wards": {
@@ -12657,7 +12474,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 12,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -12665,7 +12482,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 16,
+     "rank": 13,
      "value": 0.0
     },
     "gold10": {
@@ -12704,8 +12521,8 @@
      "games": 4,
      "lane": "UTILITY",
      "n": 16,
-     "pct": 0.719,
-     "rank": 5,
+     "pct": 0.781,
+     "rank": 4,
      "value": 612.3
     },
     "gold_diff_25": {
@@ -12745,7 +12562,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.667,
-     "rank": 8,
+     "rank": 5,
      "value": 0.25
     },
     "immobilizations": {
@@ -12761,7 +12578,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 14,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -12801,7 +12618,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.062,
-     "rank": 16,
+     "rank": 15,
      "value": 7.8
     },
     "level_lead_lane": {
@@ -12825,7 +12642,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.056,
-     "rank": 18,
+     "rank": 17,
      "value": 4.5
     },
     "multikills": {
@@ -12833,7 +12650,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.444,
-     "rank": 11,
+     "rank": 10,
      "value": 0.5
     },
     "outnumbered_kills": {
@@ -12841,7 +12658,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.5,
-     "rank": 10,
+     "rank": 9,
      "value": 0.75
     },
     "plates_taken": {
@@ -12961,7 +12778,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.944,
-     "rank": 2,
+     "rank": 1,
      "value": 1.0
     },
     "xp10": {
@@ -13189,7 +13006,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 2,
+       "rank": 1,
        "value": 1.0
       }
      ],
@@ -13591,7 +13408,7 @@
      "lane": "JUNGLE",
      "n": 16,
      "pct": 0.344,
-     "rank": 8,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -13599,7 +13416,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 6,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -13751,7 +13568,7 @@
      "lane": "JUNGLE",
      "n": 16,
      "pct": 0.781,
-     "rank": 3,
+     "rank": 2,
      "value": 2.0
     },
     "longest_living": {
@@ -14445,7 +14262,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.875,
-     "rank": 3,
+     "rank": 2,
      "value": 86.0
     },
     "cs15": {
@@ -14581,7 +14398,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 9,
+     "rank": 8,
      "value": 0.67
     },
     "early_lane_rate": {
@@ -14589,7 +14406,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.344,
-     "rank": 14,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -14597,7 +14414,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 7,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -14620,8 +14437,8 @@
      "games": 3,
      "lane": "TOP",
      "n": 16,
-     "pct": 0.406,
-     "rank": 10,
+     "pct": 0.469,
+     "rank": 9,
      "value": 5389.0
     },
     "gold25": {
@@ -14644,8 +14461,8 @@
      "games": 3,
      "lane": "TOP",
      "n": 16,
-     "pct": 0.781,
-     "rank": 4,
+     "pct": 0.844,
+     "rank": 3,
      "value": 809.3
     },
     "gold_diff_25": {
@@ -14701,7 +14518,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 9,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -14733,7 +14550,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.281,
-     "rank": 14,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -14749,7 +14566,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.781,
-     "rank": 6,
+     "rank": 2,
      "value": 2.0
     },
     "longest_living": {
@@ -14773,7 +14590,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 15,
+     "rank": 14,
      "value": 0.0
     },
     "outnumbered_kills": {
@@ -14786,11 +14603,11 @@
     },
     "plates_taken": {
      "games": 3,
-     "lane": "UTILITY",
+     "lane": "TOP",
      "n": 16,
-     "pct": 0.531,
-     "rank": 8,
-     "value": 9.67
+     "pct": 0.406,
+     "rank": 10,
+     "value": 9.0
     },
     "save_ally": {
      "games": 6,
@@ -14884,8 +14701,8 @@
      "games": 3,
      "lane": "TOP",
      "n": 16,
-     "pct": 0.781,
-     "rank": 4,
+     "pct": 0.844,
+     "rank": 3,
      "value": 0.34
     },
     "ward_takedowns": {
@@ -14893,7 +14710,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 10,
+     "rank": 9,
      "value": 5.0
     },
     "winrate": {
@@ -14901,7 +14718,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.639,
-     "rank": 7,
+     "rank": 5,
      "value": 0.667
     },
     "xp10": {
@@ -15157,7 +14974,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 7,
+       "rank": 5,
        "value": 0.667
       }
      ],
@@ -15630,7 +15447,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 10,
+     "rank": 8,
      "value": 0.67
     },
     "early_lane_rate": {
@@ -15638,7 +15455,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.344,
-     "rank": 7,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -15646,7 +15463,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 8,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -15654,7 +15471,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.444,
-     "rank": 11,
+     "rank": 10,
      "value": 0.167
     },
     "gold10": {
@@ -15669,8 +15486,8 @@
      "games": 6,
      "lane": "BOTTOM",
      "n": 16,
-     "pct": 0.531,
-     "rank": 8,
+     "pct": 0.594,
+     "rank": 7,
      "value": 5769.8
     },
     "gold25": {
@@ -15726,7 +15543,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 14,
+     "rank": 13,
      "value": 0.0
     },
     "herald_takedowns": {
@@ -15734,7 +15551,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 15,
+     "rank": 14,
      "value": 0.0
     },
     "immobilizations": {
@@ -15750,7 +15567,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 10,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -15830,7 +15647,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.667,
-     "rank": 7,
+     "rank": 6,
      "value": 1.0
     },
     "plates_taken": {
@@ -15846,7 +15663,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 11,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -15854,7 +15671,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.194,
-     "rank": 14,
+     "rank": 12,
      "value": 0.0
     },
     "skillshots_dodged": {
@@ -15950,7 +15767,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.25,
-     "rank": 14,
+     "rank": 13,
      "value": 0.333
     },
     "xp10": {
@@ -16218,7 +16035,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 14,
+       "rank": 13,
        "value": 0.333
       }
      ],
@@ -16516,11 +16333,11 @@
     },
     "cs15": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
      "pct": 0.969,
      "rank": 1,
-     "value": 135.3
+     "value": 129.3
     },
     "cs25": {
      "games": 3,
@@ -16628,11 +16445,11 @@
     },
     "dps15": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
-     "pct": 0.844,
-     "rank": 3,
-     "value": 598.7
+     "pct": 0.719,
+     "rank": 5,
+     "value": 570.8
     },
     "dps25": {
      "games": 3,
@@ -16652,10 +16469,10 @@
     },
     "early_lane_rate": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
      "pct": 0.344,
-     "rank": 15,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -16663,7 +16480,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 4,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -16684,11 +16501,11 @@
     },
     "gold15": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
-     "pct": 0.781,
-     "rank": 4,
-     "value": 6026.3
+     "pct": 0.406,
+     "rank": 10,
+     "value": 5290.7
     },
     "gold25": {
      "games": 3,
@@ -16708,11 +16525,11 @@
     },
     "gold_diff_15": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
-     "pct": 0.844,
-     "rank": 3,
-     "value": 892.7
+     "pct": 0.656,
+     "rank": 6,
+     "value": 508.3
     },
     "gold_diff_25": {
      "games": 3,
@@ -16767,7 +16584,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 7,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -16796,10 +16613,10 @@
     },
     "lane_win_rate": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
      "pct": 0.281,
-     "rank": 15,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -16807,7 +16624,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.875,
-     "rank": 3,
+     "rank": 2,
      "value": 11.3
     },
     "level_lead_lane": {
@@ -16852,11 +16669,11 @@
     },
     "plates_taken": {
      "games": 3,
-     "lane": "UTILITY",
+     "lane": "TOP",
      "n": 16,
-     "pct": 0.719,
-     "rank": 5,
-     "value": 13.33
+     "pct": 0.656,
+     "rank": 6,
+     "value": 12.33
     },
     "save_ally": {
      "games": 9,
@@ -16948,11 +16765,11 @@
     },
     "vision_adv_lane": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
-     "pct": 0.844,
-     "rank": 3,
-     "value": 0.35
+     "pct": 0.781,
+     "rank": 4,
+     "value": 0.28
     },
     "ward_takedowns": {
      "games": 9,
@@ -16967,7 +16784,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.639,
-     "rank": 6,
+     "rank": 5,
      "value": 0.667
     },
     "xp10": {
@@ -16996,11 +16813,11 @@
     },
     "xp_diff_15": {
      "games": 3,
-     "lane": "MIDDLE",
+     "lane": "TOP",
      "n": 16,
      "pct": 0.844,
      "rank": 3,
-     "value": 574.7
+     "value": 566.7
     }
    },
    "name": "조 C",
@@ -17247,7 +17064,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 6,
+       "rank": 5,
        "value": 0.667
       }
      ],
@@ -17482,7 +17299,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.111,
-     "rank": 17,
+     "rank": 15,
      "value": 0.0
     },
     "bounty_gold": {
@@ -17490,7 +17307,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 17,
+     "rank": 14,
      "value": 0.0
     },
     "control_wards": {
@@ -17506,7 +17323,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 13,
+     "rank": 11,
      "value": 5.0
     },
     "dmg_magic": {
@@ -17578,7 +17395,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 16,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -17586,7 +17403,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.778,
-     "rank": 5,
+     "rank": 3,
      "value": 0.333
     },
     "gold_share": {
@@ -17786,7 +17603,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.639,
-     "rank": 8,
+     "rank": 5,
      "value": 0.667
     }
    },
@@ -17907,7 +17724,7 @@
        "key": "deaths_per_game",
        "label": "판당 데스",
        "n": 18,
-       "rank": 13,
+       "rank": 11,
        "value": 5.0
       }
      ],
@@ -17964,7 +17781,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 8,
+       "rank": 5,
        "value": 0.667
       }
      ],
@@ -18135,7 +17952,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.444,
-     "rank": 11,
+     "rank": 10,
      "value": 0.33
     },
     "bounty_gold": {
@@ -18215,7 +18032,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.583,
-     "rank": 8,
+     "rank": 7,
      "value": 4.67
     },
     "dmg_magic": {
@@ -18295,7 +18112,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 12,
+     "rank": 8,
      "value": 0.67
     },
     "early_lane_rate": {
@@ -18303,7 +18120,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.344,
-     "rank": 16,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -18311,7 +18128,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 17,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -18319,7 +18136,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 18,
+     "rank": 13,
      "value": 0.0
     },
     "gold10": {
@@ -18358,8 +18175,8 @@
      "games": 3,
      "lane": "UTILITY",
      "n": 16,
-     "pct": 0.656,
-     "rank": 6,
+     "pct": 0.719,
+     "rank": 5,
      "value": 546.0
     },
     "gold_diff_25": {
@@ -18399,7 +18216,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.861,
-     "rank": 3,
+     "rank": 2,
      "value": 0.33
     },
     "immobilizations": {
@@ -18415,7 +18232,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 18,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -18447,7 +18264,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.281,
-     "rank": 16,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -18463,7 +18280,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.281,
-     "rank": 13,
+     "rank": 11,
      "value": 1.33
     },
     "longest_living": {
@@ -18479,7 +18296,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.944,
-     "rank": 2,
+     "rank": 1,
      "value": 0.0
     },
     "multikills": {
@@ -18487,7 +18304,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 18,
+     "rank": 14,
      "value": 0.0
     },
     "outnumbered_kills": {
@@ -18495,7 +18312,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 16,
+     "rank": 15,
      "value": 0.33
     },
     "plates_taken": {
@@ -18511,7 +18328,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 17,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -18543,7 +18360,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.375,
-     "rank": 11,
+     "rank": 10,
      "value": 0.33
     },
     "stealth_wards": {
@@ -18591,7 +18408,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.944,
-     "rank": 2,
+     "rank": 1,
      "value": 108.0
     },
     "vision_adv_lane": {
@@ -18615,7 +18432,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.056,
-     "rank": 18,
+     "rank": 17,
      "value": 0.0
     },
     "xp10": {
@@ -18786,7 +18603,7 @@
        "key": "deaths_per_game",
        "label": "판당 데스",
        "n": 18,
-       "rank": 8,
+       "rank": 7,
        "value": 4.67
       }
      ],
@@ -18824,7 +18641,7 @@
        "key": "vision",
        "label": "시야 점수",
        "n": 18,
-       "rank": 2,
+       "rank": 1,
        "value": 108.0
       }
      ],
@@ -18843,7 +18660,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 18,
+       "rank": 17,
        "value": 0.0
       }
      ],
@@ -19020,7 +18837,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.111,
-     "rank": 18,
+     "rank": 15,
      "value": 0.0
     },
     "bounty_gold": {
@@ -19028,7 +18845,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 18,
+     "rank": 14,
      "value": 0.0
     },
     "control_wards": {
@@ -19044,7 +18861,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.583,
-     "rank": 9,
+     "rank": 7,
      "value": 4.67
     },
     "dmg_magic": {
@@ -19108,7 +18925,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.694,
-     "rank": 7,
+     "rank": 5,
      "value": 1.0
     },
     "epic_steals": {
@@ -19116,7 +18933,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 18,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -19124,7 +18941,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.778,
-     "rank": 6,
+     "rank": 3,
      "value": 0.333
     },
     "gold_share": {
@@ -19148,7 +18965,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 18,
+     "rank": 13,
      "value": 0.0
     },
     "herald_takedowns": {
@@ -19156,7 +18973,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.861,
-     "rank": 4,
+     "rank": 2,
      "value": 0.33
     },
     "immobilizations": {
@@ -19188,7 +19005,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.111,
-     "rank": 17,
+     "rank": 16,
      "value": 0.33
     },
     "kp": {
@@ -19212,7 +19029,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.444,
-     "rank": 11,
+     "rank": 10,
      "value": 2.0
     },
     "multikills": {
@@ -19220,7 +19037,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.333,
-     "rank": 13,
+     "rank": 12,
      "value": 0.33
     },
     "outnumbered_kills": {
@@ -19228,7 +19045,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.389,
-     "rank": 12,
+     "rank": 11,
      "value": 0.67
     },
     "save_ally": {
@@ -19236,7 +19053,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 18,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -19244,7 +19061,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.194,
-     "rank": 18,
+     "rank": 12,
      "value": 0.0
     },
     "skillshots_dodged": {
@@ -19268,7 +19085,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.111,
-     "rank": 17,
+     "rank": 16,
      "value": 3.0
     },
     "takedowns_early": {
@@ -19300,7 +19117,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.222,
-     "rank": 15,
+     "rank": 14,
      "value": 1.33
     },
     "vision": {
@@ -19324,7 +19141,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.639,
-     "rank": 9,
+     "rank": 5,
      "value": 0.667
     }
    },
@@ -19445,7 +19262,7 @@
        "key": "deaths_per_game",
        "label": "판당 데스",
        "n": 18,
-       "rank": 9,
+       "rank": 7,
        "value": 4.67
       }
      ],
@@ -19502,7 +19319,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 9,
+       "rank": 5,
        "value": 0.667
       }
      ],
@@ -19673,7 +19490,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.75,
-     "rank": 5,
+     "rank": 4,
      "value": 0.67
     },
     "bounty_gold": {
@@ -19833,7 +19650,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 11,
+     "rank": 8,
      "value": 0.67
     },
     "early_lane_rate": {
@@ -19849,7 +19666,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 13,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -19929,7 +19746,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 15,
+     "rank": 13,
      "value": 0.0
     },
     "herald_takedowns": {
@@ -19937,7 +19754,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 16,
+     "rank": 14,
      "value": 0.0
     },
     "immobilizations": {
@@ -19953,7 +19770,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 15,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -20001,7 +19818,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.781,
-     "rank": 5,
+     "rank": 2,
      "value": 2.0
     },
     "longest_living": {
@@ -20049,7 +19866,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 14,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -20057,7 +19874,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.194,
-     "rank": 15,
+     "rank": 12,
      "value": 0.0
     },
     "skillshots_dodged": {
@@ -20081,7 +19898,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.75,
-     "rank": 5,
+     "rank": 4,
      "value": 1.0
     },
     "stealth_wards": {
@@ -20770,8 +20587,8 @@
      "games": 7,
      "lane": "MIDDLE",
      "n": 16,
-     "pct": 0.719,
-     "rank": 5,
+     "pct": 0.781,
+     "rank": 4,
      "value": 594.8
     },
     "dps25": {
@@ -20803,7 +20620,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 3,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -20826,8 +20643,8 @@
      "games": 7,
      "lane": "MIDDLE",
      "n": 16,
-     "pct": 0.594,
-     "rank": 7,
+     "pct": 0.656,
+     "rank": 6,
      "value": 5806.1
     },
     "gold25": {
@@ -20891,7 +20708,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.333,
-     "rank": 13,
+     "rank": 12,
      "value": 0.1
     },
     "immobilizations": {
@@ -20994,8 +20811,8 @@
      "games": 7,
      "lane": "MIDDLE",
      "n": 16,
-     "pct": 0.406,
-     "rank": 10,
+     "pct": 0.469,
+     "rank": 9,
      "value": 9.14
     },
     "save_ally": {
@@ -21003,7 +20820,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 9,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -21815,7 +21632,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.344,
-     "rank": 11,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -21823,7 +21640,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 9,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -21831,7 +21648,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 14,
+     "rank": 13,
      "value": 0.0
     },
     "gold10": {
@@ -21927,7 +21744,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 11,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -21943,7 +21760,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 12,
+     "rank": 11,
      "value": 1.0
     },
     "kp": {
@@ -21959,7 +21776,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.281,
-     "rank": 11,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -22014,8 +21831,8 @@
      "games": 3,
      "lane": "MIDDLE",
      "n": 16,
-     "pct": 0.469,
-     "rank": 9,
+     "pct": 0.531,
+     "rank": 8,
      "value": 9.33
     },
     "save_ally": {
@@ -22023,7 +21840,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 12,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -22055,7 +21872,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.125,
-     "rank": 14,
+     "rank": 13,
      "value": 0.0
     },
     "stealth_wards": {
@@ -22095,7 +21912,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.444,
-     "rank": 11,
+     "rank": 10,
      "value": 2.0
     },
     "vision": {
@@ -22119,7 +21936,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 11,
+     "rank": 9,
      "value": 5.0
     },
     "winrate": {
@@ -22549,7 +22366,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.111,
-     "rank": 16,
+     "rank": 15,
      "value": 0.0
     },
     "bounty_gold": {
@@ -22557,7 +22374,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 15,
+     "rank": 14,
      "value": 0.0
     },
     "control_wards": {
@@ -22717,7 +22534,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.344,
-     "rank": 9,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -22725,7 +22542,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 10,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -22813,7 +22630,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.667,
-     "rank": 6,
+     "rank": 5,
      "value": 0.25
     },
     "immobilizations": {
@@ -22829,7 +22646,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 12,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -22861,7 +22678,7 @@
      "lane": "UTILITY",
      "n": 16,
      "pct": 0.281,
-     "rank": 9,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -22901,7 +22718,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 16,
+     "rank": 14,
      "value": 0.0
     },
     "outnumbered_kills": {
@@ -23496,7 +23313,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.25,
-     "rank": 14,
+     "rank": 13,
      "value": 1.0
     },
     "cs10": {
@@ -23623,8 +23440,8 @@
      "games": 5,
      "lane": "BOTTOM",
      "n": 16,
-     "pct": 0.781,
-     "rank": 4,
+     "pct": 0.844,
+     "rank": 3,
      "value": 596.6
     },
     "dps25": {
@@ -23656,7 +23473,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 5,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -23760,7 +23577,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 8,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -23784,7 +23601,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.611,
-     "rank": 8,
+     "rank": 7,
      "value": 0.577
     },
     "lane_win_rate": {
@@ -23800,7 +23617,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.438,
-     "rank": 10,
+     "rank": 9,
      "value": 9.4
     },
     "level_lead_lane": {
@@ -23856,7 +23673,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 10,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -23864,7 +23681,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.194,
-     "rank": 13,
+     "rank": 12,
      "value": 0.0
     },
     "skillshots_dodged": {
@@ -24202,7 +24019,7 @@
        "key": "kp",
        "label": "킬 관여",
        "n": 18,
-       "rank": 8,
+       "rank": 7,
        "value": 0.577
       }
      ],
@@ -24459,7 +24276,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.25,
-     "rank": 15,
+     "rank": 13,
      "value": 1.0
     },
     "cs10": {
@@ -24499,7 +24316,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.438,
-     "rank": 10,
+     "rank": 9,
      "value": -2.0
     },
     "deaths_per_game": {
@@ -24587,7 +24404,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.344,
-     "rank": 12,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -24595,7 +24412,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 14,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -24603,7 +24420,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 17,
+     "rank": 13,
      "value": 0.0
     },
     "gold10": {
@@ -24618,8 +24435,8 @@
      "games": 3,
      "lane": "MIDDLE",
      "n": 16,
-     "pct": 0.656,
-     "rank": 6,
+     "pct": 0.719,
+     "rank": 5,
      "value": 5960.0
     },
     "gold_diff_10": {
@@ -24659,7 +24476,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 16,
+     "rank": 13,
      "value": 0.0
     },
     "herald_takedowns": {
@@ -24667,7 +24484,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 17,
+     "rank": 14,
      "value": 0.0
     },
     "immobilizations": {
@@ -24683,7 +24500,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 16,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -24715,7 +24532,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.281,
-     "rank": 12,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -24723,7 +24540,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.719,
-     "rank": 6,
+     "rank": 4,
      "value": 11.0
     },
     "level_lead_lane": {
@@ -24747,7 +24564,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.722,
-     "rank": 6,
+     "rank": 5,
      "value": 1.0
     },
     "multikills": {
@@ -24770,8 +24587,8 @@
      "games": 3,
      "lane": "MIDDLE",
      "n": 16,
-     "pct": 0.656,
-     "rank": 6,
+     "pct": 0.719,
+     "rank": 5,
      "value": 12.67
     },
     "save_ally": {
@@ -24779,7 +24596,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 15,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -24787,7 +24604,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.194,
-     "rank": 16,
+     "rank": 12,
      "value": 0.0
     },
     "skillshots_dodged": {
@@ -24811,7 +24628,7 @@
      "lane": "MIDDLE",
      "n": 16,
      "pct": 0.125,
-     "rank": 15,
+     "rank": 13,
      "value": 0.0
     },
     "stealth_wards": {
@@ -24883,7 +24700,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.25,
-     "rank": 15,
+     "rank": 13,
      "value": 0.333
     },
     "xp10": {
@@ -25029,7 +24846,7 @@
        "key": "cs_diff_15",
        "label": "CS차@15",
        "n": 16,
-       "rank": 10,
+       "rank": 9,
        "value": -2.0
       }
      ],
@@ -25112,7 +24929,7 @@
        "key": "winrate",
        "label": "승률",
        "n": 18,
-       "rank": 15,
+       "rank": 13,
        "value": 0.333
       }
      ],
@@ -25278,7 +25095,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.75,
-     "rank": 6,
+     "rank": 4,
      "value": 0.67
     },
     "bounty_gold": {
@@ -25358,7 +25175,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.056,
-     "rank": 18,
+     "rank": 17,
      "value": 8.33
     },
     "dmg_magic": {
@@ -25438,7 +25255,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.694,
-     "rank": 6,
+     "rank": 5,
      "value": 1.0
     },
     "early_lane_rate": {
@@ -25446,7 +25263,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.344,
-     "rank": 13,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -25454,7 +25271,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 15,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -25462,7 +25279,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.778,
-     "rank": 4,
+     "rank": 3,
      "value": 0.333
     },
     "gold10": {
@@ -25477,8 +25294,8 @@
      "games": 3,
      "lane": "BOTTOM",
      "n": 16,
-     "pct": 0.469,
-     "rank": 9,
+     "pct": 0.531,
+     "rank": 8,
      "value": 5630.3
     },
     "gold25": {
@@ -25534,7 +25351,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 17,
+     "rank": 13,
      "value": 0.0
     },
     "herald_takedowns": {
@@ -25542,7 +25359,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 18,
+     "rank": 14,
      "value": 0.0
     },
     "immobilizations": {
@@ -25558,7 +25375,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 17,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -25574,7 +25391,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 13,
+     "rank": 11,
      "value": 1.0
     },
     "kp": {
@@ -25590,7 +25407,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.281,
-     "rank": 13,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -25606,7 +25423,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.281,
-     "rank": 12,
+     "rank": 11,
      "value": 1.33
     },
     "longest_living": {
@@ -25630,7 +25447,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.139,
-     "rank": 17,
+     "rank": 14,
      "value": 0.0
     },
     "outnumbered_kills": {
@@ -25654,7 +25471,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 16,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -25662,7 +25479,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.194,
-     "rank": 17,
+     "rank": 12,
      "value": 0.0
     },
     "skillshots_dodged": {
@@ -25686,7 +25503,7 @@
      "lane": "BOTTOM",
      "n": 16,
      "pct": 0.125,
-     "rank": 16,
+     "rank": 13,
      "value": 0.0
     },
     "stealth_wards": {
@@ -25935,7 +25752,7 @@
        "key": "deaths_per_game",
        "label": "판당 데스",
        "n": 18,
-       "rank": 18,
+       "rank": 17,
        "value": 8.33
       }
      ],
@@ -26250,7 +26067,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 12,
+     "rank": 11,
      "value": 5.0
     },
     "dmg_magic": {
@@ -26330,7 +26147,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.222,
-     "rank": 15,
+     "rank": 14,
      "value": 0.5
     },
     "early_lane_rate": {
@@ -26338,7 +26155,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.344,
-     "rank": 10,
+     "rank": 6,
      "value": 0.0
     },
     "epic_steals": {
@@ -26346,7 +26163,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.472,
-     "rank": 11,
+     "rank": 2,
      "value": 0.0
     },
     "first_blood_rate": {
@@ -26354,7 +26171,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.167,
-     "rank": 15,
+     "rank": 13,
      "value": 0.0
     },
     "gold10": {
@@ -26434,7 +26251,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.667,
-     "rank": 7,
+     "rank": 5,
      "value": 0.25
     },
     "immobilizations": {
@@ -26450,7 +26267,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.361,
-     "rank": 13,
+     "rank": 6,
      "value": 0.0
     },
     "kda": {
@@ -26482,7 +26299,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.281,
-     "rank": 10,
+     "rank": 8,
      "value": 0.0
     },
     "level15": {
@@ -26490,7 +26307,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.719,
-     "rank": 5,
+     "rank": 4,
      "value": 11.0
     },
     "level_lead_lane": {
@@ -26498,7 +26315,7 @@
      "lane": "TOP",
      "n": 16,
      "pct": 0.781,
-     "rank": 4,
+     "rank": 2,
      "value": 2.0
     },
     "longest_living": {
@@ -26546,7 +26363,7 @@
      "lane": null,
      "n": 18,
      "pct": 0.306,
-     "rank": 13,
+     "rank": 8,
      "value": 0.0
     },
     "shield_teammates": {
@@ -26821,7 +26638,7 @@
        "key": "deaths_per_game",
        "label": "판당 데스",
        "n": 18,
-       "rank": 12,
+       "rank": 11,
        "value": 5.0
       }
      ],
@@ -61215,7 +61032,7 @@
    "winrate": 0.0
   }
  ],
- "timestamp": "2026-08-23T17:43:57+00:00",
+ "timestamp": "2026-08-24T05:04:02+00:00",
  "trios": [
   {
    "a": "말듣쓰",
