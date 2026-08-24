@@ -1,4 +1,7 @@
 # 공개 JSON 은 compact 로 발행된다(폰에서 파싱하는 바이트를 줄이려고).
 # 그래도 diff 는 읽혀야 하니, git 이 비교할 때만 pretty-print 하게 한다.
-# 한 번만: git config diff.json.textconv "python -m json.tool"
+# 한 번만: git config diff.json.textconv "python -X utf8 -m json.tool --no-ensure-ascii"
+#   -X utf8  : 없으면 Windows 콘솔 기본(cp949)으로 내보내려다 diff 가 통째로 실패한다
+#              ("cp949 codec can't encode ... fatal: unable to read files to diff")
+#   --no-ensure-ascii : 없으면 한글이 말 처럼 보인다
 *.json diff=json
