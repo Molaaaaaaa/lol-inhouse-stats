@@ -402,7 +402,9 @@
   </nav>
   <main id="views">
 
-  <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div><div id="boardNote"></div>
+  <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2>
+    <div class="lnpicks" id="boardLanes" role="group" aria-label="라인 선택"></div>
+    <div id="boardT"></div><div id="boardNote"></div>
     <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div></section>
 
   <section id="rank" class="view hidden"><div class="card">
@@ -639,6 +641,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
+  라인MMR:'그 라인에서의 MMR 입니다.\n통합 실력에 **그 라인 승률 보정**을 더한 값이고, 라인마다 처음부터 다시 매긴 값이 아닙니다.\n그래서 통합 MMR 과 크게 벌어지지 않습니다(실측 편차 중앙 14).\n판수가 적은 라인은 보정이 거의 안 걸려 통합값에 가까워집니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
   궁합:'같이 한 팀이었을 때의 전적입니다.\n궁합 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
   진영:'블루(왼쪽 아래)와 레드(오른쪽 위) 진영의 승률입니다.\n한 경기에 블루 하나 레드 하나라 두 진영 승수의 합이 경기 수이고,\n어느 쪽이 더 이겼는지는 상쇄되지 않는 실제 정보입니다.\n표본이 작으면 크게 흔들리니 경기 수를 같이 보세요.',
@@ -768,11 +771,55 @@ function openMathFor(id){
   showSubtab($('#math'), 0);
   $('#math').scrollIntoView({behavior:'smooth',block:'start'});
 }
+// 리더보드에서 지금 고른 라인. ''(빈 문자열)이면 통합.
+let curBoardLane='';
+
+function boardLaneRows(lane){
+  /* 그 라인만의 리더보드. 백엔드 추가 없이 이미 실린 둘을 잇는다:
+       players[*].lanes  = 라인별 전적(판·승률·KDA·DPM·킬관여·CS·시야)
+       ratings[*].lanes  = 라인별 MMR
+     ⚠️ 라인 MMR 은 통합 실력에 그 라인 승률 보정을 더한 값이지, 라인마다 처음부터
+        다시 매긴 값이 아니다. 아래 안내 문구가 그걸 밝힌다. */
+  const ratByName={}, idByName={};
+  Object.entries(DATA.ratings||{}).forEach(([id,r])=>{ratByName[r.name]=r; idByName[r.name]=id;});
+  const out=[];
+  Object.values(DATA.players||{}).forEach(pl=>{
+    const L=(pl.lanes||[]).find(x=>x.lane===lane);
+    if(!L||!(L.games>0)) return;
+    const rt=ratByName[pl.name]||{};
+    const lm=((rt.lanes||{})[lane]||{}).mmr;
+    const wins=Math.round((L.winrate||0)*L.games);
+    out.push({discord_name:pl.name, mmr:lm||0, games:L.games, wins,
+      losses:L.games-wins, winrate:L.winrate, kda:L.kda, kp:L.kp, dpm:L.dpm,
+      cs:L.cs, ci_lower:lm||0, _rid:idByName[pl.name]||''});
+  });
+  return out;
+}
+
 function renderBoard(){
   // 이름이 아니라 **id**로 잇는다. sanitize된 이름을 속성에 넣었다 다시 읽으면
   // 엔티티가 풀려(&quot; → ") 원본과 안 맞는다.
   const mmrByName={}, idByName={};
   Object.entries(DATA.ratings||{}).forEach(([id,r])=>{mmrByName[r.name]=r.mmr; idByName[r.name]=id;});
+  // 라인 버튼 — 그 라인을 실제로 뛴 사람이 2명 이상일 때만 낸다(혼자면 순위가 없다)
+  const have={};
+  Object.values(DATA.players||{}).forEach(pl=>(pl.lanes||[]).forEach(L=>{
+    if(L.games>0) have[L.lane]=(have[L.lane]||0)+1;}));
+  const lanes=LANE_SEQ.filter(L=>(have[L]||0)>=2);
+  const lb=$('#boardLanes');
+  if(lb){
+    lb.innerHTML=[['','전체']].concat(lanes.map(L=>[L,laneKo(L)])).map(([v,t])=>
+      `<button type="button" class="lnpick${curBoardLane===v?' on':''}" data-lane="${v}"`+
+      ` aria-pressed="${curBoardLane===v}">${t}${v?` <span class="muted">${have[v]}</span>`:''}</button>`).join('')
+      +`<span class="muted" style="font-size:11px;margin-left:4px">${curBoardLane
+        ?`${laneKo(curBoardLane)}에서 뛴 판만 · MMR 도 ${laneKo(curBoardLane)} 기준`
+        :'라인을 고르면 그 라인 판만 봅니다'}</span>`;
+    lb.querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
+      curBoardLane=b.dataset.lane; renderBoard();
+      announce(curBoardLane?`${laneKo(curBoardLane)} 리더보드`:'전체 리더보드');
+    });
+  }
+  if(curBoardLane){ renderBoardLane(); return; }
   const rows=(DATA.leaderboard||[]).map(r=>(
     // losses 는 서버가 안 보낸다. fmt 로만 만들면 표시는 되는데 **정렬이 죽는다**
     // (undefined 끼리 비교하면 전부 동률 → 원래 순서로 되돌아갈 뿐이다).
@@ -802,6 +849,33 @@ function renderBoard(){
   // ⚠️ renderTable 이 컨테이너 innerHTML 을 덮으므로 안쪽에 붙이면 **정렬 한 번에
   //    사라지고 안 돌아온다**. 19명 중 18명만 보이는 이유를 밝히는 유일한 문구다.
   $('#boardNote').innerHTML=minGamesNote();
+}
+
+function renderBoardLane(){
+  const lane=curBoardLane, rows=boardLaneRows(lane);
+  const need=(DATA.min_games)||3;
+  // 메달은 라인 MMR 기준 등수로 미리 박는다(정렬을 따라다니면 안 된다 — 통합 표와 같은 이유)
+  rows.slice().sort((a,b)=>(b.mmr||0)-(a.mmr||0))
+      .forEach((r,i)=>{ r._medal=i<3?MEDAL[i]+' ':''; });
+  renderTable($('#boardT'),rows,[
+    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v},
+    {k:'mmr',h:`${laneKo(lane)} MMR`,num:1,bar:1,hlp:'라인MMR',
+     fmt:(v,r)=>r._rid?`<span class="mmrlink" role="button" tabindex="0"
+       data-who="${r._rid}" data-tip="누르면 이 MMR 이 어떻게 나왔는지 계산 과정을 펼칩니다">${v}</span>`:v},
+    {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},{k:'losses',h:'패',num:1},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
+    {k:'kda',h:'KDA',num:1},
+    {k:'kp',h:'킬관여',num:1,fmt:v=>v==null?'-':pct(v)},
+    {k:'dpm',h:'DPM',num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
+    {k:'cs',h:'CS',num:1,fmt:v=>v==null?'-':Math.round(v)},
+  ],'mmr',-1);
+  const thin=rows.filter(r=>r.games<need).length;
+  $('#boardNote').innerHTML=
+    `<p class="muted" style="font-size:11.5px;margin:6px 0 0">`+
+    `${laneKo(lane)}${josa(laneKo(lane),['을','를'])} 한 판이라도 뛴 ${rows.length}명입니다`+
+    `${thin?` — 그중 ${thin}명은 ${need}판 미만입니다`:''}. `+
+    `<b>${laneKo(lane)} MMR</b> 은 그 사람의 통합 실력에 ${laneKo(lane)} 승률 보정을 더한 값입니다`+
+    ` — 라인마다 처음부터 다시 매긴 값이 아니고, 판수가 적으면 보정이 거의 안 걸려 통합값에 가깝습니다.</p>`;
 }
 
 // 지표 목록·라벨·포맷은 **서버가 준 것만** 쓴다. 예전엔 여기에도 배열을 두고
@@ -1262,8 +1336,13 @@ function renderPlayerBody(){
     .forEach((b,i)=>b.addEventListener('click',()=>{plSubIdx=i;}));
   // ⚠️ 라인마다 지표가 통째로 다르다. 미드·탑·서폿을 3판씩 도는 사람의 통합 DPM 은
   //    어느 라인 얘기도 아니게 된다 → 라인별로 같이 보여준다.
-  renderTable($('#plLane'),p.lanes,[
+  // 라인별 MMR 을 같이 보여준다 — ratings 에 이미 실려 있는데 여기서 안 쓰고 있었다.
+  // players 와 ratings 는 같은 키(p1…)를 쓴다 — 셀렉트 값이 곧 그 사람의 rating 키다.
+  const rtLanes=((DATA.ratings||{})[$('#playerSel').value]||{}).lanes||{};
+  const laneRows=(p.lanes||[]).map(L=>({...L, mmr:(rtLanes[L.lane]||{}).mmr}));
+  renderTable($('#plLane'),laneRows,[
     {k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
+    {k:'mmr',h:'MMR',num:1,hlp:'라인MMR',fmt:v=>v==null?'-':v},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1},
     {k:'dpm',h:'DPM',num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
