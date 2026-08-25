@@ -60,6 +60,8 @@
   tbody tr:hover{background:var(--panel2)}
   .pos{color:var(--good)} .neg{color:var(--bad)}
   .wr-h{color:var(--good);font-weight:650} .wr-m{color:var(--mid)} .wr-l{color:var(--bad)}
+  /* 판수가 모자라 좋고 나쁨을 말할 수 없는 값 — 숫자는 보여주되 색으로 단정하지 않는다 */
+  .wr-dim{color:var(--dim);opacity:.85}
   .wr-h::after{content:' \25B2';font-size:.72em} .wr-l::after{content:' \25BC';font-size:.72em}
   .pill{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--panel2);
     border:1px solid var(--line);color:var(--dim);font-size:12px;margin:2px 3px 2px 0}
@@ -286,7 +288,12 @@
   .psearch{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
     border-radius:9px;padding:7px 11px;font:inherit;font-size:13px;width:150px}
   .psearch:focus{outline:none;border-color:var(--acc)}
-  footer{color:var(--dim);font-size:12px;text-align:center;padding:24px}
+  .sronly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+  footer{color:var(--dim);font-size:12px;text-align:center;padding:24px;
+    display:flex;flex-direction:column;gap:8px;align-items:center}
+  /* 법적 고지는 읽히되 본문을 밀어내지 않게 — 작게, 한 단 폭으로 */
+  footer .legal{max-width:62ch;font-size:11px;line-height:1.65;opacity:.8}
   .tooltip{cursor:help;border-bottom:1px dotted var(--dim)}
   .chart{width:100%;height:auto;display:block}
   .clickable{cursor:pointer} .match.clickable:hover{border-color:var(--acc)}
@@ -312,6 +319,23 @@
   .sb th,.sb td{padding:5px 7px;font-size:12px}
   .sb .sbteam td{color:var(--dim);background:var(--panel2);font-weight:650}
   @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+  /* 움직임에 민감한 사람에게는 전환을 없앤다 */
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+      transition-duration:.001ms!important;scroll-behavior:auto!important}
+  }
+  @media(max-width:640px){
+    /* 탭 11개가 접히면 폰에서 180px(뷰포트의 22%)를 먹고, 첫 데이터 행이
+       679px 아래로 밀린다(실측 375px). 한 줄 가로 스크롤로 바꾼다. */
+    .tabs{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
+      scroll-snap-type:x proximity;margin-bottom:12px;
+      /* 오른쪽에 더 있다는 걸 페이드로 알린다 — 잘린 게 아니라 이어진다는 신호 */
+      -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);
+      mask-image:linear-gradient(90deg,#000 88%,transparent)}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex:0 0 auto;scroll-snap-align:start;padding:7px 13px}
+  }
   @media(max-width:480px){
     .wrap{padding:12px}.hide-sm{display:none}
     /* 좁은 화면에서 두 팀을 가로로 나눠 가지면 한 팀에 100px 밖에 안 돌아가
@@ -344,21 +368,25 @@
 <div class="wrap">
   <noscript><div class="card">이 페이지는 자바스크립트로 전적을 불러옵니다. 브라우저에서 JS를 허용해 주세요.</div></noscript>
   <div id="warnBar" class="hidden"></div>
+  <!-- 화면이 바뀐 걸 스크린리더에 알린다. 시각적으로는 감추되 display:none 은 쓰지 않는다
+       (display:none 이면 보조기술도 못 읽는다). -->
+  <div id="sr" class="sronly" aria-live="polite" role="status"></div>
   <div class="kpis" id="kpis"></div>
 
-  <div class="tabs" id="tabs">
-    <div class="tab on" data-t="board">🏆 리더보드</div>
-    <div class="tab" data-t="rank">📊 랭킹</div>
-    <div class="tab" data-t="syn">🤝 시너지</div>
-    <div class="tab" data-t="champ">🧙 챔피언</div>
-    <div class="tab" data-t="records">🏅 기록실</div>
-    <div class="tab" data-t="fun">🔍 심화</div>
-    <div class="tab" data-t="matches">📜 경기</div>
-    <div class="tab" data-t="player">👤 플레이어</div>
-    <div class="tab" data-t="compare">⚖️ 비교</div>
-    <div class="tab" data-t="balance">🧮 밸런스</div>
-    <div class="tab" data-t="math">📐 계산식</div>
-  </div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
+    <div class="tab on" role="tab" data-t="board">🏆 리더보드</div>
+    <div class="tab" role="tab" data-t="rank">📊 랭킹</div>
+    <div class="tab" role="tab" data-t="syn">🤝 시너지</div>
+    <div class="tab" role="tab" data-t="champ">🧙 챔피언</div>
+    <div class="tab" role="tab" data-t="records">🏅 기록실</div>
+    <div class="tab" role="tab" data-t="fun">🔍 심화</div>
+    <div class="tab" role="tab" data-t="matches">📜 경기</div>
+    <div class="tab" role="tab" data-t="player">👤 플레이어</div>
+    <div class="tab" role="tab" data-t="compare">⚖️ 비교</div>
+    <div class="tab" role="tab" data-t="balance">🧮 밸런스</div>
+    <div class="tab" role="tab" data-t="math">📐 계산식</div>
+  </nav>
+  <main id="views">
 
   <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2><div id="boardT"></div><div id="boardNote"></div>
     <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div></section>
@@ -506,6 +534,7 @@
   </div>
   <p class="muted" id="fbAlt" style="display:none;font-size:12px;margin-top:8px"></p>
 </section>
+  </main>
 <footer id="foot"></footer>
 
 <script>
@@ -533,9 +562,23 @@ function champImg(name){
   const url = `https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/champion/${name}.png`;
   return `<img class="champ" src="${url}" loading="lazy" decoding="async" onerror="this.style.display='none'" alt="">`;
 }
-function wrClass(w){ return w>0.55?'wr-h':(w<0.45?'wr-l':'wr-m'); }
+// n(판수)을 주면 문턱 미만은 색으로 단정하지 않는다.
+// ⚠️ 1판 0% 를 빨강 ▼ 로 칠하면 "이 사람은 짧은 판에 약하다"로 읽힌다 — 한 판인데.
+//    판수는 이미 "(1)" 로 적히지만 **색이 그걸 무시**하고 있었다(실측 20셀).
+//    n 을 안 넘기면 예전 동작 그대로다(판수를 모르는 호출부를 깨지 않는다).
+function wrClass(w, n){
+  if(n!=null && n < minGamesNeeded()) return 'wr-dim';
+  return w>0.55?'wr-h':(w<0.45?'wr-l':'wr-m');
+}
+// 문턱은 발행 쪽 min_games 를 따른다 — 화면이 따로 정하면 반드시 어긋난다.
+function minGamesNeeded(){ return (DATA && DATA.min_games) || 3; }
 
 // --- 정렬 가능한 테이블 ---
+// 보조기술에 상태 변화를 알린다. 같은 문자열을 연속으로 넣으면 다시 안 읽히므로 비웠다 채운다.
+function announce(msg){
+  const el=$('#sr'); if(!el) return;
+  el.textContent=''; setTimeout(()=>{el.textContent=msg;},50);
+}
 function renderTable(el, rows, cols, sortKey, sortDir){
   if(!rows || !rows.length){ el.innerHTML='<p class="muted">데이터 없음</p>'; return; }
   // 바 컬럼 최대값
@@ -552,8 +595,13 @@ function renderTable(el, rows, cols, sortKey, sortDir){
       if(typeof x==='number'||typeof y==='number') return ((+x||0)-(+y||0))*sortDir;
       return String(x).localeCompare(String(y))*sortDir; });
   }
-  let h='<table><thead><tr>'+cols.map(c=>
-    `<th data-k="${c.k}" class="sortable ${c.num?'num':''}">${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
+  // 표 이름 — 스크린리더는 표가 40개면 "표, 10열 19행"만 40번 듣는다. 무슨 표인지 붙인다.
+  const cap=(el.closest('.card')||{}).querySelector
+    ? (el.closest('.card').querySelector('h2')||{}).textContent : '';
+  const capTxt=(cap||'').replace(/[?？]\s*$/,'').trim();
+  // scope="col" 이 없으면 셀을 읽을 때 어느 열인지 안 나온다(실측 0/265).
+  let h='<table'+(capTxt?` aria-label="${esc(capTxt)}"`:'')+'><thead><tr>'+cols.map(c=>
+    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}">${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
   data.forEach((r,i)=>{
     h+='<tr>'+cols.map(c=>{
       let v=r[c.k];
@@ -568,6 +616,10 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   el.innerHTML=h+'</tbody></table>';
   el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
     const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
+      labelTables();
+      // 정렬은 눈으로는 표가 다시 그려지는 게 보이지만, 소리로는 아무 일도 안 일어난다
+      announce(`${th.textContent.replace(/[?？▼▲]/g,'').trim()} 기준 `+
+               `${nd<0?'내림차순':'오름차순'} 정렬, ${rows.length}행`);
   });
 }
 
@@ -632,7 +684,7 @@ const TIP=(()=>{
   // 탭/클릭 토글 — 같은 물음표를 다시 누르면 닫힌다.
   // ⚠️ **물음표(.qmark)에만** 적용한다. 설명이 붙은 버튼·링크까지 가로채면 눌러도
   //    아무 일이 안 일어난다(MMR 계산 과정 열기 등이 죽는다).
-  // ⚠️ 물음표 쪽은 **캡처 단계**에서 전파를 끊어야 한다. 물음표가 정렬 가능한 <th>
+  // ⚠️ 물음표 쪽은 **캡처 단계**에서 전파를 끊어야 한다. 물음표가 정렬 가능한 <th scope="col">
   //    안에 있어서, 안 끊으면 설명을 보려는 클릭이 표 정렬까지 바꿔 버린다
   //    (th.onclick 은 직접 할당돼 있어 버블 단계에서는 이미 늦다).
   // 표시 전용 요소(육각형 축 막대·레이더 꼭짓점·타임라인 점). 이것들은 눌러도
@@ -688,7 +740,7 @@ function minGamesNote(lane){
       ? ` (라인별 지표는 ${DATA.min_games_lane}판)` : '')+
     (ex?` — ${ex}명이 판수 미달로 빠져 있습니다`:'')+
     (dx?`${ex?', ':' — '}${dx}명이 참여 일수 미달(${DATA.min_days}일)로 빠져 있습니다`:'')+
-    `. <span class="qmark" data-tip="총 경기 수의 20%(최소 3판)를 요구합니다.&#10;경기가 쌓이면 기준도 같이 올라가서, 한두 판 뛴 기록이 계속 1위에 남지 않습니다." aria-label="최소 판수 설명">?</span></p>`;
+    `. <span class="qmark" tabindex="0" role="button" data-tip="총 경기 수의 20%(최소 3판)를 요구합니다.&#10;경기가 쌓이면 기준도 같이 올라가서, 한두 판 뛴 기록이 계속 1위에 남지 않습니다." aria-label="최소 판수 설명">?</span></p>`;
 }
 // MMR 숫자를 누르면 그 사람의 계산 과정으로 바로 간다 — "이 숫자 어디서 나왔냐"에
 // 답이 두 번의 클릭 안에 있어야 한다.
@@ -727,7 +779,7 @@ function renderBoard(){
        data-who="${r._rid}" data-tip="누르면 이 MMR 이 어떻게 나왔는지 계산 과정을 펼칩니다">${v}</span>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'losses',h:'패',num:1},
-    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'ci_lower',h:'신뢰성',num:1,fmt:v=>pct(v),hlp:'신뢰성'},
     {k:'kda',h:'KDA',num:1},{k:'kp',h:'킬관여',num:1,fmt:pct},
     {k:'dpm',h:'DPM',num:1,bar:1},
@@ -905,14 +957,14 @@ function renderChamp(){
   const cols=[{k:'champion_name',h:'챔피언',img:'champion_name',fmt:v=>champKo(v)}];
   if(champLane) cols.push({k:'lane',h:'라인',fmt:laneKo});
   cols.push({k:'games',h:'판',num:1,bar:1},
-    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1});
   renderTable($('#champT'),rows,cols,'games',-1);
   renderTable($('#champMatchT'),DATA.champion_matchups||[],[
     {k:'champ',h:'챔프',img:'champ',fmt:v=>champKo(v)},
     {k:'vs_champ',h:'상대',img:'vs_champ',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1,bar:1},
-    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)}],'games',-1);
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)}],'games',-1);
   if(!DATA.ban_available){
     // 종료화면 스크린샷에는 밴이 찍히지 않는다. 빈 표를 두면 "아무도 밴을 안 했다"로
     // 읽히므로, 왜 없는지와 언제 채워지는지를 적는다.
@@ -964,7 +1016,7 @@ function renderFun(){
   const hs=(F.by_hour||[]).slice().sort((a,b)=>a.hour-b.hour);
   const hmax=Math.max(1,...hs.map(h=>h.games));
   const htot=hs.reduce((t,h)=>t+(+h.games||0),0)||1;
-  $('#funHour').innerHTML=hs.length? '<table><thead><tr><th>시각</th><th class="num">경기 수</th><th class="num">비중</th></tr></thead><tbody>'+
+  $('#funHour').innerHTML=hs.length? '<table><thead><tr><th scope="col">시각</th><th scope="col" class="num">경기 수</th><th scope="col" class="num">비중</th></tr></thead><tbody>'+
     hs.map(h=>`<tr><td>${String(h.hour).padStart(2,'0')}시</td>`+
       `<td class="num">${barCell(h.games,hmax,h.games)}</td>`+
       `<td class="num muted">${pct(h.games/htot)}</td></tr>`).join('')+
@@ -977,11 +1029,11 @@ function renderFun(){
   renderTable($('#funDur'),F.by_duration||[],[
     {k:'discord_name',h:'멤버'},
     {k:'short_wr',h:'~25분',num:1,fmt:(v,r)=>r.short_g?`${pct(v)} <span class="muted">(${r.short_g})</span>`:'-',
-     cls:r=>'num '+(r.short_g?wrClass(r.short_wr):'')},
+     cls:r=>'num '+(r.short_g?wrClass(r.short_wr,r.short_g):'')},
     {k:'mid_wr',h:'25~35분',num:1,fmt:(v,r)=>r.mid_g?`${pct(v)} <span class="muted">(${r.mid_g})</span>`:'-',
-     cls:r=>'num '+(r.mid_g?wrClass(r.mid_wr):'')},
+     cls:r=>'num '+(r.mid_g?wrClass(r.mid_wr,r.mid_g):'')},
     {k:'long_wr',h:'35분~',num:1,fmt:(v,r)=>r.long_g?`${pct(v)} <span class="muted">(${r.long_g})</span>`:'-',
-     cls:r=>'num '+(r.long_g?wrClass(r.long_wr):'')},
+     cls:r=>'num '+(r.long_g?wrClass(r.long_wr,r.long_g):'')},
   ],null,-1);
 
   // 역전 / 던짐
@@ -1050,7 +1102,7 @@ function renderFun(){
   renderTable($('#funDragon'),F.dragons||[],[
     {k:'dragon',h:'용',fmt:v=>DRAGON_KO[v]||v},
     {k:'taken',h:'획득',num:1,bar:1},
-    {k:'winrate',h:'그 판 승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'winrate',h:'그 판 승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
   ],'taken',-1);
 
   $('#funHeat').innerHTML=heatmap(F.death_positions||[]);
@@ -1180,7 +1232,7 @@ function renderPlayerBody(){
         </div>
       </div>
       <div data-sub="📐 세부 지표">
-        <h2>📐 세부 지표<span class="qmark" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
+        <h2>📐 세부 지표<span class="qmark" tabindex="0" role="button" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
         <div id="plMetrics"></div>
       </div>
     </div>`;
@@ -1197,7 +1249,7 @@ function renderPlayerBody(){
   //    어느 라인 얘기도 아니게 된다 → 라인별로 같이 보여준다.
   renderTable($('#plLane'),p.lanes,[
     {k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1},
-    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1},
     {k:'dpm',h:'DPM',num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
     {k:'kp',h:'킬관여',num:1,fmt:v=>v==null?'-':pct(v)},
@@ -1211,7 +1263,7 @@ function renderPlayerBody(){
   else $('#plLaneNote').innerHTML='';
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},
-    {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate)},
+    {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plRecent'),(p.recent_games||[]).map(g=>({...g,res:g.win?'승':'패'})),
     [{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},{k:'lane',h:'라인',fmt:laneKo},
@@ -1665,14 +1717,14 @@ function scoreboard(d){
     {h:'아이템',cell:p=>`<td>${(p.items||[]).map(itemImg).join('')}</td>`,
      on:all.some(p=>(p.items||[]).length)},
   ].filter(c=>c.on);
-  const head='<tr>'+cols.map(c=>`<th${c.num?' class="num"':''}>${c.h}</th>`).join('')+'</tr>';
+  const head='<tr>'+cols.map(c=>`<th scope="col"${c.num?' class="num"':''}>${c.h}</th>`).join('')+'</tr>';
   // 선수 행을 누르면 바로 아래에 상세가 펼쳐진다. 표 밖으로 띄우면 어느 선수 것인지
   // 헷갈리므로 같은 <tbody> 안에 붙인다.
   const row=(p,key)=>'<tr class="sbrow" data-pd="'+key+'">'+cols.map(c=>c.cell(p)).join('')+'</tr>'+
     `<tr class="sbdet hidden" data-pdfor="${key}"><td colspan="${cols.length}">`+
     playerDetailHTML(p,d.duration)+`</td></tr>`;
   let n=0;
-  return `<div style="overflow-x:auto"><table class="sb"><thead>${head}</thead><tbody>`+
+  return `<div style="overflow-x:auto"><table class="sb" aria-label="경기 스코어보드 — 양 팀 10명"><thead>${head}</thead><tbody>`+
     d.teams.map(t=>`<tr class="sbteam"><td colspan="${cols.length}">${t.team_id===100?'🔵 블루팀':'🔴 레드팀'} ${t.win?'(승)':'(패)'}</td></tr>`+
       (t.players||[]).slice().sort((a,b)=>laneIdx(a.lane)-laneIdx(b.lane))
         .map(p=>row(p,'p'+(n++))).join('')).join('')+
@@ -1717,7 +1769,7 @@ function renderSynHeat(){
   const map={}; syn.forEach(s=>{map[s.na+'|'+s.nb]=s.synergy;map[s.nb+'|'+s.na]=s.synergy;});
   const color=v=>{ if(v==null)return 'var(--panel2)'; const t=Math.max(-0.15,Math.min(0.15,v))/0.15;
     return t>=0?`rgba(58,160,238,${(0.2+0.7*t).toFixed(2)})`:`rgba(232,131,58,${(0.2+0.7*-t).toFixed(2)})`; };
-  let h='<table class="heat"><tr><th class="hh"></th>'+names.map(n=>`<th class="hh">${n}</th>`).join('')+'</tr>';
+  let h='<table class="heat" aria-label="시너지 히트맵"><tr><th scope="col" class="hh"></th>'+names.map(n=>`<th scope="col" class="hh">${n}</th>`).join('')+'</tr>';
   for(const a of names){ h+=`<tr><td class="hh">${a}</td>`+names.map(b=>{
     if(a===b) return '<td><div class="hc" style="background:var(--line)"></div></td>';
     const raw=map[a+'|'+b], v=(raw==null||isNaN(+raw))?null:+raw;
@@ -1942,8 +1994,8 @@ function renderMathMmr(){
       강한 라인업을 이기면 더 오릅니다. 표본이 적으면 L2 정규화가 0으로 당깁니다.</p>
 
     <h3>③ 퍼포먼스 항 — 방 안에서의 상대 위치(z점수)</h3>
-    <div class="tbl"><table><thead><tr><th>항목</th><th class="num">내 값</th>
-      <th class="num">z</th><th class="num">가중치</th><th class="num">기여</th></tr></thead>
+    <div class="tbl"><table><thead><tr><th scope="col">항목</th><th scope="col" class="num">내 값</th>
+      <th scope="col" class="num">z</th><th scope="col" class="num">가중치</th><th scope="col" class="num">기여</th></tr></thead>
       <tbody>${zrow}</tbody></table></div>
     <p class="fml">퍼포먼스 = ${nf(zsum,4)} ÷ ${zw} = <b>${nf(b.perf,6)}</b><br>
       퍼포항 = (1−${nf0(b.alpha,6)}) × ${PW} × ${nf(b.perf,6)} × ${nf0(b.shrink,6)}
@@ -2028,6 +2080,21 @@ function renderMathRest(){
   </div>`;
 }
 
+// 표 40개 중 손으로 만든 것들은 renderTable 을 안 거쳐 이름이 없다. 개별로 붙이면
+// 표가 하나 늘 때마다 또 빠진다 → 렌더가 끝난 뒤 한 번에 훑는다.
+// (스크린리더는 이름 없는 표를 "표, N열 M행"으로만 읽는다. 40번 들으면 구분이 안 된다.)
+function labelTables(){
+  document.querySelectorAll('table:not([aria-label])').forEach(t=>{
+    const card=t.closest('.card'), h=card&&card.querySelector('h2');
+    let name=(h?h.textContent:'').replace(/[?？]\s*$/,'').trim();
+    // 카드 밖에 있는 표 둘 — 랭킹표는 고른 지표가 이름이고, 비교표는 두 선수다
+    if(!name && t.parentElement){
+      if(t.parentElement.id==='rankT') name=(mLabel?mLabel(curMetric):'')+' 랭킹';
+      else if(t.classList.contains('cmp')) name='두 선수 비교';
+    }
+    if(name) t.setAttribute('aria-label',name);
+  });
+}
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
   // ⚠️ 발행 쪽은 경고를 실어 보내는데(예: 표시명이 겹쳐 두 사람 통계가 섞임) 화면이
@@ -2041,7 +2108,15 @@ function renderAll(){
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
   renderCompare(); renderBalancePicker(); renderMath(); buildSubtabs();
-  $('#foot').innerHTML=`내전 해체 분석기 · ${DATA.name||''}`;
+  // ⚠️ Riot 고지는 **여기** 있어야 한다. 정적 HTML 에만 두면 이 줄이 덮어써서 사라진다.
+  //    Riot 은 서드파티 앱에 '공식 관여가 아니다'라는 표기를 요구한다.
+  $('#foot').innerHTML=`<div>내전 해체 분석기 · ${DATA.name||''}</div>`+
+    `<div class="legal">이 사이트는 Riot Games 와 무관합니다. Riot Games 또는 `+
+    `League of Legends 의 제작·운영에 공식적으로 관여하는 어떤 주체의 견해나 의견도 `+
+    `반영하지 않으며, 후원·승인받지 않았습니다. Riot Games 및 League of Legends 는 `+
+    `Riot Games, Inc. 의 상표 또는 등록상표입니다.</div>`+
+    `<div class="legal">챔피언 이미지 출처: Riot Games Data Dragon.</div>`;
+  labelTables();
   fillFeedbackWho();   // DATA는 sanitize된 값
 }
 
@@ -2137,6 +2212,9 @@ function activateTab(t){
   document.querySelectorAll('#tabs .tab').forEach(x=>{
     const on=(x===t); x.classList.toggle('on',on); x.setAttribute('aria-selected',on);
   });
+  announce(`${t.textContent.trim()} 화면`);
+  // 가로 스크롤 탭바에서는 선택된 탭이 화면 밖일 수 있다 → 끌어다 놓는다
+  if(t.scrollIntoView) t.scrollIntoView({block:'nearest',inline:'nearest'});
   document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
   const view=$('#'+t.dataset.t); if(view) view.classList.remove('hidden');
 }
