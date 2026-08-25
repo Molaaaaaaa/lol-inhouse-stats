@@ -281,6 +281,15 @@
   /* 지난 내전 대비 변화 — 점수 옆에 작게. 색만으로 방향을 말하지 않게 ▲▼ 를 붙인다. */
   .axd{font-size:10.5px;margin-left:5px;font-variant-numeric:tabular-nums}
   .axd.up{color:var(--good)} .axd.down{color:var(--bad)}
+  /* 라인 선택기 — 세부 지표를 그 라인 판만으로 다시 그린다 */
+  .lnpicks{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:2px 0 10px}
+  .lnpick{background:var(--panel2);border:1px solid var(--line);color:var(--dim);
+    border-radius:999px;padding:3px 11px;font-size:12px;cursor:pointer;font-family:inherit}
+  .lnpick:hover{color:var(--txt)}
+  .lnpick.on{background:var(--acc);border-color:transparent;color:#04121a;font-weight:650}
+  /* 판수가 문턱보다 적은 줄 — 값은 보여주되 또렷하게 두지 않는다(1판부터 싣는다) */
+  .mrow.thin{opacity:.62}
+  .mrow .mg{color:var(--dim);font-size:10px;margin-right:5px}
   .mrow .lnt{margin-left:6px;font-size:10px;color:var(--dim);border:1px solid var(--line);
     border-radius:4px;padding:0 4px;vertical-align:1px}
   .mrow .mv{text-align:right;font-variant-numeric:tabular-nums}
@@ -349,6 +358,8 @@
     /* 닉네임은 여기서 포기한다 — 칸을 균등하게 줘도 한 칸이 15.8px(말줄임표 하나)라
        읽히지 않는다(실측). 대신 아이콘을 온전히 살리고, 이름·챔피언은 행을 눌러
        펼치는 스코어보드에서 전부 본다. */
+    /* 라인 선택기 버튼이 24px 라 손가락으로 누르기 빠듯하다(실측) */
+    .lnpick{padding:7px 13px;font-size:12.5px}
     .team .pl{flex:0 0 auto}
     .team .pl img{flex:0 0 auto}
     .team .pn{display:none}
@@ -1380,23 +1391,60 @@ function hourBars(hs){
     return `<div class="hb" data-tip="${String(h.hour).padStart(2,'0')}시 · ${h.games}판 · 승률 ${pct(h.winrate)}">`+
       `<span style="height:${hgt}px;background:${col}"></span><b>${h.hour}</b></div>`;}).join('')+'</div>';
 }
+// 세부 지표에서 지금 고른 라인. ''(빈 문자열)이면 통합.
+let curMetricLane='';
+
 function renderPlayerMetrics(p){
   const el=$('#plMetrics'); if(!el) return;
-  const m=p.metrics||{};
+  const per=p.metrics_lane||null;              // {라인: {지표: 셀}} — 라인 2개 이상인 사람만
+  const lanes=per?Object.keys(per).sort((a,b)=>laneIdx(a)-laneIdx(b)):[];
+  if(!lanes.includes(curMetricLane)) curMetricLane='';   // 사람이 바뀌면 통합으로
+  const m=(curMetricLane&&per)?per[curMetricLane]:(p.metrics||{});
+
+  // 라인 선택기 — 라인을 하나만 뛴 사람에겐 아예 안 보여준다(고를 게 없다).
+  let picker='';
+  if(lanes.length>=2){
+    const btn=(v,label)=>`<button type="button" class="lnpick${curMetricLane===v?' on':''}"`+
+      ` data-lane="${v}" aria-pressed="${curMetricLane===v}">${label}</button>`;
+    picker=`<div class="lnpicks" role="group" aria-label="라인 선택">`+
+      btn('','전체')+lanes.map(L=>btn(L,laneKo(L))).join('')+
+      `<span class="muted" style="font-size:11px;margin-left:4px">`+
+      `${curMetricLane?`${laneKo(curMetricLane)}에서 뛴 판만, ${laneKo(curMetricLane)}끼리 비교`
+                     :'라인을 고르면 그 라인 판만 봅니다'}</span></div>`;
+  }
+
   const groups=(DATA.metric_groups||[]).map(g=>({group:g.group,
     metrics:(g.metrics||[]).filter(k=>m[k])})).filter(g=>g.metrics.length);
-  if(!groups.length){ el.innerHTML='<p class="muted">판수가 모자라 세부 지표를 낼 수 없습니다.</p>'; return; }
-  el.innerHTML=groups.map(g=>
+  if(!groups.length){
+    el.innerHTML=picker+'<p class="muted">이 라인에서 낼 수 있는 지표가 없습니다.</p>';
+    bindLanePicks(el,p); return;
+  }
+  const need=(DATA.min_games)||3;
+  el.innerHTML=picker+groups.map(g=>
     `<div class="mgroup"><div class="mgh">${g.group}</div>`+
     g.metrics.map(k=>{const c=m[k];
-      // 라인별로 쪼개지는 지표는 **한 라인 값**이 대표로 올라온다 → 어느 라인인지 밝힌다.
-      // 안 밝히면 여러 라인을 도는 사람의 값이 '전 판 종합'으로 읽힌다.
-      const lt=c.lane?`<span class="lnt" data-tip="${laneKo(c.lane)}에서 뛴 ${c.games||'?'}판 기준입니다.&#10;라인마다 값의 의미가 달라 섞지 않고 한 라인만 씁니다.">${laneKo(c.lane)}</span>`:'';
-      return `<div class="mrow"><span class="ml">${mLabel(k)}${lt}</span>`+
+      // 통합 보기에서 라인별 지표는 **한 라인 값**이 대표로 올라온다 → 어느 라인인지 밝힌다.
+      // 라인을 골라 놓은 상태에서는 이미 위에 적혀 있으므로 다시 붙이지 않는다.
+      const lt=(!curMetricLane&&c.lane)
+        ?`<span class="lnt" data-tip="${laneKo(c.lane)}에서 뛴 ${c.games||'?'}판 기준입니다.&#10;라인마다 값의 의미가 달라 섞지 않고 한 라인만 씁니다.">${laneKo(c.lane)}</span>`:'';
+      // ⚠️ 라인별 값은 1판부터 실린다. 판수를 숨기면 "1판인데 10명 중 2위"가
+      //    실력처럼 읽힌다 → 문턱 미만은 흐리게 하고 판수를 항상 적는다.
+      const thin=(c.games!=null&&c.games<need);
+      const gtxt=c.games!=null?`<span class="mg">${c.games}판</span>`:'';
+      return `<div class="mrow${thin?' thin':''}"><span class="ml">${mLabel(k)}${lt}</span>`+
         `<span class="mv">${fmtMetric(k,c.value)}</span>`+
         `<span class="mb"><i style="width:${(c.pct*100).toFixed(0)}%"></i></span>`+
-        `<span class="mr">${c.rank}/${c.n}</span></div>`;}).join('')+
+        `<span class="mr">${gtxt}${c.rank}/${c.n}</span></div>`;}).join('')+
     `</div>`).join('');
+  bindLanePicks(el,p);
+}
+
+function bindLanePicks(el,p){
+  el.querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
+    curMetricLane=b.dataset.lane;
+    renderPlayerMetrics(p);
+    announce(curMetricLane?`${laneKo(curMetricLane)} 지표`:'전체 라인 지표');
+  });
 }
 
 function renderCompare(){
