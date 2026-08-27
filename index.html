@@ -83,6 +83,14 @@
     font-size:12.5px;line-height:1.75;background:#0c121a;border:1px solid var(--line);
     border-left:3px solid var(--acc);border-radius:8px;padding:10px 13px;margin:0 0 8px;
     overflow-x:auto}
+  .tfilter{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+  .tfilter input{flex:0 1 220px;padding:6px 10px;border:1px solid var(--line);
+    border-radius:8px;background:#0c121a;color:var(--txt);font-size:13px}
+  .tfilter input:focus{outline:none;border-color:var(--acc)}
+  .tfilter .tfhit{font-size:12px}
+  tr.tfhide{display:none}
+  /* 손가락으로 누르는 화면에서는 입력칸도 44px 은 돼야 한다(기본 29px) */
+  @media (pointer:coarse){ .tfilter input{min-height:44px;font-size:16px} }
   .mathwrap .muted{font-size:12.5px;line-height:1.65;margin:0 0 6px}
   .mathwrap .tbl{overflow-x:auto;margin:0 0 8px}
   .mathwrap table{border-collapse:collapse;width:100%;font-size:12.5px}
@@ -619,8 +627,10 @@ function renderTable(el, rows, cols, sortKey, sortDir){
       return String(x).localeCompare(String(y))*sortDir; });
   }
   // 표 이름 — 스크린리더는 표가 40개면 "표, 10열 19행"만 40번 듣는다. 무슨 표인지 붙인다.
-  const cap=(el.closest('.card')||{}).querySelector
-    ? (el.closest('.card').querySelector('h2')||{}).textContent : '';
+  // ⚠️ 카드 h2 를 쓰면 안 된다. 한 카드에 표가 여럿이면 전부 같은 이름이 된다 —
+  //    플레이어 탭의 표 4개(라인별 전적·챔피언·상대별 전적·최근 경기)가 죄다
+  //    "라인 분포"로 불렸다. 표 **바로 앞** 제목을 쓴다.
+  const cap=(nearestHeading(el)||{}).textContent;
   const capTxt=(cap||'').replace(/[?？]\s*$/,'').trim();
   // scope="col" 이 없으면 셀을 읽을 때 어느 열인지 안 나온다(실측 0/265).
   let h='<table'+(capTxt?` aria-label="${esc(capTxt)}"`:'')+'><thead><tr>'+cols.map(c=>
@@ -637,6 +647,9 @@ function renderTable(el, rows, cols, sortKey, sortDir){
     }).join('')+'</tr>';
   });
   el.innerHTML=h+'</tbody></table>';
+  // ⚠️ 여기서 표가 통째로 갈린다. aria-label 과 거르기 칸도 같이 날아가므로 다시 붙인다
+  //    (안 하면 랭킹 지표를 바꾸는 순간 거르기 칸이 사라진다 — 실측).
+  labelTables(); attachTableFilters(el);
   el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
     const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
       labelTables();
@@ -2304,9 +2317,80 @@ function renderMathRest(){
 // 표 40개 중 손으로 만든 것들은 renderTable 을 안 거쳐 이름이 없다. 개별로 붙이면
 // 표가 하나 늘 때마다 또 빠진다 → 렌더가 끝난 뒤 한 번에 훑는다.
 // (스크린리더는 이름 없는 표를 "표, N열 M행"으로만 읽는다. 40번 들으면 구분이 안 된다.)
+// 긴 표에 이름으로 거르는 칸을 붙인다.
+//
+// 정렬만으로는 "이 사람 것"을 못 찾는다. 듀오 시너지는 104행(데스크톱 4.6화면)이고
+// 챔피언 메타 51행, 라인별 챔피언 폭 45행이 그렇다 — 정렬은 다 되는데 거르는 수단이
+// 없어 눈으로 훑는 수밖에 없었다.
+//
+// 표마다 따로 만들지 않는다. 행이 일정 수를 넘으면 자동으로 붙으므로, 나중에 생기는
+// 긴 표도 그냥 얻는다.
+const TABLE_FILTER_MIN = 20;   // 이보다 짧으면 눈으로 훑는 게 빠르다
+// 표가 다시 그려져도(정렬·지표 변경) 거르던 문구는 살아 있어야 한다. 상자 자체는
+// 컨테이너 안에 있어 innerHTML 로 날아가므로 문구를 밖에 둔다.
+// ⚠️ 키는 표 **이름**이 아니라 **자리**(감싸는 요소의 id)다. 랭킹표는 지표를 바꾸면
+//    이름이 '분당 딜 랭킹' → '총 딜 랭킹' 으로 바뀌어, 이름으로 매어 두면 거르던
+//    문구가 사라진다(실측).
+const TFQ = {};
+
+function attachTableFilters(root){
+  (root || document).querySelectorAll('table').forEach(tb => {
+    if (tb.dataset.filt) return;
+    // 경기 스코어보드는 찾는 표가 아니라 읽는 표다. 히트맵은 사람×사람 격자라
+    // 행만 숨기면 축이 어긋난다 — 둘 다 거르기 대상이 아니다.
+    if (tb.classList.contains('sb') || tb.classList.contains('heat') ||
+        tb.closest('.match-detail')) return;
+    const body = tb.tBodies[0];
+    if (!body || body.rows.length < TABLE_FILTER_MIN) return;
+    tb.dataset.filt = '1';
+
+    const id = 'tf' + Math.random().toString(36).slice(2, 8);
+    const name = tb.getAttribute('aria-label') || '표';
+    const box = document.createElement('div');
+    box.className = 'tfilter';
+    box.innerHTML = `<label class="sronly" for="${id}">${name} 안에서 찾기</label>`+
+      `<input type="search" id="${id}" placeholder="이름으로 거르기" autocomplete="off">`+
+      `<span class="tfhit muted"></span>`;
+    // overflow 감싸개가 있으면 그 바깥에 둔다(가로 스크롤 안에 갇히지 않게)
+    const anchor = (tb.parentElement && /auto|scroll/.test(
+      getComputedStyle(tb.parentElement).overflowX)) ? tb.parentElement : tb;
+    anchor.parentElement.insertBefore(box, anchor);
+
+    const key = (anchor.closest('[id]') || {}).id || name;
+    const inp = box.querySelector('input'), hit = box.querySelector('.tfhit');
+    const apply = (say) => {
+      const q = inp.value.trim().toLowerCase();
+      TFQ[key] = inp.value;
+      let n = 0;
+      for (const tr of body.rows) {
+        const on = !q || tr.textContent.toLowerCase().includes(q);
+        tr.classList.toggle('tfhide', !on);
+        if (on) n++;
+      }
+      hit.textContent = q ? `${n}줄` : '';
+      if (say && q) announce(`${n}줄 남음`);
+    };
+    inp.addEventListener('input', () => apply(true));
+    if (TFQ[key]) { inp.value = TFQ[key]; apply(false); }   // 다시 그려진 표에 복원
+  });
+}
+
+// 표 바로 앞의 제목을 찾는다. 카드 제목만 쓰면 한 카드에 표가 여럿일 때 전부 같은
+// 이름이 된다 — 플레이어 탭의 표 4개(라인별 전적·챔피언·상대별 전적·최근 경기)가
+// 전부 "라인 분포"로 불렸다. 소리로 들으면 어느 표인지 구분이 안 된다.
+function nearestHeading(t){
+  const card=t.closest('.card');
+  let e=t;
+  while(e && e!==card){
+    let p=e.previousElementSibling;
+    while(p){ if(p.tagName==='H2'||p.tagName==='H3') return p; p=p.previousElementSibling; }
+    e=e.parentElement;
+  }
+  return card?card.querySelector('h2'):null;
+}
 function labelTables(){
   document.querySelectorAll('table:not([aria-label])').forEach(t=>{
-    const card=t.closest('.card'), h=card&&card.querySelector('h2');
+    const h=nearestHeading(t);
     let name=(h?h.textContent:'').replace(/[?？]\s*$/,'').trim();
     // 카드 밖에 있는 표 둘 — 랭킹표는 고른 지표가 이름이고, 비교표는 두 선수다
     if(!name && t.parentElement){
@@ -2338,6 +2422,7 @@ function renderAll(){
     `Riot Games, Inc. 의 상표 또는 등록상표입니다.</div>`+
     `<div class="legal">챔피언 이미지 출처: Riot Games Data Dragon.</div>`;
   labelTables();
+  attachTableFilters();   // labelTables 뒤 — 표 이름을 라벨로 쓴다
   fillFeedbackWho();   // DATA는 sanitize된 값
 }
 
