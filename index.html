@@ -1235,13 +1235,41 @@ function renderMatches(){
         `<span class="pn">${p.name||''}</span></span>`).join('');
       return `<div class="team"><span class="res ${tm.win?'w':'l'}">${tm.win?'승':'패'}</span>${players}</div>`;
     }).join('<span class="vs">vs</span>');
-    const has=!!m.detail||(m.timeline&&m.timeline.minutes&&m.timeline.minutes.length>1);
-    const body=m.detail?matchDetailHTML(m.detail):goldChart(m.timeline);
-    const detail=has?`<div class="match-detail hidden" data-d="${idx}">${body}</div>`:'';
+    const has=!!m.d||!!m.detail||(m.timeline&&m.timeline.minutes&&m.timeline.minutes.length>1);
+    // ⚠️ 상세 HTML 을 여기서 만들지 않는다. 20경기치를 미리 그리면 숨긴 채로 DOM
+    //    36,745노드(전체의 79%) · HTML 2.07MB 가 쌓인다 — 실측 renderAll 133ms 의
+    //    대부분이 아무도 안 펼친 상세를 그리는 시간이었다. 누를 때 받아서 그린다.
+    const detail=has?`<div class="match-detail hidden" data-d="${idx}"></div>`:'';
     return `<div class="match ${has?'clickable':''}" data-idx="${idx}"><span class="muted hide-sm" style="width:96px">${d}</span>${t}${has?'<span class="muted" data-tip="눌러서 경기 상세 보기">🔎</span>':''}</div>${detail}`;
   }).join('');
-  $('#matchT').querySelectorAll('.match.clickable').forEach(el=>el.onclick=()=>{
-    const d=$('#matchT').querySelector(`.match-detail[data-d="${el.dataset.idx}"]`); if(d) d.classList.toggle('hidden');
+  $('#matchT').querySelectorAll('.match.clickable').forEach(el=>el.onclick=async()=>{
+    const idx=el.dataset.idx;
+    const d=$('#matchT').querySelector(`.match-detail[data-d="${idx}"]`);
+    if(!d || d.dataset.loading) return;
+    if(!d.dataset.built){            // 처음 펼칠 때 한 번만 받아서 그린다
+      const m=ms[+idx];
+      let det=m.detail;
+      if(!det && m.d){
+        d.dataset.loading='1';
+        d.classList.remove('hidden');
+        d.innerHTML='<p class="muted" style="padding:12px">경기 상세를 불러오는 중…</p>';
+        det=await loadMatchDetail(m.match_id);
+        delete d.dataset.loading;
+        if(!det){
+          d.innerHTML='<p class="muted" style="padding:12px">경기 상세를 불러오지 못했습니다.</p>';
+          announce('경기 상세를 불러오지 못했다');
+          return;                    // built 를 안 세워 다음에 다시 시도한다
+        }
+      }
+      d.innerHTML=det?matchDetailHTML(det):goldChart(m.timeline);
+      d.dataset.built='1';
+      labelTables();      // 새로 생긴 표에 aria-label 을 붙인다
+      d.classList.remove('hidden');
+      announce('경기 상세를 폈다');
+      return;
+    }
+    d.classList.toggle('hidden');
+    announce(d.classList.contains('hidden')?'경기 상세를 접었다':'경기 상세를 폈다');
   });
 }
 
@@ -2355,11 +2383,29 @@ function fillFeedbackWho(){
   };
 })();
 
+let GID='';                     // 상세 파일 경로에 쓴다
+const MDCACHE={};               // 한 번 받은 경기 상세는 다시 안 받는다
+
 async function loadGuild(gid){
   if(!safeId(gid)){ $('#meta').textContent='잘못된 데이터 식별자'; return; }
   const r=await fetch(`data/${encodeURIComponent(gid)}.json?t=`+Date.now());
   if(!r.ok){ $('#meta').textContent='데이터를 불러올 수 없습니다.'; return; }
+  GID=gid;
   DATA=sanitize(await r.json()); renderAll();
+}
+
+// 경기 상세는 경기마다 별도 파일이다. 예전엔 페이로드에 20경기치를 인라인했는데,
+// 경기당 18.5KB 라 판이 쌓일수록 아무도 안 펼치는 상세를 매번 내려받게 된다.
+// 파일명은 익명 슬러그(원본 매치 ID 가 아니다)이고 내용이 안 바뀌므로 캐시가 잘 먹는다.
+async function loadMatchDetail(slug){
+  if(!safeId(slug)) return null;
+  if(MDCACHE[slug]!==undefined) return MDCACHE[slug];
+  try{
+    const r=await fetch(`data/${encodeURIComponent(GID)}/m/${encodeURIComponent(slug)}.json`);
+    if(!r.ok) throw new Error(r.status);
+    MDCACHE[slug]=sanitize(await r.json());
+  }catch(e){ MDCACHE[slug]=null; }
+  return MDCACHE[slug];
 }
 
 // ---------- 섹션 안 서브탭 ----------
