@@ -41,6 +41,8 @@
   .kpi .label{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
   .kpi .value{font-size:25px;font-weight:750;margin-top:6px}
   .kpi .value.acc{color:var(--acc)}
+  /* 시각은 값이 아니라 딸린 정보다 — 헤드라인 크기로 쓰면 줄바꿈이 행을 늘린다 */
+  .kpi .value.ts{font-size:16px;font-weight:600;color:var(--dim)}
   .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
   .tab{padding:8px 15px;border:1px solid var(--line);border-radius:999px;cursor:pointer;
     color:var(--dim);user-select:none;transition:.12s}
@@ -98,7 +100,7 @@
     .tfilter input,.mpick input[type=search],.psearch,input[type=search]{
       min-height:44px;font-size:16px}
     .subtab,.mchip,.lnpick,.chip{min-height:44px}
-    #champ .tab,#board .tab,#rank .tab{min-height:44px}
+    #champ .tab,#board .tab{min-height:44px}
     /* 읽으라고 쓴 글은 11px 로 두지 않는다(설명문·안내). 차트 눈금·아이콘은 그대로. */
     p.muted,.card>.muted,.axnote{font-size:12.5px}
   }
@@ -359,16 +361,16 @@
       transition-duration:.001ms!important;scroll-behavior:auto!important}
   }
   @media(max-width:640px){
-    /* 탭 11개가 접히면 폰에서 180px(뷰포트의 22%)를 먹고, 첫 데이터 행이
-       679px 아래로 밀린다(실측 375px). 한 줄 가로 스크롤로 바꾼다. */
-    .tabs{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
-      -webkit-overflow-scrolling:touch;scrollbar-width:none;
-      scroll-snap-type:x proximity;margin-bottom:12px;
-      /* 오른쪽에 더 있다는 걸 페이드로 알린다 — 잘린 게 아니라 이어진다는 신호 */
-      -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);
-      mask-image:linear-gradient(90deg,#000 88%,transparent)}
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{flex:0 0 auto;scroll-snap-align:start;padding:7px 13px}
+    /* 예전엔 탭 11개를 한 줄 가로 스크롤로 두었다. 접으면 180px 를 먹었기 때문이다.
+       그런데 실측해 보니 **완전히 보이는 탭이 3개**였다(탭바 1060px / 화면 351px).
+       페이드로 "더 있다"고 알리긴 하지만, 사람 눈에는 탭이 3개인 사이트였다.
+       탭을 8개로 묶고 나서도 4개가 숨어 있었다 — 그래서 감싸는 쪽으로 되돌린다.
+       늘어난 세로(+108px)는 KPI 의 '업데이트' 칸에서 되찾았다(-78px, renderKpis 참고). */
+    .tabs{flex-wrap:wrap;margin-bottom:12px}
+    /* 화면 이동은 이 사이트에서 제일 많이 누르는 것이다. 44px 아래로 두지 않는다
+       (`pointer:coarse` 규칙이 섹션 안의 .tab 만 잡고 있어서 정작 주 메뉴가 빠져 있었다). */
+    .tab{flex:0 0 auto;padding:7px 10px;font-size:13px;
+      min-height:44px;display:inline-flex;align-items:center}
   }
   @media(max-width:480px){
     .wrap{padding:12px}.hide-sm{display:none}
@@ -411,6 +413,53 @@
     /* 값이 길면(닉네임·챔프 이름) 칸을 밀어내지 않고 줄바꿈한다 */
     table:not(.sb):not(.heat):not(.cmp) td>*{min-width:0}
   }
+
+/* ── 티어 ──────────────────────────────────────────────────────────────
+   색은 롤 티어 색을 따른다. 사람들이 이미 아는 색이라 이름을 안 읽어도 읽힌다.
+   ⚠️ 배경색만으로 티어를 구분하면 색각 이상인 사람에게는 티어가 없는 것과 같다.
+      그래서 배지에는 **항상 이름이 같이** 있고, 색은 거드는 역할만 한다. */
+.tierbadge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;
+  font-size:12px;font-weight:700;white-space:nowrap;border:1px solid currentColor}
+.t-아이언{color:#8a8079;background:#8a807914}
+.t-브론즈{color:#b0764a;background:#b0764a14}
+.t-실버{color:#9fb0b4;background:#9fb0b414}
+.t-골드{color:#d6a53f;background:#d6a53f14}
+.t-플래티넘{color:#3fa8a8;background:#3fa8a814}
+.t-에메랄드{color:#3faa63;background:#3faa6314}
+.t-다이아{color:#6b7fe0;background:#6b7fe014}
+.t-마스터{color:#a95ce8;background:#a95ce814}
+.t-그랜드마스터{color:#e05656;background:#e0565614}
+.t-챌린저{color:#e8c46a;background:#e8c46a14}
+
+/* 라인별 격자 — 가로는 라인 5칸 고정, 세로는 사람 */
+.lanegrid{width:100%;border-collapse:separate;border-spacing:0}
+.lanegrid th{font-size:12px;font-weight:600;padding:6px 4px;text-align:center;
+  color:var(--muted);position:sticky;top:0;background:var(--card);z-index:1}
+.lanegrid th:first-child{text-align:left;padding-left:8px}
+.lanegrid td{padding:3px 4px;text-align:center}
+.lanegrid td:first-child{text-align:left;padding-left:8px;font-size:13px;white-space:nowrap}
+.lcell{display:block;border-radius:8px;padding:5px 4px;line-height:1.25;
+  border:1px solid transparent;min-width:56px}
+.lcell b{display:block;font-size:13px;font-variant-numeric:tabular-nums}
+.lcell i{display:block;font-style:normal;font-size:10px;opacity:.75}
+/* 주 라인 — 실선. 이 사람을 대표하는 칸이다. */
+.lcell.main{border-color:currentColor;font-weight:700}
+/* 배치가 끝난 칸 — 옅은 실선 */
+.lcell.placed{border-color:currentColor;border-style:solid;opacity:1}
+/* 표본이 모자란 칸 — 점선. "이건 아직 추정이다"를 **모양**으로 말한다.
+   색이나 투명도만 쓰면 흑백 출력·색각 이상에서 구분이 사라진다. */
+.lcell.thin{border-style:dashed;border-color:currentColor;opacity:.62}
+.lcell.none{border-style:dashed;border-color:var(--line);opacity:.45}
+.cpnum{font-variant-numeric:tabular-nums;font-weight:700}
+.cpbar{position:relative;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.cpbar>i{position:absolute;inset:0 auto 0 0;border-radius:3px;background:currentColor}
+.tierlegend{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px}
+.tierlegend span{font-size:11px}
+@media (max-width:640px){
+  /* 모바일에서는 격자를 가로로 굴린다 — 5칸을 2열로 접으면 라인 순서가 무너진다 */
+  .lanewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .lanegrid{min-width:520px}
+}
 </style>
 </head>
 <body>
@@ -430,60 +479,72 @@
   <div class="kpis" id="kpis"></div>
 
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
-    <div class="tab on" role="tab" data-t="board">🏆 리더보드</div>
-    <div class="tab" role="tab" data-t="rank">📊 랭킹</div>
+    <div class="tab on" role="tab" data-t="tier">🏆 티어</div>
+    <div class="tab" role="tab" data-t="board">📈 순위</div>
+    <div class="tab" role="tab" data-t="records">🏅 기록</div>
     <div class="tab" role="tab" data-t="syn">🤝 시너지</div>
     <div class="tab" role="tab" data-t="champ">🧙 챔피언</div>
-    <div class="tab" role="tab" data-t="records">🏅 기록실</div>
-    <div class="tab" role="tab" data-t="fun">🔍 심화</div>
     <div class="tab" role="tab" data-t="matches">📜 경기</div>
-    <div class="tab" role="tab" data-t="player">👤 플레이어</div>
-    <div class="tab" role="tab" data-t="compare">⚖️ 비교</div>
+    <div class="tab" role="tab" data-t="player">👤 사람</div>
     <div class="tab" role="tab" data-t="balance">🧮 밸런스</div>
-    <div class="tab" role="tab" data-t="math">📐 계산식</div>
   </nav>
   <main id="views">
 
-  <section id="board" class="view"><div class="card"><h2>🏆 승률 리더보드</h2>
-    <div class="lnpicks" id="boardLanes" role="group" aria-label="라인 선택"></div>
-    <div id="boardT"></div><div id="boardNote"></div>
-    <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div></section>
-
-  <section id="rank" class="view hidden"><div class="card">
-    <div class="mpick">
-      <div class="grp">
-        <span class="muted" style="font-size:12.5px">분류</span>
-        <span id="metricGroups"></span>
-        <input type="search" id="metricSearch" placeholder="지표 검색 (예: 골드)"
-               aria-label="지표 검색">
-        <span class="cnt" id="metricCount"></span>
+  <section id="tier" class="view" data-subtabs>
+    <div class="card" data-sub="🏆 사다리"><h2>🏆 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span></h2>
+      <p class="muted" id="cpIntro"></p>
+      <div class="tierlegend" id="cpLegend"></div>
+      <div id="cpT"></div>
+      <div class="muted" id="cpNote" style="margin-top:8px;font-size:12px"></div></div>
+    <div class="card" data-sub="🧭 라인별"><h2>🧭 라인별 티어<span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
+      <p class="muted" id="cpLaneIntro"></p>
+      <div class="lanewrap" id="cpLaneGrid"></div>
+      <div class="muted" id="cpLaneNote" style="margin-top:8px;font-size:12px"></div></div>
+    <div class="card" data-sub="📐 CP 계산식"><h2>📐 CP 는 어떻게 나오나</h2>
+      <div id="cpMath"></div></div>
+    <div class="card" data-sub="🎯 MMR 검산">
+      <h2>📐 이 숫자는 어떻게 나왔나</h2>
+      <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
+        <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
+      <div class="row" style="margin:10px 0">
+        <label>MMR 검산할 사람 <select id="mathWho"></select></label>
       </div>
-      <div class="metswrap"><span class="metsfrom" id="metricFrom"></span>
-        <div class="mets" id="metricChips"></div></div>
-      <p class="metdesc" id="metricDesc"></p>
-      <div class="row" style="margin-top:2px">
-        <span class="muted" style="font-size:12.5px">라인</span>
-        <span id="laneBtns"></span>
-        <span class="muted" id="rankNote"></span>
-      </div>
-      <div class="muted" id="rankPending"></div>
+      <div id="mathMmr"></div>
     </div>
-    <div id="rankT"></div>
-  </div></section>
-
-  <section id="syn" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🤝 듀오"><h2>🤝 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
-      <div id="synT"></div></div>
-    <div class="card" data-sub="👥 트리오"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
-    <div class="card" data-sub="🔥 히트맵"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
   </section>
 
-  <section id="champ" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🧙 메타"><h2>🧙 챔피언 메타 (서버 전체)</h2>
-      <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
-      <div id="champT"></div></div>
-    <div class="card" data-sub="⚔️ 매치업"><h2>같은 라인 챔피언 매치업</h2><div id="champMatchT"></div></div>
-    <div class="card" data-sub="🚫 밴"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
+  <section id="board" class="view hidden" data-subtabs>
+    <div data-sub="📈 승률" class="card"><h2>🏆 승률 리더보드</h2>
+        <div class="lnpicks" id="boardLanes" role="group" aria-label="라인 선택"></div>
+        <div id="boardT"></div><div id="boardNote"></div>
+        <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div>
+    <div data-sub="📊 지표" class="card">
+        <div class="mpick">
+          <div class="grp">
+            <span class="muted" style="font-size:12.5px">분류</span>
+            <span id="metricGroups"></span>
+            <input type="search" id="metricSearch" placeholder="지표 검색 (예: 골드)"
+                   aria-label="지표 검색">
+            <span class="cnt" id="metricCount"></span>
+          </div>
+          <div class="metswrap"><span class="metsfrom" id="metricFrom"></span>
+            <div class="mets" id="metricChips"></div></div>
+          <p class="metdesc" id="metricDesc"></p>
+          <div class="row" style="margin-top:2px">
+            <span class="muted" style="font-size:12.5px">라인</span>
+            <span id="laneBtns"></span>
+            <span class="muted" id="rankNote"></span>
+          </div>
+          <div class="muted" id="rankPending"></div>
+        </div>
+        <div id="rankT"></div>
+      </div>
+    <div class="grid2" data-sub="🧭 로밍 · 한타 · 오브젝트">
+      <div class="card"><h2>🧭 로밍 비율<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
+      <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
+      <div class="card"><h2>🐲 용 종류별 성적</h2><div id="funDragon"></div></div>
+    </div>
+    <div class="card" data-sub="🧮 지표 설명"><h2>🧮 나머지 지표</h2><div id="mathRest"></div></div>
   </section>
 
   <section id="records" class="view hidden" data-subtabs>
@@ -491,23 +552,6 @@
     <div class="grid2" data-sub="👑 MVP · 펜타">
       <div class="card"><h2>👑 MVP 랭킹<span class="qmark" tabindex="0" role="button" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
       <div class="card"><h2>🔥 펜타킬</h2><div id="pentaT"></div></div>
-    </div>
-  </section>
-
-  <section id="fun" class="view hidden" data-subtabs>
-    <div data-sub="🔵 진영 · 챔피언 폭">
-      <div class="card"><h2>🔵 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
-        <p class="muted">시간대별 승률과 달리 이건 <b>구조적으로 50%가 아니다</b> —
-          한 경기에 블루 하나 레드 하나라 어느 쪽이 더 이겼는지가 실제 정보입니다.</p>
-        <div id="funSide"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🧙 라인별 챔피언 폭<span class="qmark" tabindex="0" role="button" data-tip-key="챔피언폭" aria-label="챔피언 폭 설명">?</span></h2>
-        <p class="muted">몇 판을 몇 종으로 돌렸나. 7판에 7종이면 매판 다른 챔피언,
-          7판에 2종이면 장인입니다.</p>
-        <div id="funPool"></div></div>
-    </div>
-    <div class="grid2" data-sub="🌙 시간대 · 경기 길이">
-      <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
-      <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" tabindex="0" role="button" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
     </div>
     <div data-sub="🔄 역전 · 데스">
       <div class="card"><h2>🔄 역전 · 리드 실패<span class="qmark" tabindex="0" role="button" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
@@ -517,6 +561,13 @@
       <div class="card" style="margin-top:10px"><h2>🗺️ 데스 히트맵<span class="qmark" tabindex="0" role="button" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
         <div id="funHeat"></div></div>
     </div>
+  </section>
+
+  <section id="syn" class="view hidden" data-subtabs>
+    <div class="card" data-sub="🤝 듀오"><h2>🤝 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
+      <div id="synT"></div></div>
+    <div class="card" data-sub="👥 트리오"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
+    <div class="card" data-sub="🔥 히트맵"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
     <div data-sub="🤝 관계">
       <div class="card"><h2>💀 동반 사망<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
         <p class="muted">같은 팀 두 사람이 <b>10초 안에, 가까운 데서</b> 같이 죽은 횟수입니다.
@@ -533,43 +584,54 @@
           <div id="funStopper"></div></div>
       </div>
     </div>
-    <div class="grid2" data-sub="🧭 로밍 · 한타 · 오브젝트">
-      <div class="card"><h2>🧭 로밍 비율<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
-      <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
-      <div class="card"><h2>🐲 용 종류별 성적</h2><div id="funDragon"></div></div>
+  </section>
+
+  <section id="champ" class="view hidden" data-subtabs>
+    <div class="card" data-sub="🧙 메타"><h2>🧙 챔피언 메타 (서버 전체)</h2>
+      <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
+      <div id="champT"></div></div>
+    <div class="card" data-sub="⚔️ 매치업"><h2>같은 라인 챔피언 매치업</h2><div id="champMatchT"></div></div>
+    <div class="card" data-sub="🚫 밴"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
+    <div data-sub="🧙 챔피언 폭">
+      <div class="card" style="margin-top:10px"><h2>🧙 라인별 챔피언 폭<span class="qmark" tabindex="0" role="button" data-tip-key="챔피언폭" aria-label="챔피언 폭 설명">?</span></h2>
+        <p class="muted">몇 판을 몇 종으로 돌렸나. 7판에 7종이면 매판 다른 챔피언,
+          7판에 2종이면 장인입니다.</p>
+        <div id="funPool"></div></div>
     </div>
   </section>
 
-  <section id="matches" class="view hidden"><div class="card"><h2>📜 최근 경기</h2><div id="matchT"></div></div></section>
-
-  <section id="player" class="view hidden"><div class="card">
-    <div class="row"><span>플레이어</span><input id="playerSearch" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
-    <div id="playerBody"></div></div></section>
-
-  <section id="compare" class="view hidden"><div class="card">
-    <div class="row"><input id="cmpSearchA" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="cmpA"></select><span class="vs">VS</span><input id="cmpSearchB" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="cmpB"></select></div>
-    <div id="cmpBody"></div></div></section>
-
-  <section id="balance" class="view hidden"><div class="card">
-    <h2>🧮 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
-    <p class="muted" id="balNote">오늘 온 사람을 눌러서 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 갈립니다.</p>
-    <div id="balPick" class="chips"></div>
-    <div id="balResult"></div>
-    <div class="row" style="margin-top:10px"><button id="balClear">비우기</button>
-      <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정하기</label></div>
-  </div></section>
-
-  <section id="math" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🎯 MMR 검산">
-      <h2>📐 이 숫자는 어떻게 나왔나</h2>
-      <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
-        <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
-      <div class="row" style="margin:10px 0">
-        <label>MMR 검산할 사람 <select id="mathWho"></select></label>
-      </div>
-      <div id="mathMmr"></div>
+  <section id="matches" class="view hidden" data-subtabs>
+    <div data-sub="📜 최근 경기" class="card"><h2>📜 최근 경기</h2><div id="matchT"></div></div>
+    <div data-sub="🔵 진영">
+      <div class="card"><h2>🔵 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
+        <p class="muted">시간대별 승률과 달리 이건 <b>구조적으로 50%가 아니다</b> —
+          한 경기에 블루 하나 레드 하나라 어느 쪽이 더 이겼는지가 실제 정보입니다.</p>
+        <div id="funSide"></div></div>
     </div>
-    <div class="card" data-sub="🧮 나머지 지표"><h2>🧮 나머지 지표</h2><div id="mathRest"></div></div>
+    <div class="grid2" data-sub="🌙 시간대 · 경기 길이">
+      <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
+      <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" tabindex="0" role="button" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
+    </div>
+  </section>
+
+  <section id="player" class="view hidden" data-subtabs>
+    <div data-sub="👤 개인" class="card">
+        <div class="row"><span>플레이어</span><input id="playerSearch" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
+        <div id="playerBody"></div></div>
+    <div data-sub="⚖️ 비교" class="card">
+        <div class="row"><input id="cmpSearchA" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="cmpA"></select><span class="vs">VS</span><input id="cmpSearchB" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="cmpB"></select></div>
+        <div id="cmpBody"></div></div>
+  </section>
+
+  <section id="balance" class="view hidden" data-subtabs>
+    <div data-sub="🧮 팀 나누기" class="card">
+        <h2>🧮 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
+        <p class="muted" id="balNote">오늘 온 사람을 눌러서 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 갈립니다.</p>
+        <div id="balPick" class="chips"></div>
+        <div id="balResult"></div>
+        <div class="row" style="margin-top:10px"><button id="balClear">비우기</button>
+          <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정하기</label></div>
+      </div>
   </section>
 </div>
 <section class="fbsec" id="fbsec">
@@ -692,6 +754,8 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
+  CP:'내전 전적만으로 낸 점수입니다. 솔랭 티어와는 무관합니다.\n한 판에 15~25 움직이고, 이기고 지는 것만 반영합니다 — 많이 뛴다고 오르지 않습니다.\n같은 팀 안에서는 내 MMR 이 팀 평균보다 낮을수록, 그 판에 더 기여했을수록 더 받습니다.\n기여가 컸으면 졌을 때도 덜 잃습니다.',
+  라인티어:'라인마다 티어를 따로 냅니다. 그 판에 실제로 선 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 사람이 미드를 간다고 미드도 같은 티어인 것은 아닙니다.\n안 뛴 라인도 칸을 비우지 않고 추정치로 채우되, 점선으로 아직 표본이 모자라다는 것을 표시합니다.\n라인 편차 = 다섯 라인 중 가장 높은 칸과 가장 낮은 칸 차이의 절반입니다.',
   라인MMR:'그 라인에서의 MMR 입니다.\n통합 실력에 **그 라인 승률 보정**을 더한 값이고, 라인마다 처음부터 다시 매긴 값이 아닙니다.\n그래서 통합 MMR 과 크게 벌어지지 않습니다(실측 편차 중앙 14).\n판수가 적은 라인은 보정이 거의 안 걸려 통합값에 가까워집니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
   시너지:'같이 한 팀이었을 때의 전적입니다.\n시너지 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
@@ -816,14 +880,29 @@ function minGamesNote(lane){
 }
 // MMR 숫자를 누르면 그 사람의 계산 과정으로 바로 간다 — "이 숫자 어디서 나왔냐"에
 // 답이 두 번의 클릭 안에 있어야 한다.
+// 다른 탭의 특정 패널로 뛴다. **패널 번호가 아니라 라벨로 찾는다** —
+// 번호를 박아 두면 패널을 하나 끼워 넣는 순간 엉뚱한 화면이 열린다.
+function jumpTo(sectionId, subLabel){
+  const tab=document.querySelector(`#tabs .tab[data-t="${sectionId}"]`);
+  const sec=$('#'+sectionId);
+  if(!tab||!sec){ console.warn('jumpTo: 없는 화면', sectionId); return false; }
+  activateTab(tab);
+  if(subLabel){
+    // ⚠️ 탭만 켜면 모자란다 — 그 탭에서 다른 패널을 보고 있었으면 목표 패널은
+    //    hidden 인 채라 링크가 먹통처럼 보인다(실측 재현).
+    const panes=[...sec.children].filter(c=>c.dataset.sub);
+    const i=panes.findIndex(c=>c.dataset.sub===subLabel);
+    if(i<0){ console.warn('jumpTo: 없는 패널', sectionId, subLabel); }
+    else showSubtab(sec, i);
+  }
+  sec.scrollIntoView({behavior:'smooth',block:'start'});
+  return true;
+}
+
 function openMathFor(id){
   if(!id||!(DATA.ratings||{})[id]) return;
   $('#mathWho').value=id; renderMathMmr();
-  activateTab(document.querySelector('#tabs .tab[data-t="math"]'));
-  // ⚠️ 탭만 켜면 모자란다 — 사용자가 전에 '나머지 지표'를 봤으면 MMR 검산
-  //    패널은 hidden 인 채라 링크가 먹통처럼 보인다(실측 재현).
-  showSubtab($('#math'), 0);
-  $('#math').scrollIntoView({behavior:'smooth',block:'start'});
+  jumpTo('tier', '🎯 MMR 검산');
 }
 // 리더보드에서 지금 고른 라인. ''(빈 문자열)이면 통합.
 let curBoardLane='';
@@ -1552,8 +1631,7 @@ function openCompare(a,b){
   $('#cmpSearchA').value=''; $('#cmpSearchB').value='';
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   $('#cmpA').value=a; $('#cmpB').value=b; renderCompare();
-  activateTab(document.querySelector('#tabs .tab[data-t="compare"]'));
-  $('#compare').scrollIntoView({behavior:'smooth',block:'start'});
+  jumpTo('player', '⚖️ 비교');
 }
 function kcList(arr){
   return (arr||[]).length
@@ -2257,13 +2335,22 @@ const fmtDur=sec=>{
 };
 function renderKpis(){
   const s=DATA.summary||{}, d=DATA.timestamp?new Date(DATA.timestamp):null;
-  const ts=(d&&!isNaN(d.getTime()))?d.toLocaleString('ko-KR'):'-';
+  // ⚠️ toLocaleString('ko-KR') 은 "2026. 8. 27. 오후 5:06:52" 를 준다. 25px 굵은
+  //    글씨로 쓰면 폰에서 네 줄로 접히고, 그리드 행 높이가 95 → 173px 로 뛰면서
+  //    옆 칸('플레이어')까지 같이 끌려 올라간다(실측 +78px). 시각은 헤드라인 숫자가
+  //    아니므로 짧게 적고 작게 쓴다. 정확한 시각은 title 로 남긴다.
+  const ts=(d&&!isNaN(d.getTime()))
+    ?`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:`
+     +`${String(d.getMinutes()).padStart(2,'0')}`:'-';
+  const tsFull=(d&&!isNaN(d.getTime()))?d.toLocaleString('ko-KR'):'';
   $('#kpis').innerHTML=[
     // '평균 승률'은 제로섬이라 항상 50% 근처다 — 정보가 없다. 대신 평균 경기 시간을
     // 보여준다(우리 내전이 빨리 끝나는 편인지 길게 가는지는 실제로 다르다).
     ['총 경기',s.total_games??0,''],['평균 경기 시간',fmtDur(s.avg_duration_sec),'acc'],
-    ['플레이어',s.player_count??0,''],['업데이트',ts,'']
-  ].map(([l,v,c])=>`<div class="kpi"><div class="label">${l}</div><div class="value ${c}">${v}</div></div>`).join('');
+    ['플레이어',s.player_count??0,''],['업데이트',ts,'ts']
+  ].map(([l,v,c])=>`<div class="kpi"><div class="label">${l}</div>`+
+    `<div class="value ${c}"${c==='ts'&&tsFull?` data-tip="마지막 발행: ${esc(tsFull)}"`:''}>${v}</div></div>`).join('');
+  labelTips($('#kpis'));
 }
 
 // ---------- 계산식 (검산 가능하게) ----------
@@ -2515,6 +2602,160 @@ function labelTables(){
     if(name) t.setAttribute('aria-label',name);
   });
 }
+// ---------- 티어 (CP) ----------
+// ⚠️ 티어 컷·상수는 **하나도 여기 적지 않는다.** 전부 DATA.cp_constants 에서 읽는다.
+//    화면과 코드 양쪽에 상수를 적으면 반드시 어긋난다(라인 최소 판수에서 겪었다).
+const cpConst = () => DATA.cp_constants || {};
+const cpTiers = () => (cpConst().tiers || []);
+function tierOf(cp){
+  const t=cpTiers();
+  for(const x of t){ if(x.cp==null || cp>=x.cp) return x.name; }
+  return t.length?t[t.length-1].name:'';
+}
+// 티어 이름 → CSS 클래스. 이름 자체를 클래스로 쓰되 화이트리스트로 거른다
+// (payload 는 sanitize 를 거치지만, 클래스명에 값을 그대로 넣는 건 따로 막는다).
+function tierCls(name){
+  return cpTiers().some(x=>x.name===name) ? 't-'+name : '';
+}
+function tierBadge(name){
+  return `<span class="tierbadge ${tierCls(name)}">${esc(name)}</span>`;
+}
+// 라인 칸 하나. 확신을 **모양**으로 드러낸다 — 실선(주 라인) / 실선(배치완료) /
+// 점선(표본 부족) / 흐린 점선(안 뛴 라인).
+function laneCell(c, isMain){
+  const n=c.games||0, placed=!!c.placed;
+  const cls = isMain ? 'main placed' : (placed ? 'placed' : (n ? 'thin' : 'none'));
+  const sub = n ? `${n}판` : '안 뜀';
+  return `<span class="lcell ${cls} ${tierCls(c.tier)}"
+    data-tip="${esc(c.tier)} · CP ${c.cp} · ${n?`${n}판`:'이 라인은 아직 안 뛰었습니다'}${
+      isMain?' · 주 라인':''}${placed||isMain?'':` · 배치 ${cpConst().lane_prior_k||5}판 중 ${n}판`}"
+    ><b>${c.cp}</b><i>${esc(c.tier)} · ${sub}</i></span>`;
+}
+
+function renderCp(){
+  const cp=DATA.cp||{};
+  const ids=Object.keys(cp);
+  const C=cpConst();
+  if(!ids.length){
+    $('#cpT').innerHTML='<p class="muted">아직 티어를 낼 만한 판이 없습니다.</p>';
+    $('#cpLaneGrid').innerHTML=''; $('#cpMath').innerHTML=''; return;
+  }
+  const base=C.cp_base||1000, need=C.placement_games||4;
+
+  // ── 사다리 ──
+  $('#cpIntro').innerHTML=
+    `내전 전적만으로 낸 점수입니다. 한 판에 <b>${C.cp_min}~${C.cp_max}</b> 움직이고, `+
+    `시작점은 <b>${base}</b> 입니다. `+
+    `<b>많이 뛴다고 오르지 않습니다</b> — 이기고 지는 것만 반영합니다.`;
+  $('#cpLegend').innerHTML=cpTiers().slice().reverse().map(t=>
+    `<span>${tierBadge(t.name)}${t.cp!=null?` <span class="muted">${t.cp}+</span>`:''}</span>`
+  ).join('');
+
+  const rows=ids.map(id=>{
+    const v=cp[id]||{}, L=v.lanes||{};
+    const ml=v.main_lane;
+    return {...v, _id:id,
+      _lane: ml?laneKo(ml):'—',
+      _lanecp: ml&&L[ml]?L[ml].cp:v.cp,
+      // 안 뛴 라인 중 가장 낮은 칸 — "다른 라인 가면 어디까지 떨어지나"
+      _floor: Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null)),
+      _spread: Math.max(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))
+             - Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))};
+  });
+  // 메달은 **CP 기준 등수**로 미리 박는다. renderTable 의 idx 는 지금 정렬 순서라
+  // 판수로 정렬하면 판수 1등이 금메달을 단다(리더보드에서 겪은 것과 같은 함정).
+  rows.slice().sort((a,b)=>(b.cp||0)-(a.cp||0)).forEach((r,i)=>{r._medal=i<3?MEDAL[i]+' ':'';});
+  const maxCp=Math.max(...rows.map(r=>r.cp||0)), minCp=Math.min(...rows.map(r=>r.cp||0));
+  renderTable($('#cpT'),rows,[
+    {k:'name',h:'멤버',fmt:(v,r)=>(r._medal||'')+esc(v)+
+      (r.placed?'':` <span class="muted" style="font-size:11px">배치 ${r.games}/${need}</span>`)},
+    {k:'tier',h:'티어',fmt:v=>tierBadge(v)},
+    {k:'cp',h:'CP',num:1,fmt:(v)=>{
+      const p=maxCp>minCp?((v-minCp)/(maxCp-minCp))*100:100;
+      return `<div class="barwrap"><span class="cpnum">${v}</span>`+
+             `<i style="width:${p.toFixed(1)}%"></i></div>`;}},
+    {k:'games',h:'판수',num:1},
+    {k:'_lane',h:'주 라인'},
+    {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',
+     fmt:v=>v?`<span class="muted">±${Math.round(v/2)}</span>`:'<span class="muted">—</span>'},
+  ],'cp',-1);
+  const unplaced=rows.filter(r=>!r.placed).length;
+  $('#cpNote').innerHTML=
+    `배치는 <b>${need}판</b> 입니다`+(unplaced?` — 아직 ${unplaced}명이 배치 중입니다.`:'.')+
+    ` 배치 중에는 점수가 크게 움직입니다(K=${C.k_place} → ${C.k_norm}).`;
+
+  // ── 라인별 격자 ──
+  $('#cpLaneIntro').innerHTML=
+    `주 라인이 아닌 곳에서는 티어가 다릅니다. 솔랭 마스터 서폿이 미드를 간다고 `+
+    `미드도 마스터인 건 아니기 때문입니다. `+
+    `<b>안 뛴 라인도 칸을 비우지 않고</b> 추정치로 채웁니다 — 대신 `+
+    `<b>점선</b>이 "아직 표본이 모자라다"는 뜻입니다.`;
+  const sorted=rows.slice().sort((a,b)=>(b.cp||0)-(a.cp||0));
+  let h='<table class="lanegrid"><thead><tr><th scope="col">멤버</th>'+
+    LANE_SEQ.map(l=>`<th scope="col">${laneKo(l)}</th>`).join('')+'</tr></thead><tbody>';
+  sorted.forEach(r=>{
+    const L=r.lanes||{};
+    h+=`<tr><td>${esc(r.name)}</td>`+LANE_SEQ.map(l=>{
+      const c=L[l]; if(!c) return '<td></td>';
+      return `<td>${laneCell(c, l===r.main_lane)}</td>`;
+    }).join('')+'</tr>';
+  });
+  $('#cpLaneGrid').innerHTML=h+'</tbody></table>';
+  const off=DATA.cp_off_lane||{};
+  $('#cpLaneNote').innerHTML=
+    `<b>실선</b> = 그 라인 ${C.lane_prior_k}판 이상(배치 완료), `+
+    `<b>굵은 실선</b> = 주 라인, <b>점선</b> = 표본 부족, `+
+    `<b>흐린 점선</b> = 한 판도 안 뛴 라인(추정치).<br>`+
+    `안 뛴 라인은 주 라인보다 <b>${Math.abs(C.off_lane_prior||30)} CP</b> 낮게 잡습니다. `+
+    (off.off_games
+      ? `이 값은 실제 전적에서 나왔습니다 — 주 라인 ${pct(off.on_winrate)}(${off.on_games}판) vs `+
+        `다른 라인 ${pct(off.off_winrate)}(${off.off_games}판). `+
+        (off.significant
+          ? `표본이 충분해 이 차이는 우연으로 보기 어렵습니다.`
+          : `<b>다만 ${off.off_games}판뿐이라 아직 우연과 구분되지 않습니다</b> — `+
+            `판이 쌓이면 이 값을 다시 잽니다.`)
+      : '');
+  labelTips($('#cpLaneGrid'));
+
+  // ── 계산식 ──
+  const w=C.contrib_weights||{};
+  $('#cpMath').innerHTML=`
+    <p>CP 는 <b>숨은 점수(MMR)</b> 와 <b>보이는 점수(CP)</b> 두 개로 굴러갑니다.
+       롤이 MMR 과 LP 를 따로 두는 것과 같은 구조입니다.</p>
+    <h3 style="font-size:14px;margin:12px 0 4px">① 이길 확률은 팀으로 잰다</h3>
+    <p class="muted">기대 승률은 <b>우리 팀 평균 대 상대 팀 평균</b>으로 냅니다.
+       개인 대 상대 팀 평균으로 재면 안 됩니다 — 밸런스를 맞춘 방에서 강한 사람은
+       개인 기대 승률이 0.8 인데 팀이 반반이라 실제로는 50% 밖에 못 이깁니다.
+       그러면 <b>점수가 판수에 비례해 흘러갑니다.</b></p>
+    <h3 style="font-size:14px;margin:12px 0 4px">② 팀 안에서만 차등을 준다</h3>
+    <p class="muted">같은 팀 안에서 ⑴ 내 MMR 이 팀 평균보다 낮으면 이겼을 때 더 받고,
+       ⑵ 그 판에 더 기여했으면 더 받습니다. 두 보정은 <b>팀 안에서 합이 0</b> 이라
+       밖으로 새지 않습니다. 그리고 <b>더하는</b> 방식이라
+       기여가 큰 사람은 <b>졌을 때 덜 잃습니다</b>(곱하면 반대가 됩니다).</p>
+    <p class="muted">기여도 = 팀 안에서의 상대값(${Object.entries(w).map(([k,v])=>
+       `${({kp:'킬관여',dmg_share:'딜비중',kda_n:'KDA'})[k]||k} ${Math.round(v*100)}%`).join(' · ')}),
+       ${C.contrib_lo}~${C.contrib_hi} 로 자릅니다 — 안 자르면 서폿이 라인 때문에 깎입니다.</p>
+    <h3 style="font-size:14px;margin:12px 0 4px">③ 한 판에 ${C.cp_min}~${C.cp_max}</h3>
+    <p class="muted">이 폭은 정해 둔 값이고, 나머지는 거기서 유도됩니다.
+       기대값이 한쪽으로 흘러가지 않으려면 이길 때 얻는 값과 질 때 잃는 값의 합이
+       <b>${C.cp_size}</b> (=${C.cp_min}+${C.cp_max}) 로 고정돼야 하고,
+       그러려면 기대 승률을 <b>${(C.e_clamp*100).toFixed(1)}%~${((1-C.e_clamp)*100).toFixed(1)}%</b>
+       안으로 잘라야 합니다. 그보다 기울어진 판은 더 기울어진 것으로 치지 않습니다.</p>
+    <h3 style="font-size:14px;margin:12px 0 4px">④ 라인</h3>
+    <p class="muted">그 판에 <b>실제로 선 라인</b>의 실력으로 기대 승률을 냅니다.
+       라인 편차는 그 라인 판수로 <b>n/(n+${C.lane_prior_k})</b> 만큼만 인정합니다 —
+       1판짜리 라인이 실력처럼 보이면 안 되기 때문입니다.
+       주 라인에는 벌점이 없습니다: 전체 MMR 자체가 대부분 주 라인에서 만들어진
+       숫자라, 거기에도 벌점을 걸면 다섯 라인이 전부 자기 CP 아래로 내려갑니다.</p>
+    <h3 style="font-size:14px;margin:12px 0 4px">티어 컷</h3>
+    <div class="tierlegend">${cpTiers().slice().reverse().map(t=>
+      `<span>${tierBadge(t.name)} <span class="muted">${t.cp==null?'그 아래 전부':t.cp+' 이상'}</span></span>`
+      ).join('')}</div>
+    <p class="muted" style="margin-top:6px">컷은 고정값입니다. 점수 총합이 보존되므로
+       평균이 ${base} 근처에 머물러 컷이 흔들리지 않습니다 — 다 같이 올라서 다 같이
+       티어가 오르는 일은 생기지 않습니다.</p>`;
+}
+
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
   // ⚠️ 발행 쪽은 경고를 실어 보내는데(예: 표시명이 겹쳐 두 사람 통계가 섞임) 화면이
@@ -2522,7 +2763,7 @@ function renderAll(){
   const wb=$('#warnBar'), ws=DATA.warnings||[];
   wb.innerHTML=ws.map(w=>`<div>⚠️ ${esc(w)}</div>`).join('');
   wb.classList.toggle('hidden', !ws.length);
-  renderKpis(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
+  renderKpis(); renderCp(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
   buildChampLaneBtns(); renderChamp(); renderRecords(); renderFun(); renderMatches();
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
