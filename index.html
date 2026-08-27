@@ -89,8 +89,19 @@
   .tfilter input:focus{outline:none;border-color:var(--acc)}
   .tfilter .tfhit{font-size:12px}
   tr.tfhide{display:none}
-  /* 손가락으로 누르는 화면에서는 입력칸도 44px 은 돼야 한다(기본 29px) */
-  @media (pointer:coarse){ .tfilter input{min-height:44px;font-size:16px} }
+  /* 손가락으로 누르는 화면에서는 44px 은 돼야 한다.
+     실측(375px·터치): 지표 검색 27px · 지표 칩 29px · 서브탭 31px · 라인 버튼 33px.
+     ⚠️ 보이는 크기를 키우는 게 아니라 **누를 수 있는 높이**만 올린다 — 글자 크기를
+        건드리면 표 정렬이 어긋난다. 입력칸 글자만 16px 로 두는데, iOS 는 16px 미만
+        입력에 초점이 가면 화면을 확대해 버린다. */
+  @media (pointer:coarse){
+    .tfilter input,.mpick input[type=search],.psearch,input[type=search]{
+      min-height:44px;font-size:16px}
+    .subtab,.mchip,.lnpick,.chip{min-height:44px}
+    #champ .tab,#board .tab,#rank .tab{min-height:44px}
+    /* 읽으라고 쓴 글은 11px 로 두지 않는다(설명문·안내). 차트 눈금·아이콘은 그대로. */
+    p.muted,.card>.muted,.axnote{font-size:12.5px}
+  }
   .mathwrap .muted{font-size:12.5px;line-height:1.65;margin:0 0 6px}
   .mathwrap .tbl{overflow-x:auto;margin:0 0 8px}
   .mathwrap table{border-collapse:collapse;width:100%;font-size:12.5px}
@@ -381,11 +392,24 @@
     .team .pl{flex:0 0 auto}
     .team .pl img{flex:0 0 auto}
     .team .pn{display:none}
-    table:not(.sb):not(.heat) thead{display:none}
-    table:not(.sb):not(.heat) tbody tr{display:block;border:1px solid var(--line);border-radius:10px;
+    table:not(.sb):not(.heat):not(.cmp) thead{display:none}
+    /* ⚠️ .cmp(두 선수 비교)는 제외한다 — '값 · 항목 · 값' 3열이라 카드로 쌓으면
+       무엇과 무엇을 견주는지가 깨진다. 원래도 좁아서 표 그대로가 낫다.
+       표를 줄마다 카드로 쌓는다. 한 줄에 칸을 **2개씩** 넣어 높이를 반으로 줄인다 —
+       한 칸씩 세로로만 쌓으면 리더보드 21명이 8.5화면이 된다(칸 10개 × 30px = 307px).
+       첫 칸(이름)은 한 줄을 다 쓴다 — 카드의 제목이라 값 옆에 붙으면 안 읽힌다. */
+    table:not(.sb):not(.heat):not(.cmp) tbody tr{display:grid;grid-template-columns:1fr 1fr;
+      column-gap:12px;border:1px solid var(--line);border-radius:10px;
       margin-bottom:8px;padding:4px 10px;background:var(--panel2)}
-    table:not(.sb):not(.heat) td{display:flex;justify-content:space-between;align-items:center;border:none;padding:4px 0;white-space:normal}
-    table:not(.sb):not(.heat) td::before{content:attr(data-label);color:var(--dim);font-size:11px;margin-right:12px}
+    table:not(.sb):not(.heat):not(.cmp) tbody tr>td:first-child{grid-column:1/-1;
+      font-weight:650;border-bottom:1px solid var(--line);margin-bottom:2px}
+    table:not(.sb):not(.heat):not(.cmp) tbody tr>td:first-child::before{display:none}
+    table:not(.sb):not(.heat):not(.cmp) td{display:flex;justify-content:space-between;align-items:center;
+      border:none;padding:4px 0;white-space:normal;min-width:0}
+    table:not(.sb):not(.heat):not(.cmp) td::before{content:attr(data-label);color:var(--dim);
+      font-size:11px;margin-right:8px;flex:0 0 auto}
+    /* 값이 길면(닉네임·챔프 이름) 칸을 밀어내지 않고 줄바꿈한다 */
+    table:not(.sb):not(.heat):not(.cmp) td>*{min-width:0}
   }
 </style>
 </head>
