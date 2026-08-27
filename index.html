@@ -360,6 +360,13 @@
        펼치는 스코어보드에서 전부 본다. */
     /* 라인 선택기 버튼이 24px 라 손가락으로 누르기 빠듯하다(실측) */
     .lnpick{padding:7px 13px;font-size:12.5px}
+    /* 실측(모바일 UA·터치 5점): MMR 링크 21개가 20px 높이, 물음표는 14px 다.
+       보이는 크기는 그대로 두고 **누를 수 있는 영역만** 44px 로 넓힌다 —
+       크기를 키우면 표 정렬이 통째로 어긋난다. */
+    .qmark,.mmrlink,.vslink{position:relative}
+    .qmark::after,.mmrlink::after,.vslink::after{
+      content:'';position:absolute;left:50%;top:50%;width:44px;height:44px;
+      transform:translate(-50%,-50%);}
     .team .pl{flex:0 0 auto}
     .team .pl img{flex:0 0 auto}
     .team .pn{display:none}
@@ -1518,6 +1525,15 @@ function renderPlayerMetrics(p){
   bindLanePicks(el,p);
 }
 
+// 능력치 카드의 라인 버튼. renderPlayerBody 가 카드를 통째로 다시 쓰므로 위임으로 받는다.
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-axlane]');
+  if(!b) return;
+  curAxisLane=b.dataset.axlane;
+  renderPlayerBody();
+  announce(curAxisLane?`${laneKo(curAxisLane)} 능력치`:'전체 능력치');
+});
+
 function bindLanePicks(el,p){
   el.querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
     curMetricLane=b.dataset.lane;
@@ -1941,6 +1957,18 @@ const SCALE=()=>DATA.profile_scale||{max:5,step:.01,rings:5,room_avg:2.75};
 // 눈금 간격이 0.01 이면 두 자리, 0.5 면 한 자리. 화면이 자리수를 따로 정하지 않는다.
 const axDigits=()=>{const st=SCALE().step||0.01; return st>=0.5?1:(st>=0.1?1:2);};
 const fmtAx=v=>v==null?'—':(+v).toFixed(axDigits());
+// 능력치 카드에서 지금 고른 라인. ''(빈 문자열)이면 통합(방 전체 기준).
+let curAxisLane='';
+// 그 사람에게 실제로 보여줄 축 배열 — 라인을 골랐으면 그 라인 것.
+function axesOf(p){
+  const per=p&&p.profile_lane;
+  if(curAxisLane && per && per[curAxisLane]) return per[curAxisLane];
+  return (p&&p.profile)||[];
+}
+function axisLanesOf(p){
+  const per=p&&p.profile_lane;
+  return per?Object.keys(per).sort((a,b)=>laneIdx(a)-laneIdx(b)):[];
+}
 // 지난 내전 대비 변화. 발행 쪽이 문턱(기본 0.30) 미만은 아예 안 실어 보내므로,
 // 여기 값이 있다는 것 자체가 '잡음보다 큰 변화'라는 뜻이다.
 const fmtDelta=d=>d==null?'':
@@ -2027,7 +2055,7 @@ function radarSVG(series,opt){
 // 막대는 정확한 값을 담당한다. 둘 다 있어야 "어느 쪽이 긴가"와 "몇인가"에 같이 답한다.
 function axisBars(p){
   const SC=SCALE(), MAX=SC.max||5;
-  const ax=(p.profile||[]).filter(a=>a.score!=null);
+  const ax=axesOf(p).filter(a=>a.score!=null);
   if(!ax.length) return '';
   return `<div class="axbars">`+ax.map(a=>{
     const w=Math.max(3,Math.round(a.score/MAX*100));
@@ -2045,7 +2073,7 @@ function axisBars(p){
 // MMR 과도 상관이 중간(r≈0.5)이라 나란히 놓으면 모순으로 읽힌다.
 function statHead(p,ratingName){
   const SC=SCALE(), MAX=SC.max||5;
-  const ax=(p.profile||[]).filter(a=>a.score!=null);
+  const ax=axesOf(p).filter(a=>a.score!=null);
   if(!ax.length) return '';
   const tot=ax.reduce((t,a)=>t+a.score,0), full=ax.length*MAX;
   const best=ax.slice().sort((x,y)=>y.score-x.score).slice(0,2);
@@ -2054,13 +2082,15 @@ function statHead(p,ratingName){
     (lane?`<span class="pill">${laneKo(lane)}</span>`:'')+
     `<span class="pill">특기 ${best.map(b=>`${b.label} ${fmtAx(b.score)}`).join(' · ')}</span>`+
     `<span class="pill acc">합계 ${tot.toFixed(2)} / ${full}</span>`+
+    (ax[0]&&ax[0].n?`<span class="pill">${curAxisLane?`${laneKo(curAxisLane)} ${ax[0].n}명 중`:`방 ${ax[0].n}명 중`}</span>`:'')+
     (()=>{const mv=ax.filter(a=>a.delta!=null)
             .sort((x,y)=>Math.abs(y.delta)-Math.abs(x.delta))[0];
       return mv?`<span class="pill">지난 내전 대비 ${mv.label} `+
         `<span class="${mv.delta>0?'pos':'neg'}">${mv.delta>0?'+':''}`+
         `${mv.delta.toFixed(2)}</span></span>`:'';})()+`</div>`+
     `<p class="muted" style="font-size:11.5px;margin:6px 0 0">`+
-    `방 평균이 ${SC.room_avg} 입니다. 순위가 아니라 <b>값</b>에서 나온 점수라,`+
+    `${curAxisLane?`${laneKo(curAxisLane)}끼리 견준 점수입니다 — `:''}`+
+    `${curAxisLane?laneKo(curAxisLane):'방'} 평균이 ${SC.room_avg} 입니다. 순위가 아니라 <b>값</b>에서 나온 점수라,`+
     ` 잘하면 오르고 못하면 내려갑니다 — 남이 못해서 오르지 않습니다.`+
     ` 판수가 적으면 평균 쪽으로 당겨 둡니다.`+
     ` 승패를 반영하는 MMR 과는 다른 숫자입니다.`+
@@ -2069,7 +2099,20 @@ function statHead(p,ratingName){
     ` — 그보다 작으면 잡음과 구분이 안 됩니다.</p>`;
 }
 function radar(p,ratingKey){
-  return `<div class="statwrap">${radarSVG([{name:'',profile:p.profile,color:'#3aa0ee'}])}`+
+  // 라인을 골랐으면 레이더도 그 라인 축으로 그린다(막대·머리말과 같은 출처).
+  const lanes=axisLanesOf(p);
+  if(!lanes.includes(curAxisLane)) curAxisLane='';   // 사람이 바뀌면 통합으로
+  // 라인이 2개 이상일 때만 선택기를 낸다 — 하나면 고를 게 없다.
+  const picker=lanes.length>=2
+    ? `<div class="lnpicks" id="axLanes" role="group" aria-label="능력치 라인 선택">`+
+      [['','전체']].concat(lanes.map(L=>[L,laneKo(L)])).map(([v,t])=>
+        `<button type="button" class="lnpick${curAxisLane===v?' on':''}" data-axlane="${v}"`+
+        ` aria-pressed="${curAxisLane===v}">${t}</button>`).join('')+
+      `<span class="muted" style="font-size:11px;margin-left:4px">`+
+      `${curAxisLane?`${laneKo(curAxisLane)}에서 뛴 판만, ${laneKo(curAxisLane)}끼리 비교`
+                   :'라인을 고르면 그 라인끼리 견줍니다'}</span></div>`
+    : '';
+  return picker+`<div class="statwrap">${radarSVG([{name:'',profile:axesOf(p),color:'#3aa0ee'}])}`+
          `${axisBars(p)}</div>`+statHead(p,ratingKey);
 }
 
