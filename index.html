@@ -437,7 +437,7 @@
 /* 라인별 격자 — 가로는 라인 5칸 고정, 세로는 사람 */
 .lanegrid{width:100%;border-collapse:separate;border-spacing:0}
 .lanegrid th{font-size:12px;font-weight:600;padding:6px 4px;text-align:center;
-  color:var(--muted);position:sticky;top:0;background:var(--card);z-index:1}
+  color:var(--dim);position:sticky;top:0;background:var(--panel2);z-index:1}
 .lanegrid th:first-child{text-align:left;padding-left:8px}
 .lanegrid td{padding:3px 4px;text-align:center}
 .lanegrid td:first-child{text-align:left;padding-left:8px;font-size:13px;white-space:nowrap}
@@ -485,12 +485,12 @@
 .cbo{position:relative;display:inline-block;min-width:190px}
 .cbo>input{width:100%;box-sizing:border-box;padding:7px 28px 7px 10px;
   border:1px solid var(--line);border-radius:9px;background:var(--panel);
-  color:var(--fg);font-size:13.5px}
+  color:var(--txt);font-size:13.5px}
 .cbo>input:focus{outline:2px solid var(--acc);outline-offset:-1px}
 .cbo::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
   pointer-events:none;opacity:.55;font-size:11px}
 .cbo>ul{position:absolute;z-index:40;left:0;right:0;top:calc(100% + 4px);margin:0;
-  padding:4px;list-style:none;max-height:270px;overflow-y:auto;background:var(--card);
+  padding:4px;list-style:none;max-height:270px;overflow-y:auto;background:var(--panel2);
   border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #0008}
 .cbo>ul[hidden]{display:none}
 .cbo>ul>li{padding:7px 9px;border-radius:7px;cursor:pointer;font-size:13.5px;
