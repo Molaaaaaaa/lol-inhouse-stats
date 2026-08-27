@@ -680,7 +680,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   el.innerHTML=h+'</tbody></table>';
   // ⚠️ 여기서 표가 통째로 갈린다. aria-label 과 거르기 칸도 같이 날아가므로 다시 붙인다
   //    (안 하면 랭킹 지표를 바꾸는 순간 거르기 칸이 사라진다 — 실측).
-  labelTables(); attachTableFilters(el);
+  labelTables(); labelTips(el); attachTableFilters(el);
   el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
     const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
       labelTables();
@@ -1455,6 +1455,9 @@ function renderPlayerBody(){
     [{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},{k:'lane',h:'라인',fmt:laneKo},
      {k:'res',h:'결과',cls:r=>r.win?'pos':'neg'},{k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1}],null,-1);
   renderPlayerMetrics(p);
+  // ⚠️ 이 카드는 통째로 다시 그려진다(라인 전환·사람 전환). 다시 그리면 툴팁의
+  //    aria-label 이 같이 날아가, 소리로는 능력치 축의 순위·근거가 사라진다.
+  labelTips($('#player'));
 }
 // ---------- '나 기준' 상대별 전적 ----------
 // 왜 이 형태인가: 예전엔 상대 전적과 킬 관계가 **따로 두 카드**였는데, 둘 다 "왼쪽이
@@ -1792,6 +1795,10 @@ function goldChart(tl){
   const line=pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
   // 0선 기준 면적 — 위는 파랑, 아래는 주황. 0 지점에서 그라디언트를 끊는다.
   const zero=Y(0), zf=((zero-T)/ih*100).toFixed(2);
+  // ⚠️ id 는 경기마다 달라야 한다. 경기를 둘 이상 펼치면 같은 id 가 문서에 여러 개
+  //    생기고, `url(#gg)` 는 **처음 하나**만 가리킨다. 지금은 축이 0 기준 대칭이라
+  //    zf 가 항상 50 이어서 티가 안 났을 뿐이다.
+  const gid='gg'+Math.random().toString(36).slice(2,9);
   const area=`${L},${zero} ${line} ${(L+iw).toFixed(1)},${zero}`;
   let ticks='';
   for(let g=-top; g<=top; g+=stepG){
@@ -1813,14 +1820,14 @@ function goldChart(tl){
     `<span class="red">▼ 레드 우세</span></div>
     <svg class="chart" viewBox="0 0 ${W} ${H}" role="img"
          aria-label="골드 차이 추이 — 위쪽은 블루팀 우세, 아래쪽은 레드팀 우세">
-      <defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
+      <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#3aa0ee" stop-opacity=".30"/>
         <stop offset="${zf}%" stop-color="#3aa0ee" stop-opacity=".05"/>
         <stop offset="${zf}%" stop-color="#e8833a" stop-opacity=".05"/>
         <stop offset="100%" stop-color="#e8833a" stop-opacity=".30"/>
       </linearGradient></defs>
       ${ticks}
-      <polygon points="${area}" fill="url(#gg)"/>
+      <polygon points="${area}" fill="url(#${gid})"/>
       <polyline points="${line}" fill="none" stroke="#8fa4bd" stroke-width="2"
                 stroke-linejoin="round" stroke-linecap="round"/>
       <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="3.5" fill="${col}"/>
@@ -1998,16 +2005,29 @@ function renderSynHeat(){
   const el=$('#synHeat'); if(!el) return;
   const syn=DATA.synergy||[]; const names=[...new Set(syn.flatMap(s=>[s.na,s.nb]))];
   if(names.length<2){ el.innerHTML='<p class="muted">데이터 없음</p>'; return; }
-  const map={}; syn.forEach(s=>{map[s.na+'|'+s.nb]=s.synergy;map[s.nb+'|'+s.na]=s.synergy;});
-  const color=v=>{ if(v==null)return 'var(--panel2)'; const t=Math.max(-0.15,Math.min(0.15,v))/0.15;
-    return t>=0?`rgba(58,160,238,${(0.2+0.7*t).toFixed(2)})`:`rgba(232,131,58,${(0.2+0.7*-t).toFixed(2)})`; };
+  const map={}, gmap={};
+  syn.forEach(s=>{ map[s.na+'|'+s.nb]=s.synergy; map[s.nb+'|'+s.na]=s.synergy;
+                   gmap[s.na+'|'+s.nb]=s.games;  gmap[s.nb+'|'+s.na]=s.games; });
+  // ⚠️ 색 눈금을 **실제 값 범위**에 맞춘다. 예전엔 ±0.15 로 고정했는데 시너지는
+  //    empirical Bayes 로 눌려 실측 최대가 ±0.046 이었다 — 색 범위의 **30%만** 써서
+  //    208칸이 사실상 같은 색이었다(알파 0.20~0.41). 판수가 쌓이면 범위도 늘어난다.
+  //    다만 늘린 눈금이 약한 신호를 세 보이게 하므로, 아래 범례에 **양 끝값을 적는다.**
+  const peak=Math.max(0.02, ...syn.map(x=>Math.abs(+x.synergy||0)));
+  const color=v=>{ if(v==null)return 'var(--panel2)'; const t=Math.max(-peak,Math.min(peak,v))/peak;
+    return t>=0?`rgba(58,160,238,${(0.15+0.75*t).toFixed(2)})`:`rgba(232,131,58,${(0.15+0.75*-t).toFixed(2)})`; };
   let h='<table class="heat" aria-label="시너지 히트맵"><tr><th scope="col" class="hh"></th>'+names.map(n=>`<th scope="col" class="hh">${n}</th>`).join('')+'</tr>';
   for(const a of names){ h+=`<tr><td class="hh">${a}</td>`+names.map(b=>{
     if(a===b) return '<td><div class="hc" style="background:var(--line)"></div></td>';
     const raw=map[a+'|'+b], v=(raw==null||isNaN(+raw))?null:+raw;
-    return `<td><div class="hc" data-tip="${a} ＋ ${b}&#10;시너지 ${v==null?'-':sgn(v)}" style="background:${color(v)}">${v==null?'':(v>0?'+':'')+v.toFixed(2)}</div></td>`;
+    const g=gmap[a+'|'+b];
+    // 판수 없이 시너지만 보이면 2판짜리 +0.037 과 9판짜리가 같아 보인다
+    const tip=`${a} ＋ ${b}&#10;시너지 ${v==null?'-':sgn(v)}${g?'&#10;함께 '+g+'판':''}`;
+    return `<td><div class="hc" data-tip="${tip}" style="background:${color(v)}">${v==null?'':(v>0?'+':'')+v.toFixed(2)}</div></td>`;
   }).join('')+'</tr>'; }
-  el.innerHTML=h+'</table><p class="muted" style="margin-top:8px;font-size:12px">파랑=좋은 궁합 / 주황=나쁜 궁합</p>';
+  // 눈금이 데이터에 맞춰 늘어나므로 **양 끝이 얼마인지** 적어야 오해가 없다
+  el.innerHTML=h+'</table><p class="muted" style="margin-top:8px;font-size:12px">'+
+    `파랑=좋은 궁합 / 주황=나쁜 궁합 · 가장 진한 색이 ±${peak.toFixed(2)} 입니다`+
+    ' · 칸을 '+TAPHINT+' 함께 뛴 판수가 나옵니다</p>';
 }
 function donut(dist){
   if(!dist||!dist.length) return '<span class="muted">-</span>';
