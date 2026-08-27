@@ -1131,7 +1131,10 @@ function buildRankControls(){
 
   const q=metricQuery.trim().toLowerCase();
   // 검색 중에는 분류를 무시하고 전체에서 찾는다 — 어느 분류인지 모르니까 검색하는 것이다
-  const hits=q?groups.flatMap(g=>g.metrics.filter(k=>mLabel(k).toLowerCase().includes(q)))
+  // 라벨만 훑으면 대회식 이름(GD10·CSM·XPD15)으로 못 찾는다 — 키·설명까지 훑는다.
+  // 설명에 "대회 지표의 GD10 입니다"가 들어 있어 그 이름으로도 걸린다.
+  const hay=k=>(mLabel(k)+' '+k+' '+mDesc(k)).toLowerCase();
+  const hits=q?groups.flatMap(g=>g.metrics.filter(k=>hay(k).includes(q)))
               :(groups.find(g=>g.group===curGroup)||groups[0]).metrics;
 
   // 검색 중에도 '지금 보고 있는 지표가 어느 분류인지'는 계속 표시한다.
@@ -1185,6 +1188,23 @@ function renderSyn(){
   ],'synergy',-1);
   renderSynHeat();
 }
+function serverRecordsHTML(){
+  // gol.gg 대회 페이지의 TOURNAMENT DATA 에 해당 — 경기 단위 기록.
+  // 경기는 날짜·길이로만 특정한다(매치 ID 는 익명화 원칙상 여기 못 나온다).
+  const sr=DATA.server_records||{};
+  if(!sr.avg_kills) return '';
+  const mm=s2=>`${Math.floor(s2/60)}:${String(s2%60).padStart(2,'0')}`;
+  const dt=ts=>new Date(ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'});
+  const cell=(t,v,sub)=>`<div class="kpi"><div class="label">${t}</div>`+
+    `<div class="value" style="font-size:19px">${v}</div>`+
+    `<div class="muted" style="font-size:11px;margin-top:3px">${sub}</div></div>`;
+  return `<div class="kpis" style="margin:0 0 12px">`+
+    cell('평균 킬 / 경기', sr.avg_kills, `${DATA.summary?.total_games??''}경기 기준`)+
+    cell('최단 경기', mm(sr.shortest.dur), `${dt(sr.shortest.ts)} · ${sr.shortest.kills}킬`)+
+    cell('최장 경기', mm(sr.longest.dur), `${dt(sr.longest.ts)} · ${sr.longest.kills}킬`)+
+    cell('최다 킬 경기', sr.most_kills.kills+'킬', `${dt(sr.most_kills.ts)} · ${mm(sr.most_kills.dur)}`)+
+  `</div>`;
+}
 function renderRecords(){
   const r=DATA.records||{};
   const mmss2=sec=>sec?`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`:'';
@@ -1213,7 +1233,7 @@ function renderRecords(){
   const streak=(r.longest_streak&&r.longest_streak.name)?
     `<div class="kpi"><div class="label">🔥 최장 연승</div><div class="value" style="font-size:15px">`+
     `${r.longest_streak.name} <span class="acc">${r.longest_streak.value}연승</span></div></div>`:'';
-  $('#recCards').innerHTML=`<div class="kpis recgrid">`+cards+streak+`</div>`+minGamesNote();
+  $('#recCards').innerHTML=serverRecordsHTML()+`<div class="kpis recgrid">`+cards+streak+`</div>`+minGamesNote();
   renderTable($('#mvpT'),DATA.mvp||[],[{k:'name',h:'멤버'},
     {k:'mvp',h:'MVP',num:1,bar:1},{k:'games',h:'판',num:1}],'mvp',-1);
   const pentas=r.pentas||[];
