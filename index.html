@@ -531,6 +531,19 @@
 .killmap .kd.x{background:#9aa6b2;border-radius:2px}
 .kmlegend{display:flex;gap:12px;font-size:11.5px;color:var(--dim);margin-top:6px;flex-wrap:wrap}
 .kmlegend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+
+/* 플레이어 초기 화면 — 선수 디렉터리 */
+.plhl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.plhl .kpi .value{font-size:17px}
+.plgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:9px}
+.plcard{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:11px;background:var(--panel);cursor:pointer;text-align:left;
+  color:var(--txt);font:inherit;min-height:44px}
+.plcard:hover{border-color:var(--acc)}
+.plcard:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+.plcard b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plcard .sub{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--dim);flex-wrap:wrap}
+.plcard .tierbadge{font-size:10.5px;padding:1px 7px}
 </style>
 </head>
 <body>
@@ -1600,14 +1613,17 @@ function attachCombo(sel, placeholder){
   sel._cbo={sync,draw}; sync();
   return sel._cbo;
 }
-function fillPlayerSelect(sel,q){
+function fillPlayerSelect(sel,q,withAll){
   const all=Object.keys(DATA.players||{})
     .sort((a,b)=>playerLabel(a).localeCompare(playerLabel(b),'ko'));
   const needle=(q||'').trim().toLowerCase();
   const ids=needle?all.filter(id=>playerHaystack(id).includes(needle)):all;
   const keep=sel.value;
-  sel.innerHTML=ids.map(id=>`<option value="${id}">${playerLabel(id)}</option>`).join('');
-  if(ids.includes(keep)) sel.value=keep;      // 검색해도 보던 사람은 유지
+  // '전체 보기'는 **플레이어 탭에만** 있다. 비교 탭에 넣으면 "전체 vs 누구"라는
+  // 말이 안 되는 조합이 생긴다.
+  sel.innerHTML=(withAll?`<option value="">📋 전체 보기</option>`:'')
+    +ids.map(id=>`<option value="${id}">${playerLabel(id)}</option>`).join('');
+  if(ids.includes(keep)||(withAll&&keep==='')) sel.value=keep;   // 보던 것 유지
   return ids.length;
 }
 let plSubIdx=0;      // 플레이어 탭에서 마지막으로 보던 서브탭
@@ -1650,9 +1666,58 @@ function accRecords(p){
   </details>`;
 }
 
+// 플레이어 탭 초기 화면 — 아무도 안 골랐을 때. 첫 사람을 자동으로 여는 대신
+// 전원을 한눈에 보여주고, 카드를 누르면 그 사람이 열린다.
+function playerHomeHTML(){
+  const P=DATA.players||{}, C=DATA.cp||{};
+  // 하이라이트 — 이미 계산된 것만 끌어온다(여기서 새로 세지 않는다)
+  const lb=(DATA.leaderboard||[])[0];
+  const top=k=>((DATA.rankings||{})[k]||[])[0];
+  const hl=[
+    lb?['승률 1위 (신뢰성)',lb.discord_name,`${pct(lb.winrate)} · ${lb.games}판`]:null,
+    top('kda')?['KDA 1위',top('kda').discord_name,`${top('kda').value} · ${top('kda').games}판`]:null,
+    top('dpm')?['분당 딜 1위',top('dpm').discord_name,`${Math.round(top('dpm').value)} · ${top('dpm').games}판`]:null,
+    top('kp')?['킬 관여 1위',top('kp').discord_name,`${pct(top('kp').value)} · ${top('kp').games}판`]:null,
+  ].filter(Boolean);
+  const hlHtml=hl.length?`<div class="plhl">`+hl.map(([t,n,v])=>
+    `<div class="kpi"><div class="label">${t}</div><div class="value">${esc(n)}</div>`+
+    `<div class="muted" style="font-size:11px;margin-top:2px">${v}</div></div>`).join('')+`</div>`:'';
+  // 디렉터리 — 티어 사다리와 같은 순서(배치 미완은 맨 뒤, 티어는 안 보여준다)
+  const ids=Object.keys(P).sort((a,b)=>{
+    const ca=C[a]||{},cb=C[b]||{};
+    const oa=ca.placed?(ca.cp||0):((ca.cp||0)-100000), ob=cb.placed?(cb.cp||0):((cb.cp||0)-100000);
+    return ob-oa;});
+  const cards=ids.map(id=>{
+    const p=P[id],r=p.record||{},c=C[id]||{};
+    const tier=c.placed?tierBadge(c.tier)
+      :`<span class="muted" style="font-size:10.5px">배치 중 ${c.games??0}/${(DATA.cp_constants||{}).placement_games||3}</span>`;
+    const lane=c.main_lane?laneKo(c.main_lane):'—';
+    return `<button type="button" class="plcard" data-pid="${esc(id)}">`+
+      `<b>${esc(p.name)}</b>`+
+      `<span class="sub">${tier}<span>${lane}</span></span>`+
+      `<span class="sub"><span>${r.games||0}판 ${r.wins||0}승 ${r.losses||0}패</span>`+
+      `<span class="${wrClass(r.winrate,r.games)}">${pct(r.winrate)}</span>`+
+      `<span>KDA ${r.kda??'—'}</span></span></button>`;
+  }).join('');
+  return `${hlHtml}<div class="pdk" style="margin-bottom:8px">선수 목록
+      <span class="muted" style="font-weight:400">— 누르면 그 선수가 열립니다. 순서는 티어 순.</span></div>
+    <div class="plgrid">${cards}</div>`;
+}
 function renderPlayerBody(){
-  const p=(DATA.players||{})[$('#playerSel').value];
-  if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
+  const sel=$('#playerSel');
+  const p=(DATA.players||{})[sel.value];
+  if(!p){
+    // 아무도 안 골랐다 = 초기 화면(전체 보기). 카드를 누르면 그 사람으로 간다.
+    $('#playerBody').innerHTML=playerHomeHTML();
+    $('#playerBody').querySelectorAll('.plcard').forEach(b=>b.onclick=()=>{
+      sel.value=b.dataset.pid;
+      sel.dispatchEvent(new Event('change',{bubbles:true}));   // 콤보박스 표시 동기화
+      renderPlayerBody();
+      $('#player').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    labelTips($('#playerBody'));
+    return;
+  }
   const r=p.record||{}, f=p.form||{};
   const streak=f.streak?`<span class="pill ${f.dir==='W'?'good':'bad'}">${f.streak}${f.dir} 연속</span>`:'';
   // 예전엔 시너지 점수만 덩그러니 있어서 그게 무슨 숫자인지 알 수 없었다
@@ -3092,7 +3157,9 @@ function renderAll(){
   wb.classList.toggle('hidden', !ws.length);
   renderKpis(); renderCp(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
   buildChampLaneBtns(); renderChamp(); renderRecords(); renderFun(); renderMatches();
-  fillPlayerSelect($('#playerSel')); renderPlayerBody();
+  fillPlayerSelect($('#playerSel'),'',true);
+  $('#playerSel').value='';               // 첫 화면은 특정인이 아니라 전체 보기
+  renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
   // 검색창과 드롭다운을 한 칸으로 — 두 칸이면 어디에 치고 어디서 고르는지가 헷갈린다
