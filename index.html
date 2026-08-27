@@ -492,8 +492,8 @@
 .accbox .tick{opacity:.45;margin-right:5px}
 
 /* 행 클릭 고정 강조 — 마우스를 떼도 어느 행을 보고 있었는지 남는다 */
-#cpT tbody tr, #cpLaneGrid tbody tr{cursor:pointer}
-#cpT tbody tr.rowsel td, #cpLaneGrid tbody tr.rowsel td{
+#cpT tbody tr{cursor:pointer}
+#cpT tbody tr.rowsel td{
   font-weight:700;background:color-mix(in srgb, var(--acc) 12%, transparent)}
 
 /* 되판 아이템 — 흐리게 + ✕. 색만 바꾸면 흑백/색각에서 구분이 사라진다 */
@@ -567,16 +567,12 @@
   <main id="views">
 
   <section id="tier" class="view" data-subtabs>
-    <div class="card" data-sub="🏆 사다리"><h2>🏆 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span></h2>
+    <div class="card" data-sub="🏆 사다리"><h2>🏆 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span><span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
       <p class="muted" id="cpIntro"></p>
       <div class="tierlegend" id="cpLegend"></div>
+      <div class="lnpicks" id="cpLanePick" role="group" aria-label="보기 선택"></div>
       <div id="cpT"></div>
       <div class="muted" id="cpNote" style="margin-top:8px;font-size:12px"></div></div>
-    <div class="card" data-sub="🧭 라인별"><h2>🧭 라인별 티어<span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
-      <p class="muted" id="cpLaneIntro"></p>
-      <div class="lnpicks" id="cpLanePick" role="group" aria-label="라인 선택"></div>
-      <div class="lanewrap" id="cpLaneGrid"></div>
-      <div class="muted" id="cpLaneNote" style="margin-top:8px;font-size:12px"></div></div>
     <div class="card" data-sub="📐 CP 계산식"><h2>📐 CP 는 어떻게 나오나</h2>
       <div id="cpMath"></div></div>
     <div class="card" data-sub="🎯 MMR 검산">
@@ -2939,15 +2935,16 @@ function tierBadge(name){
 }
 // 라인 칸 하나. 확신을 **모양**으로 드러낸다 — 실선(주 라인) / 실선(배치완료) /
 // 점선(표본 부족) / 흐린 점선(안 뛴 라인).
-// 라인별 화면 상태 — 필터·추정치 토글은 다시 그려도 유지된다
-let cpLaneFilter='', cpLaneEst=false;
+// 사다리 보기 상태 — ''=통합(1인 1행) · 'ALL'=라인별 전부 · 라인키=그 라인만.
+// 다시 그려도 유지된다.
+let cpView='', cpLaneEst=false;
 function renderCp(){
   const cp=DATA.cp||{};
   const ids=Object.keys(cp);
   const C=cpConst();
   if(!ids.length){
     $('#cpT').innerHTML='<p class="muted">아직 티어를 낼 만한 판이 없습니다.</p>';
-    $('#cpLaneGrid').innerHTML=''; $('#cpMath').innerHTML=''; return;
+    $('#cpMath').innerHTML=''; return;
   }
   const base=C.cp_base||1000, need=C.placement_games||4;
 
@@ -2980,6 +2977,25 @@ function renderCp(){
   // 배치 미완은 메달 후보에서도 뺀다 — 2판 전승이 금메달을 달면 안 된다.
   rows.filter(r=>r.placed).sort((a,b)=>(b.cp||0)-(a.cp||0)).forEach((r,i)=>{r._medal=i<3?MEDAL[i]+' ':'';});
   const FULL=C.tier_points||100;
+  // ── 보기 버튼: 통합 / 라인별 / 라인 하나 ──
+  // 🔴 라인별을 서브탭에 숨겼더니 "왜 안 보이지?" 제보가 왔다. 첫 화면에 둔다.
+  const cnt={};
+  rows.filter(r=>r.placed).forEach(r=>LANE_SEQ.forEach(l=>{
+    if(((r.lanes||{})[l]||{}).games>0) cnt[l]=(cnt[l]||0)+1;}));
+  $('#cpLanePick').innerHTML=
+    [['','통합'],['ALL','라인별']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
+      `<button type="button" class="lnpick${cpView===v?' on':''}" data-lane="${v}"`+
+      ` aria-pressed="${cpView===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('')
+    +(cpView?`<label class="mini" style="gap:6px;margin-left:10px">`+
+      `<input type="checkbox" id="cpLaneEstT"${cpLaneEst?' checked':''}>안 뛴 라인 추정치도 보기</label>`:'');
+  $('#cpLanePick').querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
+    cpView=b.dataset.lane; renderCp();
+    announce(cpView===''?'통합 티어':(cpView==='ALL'?'라인별 티어':`${laneKo(cpView)} 티어`));
+  });
+  const estT=$('#cpLaneEstT');
+  if(estT) estT.onchange=()=>{cpLaneEst=estT.checked; renderCp();};
+
+  if(cpView){ renderCpLanes(rows); return; }
   renderTable($('#cpT'),rows,[
     {k:'name',h:'멤버',fmt:(v,r)=>(r._medal||'')+esc(v)},
     // ⚠️ 배치를 마치기 전에는 티어를 **안 보여 준다.** 배치 구간은 K 가 커서 한두 판
@@ -3009,12 +3025,11 @@ function renderCp(){
     ` 배치를 마치기 전에는 티어를 보여 주지 않습니다 — 그 구간은 점수가 크게 움직여서`+
     ` (K=${C.k_place} → ${C.k_norm}) 한두 판 결과가 티어처럼 보이면 억울한 사람이 생깁니다.`;
 
-  // ── 라인별: 뛴 라인마다 한 행 ──
-  // 🔴 격자(1인 1행 × 5칸)였을 때 "외걸이면 미드·정글·원딜 3행이어야 한다"는 제보.
-  //    안 뛴 라인 추정치가 5칸을 채워서 실제로 뛴 라인이 그 사이에 묻혔다.
-  $('#cpLaneIntro').innerHTML=
-    `라인마다 티어가 따로 섭니다 — 주 라인이 아닌 곳에서는 티어가 다르기 때문입니다. `+
-    `한 사람이 여러 라인을 뛰었으면 <b>라인마다 한 줄</b>씩 나옵니다.`;
+}
+
+// (사람 × 뛴 라인) 행 목록 — "외걸이면 미드·정글·원딜 3행" 이 이 화면이다.
+function renderCpLanes(rows){
+  const C=cpConst(); const need=C.placement_games||3;
   const laneRows=[];
   rows.forEach(r=>{
     if(!r.placed){
@@ -3025,31 +3040,15 @@ function renderCp(){
       const c=(r.lanes||{})[l]; if(!c) return;
       const played=(c.games||0)>0;
       if(!played&&!cpLaneEst) return;            // 안 뛴 라인은 토글 켰을 때만
-      if(cpLaneFilter&&l!==cpLaneFilter) return;
+      if(cpView!=='ALL'&&l!==cpView) return;
       laneRows.push({name:r.name,lane:l,_laneKo:laneKo(l),games:c.games||0,
         tier:c.tier,points:c.points,cp:c.cp,mmr:c.mmr,placed:true,
         _lanePlaced:!!c.placed,_est:!played,_main:l===r.main_lane,
         _ord:c.cp});
     });
   });
-  // 라인 필터 칩 + 추정치 토글
-  const cnt={};
-  rows.filter(r=>r.placed).forEach(r=>LANE_SEQ.forEach(l=>{
-    if(((r.lanes||{})[l]||{}).games>0) cnt[l]=(cnt[l]||0)+1;}));
-  $('#cpLanePick').innerHTML=[['','전체']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
-    `<button type="button" class="lnpick${cpLaneFilter===v?' on':''}" data-lane="${v}"`+
-    ` aria-pressed="${cpLaneFilter===v}">${t}${v?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('')
-    +`<label class="mini" style="gap:6px;margin-left:10px"><input type="checkbox" id="cpLaneEstT"${cpLaneEst?' checked':''}>`+
-    `안 뛴 라인 추정치도 보기</label>`;
-  $('#cpLanePick').querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
-    cpLaneFilter=b.dataset.lane; renderCp();
-    announce(cpLaneFilter?`${laneKo(cpLaneFilter)} 라인 티어`:'전체 라인 티어');
-  });
-  const est=$('#cpLaneEstT');
-  if(est) est.onchange=()=>{cpLaneEst=est.checked; renderCp();};
-
   const FULL2=C.tier_points||100;
-  renderTable($('#cpLaneGrid'),laneRows,[
+  renderTable($('#cpT'),laneRows,[
     {k:'name',h:'멤버',fmt:(v,r)=>esc(v)+(r._masked
       ?` <span class="muted" style="font-size:11px">배치 중 ${r.games}/${need}</span>`
       :(r._main?' <span class="muted" style="font-size:10.5px">주 라인</span>':''))},
@@ -3070,20 +3069,14 @@ function renderCp(){
       return r._lanePlaced?String(v)
         :`${v} <span class="muted" style="font-size:10.5px">배치 ${v}/${C.lane_prior_k||5}</span>`;}},
   ],'_ord',-1);
-  const off=DATA.cp_off_lane||{};
-  $('#cpLaneNote').innerHTML=
-    `그 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 끝난 것으로 봅니다 — 그 전에는 `+
-    `판수 옆에 <b>배치 n/${C.lane_prior_k}</b> 로 표시합니다. `+
-    `'안 뛴 라인 추정치'를 켜면 주 라인보다 <b>${Math.abs(C.off_lane_prior||30)} CP</b> 낮게 잡은 `+
-    `추정값이 회색으로 나옵니다`+
-    ((DATA.cp_off_lane||{}).off_games
-      ? ` (근거: 주 라인 승률 ${pct((DATA.cp_off_lane).on_winrate)} vs 다른 라인 ${pct((DATA.cp_off_lane).off_winrate)}`+
-        `${(DATA.cp_off_lane).significant?'':' — 아직 표본이 얇아 우연과 구분되지 않는 값'}).`
-      : '.');
-  labelTips($('#cpLaneGrid'));
+  $('#cpNote').innerHTML=
+    `한 사람이 여러 라인을 뛰었으면 <b>라인마다 한 줄</b>씩 나옵니다. `+
+    `그 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 끝난 것으로 봅니다(그 전에는 배치 n/${C.lane_prior_k}). `+
+    `'추정치 보기'를 켜면 안 뛴 라인을 주 라인보다 ${Math.abs(C.off_lane_prior||30)} CP 낮게 잡은 값이 회색으로 나옵니다.`;
+
   // 클릭한 행 강조 유지 — 호버는 떼면 사라져서 26명 표에서 자기 줄을 놓친다.
   // 컨테이너 위임이라 정렬로 표가 다시 그려져도 리스너는 산다(강조만 리셋된다).
-  [['#cpT'],['#cpLaneGrid']].forEach(([sel])=>{
+  [['#cpT']].forEach(([sel])=>{
     const el=$(sel);
     if(el && !el._rowsel){
       el._rowsel=1;
