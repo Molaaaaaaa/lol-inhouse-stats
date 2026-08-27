@@ -420,16 +420,19 @@
       그래서 배지에는 **항상 이름이 같이** 있고, 색은 거드는 역할만 한다. */
 .tierbadge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;
   font-size:12px;font-weight:700;white-space:nowrap;border:1px solid currentColor}
-.t-아이언{color:#8a8079;background:#8a807914}
-.t-브론즈{color:#b0764a;background:#b0764a14}
-.t-실버{color:#9fb0b4;background:#9fb0b414}
-.t-골드{color:#d6a53f;background:#d6a53f14}
-.t-플래티넘{color:#3fa8a8;background:#3fa8a814}
-.t-에메랄드{color:#3faa63;background:#3faa6314}
-.t-다이아{color:#6b7fe0;background:#6b7fe014}
-.t-마스터{color:#a95ce8;background:#a95ce814}
-.t-그랜드마스터{color:#e05656;background:#e0565614}
-.t-챌린저{color:#e8c46a;background:#e8c46a14}
+.t-1티어{color:#e8c46a;background:#e8c46a14}
+.t-2티어{color:#7b8fe8;background:#7b8fe814}
+.t-3티어{color:#4aa88a;background:#4aa88a14}
+.t-4티어{color:#b0764a;background:#b0764a14}
+.t-5티어{color:#8a8079;background:#8a807914}
+/* 티어 안 진행 막대 — 다음 티어까지 얼마나 왔나. 경계에서 오르내리는 걸
+   숨기는 대신 **드러낸다**(버퍼를 안 쓰기로 한 이유가 그것이다). */
+.tprog{display:flex;align-items:center;gap:7px}
+.tprog .bar{position:relative;flex:1;min-width:44px;height:6px;border-radius:3px;
+  background:var(--line);overflow:hidden}
+.tprog .bar>i{position:absolute;inset:0 auto 0 0;border-radius:3px;background:currentColor}
+.tprog .pt{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.4em;text-align:right}
+.tprog .pt small{font-weight:500;opacity:.6;font-size:10px}
 
 /* 라인별 격자 — 가로는 라인 5칸 고정, 세로는 사람 */
 .lanegrid{width:100%;border-collapse:separate;border-spacing:0}
@@ -2627,9 +2630,9 @@ function laneCell(c, isMain){
   const cls = isMain ? 'main placed' : (placed ? 'placed' : (n ? 'thin' : 'none'));
   const sub = n ? `${n}판` : '안 뜀';
   return `<span class="lcell ${cls} ${tierCls(c.tier)}"
-    data-tip="${esc(c.tier)} · CP ${c.cp} · ${n?`${n}판`:'이 라인은 아직 안 뛰었습니다'}${
+    data-tip="${esc(c.tier)} ${c.points}점 · ${n?`${n}판`:'이 라인은 아직 안 뛰었습니다'}${
       isMain?' · 주 라인':''}${placed||isMain?'':` · 배치 ${cpConst().lane_prior_k||5}판 중 ${n}판`}"
-    ><b>${c.cp}</b><i>${esc(c.tier)} · ${sub}</i></span>`;
+    ><b>${esc(c.tier).replace('티어','')}<small style="font-weight:500;opacity:.7">·${c.points}</small></b><i>${sub}</i></span>`;
 }
 
 function renderCp(){
@@ -2643,12 +2646,13 @@ function renderCp(){
   const base=C.cp_base||1000, need=C.placement_games||4;
 
   // ── 사다리 ──
+  const FULLP=C.tier_points||100;
   $('#cpIntro').innerHTML=
-    `내전 전적만으로 낸 점수입니다. 한 판에 <b>${C.cp_min}~${C.cp_max}</b> 움직이고, `+
-    `시작점은 <b>${base}</b> 입니다. `+
+    `내전 전적만으로 냅니다. 한 판에 <b>${C.cp_min}~${C.cp_max}점</b> 움직이고, `+
+    `<b>${FULLP}점</b>을 채우면 티어가 오릅니다(약 ${Math.round(FULLP/20)}판). `+
     `<b>많이 뛴다고 오르지 않습니다</b> — 이기고 지는 것만 반영합니다.`;
-  $('#cpLegend').innerHTML=cpTiers().slice().reverse().map(t=>
-    `<span>${tierBadge(t.name)}${t.cp!=null?` <span class="muted">${t.cp}+</span>`:''}</span>`
+  $('#cpLegend').innerHTML=cpTiers().map(t=>
+    `<span>${tierBadge(t.name)}${t.open_top?' <span class="muted">위로 열림</span>':''}</span>`
   ).join('');
 
   const rows=ids.map(id=>{
@@ -2665,15 +2669,19 @@ function renderCp(){
   // 메달은 **CP 기준 등수**로 미리 박는다. renderTable 의 idx 는 지금 정렬 순서라
   // 판수로 정렬하면 판수 1등이 금메달을 단다(리더보드에서 겪은 것과 같은 함정).
   rows.slice().sort((a,b)=>(b.cp||0)-(a.cp||0)).forEach((r,i)=>{r._medal=i<3?MEDAL[i]+' ':'';});
-  const maxCp=Math.max(...rows.map(r=>r.cp||0)), minCp=Math.min(...rows.map(r=>r.cp||0));
+  const FULL=C.tier_points||100;
   renderTable($('#cpT'),rows,[
     {k:'name',h:'멤버',fmt:(v,r)=>(r._medal||'')+esc(v)+
       (r.placed?'':` <span class="muted" style="font-size:11px">배치 ${r.games}/${need}</span>`)},
     {k:'tier',h:'티어',fmt:v=>tierBadge(v)},
-    {k:'cp',h:'CP',num:1,fmt:(v)=>{
-      const p=maxCp>minCp?((v-minCp)/(maxCp-minCp))*100:100;
-      return `<div class="barwrap"><span class="cpnum">${v}</span>`+
-             `<i style="width:${p.toFixed(1)}%"></i></div>`;}},
+    // 점수와 진행 막대를 한 칸에. 같은 티어 안에서도 97점과 11점은 전혀 다르다 —
+    // 티어만 보이면 26명 중 18명이 같은 칸이라 아무것도 안 말한다.
+    {k:'points',h:'점수',num:1,fmt:(v,r)=>{
+      const w=Math.max(0,Math.min(100,(v/FULL)*100));
+      return `<div class="tprog ${tierCls(r.tier)}"><span class="pt">${v}</span>`+
+             `<span class="bar"><i style="width:${w.toFixed(1)}%"></i></span></div>`;}},
+    {k:'to_next',h:'다음까지',num:1,nullLast:1,
+     fmt:v=>v==null?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
     {k:'games',h:'판수',num:1},
     {k:'_lane',h:'주 라인'},
     {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',
@@ -2747,13 +2755,31 @@ function renderCp(){
        1판짜리 라인이 실력처럼 보이면 안 되기 때문입니다.
        주 라인에는 벌점이 없습니다: 전체 MMR 자체가 대부분 주 라인에서 만들어진
        숫자라, 거기에도 벌점을 걸면 다섯 라인이 전부 자기 CP 아래로 내려갑니다.</p>
-    <h3 style="font-size:14px;margin:12px 0 4px">티어 컷</h3>
-    <div class="tierlegend">${cpTiers().slice().reverse().map(t=>
-      `<span>${tierBadge(t.name)} <span class="muted">${t.cp==null?'그 아래 전부':t.cp+' 이상'}</span></span>`
+    <h3 style="font-size:14px;margin:12px 0 4px">⑤ 티어와 점수</h3>
+    <p class="muted">롤과 같은 구조입니다 — <b>티어 + 티어 안 점수</b>.
+       속으로는 이어지는 점수 하나가 있고, 티어와 점수는 그걸 ${FULLP}점 단위로
+       <b>쪼갠 것</b>입니다. 그래서 둘이 어긋날 수가 없습니다:
+       속 점수가 높으면 티어도 반드시 같거나 위입니다.</p>
+    <p class="muted"><b>1티어는 ${FULLP-1}점을 넘어갑니다.</b> 위가 없으니 자를 이유가
+       없습니다. 그리고 위로 갈수록 오르기 힘든 건 따로 규칙을 두지 않아도 이미
+       그렇습니다 — 기대 승률을 잘라 두었기 때문에 유리한 쪽은
+       <b>이겨도 ${C.cp_min}에 가깝게 받고 져도 ${C.cp_max}에 가깝게 잃습니다.</b>
+       (실측: 상위권 승 +17.7 / 패 −22.0, 하위권 승 +21.1 / 패 −18.2)</p>
+    <p class="muted"><b>마지막 티어는 0점에서 멈춥니다.</b> 다만 멈추는 건 보이는
+       점수뿐이고 속 점수는 계속 움직입니다 — 속까지 막으면 그 사람을 이긴 쪽에
+       점수가 새로 생겨 전체가 부풀고, 팀을 가를 때 쓰는 실력값도 틀린 채 굳습니다.</p>
+    <div class="tierlegend">${cpTiers().map(t=>
+      `<span>${tierBadge(t.name)} <span class="muted">${
+        t.open_top?'위로 열림':(t.cp==null?'맨 아래':'속 점수 '+t.cp+'+')}</span></span>`
       ).join('')}</div>
-    <p class="muted" style="margin-top:6px">컷은 고정값입니다. 점수 총합이 보존되므로
-       평균이 ${base} 근처에 머물러 컷이 흔들리지 않습니다 — 다 같이 올라서 다 같이
-       티어가 오르는 일은 생기지 않습니다.</p>`;
+    <p class="muted" style="margin-top:6px">티어 경계는 고정값입니다. 점수 총합이
+       보존되어 평균이 ${base} 근처에 머무르므로, 다 같이 올라서 다 같이 티어가
+       오르는 일은 생기지 않습니다.</p>
+    <p class="muted"><b>왜 5단계인가</b> — 판이 쌓여도 점수 폭은 400 근처에서
+       멈춥니다(실측: 19판 217 · 200판 403 · 400판 399). 티어 하나가 운과 구분되려면
+       그만한 폭이 필요하니 400÷${FULLP}≈4~5단계가 이 방의 해상도입니다.
+       10단계로 나눠 봤더니 <b>한 판 두고 티어가 바뀐 비율이 79%</b>였습니다 —
+       그건 티어가 아니라 점수판이었습니다.</p>`;
 }
 
 function renderAll(){
