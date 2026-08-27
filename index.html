@@ -2834,31 +2834,40 @@ function renderCp(){
       _spread: Math.max(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))
              - Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))};
   });
+  // 배치 미완은 CP 순서에 끼워 두면 **정렬 위치가 티어를 누설한다** → 맨 아래로.
+  // _ord 는 기본 정렬 전용이다(헤더를 눌러 다른 열로 정렬하는 건 그대로 된다).
+  rows.forEach(r=>{r._ord=r.placed?r.cp:(r.cp-100000);});
   // 메달은 **CP 기준 등수**로 미리 박는다. renderTable 의 idx 는 지금 정렬 순서라
   // 판수로 정렬하면 판수 1등이 금메달을 단다(리더보드에서 겪은 것과 같은 함정).
-  rows.slice().sort((a,b)=>(b.cp||0)-(a.cp||0)).forEach((r,i)=>{r._medal=i<3?MEDAL[i]+' ':'';});
+  // 배치 미완은 메달 후보에서도 뺀다 — 2판 전승이 금메달을 달면 안 된다.
+  rows.filter(r=>r.placed).sort((a,b)=>(b.cp||0)-(a.cp||0)).forEach((r,i)=>{r._medal=i<3?MEDAL[i]+' ':'';});
   const FULL=C.tier_points||100;
   renderTable($('#cpT'),rows,[
-    {k:'name',h:'멤버',fmt:(v,r)=>(r._medal||'')+esc(v)+
-      (r.placed?'':` <span class="muted" style="font-size:11px">배치 ${r.games}/${need}</span>`)},
-    {k:'tier',h:'티어',fmt:v=>tierBadge(v)},
+    {k:'name',h:'멤버',fmt:(v,r)=>(r._medal||'')+esc(v)},
+    // ⚠️ 배치를 마치기 전에는 티어를 **안 보여 준다.** 배치 구간은 K 가 커서 한두 판
+    //    결과로 크게 흔들린다 — 그 상태의 티어는 정보가 아니라 낙인이다.
+    {k:'tier',h:'티어',fmt:(v,r)=>r.placed?tierBadge(v)
+      :`<span class="muted" style="font-size:12px">배치 중 ${r.games}/${need}</span>`},
     // 점수와 진행 막대를 한 칸에. 같은 티어 안에서도 97점과 11점은 전혀 다르다 —
     // 티어만 보이면 26명 중 18명이 같은 칸이라 아무것도 안 말한다.
     {k:'points',h:'점수',num:1,fmt:(v,r)=>{
+      if(!r.placed) return '<span class="muted">—</span>';
       const w=Math.max(0,Math.min(100,(v/FULL)*100));
       return `<div class="tprog ${tierCls(r.tier)}"><span class="pt">${v}</span>`+
              `<span class="bar"><i style="width:${w.toFixed(1)}%"></i></span></div>`;}},
     {k:'to_next',h:'다음까지',num:1,nullLast:1,
-     fmt:v=>v==null?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
+     fmt:(v,r)=>(!r.placed||v==null)?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
     {k:'games',h:'판수',num:1},
     {k:'_lane',h:'주 라인'},
     {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',
-     fmt:v=>v?`<span class="muted">±${Math.round(v/2)}</span>`:'<span class="muted">—</span>'},
-  ],'cp',-1);
+     // 라인 편차도 CP 파생값이다 — 배치 미완은 같이 가린다
+     fmt:(v,r)=>(!r.placed||!v)?'<span class="muted">—</span>':`<span class="muted">±${Math.round(v/2)}</span>`},
+  ],'_ord',-1);
   const unplaced=rows.filter(r=>!r.placed).length;
   $('#cpNote').innerHTML=
     `배치는 <b>${need}판</b> 입니다`+(unplaced?` — 아직 ${unplaced}명이 배치 중입니다.`:'.')+
-    ` 배치 중에는 점수가 크게 움직입니다(K=${C.k_place} → ${C.k_norm}).`;
+    ` 배치를 마치기 전에는 티어를 보여 주지 않습니다 — 그 구간은 점수가 크게 움직여서`+
+    ` (K=${C.k_place} → ${C.k_norm}) 한두 판 결과가 티어처럼 보이면 억울한 사람이 생깁니다.`;
 
   // ── 라인별 격자 ──
   $('#cpLaneIntro').innerHTML=
@@ -2866,10 +2875,16 @@ function renderCp(){
     `미드도 마스터인 건 아니기 때문입니다. `+
     `<b>안 뛴 라인도 칸을 비우지 않고</b> 추정치로 채웁니다 — 대신 `+
     `<b>점선</b>이 "아직 표본이 모자라다"는 뜻입니다.`;
-  const sorted=rows.slice().sort((a,b)=>(b.cp||0)-(a.cp||0));
+  // 배치 미완은 라인 칸도 감춘다 — 라인 CP 는 전체 CP 에서 파생되므로 같은 누설이다.
+  const sorted=rows.slice().sort((a,b)=>(b._ord||0)-(a._ord||0));
   let h='<table class="lanegrid"><thead><tr><th scope="col">멤버</th>'+
     LANE_SEQ.map(l=>`<th scope="col">${laneKo(l)}</th>`).join('')+'</tr></thead><tbody>';
   sorted.forEach(r=>{
+    if(!r.placed){
+      h+=`<tr><td>${esc(r.name)} <span class="muted" style="font-size:11px">배치 중 ${r.games}/${(cpConst().placement_games||3)}</span></td>`
+        +LANE_SEQ.map(()=>'<td><span class="muted">—</span></td>').join('')+'</tr>';
+      return;
+    }
     const L=r.lanes||{};
     h+=`<tr><td>${esc(r.name)}</td>`+LANE_SEQ.map(l=>{
       const c=L[l]; if(!c) return '<td></td>';
