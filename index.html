@@ -463,6 +463,49 @@
   .lanewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .lanegrid{min-width:520px}
 }
+
+/* 계정별 전적 — 합친 사람만 나온다 */
+.accbox{margin:-2px 0 10px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.accbox>summary{cursor:pointer;padding:7px 11px;font-size:12.5px;color:var(--dim);
+  list-style:none;display:flex;align-items:center;gap:6px;min-height:34px}
+.accbox>summary::-webkit-details-marker{display:none}
+.accbox>summary::after{content:'▾';margin-left:auto;opacity:.6;transition:transform .15s}
+.accbox[open]>summary::after{transform:rotate(180deg)}
+.accbox>summary:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+.accbox .body{padding:0 11px 10px}
+.accbox table{width:100%;border-collapse:collapse;font-size:12.5px}
+.accbox th,.accbox td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left}
+.accbox th{color:var(--dim);font-weight:600}
+.accbox td.num,.accbox th.num{text-align:right;font-variant-numeric:tabular-nums}
+.accbox tr:last-child td{border-bottom:0}
+.accnote{font-size:11.5px;color:var(--dim);margin:7px 0 0;line-height:1.5}
+@media (pointer:coarse){ .accbox>summary{min-height:44px} }
+
+/* 사람 고르는 칸 — 검색과 선택을 한 칸으로 */
+.cbo{position:relative;display:inline-block;min-width:190px}
+.cbo>input{width:100%;box-sizing:border-box;padding:7px 28px 7px 10px;
+  border:1px solid var(--line);border-radius:9px;background:var(--panel);
+  color:var(--fg);font-size:13.5px}
+.cbo>input:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.cbo::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  pointer-events:none;opacity:.55;font-size:11px}
+.cbo>ul{position:absolute;z-index:40;left:0;right:0;top:calc(100% + 4px);margin:0;
+  padding:4px;list-style:none;max-height:270px;overflow-y:auto;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #0008}
+.cbo>ul[hidden]{display:none}
+.cbo>ul>li{padding:7px 9px;border-radius:7px;cursor:pointer;font-size:13.5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbo>ul>li[aria-selected="true"]{background:var(--line)}
+.cbo>ul>li.on{background:var(--acc);color:#08111c}
+.cbo>ul>li .alt{opacity:.6;font-size:11.5px;margin-left:5px}
+.cbo>ul>li.none{cursor:default;opacity:.6}
+.cbo-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap}
+@media (pointer:coarse){ .cbo>input{min-height:44px;font-size:16px} .cbo>ul>li{min-height:44px;display:flex;align-items:center} }
+
+.accbox tr.acctot td{background:var(--line)}
+.accbox tr.accsub td:first-child{padding-left:4px}
+.accbox .tick{opacity:.45;margin-right:5px}
 </style>
 </head>
 <body>
@@ -619,10 +662,10 @@
 
   <section id="player" class="view hidden" data-subtabs>
     <div data-sub="👤 개인" class="card">
-        <div class="row"><span>플레이어</span><input id="playerSearch" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
+        <div class="row"><span>플레이어</span><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
         <div id="playerBody"></div></div>
     <div data-sub="⚖️ 비교" class="card">
-        <div class="row"><input id="cmpSearchA" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="cmpA"></select><span class="vs">VS</span><input id="cmpSearchB" class="psearch" type="search" placeholder="닉네임 검색" autocomplete="off"><select id="cmpB"></select></div>
+        <div class="row"><select id="cmpA"></select><span class="vs">VS</span><select id="cmpB"></select></div>
         <div id="cmpBody"></div></div>
   </section>
 
@@ -1431,6 +1474,85 @@ function playerHaystack(id){
   const p=(DATA.players||{})[id]||{};
   return [playerLabel(id)].concat(p.accounts||[]).join(' ').toLowerCase();
 }
+// ---------- 사람 고르는 칸(콤보박스) ----------
+// `<select>` 는 화면에서만 감추고 **값의 출처로 계속 쓴다** — 렌더 코드가 전부
+// `$('#playerSel').value` 로 읽고 쓰기 때문이다. 지우면 다 고쳐야 하고 하나는 빠뜨린다.
+let _cboSeq=0;
+function attachCombo(sel, placeholder){
+  if(!sel || sel._cbo) return sel && sel._cbo;
+  const id='cbo'+(++_cboSeq);
+  const box=document.createElement('div'); box.className='cbo';
+  const inp=document.createElement('input');
+  inp.type='text'; inp.autocomplete='off'; inp.placeholder=placeholder||'이름 검색';
+  inp.setAttribute('role','combobox');
+  inp.setAttribute('aria-expanded','false');
+  inp.setAttribute('aria-controls',id);
+  inp.setAttribute('aria-autocomplete','list');
+  if(sel.getAttribute('aria-label')) inp.setAttribute('aria-label',sel.getAttribute('aria-label'));
+  const list=document.createElement('ul');
+  list.id=id; list.setAttribute('role','listbox'); list.hidden=true;
+  box.appendChild(inp); box.appendChild(list);
+  sel.parentNode.insertBefore(box, sel);
+  sel.classList.add('cbo-hidden');
+  sel.setAttribute('tabindex','-1');
+  sel.setAttribute('aria-hidden','true');
+
+  let items=[], cur=-1;
+  const label=v=>{const o=[...sel.options].find(x=>x.value===v);return o?o.textContent:'';};
+  // 부캐 이름으로도 찾아진다 — 계정을 합치면 흡수된 이름은 화면 어디에도 안 남기 때문에
+  // 그 이름으로 자기를 찾으려는 사람이 아무것도 못 찾게 된다.
+  const hay=v=>{const p=(DATA.players||{})[v]||{};
+    return [label(v)].concat(p.accounts||[]).join(' ').toLowerCase();};
+  function altOf(v,q){
+    const p=(DATA.players||{})[v]||{};
+    const hit=(p.accounts||[]).find(a=>a.toLowerCase().includes(q)&&a!==label(v));
+    return hit?`<span class="alt">${esc(hit)}</span>`:'';
+  }
+  function draw(){
+    const q=inp.value.trim().toLowerCase();
+    items=[...sel.options].map(o=>o.value).filter(v=>!q||hay(v).includes(q));
+    if(!items.length){ list.innerHTML='<li class="none" role="presentation">맞는 사람이 없습니다</li>'; }
+    else list.innerHTML=items.map((v,i)=>
+      `<li role="option" id="${id}-${i}" aria-selected="${v===sel.value}"`+
+      `${i===cur?' class="on"':''} data-v="${esc(v)}">${esc(label(v))}${altOf(v,q)}</li>`).join('');
+    inp.setAttribute('aria-activedescendant', (cur>=0&&items[cur])?`${id}-${cur}`:'');
+  }
+  function open(){ if(!list.hidden) return; list.hidden=false;
+    inp.setAttribute('aria-expanded','true'); draw(); }
+  function close(){ list.hidden=true; cur=-1;
+    inp.setAttribute('aria-expanded','false'); inp.setAttribute('aria-activedescendant',''); }
+  function pick(v){
+    if(v==null) return;
+    sel.value=v; sync(); close();
+    sel.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+  function sync(){ inp.value=label(sel.value); }
+
+  inp.addEventListener('focus',()=>{ inp.select(); open(); });
+  inp.addEventListener('input',()=>{ cur=-1; open(); draw(); });
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+      e.preventDefault(); if(list.hidden) open();
+      if(!items.length) return;
+      cur=(cur+(e.key==='ArrowDown'?1:-1)+items.length)%items.length; draw();
+      const el=list.querySelector('.on'); if(el&&el.scrollIntoView) el.scrollIntoView({block:'nearest'});
+    } else if(e.key==='Enter'){
+      if(!list.hidden){ e.preventDefault(); pick(cur>=0?items[cur]:items[0]); }
+    } else if(e.key==='Escape'){
+      if(!list.hidden){ e.preventDefault(); close(); sync(); }
+    } else if(e.key==='Tab'){ close(); sync(); }
+  });
+  list.addEventListener('mousedown',e=>{
+    const li=e.target.closest('li[data-v]'); if(!li) return;
+    e.preventDefault(); pick(li.dataset.v);
+  });
+  document.addEventListener('mousedown',e=>{ if(!box.contains(e.target)){ close(); sync(); } });
+  // 목록이 다시 채워지면(fillPlayerSelect) 표시도 따라가야 한다
+  new MutationObserver(()=>{ sync(); if(!list.hidden) draw(); }).observe(sel,{childList:true});
+  sel.addEventListener('change',sync);
+  sel._cbo={sync,draw}; sync();
+  return sel._cbo;
+}
 function fillPlayerSelect(sel,q){
   const all=Object.keys(DATA.players||{})
     .sort((a,b)=>playerLabel(a).localeCompare(playerLabel(b),'ko'));
@@ -1442,6 +1564,45 @@ function fillPlayerSelect(sel,q){
   return ids.length;
 }
 let plSubIdx=0;      // 플레이어 탭에서 마지막으로 보던 서브탭
+// 계정을 합친 사람의 계정별 전적. 합치지 않았으면 아무것도 안 그린다.
+// ⚠️ MMR·CP 는 여기 없다 — 통합 지표다. 계정별로 매기면 표본이 반으로 쪼개져 둘 다
+//    부정확해지고, 리더보드에 한 사람이 두 줄로 서고, 두 계정이 다른 팀이던 판에서
+//    자기가 자기 점수를 뺏는다. 화면에도 그 이유를 적어 둔다.
+function accRecords(p){
+  const rows=(p&&p.account_records)||[];
+  if(rows.length<2) return '';
+  const tot=rows.reduce((a,r)=>a+(r.games||0),0);
+  const tw=rows.reduce((a,r)=>a+r.wins,0), tl=rows.reduce((a,r)=>a+r.losses,0);
+  // ⚠️ 합계가 **맨 위**여야 한다. 아래에 두면 계정 두 줄이 먼저 읽혀서 "두 사람"으로
+  //    보인다(실측 반응: "병합 아예 안됐는데?" — 데이터는 멀쩡했는데 표가 그렇게 생겼다).
+  //    계정 줄은 ↳ 로 합계에 딸려 붙는다.
+  return `<details class="accbox">
+    <summary role="group" aria-label="계정별로 나눠 보기">🪪 이 <b>${tot}판</b>은 계정 ${rows.length}개를 합친 기록입니다 — 계정별로 나눠 보기</summary>
+    <div class="body"><table><thead><tr>
+      <th scope="col">계정</th><th scope="col" class="num">판</th>
+      <th scope="col" class="num">승</th><th scope="col" class="num">패</th>
+      <th scope="col" class="num">승률</th><th scope="col" class="num">KDA</th>
+      <th scope="col">주 라인</th></tr></thead><tbody>`+
+    `<tr class="acctot"><td><b>${esc(p.name)}</b> <span class="muted">합계</span></td>`+
+      `<td class="num"><b>${tot}</b></td><td class="num"><b>${tw}</b></td>`+
+      `<td class="num"><b>${tl}</b></td>`+
+      `<td class="num ${wrClass(tot?tw/tot:0,tot)}"><b>${pct(tot?tw/tot:0)}</b></td>`+
+      `<td class="num">${(p.record&&p.record.kda)!=null?p.record.kda:''}</td><td></td></tr>`+
+    rows.map(r=>`<tr class="accsub"><td><span class="tick">↳</span>${esc(r.riot_name)}</td>`+
+      `<td class="num">${r.games}</td><td class="num">${r.wins}</td>`+
+      `<td class="num">${r.losses}</td>`+
+      `<td class="num ${wrClass(r.winrate,r.games)}">${pct(r.winrate)}</td>`+
+      `<td class="num">${r.kda}</td>`+
+      `<td>${r.main_lane?laneKo(r.main_lane):'—'}</td></tr>`).join('')+
+    `</tbody></table>
+    <p class="accnote">위쪽의 <b>티어·CP·MMR·시너지·맞대결</b>은 전부 <b>합계 기준</b>입니다 —
+       화면 어디에서도 두 사람으로 세지 않습니다.
+       계정별로 매기면 표본이 쪼개져 둘 다 부정확해지고, 순위표에 한 사람이 두 줄로 서며,
+       두 계정이 서로 다른 팀이던 판에서는 자기가 자기 점수를 가져가게 됩니다.
+       나눠 보는 것은 <b>전적</b>뿐입니다.</p></div>
+  </details>`;
+}
+
 function renderPlayerBody(){
   const p=(DATA.players||{})[$('#playerSel').value];
   if(!p){ $('#playerBody').innerHTML='<p class="muted">기록 없음</p>'; return; }
@@ -1471,7 +1632,7 @@ function renderPlayerBody(){
     <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
     <span class="pill">KDA ${r.kda}</span><span class="pill">${mLabel('kp')} ${pct(r.kp)}</span>
     <span class="pill">${mLabel('dpm')} ${r.dpm}</span>${streak}</div>
-    ${((p.account_count||(p.accounts||[]).length)>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">🪪 계정 ${p.account_count||p.accounts.length}개 합산${p.accounts?': '+p.accounts.join(', '):''}</div>`:''}
+    ${(p.account_records&&p.account_records.length>1)?accRecords(p):(((p.account_count||(p.accounts||[]).length)>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">🪪 계정 ${p.account_count||p.accounts.length}개 합산${p.accounts?': '+p.accounts.join(', '):''}</div>`:'')}
     <div id="plPanes">
       <div data-sub="📊 요약">
         <div class="grid2">
@@ -1639,7 +1800,6 @@ function renderPlayerVs(meId){
 // 조용히 실패하므로 반드시 먼저 비운다.
 function openCompare(a,b){
   const P=DATA.players||{}; if(!P[a]||!P[b]) return;
-  $('#cmpSearchA').value=''; $('#cmpSearchB').value='';
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   $('#cmpA').value=a; $('#cmpB').value=b; renderCompare();
   jumpTo('player', '⚖️ 비교');
@@ -2802,6 +2962,10 @@ function renderAll(){
   fillPlayerSelect($('#playerSel')); renderPlayerBody();
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
+  // 검색창과 드롭다운을 한 칸으로 — 두 칸이면 어디에 치고 어디서 고르는지가 헷갈린다
+  attachCombo($('#playerSel'),'이름 검색');
+  attachCombo($('#cmpA'),'이름 검색');
+  attachCombo($('#cmpB'),'이름 검색');
   renderCompare(); renderBalancePicker(); renderMath(); buildSubtabs();
   // ⚠️ Riot 고지는 **여기** 있어야 한다. 정적 HTML 에만 두면 이 줄이 덮어써서 사라진다.
   //    Riot 은 서드파티 앱에 '공식 관여가 아니다'라는 표기를 요구한다.
@@ -2965,13 +3129,6 @@ $('#tabs').addEventListener('click',e=>activateTab(e.target.closest('.tab')));
 })();
 $('#tabs').setAttribute('role','tablist');
 $('#metricSearch').addEventListener('input',e=>{metricQuery=e.target.value;buildRankControls();});
-$('#playerSearch').addEventListener('input',e=>{
-  const n=fillPlayerSelect($('#playerSel'),e.target.value);
-  $('#playerHit').textContent=e.target.value.trim()?`${n}명`:'';
-  renderPlayerBody();
-});
-$('#cmpSearchA').addEventListener('input',e=>{fillPlayerSelect($('#cmpA'),e.target.value);renderCompare();});
-$('#cmpSearchB').addEventListener('input',e=>{fillPlayerSelect($('#cmpB'),e.target.value);renderCompare();});
 $('#playerSel').addEventListener('change',renderPlayerBody);
 // 스코어보드 선수 행 → 그 판 상세 펼치기/접기
 document.addEventListener('click',e=>{
