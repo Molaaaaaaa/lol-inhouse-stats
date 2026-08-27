@@ -1772,7 +1772,30 @@ function runBalance(){
       `${m.off?'<span class="bad" data-tip="주로 하던 라인이 아닙니다">⚠️</span>':''}</div>`).join('')+`</div>`;
   out.innerHTML=`<div class="bverdict ${verdict[1]}">${pa} : ${100-pa}<span>${verdict[0]}</span></div>`+
     `<div class="bteams">`+team(res.teamA,'A팀','🔵')+team(res.teamB,'B팀','🔴')+`</div>`+
-    (hasLane?'':`<p class="muted" style="font-size:12px;margin:8px 0 0">라인은 5:5일 때만 배정합니다.</p>`);
+    (hasLane?'':`<p class="muted" style="font-size:12px;margin:8px 0 0">라인은 5:5일 때만 배정합니다.</p>`)+
+    `<div class="row" style="margin-top:10px"><button id="balCopy" class="chip">📋 복사</button>`+
+    `<span class="muted" id="balCopyMsg" style="font-size:12px"></span></div>`;
+  // 팀을 갈라 놓고 옮길 방법이 없으면 열 명을 다시 타이핑해야 한다 — 그게 실제로
+  // 이 화면을 쓰는 마지막 단계다. 디스코드에 그대로 붙는 글로 만든다.
+  const copyBtn=$('#balCopy');
+  if(copyBtn) copyBtn.onclick=async()=>{
+    const line=t=>t.slice().sort((x,y)=>laneIdx(x.lane)-laneIdx(y.lane))
+      .map(m=>(hasLane?`${LANE_KR[m.lane]||'-'} `:'')+m.name).join('\n');
+    const txt=`내전 팀 (${pa} : ${100-pa} · ${verdict[0]})\n`+
+      `\n🔵 A팀\n${line(res.teamA)}\n\n🔴 B팀\n${line(res.teamB)}`;
+    const msg=$('#balCopyMsg');
+    try{
+      await navigator.clipboard.writeText(txt);
+      msg.textContent='복사했습니다 — 디스코드에 붙여넣으세요';
+    }catch(e){
+      // 클립보드가 막힌 브라우저(구형·비보안 맥락)에서는 고를 수 있게 펼쳐 준다
+      const ta=document.createElement('textarea');
+      ta.value=txt; ta.style.cssText='width:100%;height:150px;margin-top:8px';
+      msg.textContent='자동 복사가 막혀 있습니다 — 아래 글을 직접 복사하세요';
+      msg.parentElement.appendChild(ta); ta.select();
+    }
+    announce('팀 배정을 복사했습니다');
+  };
 }
 // --- SVG 차트 (라이브러리 없이 inline) ---
 const ROLE_COLOR={TOP:'#e8833a',JUNGLE:'#3aa0ee',MIDDLE:'#c8aa6e',BOTTOM:'#9b7ede',UTILITY:'#5ec8b0',UNKNOWN:'#9aa6b2'};
