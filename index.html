@@ -434,25 +434,6 @@
 .tprog .pt{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.4em;text-align:right}
 .tprog .pt small{font-weight:500;opacity:.6;font-size:10px}
 
-/* 라인별 격자 — 가로는 라인 5칸 고정, 세로는 사람 */
-.lanegrid{width:100%;border-collapse:separate;border-spacing:0}
-.lanegrid th{font-size:12px;font-weight:600;padding:6px 4px;text-align:center;
-  color:var(--dim);position:sticky;top:0;background:var(--panel2);z-index:1}
-.lanegrid th:first-child{text-align:left;padding-left:8px}
-.lanegrid td{padding:3px 4px;text-align:center}
-.lanegrid td:first-child{text-align:left;padding-left:8px;font-size:13px;white-space:nowrap}
-.lcell{display:block;border-radius:8px;padding:5px 4px;line-height:1.25;
-  border:1px solid transparent;min-width:56px}
-.lcell b{display:block;font-size:13px;font-variant-numeric:tabular-nums}
-.lcell i{display:block;font-style:normal;font-size:10px;opacity:.75}
-/* 주 라인 — 실선. 이 사람을 대표하는 칸이다. */
-.lcell.main{border-color:currentColor;font-weight:700}
-/* 배치가 끝난 칸 — 옅은 실선 */
-.lcell.placed{border-color:currentColor;border-style:solid;opacity:1}
-/* 표본이 모자란 칸 — 점선. "이건 아직 추정이다"를 **모양**으로 말한다.
-   색이나 투명도만 쓰면 흑백 출력·색각 이상에서 구분이 사라진다. */
-.lcell.thin{border-style:dashed;border-color:currentColor;opacity:.62}
-.lcell.none{border-style:dashed;border-color:var(--line);opacity:.45}
 .cpnum{font-variant-numeric:tabular-nums;font-weight:700}
 .cpbar{position:relative;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .cpbar>i{position:absolute;inset:0 auto 0 0;border-radius:3px;background:currentColor}
@@ -585,6 +566,7 @@
       <div class="muted" id="cpNote" style="margin-top:8px;font-size:12px"></div></div>
     <div class="card" data-sub="🧭 라인별"><h2>🧭 라인별 티어<span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
       <p class="muted" id="cpLaneIntro"></p>
+      <div class="lnpicks" id="cpLanePick" role="group" aria-label="라인 선택"></div>
       <div class="lanewrap" id="cpLaneGrid"></div>
       <div class="muted" id="cpLaneNote" style="margin-top:8px;font-size:12px"></div></div>
     <div class="card" data-sub="📐 CP 계산식"><h2>📐 CP 는 어떻게 나오나</h2>
@@ -2949,18 +2931,8 @@ function tierBadge(name){
 }
 // 라인 칸 하나. 확신을 **모양**으로 드러낸다 — 실선(주 라인) / 실선(배치완료) /
 // 점선(표본 부족) / 흐린 점선(안 뛴 라인).
-function laneCell(c, isMain){
-  const n=c.games||0, placed=!!c.placed;
-  const cls = isMain ? 'main placed' : (placed ? 'placed' : (n ? 'thin' : 'none'));
-  // 라인 배치(5판)가 안 끝난 칸은 판수 대신 '배치 n/5' — 점선만으로는 안 읽힌다
-  //   (실측 피드백: "원딜 1판인데 티어가 정해진 것처럼 보인다").
-  const sub = placed ? `${n}판` : (n ? `배치 ${n}/${cpConst().lane_prior_k||5}` : '안 뜀');
-  return `<span class="lcell ${cls} ${tierCls(c.tier)}"
-    data-tip="${esc(c.tier)} ${c.points}점 · ${n?`${n}판`:'이 라인은 아직 안 뛰었습니다'}${
-      isMain?' · 주 라인':''}${placed||isMain?'':` · 배치 ${cpConst().lane_prior_k||5}판 중 ${n}판`}"
-    ><b>${esc(c.tier).replace('티어','')}<small style="font-weight:500;opacity:.7">·${c.points}</small></b><i>${sub}</i></span>`;
-}
-
+// 라인별 화면 상태 — 필터·추정치 토글은 다시 그려도 유지된다
+let cpLaneFilter='', cpLaneEst=false;
 function renderCp(){
   const cp=DATA.cp||{};
   const ids=Object.keys(cp);
@@ -3029,43 +3001,77 @@ function renderCp(){
     ` 배치를 마치기 전에는 티어를 보여 주지 않습니다 — 그 구간은 점수가 크게 움직여서`+
     ` (K=${C.k_place} → ${C.k_norm}) 한두 판 결과가 티어처럼 보이면 억울한 사람이 생깁니다.`;
 
-  // ── 라인별 격자 ──
+  // ── 라인별: 뛴 라인마다 한 행 ──
+  // 🔴 격자(1인 1행 × 5칸)였을 때 "외걸이면 미드·정글·원딜 3행이어야 한다"는 제보.
+  //    안 뛴 라인 추정치가 5칸을 채워서 실제로 뛴 라인이 그 사이에 묻혔다.
   $('#cpLaneIntro').innerHTML=
-    `주 라인이 아닌 곳에서는 티어가 다릅니다. 솔랭 마스터 서폿이 미드를 간다고 `+
-    `미드도 마스터인 건 아니기 때문입니다. `+
-    `<b>안 뛴 라인도 칸을 비우지 않고</b> 추정치로 채웁니다 — 대신 `+
-    `<b>점선</b>이 "아직 표본이 모자라다"는 뜻입니다.`;
-  // 배치 미완은 라인 칸도 감춘다 — 라인 CP 는 전체 CP 에서 파생되므로 같은 누설이다.
-  const sorted=rows.slice().sort((a,b)=>(b._ord||0)-(a._ord||0));
-  let h='<table class="lanegrid"><thead><tr><th scope="col">멤버</th>'+
-    LANE_SEQ.map(l=>`<th scope="col">${laneKo(l)}</th>`).join('')+'</tr></thead><tbody>';
-  sorted.forEach(r=>{
+    `라인마다 티어가 따로 섭니다 — 주 라인이 아닌 곳에서는 티어가 다르기 때문입니다. `+
+    `한 사람이 여러 라인을 뛰었으면 <b>라인마다 한 줄</b>씩 나옵니다.`;
+  const laneRows=[];
+  rows.forEach(r=>{
     if(!r.placed){
-      h+=`<tr><td>${esc(r.name)} <span class="muted" style="font-size:11px">배치 중 ${r.games}/${(cpConst().placement_games||3)}</span></td>`
-        +LANE_SEQ.map(()=>'<td><span class="muted">—</span></td>').join('')+'</tr>';
+      laneRows.push({_masked:1,name:r.name,games:r.games,_ord:r._ord});
       return;
     }
-    const L=r.lanes||{};
-    h+=`<tr><td>${esc(r.name)}</td>`+LANE_SEQ.map(l=>{
-      const c=L[l]; if(!c) return '<td></td>';
-      return `<td>${laneCell(c, l===r.main_lane)}</td>`;
-    }).join('')+'</tr>';
+    LANE_SEQ.forEach(l=>{
+      const c=(r.lanes||{})[l]; if(!c) return;
+      const played=(c.games||0)>0;
+      if(!played&&!cpLaneEst) return;            // 안 뛴 라인은 토글 켰을 때만
+      if(cpLaneFilter&&l!==cpLaneFilter) return;
+      laneRows.push({name:r.name,lane:l,_laneKo:laneKo(l),games:c.games||0,
+        tier:c.tier,points:c.points,cp:c.cp,mmr:c.mmr,placed:true,
+        _lanePlaced:!!c.placed,_est:!played,_main:l===r.main_lane,
+        _ord:c.cp});
+    });
   });
-  $('#cpLaneGrid').innerHTML=h+'</tbody></table>';
+  // 라인 필터 칩 + 추정치 토글
+  const cnt={};
+  rows.filter(r=>r.placed).forEach(r=>LANE_SEQ.forEach(l=>{
+    if(((r.lanes||{})[l]||{}).games>0) cnt[l]=(cnt[l]||0)+1;}));
+  $('#cpLanePick').innerHTML=[['','전체']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
+    `<button type="button" class="lnpick${cpLaneFilter===v?' on':''}" data-lane="${v}"`+
+    ` aria-pressed="${cpLaneFilter===v}">${t}${v?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('')
+    +`<label class="mini" style="gap:6px;margin-left:10px"><input type="checkbox" id="cpLaneEstT"${cpLaneEst?' checked':''}>`+
+    `안 뛴 라인 추정치도 보기</label>`;
+  $('#cpLanePick').querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
+    cpLaneFilter=b.dataset.lane; renderCp();
+    announce(cpLaneFilter?`${laneKo(cpLaneFilter)} 라인 티어`:'전체 라인 티어');
+  });
+  const est=$('#cpLaneEstT');
+  if(est) est.onchange=()=>{cpLaneEst=est.checked; renderCp();};
+
+  const FULL2=C.tier_points||100;
+  renderTable($('#cpLaneGrid'),laneRows,[
+    {k:'name',h:'멤버',fmt:(v,r)=>esc(v)+(r._masked
+      ?` <span class="muted" style="font-size:11px">배치 중 ${r.games}/${need}</span>`
+      :(r._main?' <span class="muted" style="font-size:10.5px">주 라인</span>':''))},
+    {k:'_laneKo',h:'라인',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
+      :(r._est?`<span class="muted">${v}?</span>`:v)},
+    {k:'tier',h:'티어',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
+      :(r._est?`<span class="muted" style="font-size:11.5px">${esc(v)} (추정)</span>`:tierBadge(v))},
+    {k:'points',h:'점수',num:1,fmt:(v,r)=>{
+      if(r._masked||r._est) return '<span class="muted">—</span>';
+      const w2=Math.max(0,Math.min(100,(v/FULL2)*100));
+      return `<div class="tprog ${tierCls(r.tier)}"><span class="pt">${v}</span>`+
+             `<span class="bar"><i style="width:${w2.toFixed(1)}%"></i></span></div>`;}},
+    {k:'mmr',h:'MMR',num:1,fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
+      :`<span class="muted">${v}</span>`},
+    {k:'games',h:'판수',num:1,fmt:(v,r)=>{
+      if(r._masked) return '<span class="muted">—</span>';
+      if(r._est) return '<span class="muted">0</span>';
+      return r._lanePlaced?String(v)
+        :`${v} <span class="muted" style="font-size:10.5px">배치 ${v}/${C.lane_prior_k||5}</span>`;}},
+  ],'_ord',-1);
   const off=DATA.cp_off_lane||{};
   $('#cpLaneNote').innerHTML=
-    `<b>실선</b> = 그 라인 ${C.lane_prior_k}판 이상(배치 완료), `+
-    `<b>굵은 실선</b> = 주 라인, <b>점선</b> = 표본 부족, `+
-    `<b>흐린 점선</b> = 한 판도 안 뛴 라인(추정치).<br>`+
-    `안 뛴 라인은 주 라인보다 <b>${Math.abs(C.off_lane_prior||30)} CP</b> 낮게 잡습니다. `+
-    (off.off_games
-      ? `이 값은 실제 전적에서 나왔습니다 — 주 라인 ${pct(off.on_winrate)}(${off.on_games}판) vs `+
-        `다른 라인 ${pct(off.off_winrate)}(${off.off_games}판). `+
-        (off.significant
-          ? `표본이 충분해 이 차이는 우연으로 보기 어렵습니다.`
-          : `<b>다만 ${off.off_games}판뿐이라 아직 우연과 구분되지 않습니다</b> — `+
-            `판이 쌓이면 이 값을 다시 잽니다.`)
-      : '');
+    `그 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 끝난 것으로 봅니다 — 그 전에는 `+
+    `판수 옆에 <b>배치 n/${C.lane_prior_k}</b> 로 표시합니다. `+
+    `'안 뛴 라인 추정치'를 켜면 주 라인보다 <b>${Math.abs(C.off_lane_prior||30)} CP</b> 낮게 잡은 `+
+    `추정값이 회색으로 나옵니다`+
+    ((DATA.cp_off_lane||{}).off_games
+      ? ` (근거: 주 라인 승률 ${pct((DATA.cp_off_lane).on_winrate)} vs 다른 라인 ${pct((DATA.cp_off_lane).off_winrate)}`+
+        `${(DATA.cp_off_lane).significant?'':' — 아직 표본이 얇아 우연과 구분되지 않는 값'}).`
+      : '.');
   labelTips($('#cpLaneGrid'));
   // 클릭한 행 강조 유지 — 호버는 떼면 사라져서 26명 표에서 자기 줄을 놓친다.
   // 컨테이너 위임이라 정렬로 표가 다시 그려져도 리스너는 산다(강조만 리셋된다).
