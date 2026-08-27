@@ -105,6 +105,9 @@
   .cmpleg i{width:14px;height:0;border-top:3px solid;border-radius:2px;display:inline-block}
   /* 스코어보드 펼침 */
   .sbrow{cursor:pointer}
+  /* 키보드로 왔을 때 어디에 있는지 보여야 한다 — 색만 바꾸면 잘 안 보인다 */
+  th.sortable:focus-visible,tr.sbrow:focus-visible,.mexp:focus-visible{
+    outline:2px solid var(--acc);outline-offset:-2px}
   .sbrow:hover{background:#141c27}
   .sbrow.on{background:#16202d}
   .sbname{display:inline-flex;align-items:center;gap:4px}
@@ -371,8 +374,8 @@
     /* 실측(모바일 UA·터치 5점): MMR 링크 21개가 20px 높이, 물음표는 14px 다.
        보이는 크기는 그대로 두고 **누를 수 있는 영역만** 44px 로 넓힌다 —
        크기를 키우면 표 정렬이 통째로 어긋난다. */
-    .qmark,.mmrlink,.vslink{position:relative}
-    .qmark::after,.mmrlink::after,.vslink::after{
+    .qmark,.mmrlink,.vslink,.mexp{position:relative}
+    .qmark::after,.mmrlink::after,.vslink::after,.mexp::after{
       content:'';position:absolute;left:50%;top:50%;width:44px;height:44px;
       transform:translate(-50%,-50%);}
     .team .pl{flex:0 0 auto}
@@ -634,7 +637,11 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   const capTxt=(cap||'').replace(/[?？]\s*$/,'').trim();
   // scope="col" 이 없으면 셀을 읽을 때 어느 열인지 안 나온다(실측 0/265).
   let h='<table'+(capTxt?` aria-label="${esc(capTxt)}"`:'')+'><thead><tr>'+cols.map(c=>
-    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}">${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
+    // ⚠️ tabindex 가 없으면 **마우스 없이는 어떤 표도 정렬할 수 없다**(표 27개 전부).
+    //    aria-sort 는 지금 무엇으로 정렬돼 있는지를 소리로 알려 준다.
+    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}" tabindex="0"`+
+    ` aria-sort="${c.k===sortKey?(sortDir<0?'descending':'ascending'):'none'}">`+
+    `${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
   data.forEach((r,i)=>{
     h+='<tr>'+cols.map(c=>{
       let v=r[c.k];
@@ -740,10 +747,13 @@ const TIP=(()=>{
     // 물음표가 아니면 열려 있던 설명만 닫고, 클릭은 그대로 흘려보낸다
     hide();
   }, true);
-  // 버튼처럼 쓰는 것들은 키보드로도 눌려야 한다
+  // 버튼처럼 쓰는 것들은 키보드로도 눌려야 한다.
+  // ⚠️ 정렬 헤더(th)와 스코어보드 행(tr)에는 role="button" 을 못 준다 — 그러면
+  //    "열 제목"·"행"이라는 표 구조가 스크린리더에서 사라진다. tabindex 로 도달만
+  //    시키고 여기서 Enter/Space 를 받는다.
   document.addEventListener('keydown',e=>{
     if(e.key!=='Enter' && e.key!==' ') return;
-    const b=e.target.closest('[role="button"],.qmark');
+    const b=e.target.closest('[role="button"],.qmark,th.sortable,tr.sbrow');
     if(!b) return;
     e.preventDefault(); b.click();
   });
@@ -1253,7 +1263,12 @@ function renderMatches(){
     //    36,745노드(전체의 79%) · HTML 2.07MB 가 쌓인다 — 실측 renderAll 133ms 의
     //    대부분이 아무도 안 펼친 상세를 그리는 시간이었다. 누를 때 받아서 그린다.
     const detail=has?`<div class="match-detail hidden" data-d="${idx}"></div>`:'';
-    return `<div class="match ${has?'clickable':''}" data-idx="${idx}"><span class="muted hide-sm" style="width:96px">${d}</span>${t}${has?'<span class="muted" data-tip="눌러서 경기 상세 보기">🔎</span>':''}</div>${detail}`;
+    // ⚠️ 줄 전체를 role="button" 으로 만들면 안 된다. 버튼은 **내용을 이름으로 눌러
+    //    담아** 안에 있는 선수 10명·챔피언이 스크린리더에서 개별로 안 읽힌다.
+    //    마우스로는 줄 전체가 눌리게 두고(예전 그대로), 키보드용 버튼은 돋보기에만 준다.
+    const eye=has?`<span class="muted mexp" role="button" tabindex="0" aria-expanded="false"`+
+      ` aria-label="${d} 경기 상세 펼치기" data-tip="눌러서 경기 상세 보기">🔎</span>`:'';
+    return `<div class="match ${has?'clickable':''}" data-idx="${idx}"><span class="muted hide-sm" style="width:96px">${d}</span>${t}${eye}</div>${detail}`;
   }).join('');
   $('#matchT').querySelectorAll('.match.clickable').forEach(el=>el.onclick=async()=>{
     const idx=el.dataset.idx;
@@ -1276,13 +1291,18 @@ function renderMatches(){
       }
       d.innerHTML=det?matchDetailHTML(det):goldChart(m.timeline);
       d.dataset.built='1';
-      labelTables();      // 새로 생긴 표에 aria-label 을 붙인다
+      labelTables(); labelTips(d);   // 새로 생긴 표·툴팁에 이름표를 붙인다
       d.classList.remove('hidden');
+      const eye0=el.querySelector('.mexp');
+      if(eye0) eye0.setAttribute('aria-expanded','true');
       announce('경기 상세를 폈다');
       return;
     }
     d.classList.toggle('hidden');
-    announce(d.classList.contains('hidden')?'경기 상세를 접었다':'경기 상세를 폈다');
+    const open=!d.classList.contains('hidden');
+    const eye=el.querySelector('.mexp');
+    if(eye) eye.setAttribute('aria-expanded', open?'true':'false');
+    announce(open?'경기 상세를 폈다':'경기 상세를 접었다');
   });
 }
 
@@ -1908,7 +1928,7 @@ function scoreboard(d){
   const head='<tr>'+cols.map(c=>`<th scope="col"${c.num?' class="num"':''}>${c.h}</th>`).join('')+'</tr>';
   // 선수 행을 누르면 바로 아래에 상세가 펼쳐진다. 표 밖으로 띄우면 어느 선수 것인지
   // 헷갈리므로 같은 <tbody> 안에 붙인다.
-  const row=(p,key)=>'<tr class="sbrow" data-pd="'+key+'">'+cols.map(c=>c.cell(p)).join('')+'</tr>'+
+  const row=(p,key)=>'<tr class="sbrow" data-pd="'+key+'" tabindex="0" aria-expanded="false">'+cols.map(c=>c.cell(p)).join('')+'</tr>'+
     `<tr class="sbdet hidden" data-pdfor="${key}"><td colspan="${cols.length}">`+
     playerDetailHTML(p,d.duration)+`</td></tr>`;
   let n=0;
@@ -2388,6 +2408,27 @@ function nearestHeading(t){
   }
   return card?card.querySelector('h2'):null;
 }
+// 툴팁에만 있는 정보를 이름표로도 준다.
+//
+// 실측: 경기 목록의 선수 칩(190개)은 눈에 이름만 보이고 **라인과 챔피언이 툴팁에만**
+// 있었다(챔프 이미지는 alt="" 로 장식 처리). 마우스가 없으면 "누가 무슨 챔피언으로
+// 어느 라인을 했나"가 통째로 안 읽힌다. 능력치 축 행도 순위·근거 지표가 툴팁에만 있었다.
+//
+// 툴팁이 이미 보이는 글자를 담고 있으면 그대로 쓰고, 아니면 앞에 붙여 둘 다 읽히게 한다.
+function labelTips(root){
+  (root || document).querySelectorAll('[data-tip]').forEach(e => {
+    if (e.getAttribute('aria-label') || e.getAttribute('title')) return;
+    const tip = (e.getAttribute('data-tip') || '')
+      .replace(/&#10;/g, ' · ').replace(/\s*\n\s*/g, ' · ')
+      .replace(/\s+/g, ' ').trim();
+    if (!tip) return;
+    const seen = (e.textContent || '').replace(/\s+/g, ' ').trim();
+    // 툴팁이 보이는 글자와 같으면 굳이 덧씌우지 않는다
+    if (seen && tip === seen) return;
+    e.setAttribute('aria-label', (!seen || tip.includes(seen)) ? tip : seen + ' · ' + tip);
+  });
+}
+
 function labelTables(){
   document.querySelectorAll('table:not([aria-label])').forEach(t=>{
     const h=nearestHeading(t);
@@ -2422,6 +2463,7 @@ function renderAll(){
     `Riot Games, Inc. 의 상표 또는 등록상표입니다.</div>`+
     `<div class="legal">챔피언 이미지 출처: Riot Games Data Dragon.</div>`;
   labelTables();
+  labelTips();
   attachTableFilters();   // labelTables 뒤 — 표 이름을 라벨로 쓴다
   fillFeedbackWho();   // DATA는 sanitize된 값
 }
@@ -2535,6 +2577,9 @@ function activateTab(t){
   if(!t||!t.dataset.t) return;
   document.querySelectorAll('#tabs .tab').forEach(x=>{
     const on=(x===t); x.classList.toggle('on',on); x.setAttribute('aria-selected',on);
+    // 탭 목록은 **하나만** 탭 순서에 있고 나머지는 화살표로 옮긴다(ARIA tablist 규약).
+    // 11개를 전부 tabindex=0 으로 두면 본문에 닿기까지 Tab 을 13번 눌러야 했다.
+    x.setAttribute('tabindex', on?'0':'-1');
   });
   announce(`${t.textContent.trim()} 화면`);
   // 가로 스크롤 탭바에서는 선택된 탭이 화면 밖일 수 있다 → 끌어다 놓는다
@@ -2543,14 +2588,32 @@ function activateTab(t){
   const view=$('#'+t.dataset.t); if(view) view.classList.remove('hidden');
 }
 $('#tabs').addEventListener('click',e=>activateTab(e.target.closest('.tab')));
-// 키보드 접근성: 탭에 포커스 + Enter/Space로 전환
-document.querySelectorAll('#tabs .tab').forEach(t=>{
-  t.setAttribute('tabindex','0'); t.setAttribute('role','tab');
-  t.setAttribute('aria-selected', t.classList.contains('on'));
-  t.addEventListener('keydown',e=>{
-    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); activateTab(t); }
+// 키보드 접근성. `role="tablist"` 를 선언했으면 스크린리더 쓰는 사람은 **화살표로
+// 옮겨지길 기대한다** — 안 넣으면 선언만 해 놓고 약속을 안 지키는 셈이다.
+// 옮기면 바로 전환한다(자동 활성화). 탭 11개가 다 가벼운 화면 전환이라 그게 자연스럽다.
+(function(){
+  const tabs=[...document.querySelectorAll('#tabs .tab')];
+  tabs.forEach((t,i)=>{
+    t.setAttribute('role','tab');
+    const on=t.classList.contains('on');
+    t.setAttribute('aria-selected', on);
+    t.setAttribute('tabindex', on?'0':'-1');
+    t.addEventListener('keydown',e=>{
+      const K={ArrowRight:1,ArrowLeft:-1};
+      if(e.key in K){
+        e.preventDefault();
+        const n=tabs[(i+K[e.key]+tabs.length)%tabs.length];
+        activateTab(n); n.focus();
+      } else if(e.key==='Home'||e.key==='End'){
+        e.preventDefault();
+        const n=e.key==='Home'?tabs[0]:tabs[tabs.length-1];
+        activateTab(n); n.focus();
+      } else if(e.key==='Enter'||e.key===' '){
+        e.preventDefault(); activateTab(t);
+      }
+    });
   });
-});
+})();
 $('#tabs').setAttribute('role','tablist');
 $('#metricSearch').addEventListener('input',e=>{metricQuery=e.target.value;buildRankControls();});
 $('#playerSearch').addEventListener('input',e=>{
@@ -2569,6 +2632,8 @@ document.addEventListener('click',e=>{
   const open=det.classList.contains('hidden');
   det.classList.toggle('hidden',!open);
   tr.classList.toggle('on',open);
+  tr.setAttribute('aria-expanded', open?'true':'false');
+  announce(open?'선수 상세를 폈다':'선수 상세를 접었다');
 });
 $('#playerBody').addEventListener('click',e=>{
   const a=e.target.closest('.vslink'); if(!a) return;
