@@ -694,9 +694,9 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 const HELP={
   라인MMR:'그 라인에서의 MMR 입니다.\n통합 실력에 **그 라인 승률 보정**을 더한 값이고, 라인마다 처음부터 다시 매긴 값이 아닙니다.\n그래서 통합 MMR 과 크게 벌어지지 않습니다(실측 편차 중앙 14).\n판수가 적은 라인은 보정이 거의 안 걸려 통합값에 가까워집니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
-  궁합:'같이 한 팀이었을 때의 전적입니다.\n궁합 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
+  시너지:'같이 한 팀이었을 때의 전적입니다.\n시너지 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
   진영:'블루(왼쪽 아래)와 레드(오른쪽 위) 진영의 승률입니다.\n한 경기에 블루 하나 레드 하나라 두 진영 승수의 합이 경기 수이고,\n어느 쪽이 더 이겼는지는 상쇄되지 않는 실제 정보입니다.\n표본이 작으면 크게 흔들리니 경기 수를 같이 보세요.',
-  챔피언폭:'그 라인에서 서로 다른 챔피언을 몇 종 썼는지입니다.\n챔프폭 = 챔피언 종 수 ÷ 판 수. 100%면 매판 다른 챔프,\n낮을수록 한 챔프를 반복해서 씁니다. 잘한다/못한다와는 무관합니다.',
+  챔피언폭:'그 라인에서 서로 다른 챔피언을 몇 종 썼는지입니다.\n챔프폭 = 챔피언 종 수 ÷ 판수. 100%면 매판 다른 챔프,\n낮을수록 한 챔프를 반복해서 씁니다. 잘한다/못한다와는 무관합니다.',
   상대별:'맞대결 = 적으로 만난 판. 같은 팀 = 한편이었던 판.\n킬 주고받음 = (내가 잡은 수 : 나를 잡은 수), 맞대결한 판에서만 셉니다.\n기본 정렬은 상대가 나를 이긴 만큼(승수 차)이라 1판 1패가 4판 4패보다 위로 못 갑니다.\n맞대결이 0판인 상대는 맨 아래에 모읍니다.',
   동반사망:'같은 팀 두 사람이 10초 안에, 서로 2500 유닛 이내에서 죽은 횟수입니다.\n거리 조건이 없으면 맵 반대편에서 각자 죽은 것도 잡힙니다.\n판당 횟수로 세웁니다 — 총 횟수로 하면 많이 뛴 사람이 자동으로 위에 옵니다.\n데스가 많은 라인(정글)이 잘 걸리니 실력으로 읽지 마세요.',
   어시스트:'킬을 낸 사람과 그 킬에 어시를 준 사람 쌍을 셉니다.\n비중 = 이 어시 수 ÷ 받은 사람의 총 킬.\n원시 횟수만 보면 사실상 킬 수 차이라, 서포터와 정글러를 구분하는 것에 가깝습니다.\n같이 3판 이상 뛴 조합만 나옵니다.',
@@ -1164,7 +1164,7 @@ function renderFun(){
   const hs=(F.by_hour||[]).slice().sort((a,b)=>a.hour-b.hour);
   const hmax=Math.max(1,...hs.map(h=>h.games));
   const htot=hs.reduce((t,h)=>t+(+h.games||0),0)||1;
-  $('#funHour').innerHTML=hs.length? '<table><thead><tr><th scope="col">시각</th><th scope="col" class="num">경기 수</th><th scope="col" class="num">비중</th></tr></thead><tbody>'+
+  $('#funHour').innerHTML=hs.length? '<table><thead><tr><th scope="col">시각</th><th scope="col" class="num">판수</th><th scope="col" class="num">비중</th></tr></thead><tbody>'+
     hs.map(h=>`<tr><td>${String(h.hour).padStart(2,'0')}시</td>`+
       `<td class="num">${barCell(h.games,hmax,h.games)}</td>`+
       `<td class="num muted">${pct(h.games/htot)}</td></tr>`).join('')+
@@ -1364,7 +1364,7 @@ function renderPlayerBody(){
     return `<div class="mini" style="justify-content:space-between">`+
       `<span>${x.partner}</span>`+
       `<span><b class="${x.winrate>=0.5?'pos':'neg'}">${w}승 ${g-w}패</b>`+
-      `<span class="muted"> · 같이 ${g}판 · 궁합 <span class="${cls}">${sgn(x.synergy)}</span></span></span></div>`;
+      `<span class="muted"> · 같이 ${g}판 · 시너지 <span class="${cls}">${sgn(x.synergy)}</span></span></span></div>`;
   }).join('')||'<span class="muted">—</span>';
   const best=pf(p.partners_best,'pos'), worst=pf(p.partners_worst,'neg');
   const nv=p.nemesis_victim||{nemesis:[],victim:[]};
@@ -1405,8 +1405,8 @@ function renderPlayerBody(){
       </div>
       <div data-sub="🤝 파트너 · 상대 챔피언">
         <div class="grid2">
-          <div class="card"><h2>👍 잘 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="궁합" aria-label="궁합 설명">?</span></h2>${best}</div>
-          <div class="card"><h2>👎 안 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="궁합" aria-label="궁합 설명">?</span></h2>${worst}</div>
+          <div class="card"><h2>👍 잘 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>${best}</div>
+          <div class="card"><h2>👎 안 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>${worst}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
           <div class="card"><h2>상대하기 어려운 챔피언</h2>${nemesis}</div>
@@ -1743,7 +1743,7 @@ function jsBalance(players,decl){
 const balSel=new Map();     // id -> 지정 라인('' 이면 자동)
 function renderBalancePicker(){
   const R=DATA.ratings||{},ids=Object.keys(R);
-  if(!ids.length){$('#balPick').innerHTML='<p class="muted">레이팅 데이터가 없습니다 (내전이 쌓이면 활성화됩니다).</p>';return;}
+  if(!ids.length){$('#balPick').innerHTML='<p class="muted">MMR 데이터가 없습니다 (내전이 쌓이면 활성화됩니다).</p>';return;}
   const laneMode=$('#balLaneMode')&&$('#balLaneMode').checked;
   $('#balPick').innerHTML=ids.sort((a,b)=>R[b].mmr-R[a].mmr).map(id=>{
     const on=balSel.has(id), ln=balSel.get(id)||'';
@@ -2056,7 +2056,7 @@ function renderSynHeat(){
   }).join('')+'</tr>'; }
   // 눈금이 데이터에 맞춰 늘어나므로 **양 끝이 얼마인지** 적어야 오해가 없다
   el.innerHTML=h+'</table><p class="muted" style="margin-top:8px;font-size:12px">'+
-    `파랑=좋은 궁합 / 주황=나쁜 궁합 · 가장 진한 색이 ±${peak.toFixed(2)} 입니다`+
+    `파랑=시너지 높음 / 주황=낮음 · 가장 진한 색이 ±${peak.toFixed(2)} 입니다`+
     ' · 칸을 '+TAPHINT+' 함께 뛴 판수가 나옵니다</p>';
 }
 function donut(dist){
