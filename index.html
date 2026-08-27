@@ -483,12 +483,15 @@
 
 /* 사람 고르는 칸 — 검색과 선택을 한 칸으로 */
 .cbo{position:relative;display:inline-block;min-width:190px}
-.cbo>input{width:100%;box-sizing:border-box;padding:7px 28px 7px 10px;
+.cbo>input{width:100%;box-sizing:border-box;padding:7px 28px 7px 28px;
   border:1px solid var(--line);border-radius:9px;background:var(--panel);
   color:var(--txt);font-size:13.5px}
 .cbo>input:focus{outline:2px solid var(--acc);outline-offset:-1px}
 .cbo::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
   pointer-events:none;opacity:.55;font-size:11px}
+/* 🔍 — 이 칸은 입력해서 검색하는 칸이다. 아이콘이 없으면 그냥 드롭다운으로 보인다(실제 제보). */
+.cbo::before{content:'🔍';position:absolute;left:8px;top:50%;transform:translateY(-50%);
+  pointer-events:none;opacity:.5;font-size:12px}
 .cbo>ul{position:absolute;z-index:40;left:0;right:0;top:calc(100% + 4px);margin:0;
   padding:4px;list-style:none;max-height:270px;overflow-y:auto;background:var(--panel2);
   border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #0008}
@@ -1570,9 +1573,10 @@ function attachCombo(sel, placeholder){
     // ⚠️ 포커스 직후에는 입력칸에 **지금 선택된 이름**이 들어 있다. 그걸 검색어로
     //    쓰면 목록이 그 한 명으로 걸러진다(실측). 타이핑 전에는 전체를 보여준다.
     const q=typed?inp.value.trim().toLowerCase():'';
+    const hint=typed?'':'<li class="none" role="presentation">⌨️ 입력하면 이름·부캐로 검색됩니다</li>';
     items=[...sel.options].map(o=>o.value).filter(v=>!q||hay(v).includes(q));
     if(!items.length){ list.innerHTML='<li class="none" role="presentation">맞는 사람이 없습니다</li>'; }
-    else list.innerHTML=items.map((v,i)=>
+    else list.innerHTML=hint+items.map((v,i)=>
       `<li role="option" id="${id}-${i}" aria-selected="${v===sel.value}"`+
       `${i===cur?' class="on"':''} data-v="${esc(v)}">${esc(label(v))}${altOf(v,q)}</li>`).join('');
     inp.setAttribute('aria-activedescendant', (cur>=0&&items[cur])?`${id}-${cur}`:'');
@@ -1701,7 +1705,11 @@ function playerHomeHTML(){
   }).join('');
   return `${hlHtml}<div class="pdk" style="margin-bottom:8px">선수 목록
       <span class="muted" style="font-weight:400">— 누르면 그 선수가 열립니다. 순서는 티어 순.</span></div>
-    <div class="plgrid">${cards}</div>`;
+    <div class="row" style="margin-bottom:9px">
+      <label class="sronly" for="plHomeSearch">선수 검색</label>
+      <input type="search" id="plHomeSearch" class="psearch" placeholder="이름 검색 — 부캐 이름도 찾습니다" autocomplete="off">
+      <span class="muted" id="plHomeHit" style="font-size:12px"></span></div>
+    <div class="plgrid" id="plHomeGrid">${cards}</div>`;
 }
 function renderPlayerBody(){
   const sel=$('#playerSel');
@@ -1714,6 +1722,17 @@ function renderPlayerBody(){
       sel.dispatchEvent(new Event('change',{bubbles:true}));   // 콤보박스 표시 동기화
       renderPlayerBody();
       $('#player').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    // 검색창 — 카드를 실시간으로 거른다. 부캐 이름으로도 찾아진다(playerHaystack).
+    const inp=$('#plHomeSearch');
+    if(inp) inp.addEventListener('input',()=>{
+      const q=inp.value.trim().toLowerCase();
+      let hit=0;
+      $('#plHomeGrid').querySelectorAll('.plcard').forEach(b=>{
+        const ok=!q||playerHaystack(b.dataset.pid).includes(q);
+        b.style.display=ok?'':'none'; hit+=ok;
+      });
+      $('#plHomeHit').textContent=q?`${hit}명`:'';
     });
     labelTips($('#playerBody'));
     return;
@@ -2653,7 +2672,7 @@ function renderKpis(){
     // '평균 승률'은 제로섬이라 항상 50% 근처다 — 정보가 없다. 대신 평균 경기 시간을
     // 보여준다(우리 내전이 빨리 끝나는 편인지 길게 가는지는 실제로 다르다).
     ['총 경기',s.total_games??0,''],['평균 경기 시간',fmtDur(s.avg_duration_sec),'acc'],
-    ['플레이어',s.player_count??0,''],['업데이트',ts,'ts']
+    ['플레이어',s.player_count??0,''],['전적 업데이트',ts,'ts']
   ].map(([l,v,c])=>`<div class="kpi"><div class="label">${l}</div>`+
     `<div class="value ${c}"${c==='ts'&&tsFull?` data-tip="마지막 발행: ${esc(tsFull)}"`:''}>${v}</div></div>`).join('');
   labelTips($('#kpis'));
