@@ -528,6 +528,14 @@
 .plcard b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .plcard .sub{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--dim);flex-wrap:wrap}
 .plcard .tierbadge{font-size:10.5px;padding:1px 7px}
+
+/* 새 버전 배너 — 배포 전에 열어 둔 탭에게 알린다 */
+#freshBar{position:sticky;top:0;z-index:60;display:flex;gap:10px;align-items:center;
+  justify-content:center;padding:9px 14px;background:var(--panel2);
+  border-bottom:1px solid var(--acc);font-size:13px}
+#freshBar button{background:var(--acc);color:#08111c;border:0;border-radius:8px;
+  padding:6px 14px;font-weight:700;cursor:pointer;min-height:32px}
+@media (pointer:coarse){ #freshBar button{min-height:44px} }
 </style>
 </head>
 <body>
@@ -3172,6 +3180,39 @@ gap = ((MMR − CP) / ${C.cp_gap_div}) 을 ±${C.cp_gap_cap} 로 자름
        10단계로 나눠 봤더니 <b>한 판 두고 티어가 바뀐 비율이 79%</b>였습니다 —
        그건 티어가 아니라 점수판이었습니다.</p>`;
 }
+
+// ── 새 버전 감지 ────────────────────────────────────────────────────────────
+// 배포 전에 열어 둔 탭은 새로고침 전까지 옛 화면이다(실측 제보 2건이 이거였다).
+// 캐시 헤더는 올바르므로(max-age=0) 알아채기만 하면 된다: ETag 를 기억해 두고
+// 탭이 다시 보일 때 + 10분마다 HEAD 로 대조한다. 자동 새로고침은 하지 않는다 —
+// 보던 화면과 펼친 패널이 통째로 날아가므로, 알리고 사용자가 누르게 둔다.
+(function freshWatch(){
+  let seen=null, shown=false;
+  const tag=r=>r.headers.get('etag')||r.headers.get('last-modified')||'';
+  async function probe(){
+    try{
+      const r=await fetch(location.pathname||'/',{method:'HEAD',cache:'no-store'});
+      const t=tag(r);
+      if(!t) return;
+      if(seen===null){ seen=t; return; }
+      if(t!==seen && !shown){
+        shown=true;
+        const bar=document.createElement('div');
+        bar.id='freshBar'; bar.setAttribute('role','status');
+        bar.innerHTML='🔄 사이트가 업데이트됐습니다 — 새 화면을 보려면 새로고침하세요. '
+          +'<button type="button">새로고침</button>';
+        bar.querySelector('button').onclick=()=>location.reload();
+        document.body.prepend(bar);
+      }
+    }catch(e){ /* 오프라인 등 — 다음 기회에 */ }
+  }
+  probe();                                       // 기준값 기억
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible') probe();
+  });
+  window._freshProbe=probe;   // 검사·디버깅용 (배너를 사람 손 없이 확인할 길이 없다)
+  setInterval(probe, 10*60*1000);
+})();
 
 function renderAll(){
   $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
