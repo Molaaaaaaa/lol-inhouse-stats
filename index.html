@@ -1423,11 +1423,19 @@ function playerLabel(id){
   const dup=Object.values(DATA.players||{}).filter(q=>q.name===p.name).length>1;
   return dup && p.tag ? `${p.name} #${p.tag}` : (p.name||id);
 }
+// 검색이 훑을 이름들 — 대표 이름 + (공개돼 있으면) 부캐 이름.
+// ⚠️ 계정을 합치면 흡수된 이름은 화면 어디에도 안 남는다(스코어보드까지 대표 이름으로
+//    바뀐다). 그 이름으로 자기를 찾으려는 사람이 아무것도 못 찾게 되므로, 부캐 이름이
+//    실려 있을 때만이라도 검색에 걸리게 한다. 안 실려 있으면 이 함수는 아무 일도 안 한다.
+function playerHaystack(id){
+  const p=(DATA.players||{})[id]||{};
+  return [playerLabel(id)].concat(p.accounts||[]).join(' ').toLowerCase();
+}
 function fillPlayerSelect(sel,q){
   const all=Object.keys(DATA.players||{})
     .sort((a,b)=>playerLabel(a).localeCompare(playerLabel(b),'ko'));
   const needle=(q||'').trim().toLowerCase();
-  const ids=needle?all.filter(id=>playerLabel(id).toLowerCase().includes(needle)):all;
+  const ids=needle?all.filter(id=>playerHaystack(id).includes(needle)):all;
   const keep=sel.value;
   sel.innerHTML=ids.map(id=>`<option value="${id}">${playerLabel(id)}</option>`).join('');
   if(ids.includes(keep)) sel.value=keep;      // 검색해도 보던 사람은 유지
