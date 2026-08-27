@@ -897,8 +897,8 @@ function renderBoard(){
     {k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'ci_lower',h:'신뢰성',num:1,fmt:v=>pct(v),hlp:'신뢰성'},
-    {k:'kda',h:'KDA',num:1},{k:'kp',h:'킬관여',num:1,fmt:pct},
-    {k:'dpm',h:'DPM',num:1,bar:1},
+    {k:'kda',h:'KDA',num:1},{k:'kp',h:mLabel('kp'),num:1,fmt:pct},
+    {k:'dpm',h:mLabel('dpm'),num:1,bar:1},
   ],'ci_lower',-1);
   // ⚠️ renderTable 이 컨테이너 innerHTML 을 덮으므로 안쪽에 붙이면 **정렬 한 번에
   //    사라지고 안 돌아온다**. 19명 중 18명만 보이는 이유를 밝히는 유일한 문구다.
@@ -919,8 +919,8 @@ function renderBoardLane(){
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},{k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1},
-    {k:'kp',h:'킬관여',num:1,fmt:v=>v==null?'-':pct(v)},
-    {k:'dpm',h:'DPM',num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
+    {k:'kp',h:mLabel('kp'),num:1,fmt:v=>v==null?'-':pct(v)},
+    {k:'dpm',h:mLabel('dpm'),num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
     {k:'cs',h:'CS',num:1,fmt:v=>v==null?'-':Math.round(v)},
   ],'mmr',-1);
   const thin=rows.filter(r=>r.games<need).length;
@@ -934,6 +934,9 @@ function renderBoardLane(){
 
 // 지표 목록·라벨·포맷은 **서버가 준 것만** 쓴다. 예전엔 여기에도 배열을 두고
 // publish 에도 두어서, 한쪽만 고치면 조용히 어긋났다.
+// 지표 이름의 **단일 출처**. 표 머리에 'DPM' 처럼 직접 적으면 발행 쪽 이름
+// (metric_meta: '분당 딜')과 갈라져, 같은 숫자가 탭마다 다른 이름으로 불린다
+// (실측: 랭킹 탭은 '분당 딜', 리더보드·플레이어 탭은 'DPM' 이었다).
 const mLabel=k=>((DATA.metric_meta||{})[k]||{}).label||k;
 const mFmt=k=>((DATA.metric_meta||{})[k]||{}).fmt||'';
 const mDesc=k=>((DATA.metric_meta||{})[k]||{}).desc||'';
@@ -1044,7 +1047,7 @@ function renderSyn(){
   renderTable($('#synT'),DATA.synergy||[],[
     {k:'na',h:'듀오',fmt:(v,r)=>`${r.na} <span class="muted">＋</span> ${r.nb}`},
     {k:'games',h:'함께',num:1},
-    {k:'winrate',h:'함께승률',num:1,fmt:pct},{k:'expected',h:'기대',num:1,fmt:pct},
+    {k:'winrate',h:'함께 승률',num:1,fmt:pct},{k:'expected',h:'기대',num:1,fmt:pct},
     {k:'synergy',h:'시너지',num:1,fmt:sgn,hlp:'시너지',cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
   ],'synergy',-1);
   renderTable($('#trioT'),DATA.trios||[],[
@@ -1101,10 +1104,10 @@ function renderChamp(){
   if(champLane) cols.push({k:'lane',h:'라인',fmt:laneKo});
   cols.push({k:'games',h:'판',num:1,bar:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
-    {k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1});
+    {k:'kda',h:'KDA',num:1},{k:'dpm',h:mLabel('dpm'),num:1});
   renderTable($('#champT'),rows,cols,'games',-1);
   renderTable($('#champMatchT'),DATA.champion_matchups||[],[
-    {k:'champ',h:'챔프',img:'champ',fmt:v=>champKo(v)},
+    {k:'champ',h:'챔피언',img:'champ',fmt:v=>champKo(v)},
     {k:'vs_champ',h:'상대',img:'vs_champ',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},{k:'games',h:'판',num:1,bar:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)}],'games',-1);
@@ -1218,7 +1221,7 @@ function renderFun(){
   ],'assists',-1);
   const SP=F.sprees||{};
   renderTable($('#funSpree'),SP.sprees||[],[
-    {k:'name',h:'멤버'},{k:'champ',h:'챔프',img:'champ',fmt:v=>champKo(v)},
+    {k:'name',h:'멤버'},{k:'champ',h:'챔피언',img:'champ',fmt:v=>champKo(v)},
     {k:'streak',h:'연속킬',num:1,bar:1},
     {k:'minute',h:'시점',num:1,fmt:v=>`${v}분`},
   ],'streak',-1);
@@ -1374,8 +1377,8 @@ function renderPlayerBody(){
   let h=`<div class="row">
     <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
     <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
-    <span class="pill">KDA ${r.kda}</span><span class="pill">킬관여 ${pct(r.kp)}</span>
-    <span class="pill">DPM ${r.dpm}</span>${streak}</div>
+    <span class="pill">KDA ${r.kda}</span><span class="pill">${mLabel('kp')} ${pct(r.kp)}</span>
+    <span class="pill">${mLabel('dpm')} ${r.dpm}</span>${streak}</div>
     ${((p.account_count||(p.accounts||[]).length)>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">🪪 계정 ${p.account_count||p.accounts.length}개 합산${p.accounts?': '+p.accounts.join(', '):''}</div>`:''}
     <div id="plPanes">
       <div data-sub="📊 요약">
@@ -1437,23 +1440,23 @@ function renderPlayerBody(){
     {k:'mmr',h:'MMR',num:1,hlp:'라인MMR',fmt:v=>v==null?'-':v},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1},
-    {k:'dpm',h:'DPM',num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
-    {k:'kp',h:'킬관여',num:1,fmt:v=>v==null?'-':pct(v)},
+    {k:'dpm',h:mLabel('dpm'),num:1,bar:1,fmt:v=>v==null?'-':Math.round(v).toLocaleString()},
+    {k:'kp',h:mLabel('kp'),num:1,fmt:v=>v==null?'-':pct(v)},
     {k:'cs',h:'CS',num:1,fmt:v=>v==null?'-':Math.round(v)},
   ],'games',-1);
   // 통합값과 라인별이 왜 다른지 한 줄로 — 안 적으면 "숫자가 안 맞는다"로 읽힌다
   const lanesN=(p.lanes||[]).length;
   if(lanesN>1) $('#plLaneNote').innerHTML=(
-    `<p class="muted" style="font-size:11.5px;margin:6px 0 0">위 요약의 DPM ${r.dpm} 은 `+
+    `<p class="muted" style="font-size:11.5px;margin:6px 0 0">위 요약의 ${mLabel('dpm')} ${r.dpm} 은 `+
     `${lanesN}개 라인을 합친 값입니다. 라인마다 하는 일이 달라서 여기 숫자와 다릅니다.</p>`);
   else $('#plLaneNote').innerHTML='';
-  renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},
+  renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔피언',img:'champion_name',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},
     {k:'games',h:'판',num:1},{k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1}],'games',-1);
   renderTable($('#plRecent'),(p.recent_games||[]).map(g=>({...g,res:g.win?'승':'패'})),
-    [{k:'champion_name',h:'챔프',img:'champion_name',fmt:v=>champKo(v)},{k:'lane',h:'라인',fmt:laneKo},
-     {k:'res',h:'결과',cls:r=>r.win?'pos':'neg'},{k:'kda',h:'KDA',num:1},{k:'dpm',h:'DPM',num:1}],null,-1);
+    [{k:'champion_name',h:'챔피언',img:'champion_name',fmt:v=>champKo(v)},{k:'lane',h:'라인',fmt:laneKo},
+     {k:'res',h:'결과',cls:r=>r.win?'pos':'neg'},{k:'kda',h:'KDA',num:1},{k:'dpm',h:mLabel('dpm'),num:1}],null,-1);
   renderPlayerMetrics(p);
   // ⚠️ 이 카드는 통째로 다시 그려진다(라인 전환·사람 전환). 다시 그리면 툴팁의
   //    aria-label 이 같이 날아가, 소리로는 능력치 축의 순위·근거가 사라진다.
@@ -1685,8 +1688,8 @@ function renderCompare(){
       ${row('전체 판수',ra.games,rb.games)}
       ${row('전체 승률',ra.winrate,rb.winrate,pct)}
       ${row('KDA',ra.kda,rb.kda)}
-      ${row('킬관여',ra.kp,rb.kp,pct)}
-      ${row('DPM',ra.dpm,rb.dpm)}
+      ${row(mLabel('kp'),ra.kp,rb.kp,pct)}
+      ${row(mLabel('dpm'),ra.dpm,rb.dpm)}
     </tbody></table>`+laneNote+withNote+
     (vs?'':'<p class="muted" style="margin-top:10px">아직 적으로 만난 기록이 없습니다.</p>');
 }
