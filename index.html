@@ -292,7 +292,7 @@
   .minibar span{position:absolute;inset:0 auto 0 0;background:rgba(58,160,238,.35)}
   .minibar b{position:relative;font-weight:600;font-size:12px;line-height:18px;padding-left:6px}
   .recgrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
-  .hourbars{display:flex;gap:3px;align-items:flex-end;height:72px}
+  .hourbars{display:flex;gap:3px;align-items:flex-end;height:46px}
   .hourbars .hb{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:help}
   .hourbars .hb span{display:block;width:100%;border-radius:3px 3px 0 0;min-height:4px}
   .hourbars .hb b{font-size:9px;color:var(--dim);font-weight:400}
@@ -506,6 +506,31 @@
 .accbox tr.acctot td{background:var(--line)}
 .accbox tr.accsub td:first-child{padding-left:4px}
 .accbox .tick{opacity:.45;margin-right:5px}
+
+/* 행 클릭 고정 강조 — 마우스를 떼도 어느 행을 보고 있었는지 남는다 */
+#cpT tbody tr, #cpLaneGrid tbody tr{cursor:pointer}
+#cpT tbody tr.rowsel td, #cpLaneGrid tbody tr.rowsel td{
+  font-weight:700;background:color-mix(in srgb, var(--acc) 12%, transparent)}
+
+/* 되판 아이템 — 흐리게 + ✕. 색만 바꾸면 흑백/색각에서 구분이 사라진다 */
+.pdit.sold img{opacity:.38;filter:grayscale(60%)}
+.pdit.sold::after{content:'✕';position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;color:#e5484d;font-weight:900;font-size:15px;
+  text-shadow:0 0 3px #000, 0 0 3px #000;pointer-events:none}
+.pdit{position:relative}
+/* 킬 지도 */
+.killmap{position:relative;width:min(300px,100%);aspect-ratio:1;border-radius:10px;
+  background:linear-gradient(135deg,#101b17 0%,#0e1a20 50%,#131522 100%);
+  border:1px solid var(--line);overflow:hidden}
+.killmap::before{content:'';position:absolute;left:-10%;top:-10%;width:120%;height:3px;
+  background:#3aa0ee22;transform:rotate(-45deg);transform-origin:center}
+.killmap .kd{position:absolute;width:9px;height:9px;border-radius:50%;
+  transform:translate(-50%,50%);border:1px solid #000a;cursor:help}
+.killmap .kd.b{background:#3aa0ee}
+.killmap .kd.r{background:#e5484d}
+.killmap .kd.x{background:#9aa6b2;border-radius:2px}
+.kmlegend{display:flex;gap:12px;font-size:11.5px;color:var(--dim);margin-top:6px;flex-wrap:wrap}
+.kmlegend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 </style>
 </head>
 <body>
@@ -531,7 +556,7 @@
     <div class="tab" role="tab" data-t="syn">🤝 시너지</div>
     <div class="tab" role="tab" data-t="champ">🧙 챔피언</div>
     <div class="tab" role="tab" data-t="matches">📜 경기</div>
-    <div class="tab" role="tab" data-t="player">👤 사람</div>
+    <div class="tab" role="tab" data-t="player">👤 플레이어</div>
     <div class="tab" role="tab" data-t="balance">🧮 밸런스</div>
   </nav>
   <main id="views">
@@ -1517,7 +1542,7 @@ function attachCombo(sel, placeholder){
   sel.setAttribute('tabindex','-1');
   sel.setAttribute('aria-hidden','true');
 
-  let items=[], cur=-1;
+  let items=[], cur=-1, typed=false;   // typed: 포커스 후 실제로 입력했는가
   const label=v=>{const o=[...sel.options].find(x=>x.value===v);return o?o.textContent:'';};
   // 부캐 이름으로도 찾아진다 — 계정을 합치면 흡수된 이름은 화면 어디에도 안 남기 때문에
   // 그 이름으로 자기를 찾으려는 사람이 아무것도 못 찾게 된다.
@@ -1529,7 +1554,9 @@ function attachCombo(sel, placeholder){
     return hit?`<span class="alt">${esc(hit)}</span>`:'';
   }
   function draw(){
-    const q=inp.value.trim().toLowerCase();
+    // ⚠️ 포커스 직후에는 입력칸에 **지금 선택된 이름**이 들어 있다. 그걸 검색어로
+    //    쓰면 목록이 그 한 명으로 걸러진다(실측). 타이핑 전에는 전체를 보여준다.
+    const q=typed?inp.value.trim().toLowerCase():'';
     items=[...sel.options].map(o=>o.value).filter(v=>!q||hay(v).includes(q));
     if(!items.length){ list.innerHTML='<li class="none" role="presentation">맞는 사람이 없습니다</li>'; }
     else list.innerHTML=items.map((v,i)=>
@@ -1548,8 +1575,8 @@ function attachCombo(sel, placeholder){
   }
   function sync(){ inp.value=label(sel.value); }
 
-  inp.addEventListener('focus',()=>{ inp.select(); open(); });
-  inp.addEventListener('input',()=>{ cur=-1; open(); draw(); });
+  inp.addEventListener('focus',()=>{ typed=false; inp.select(); open(); });
+  inp.addEventListener('input',()=>{ typed=true; cur=-1; open(); draw(); });
   inp.addEventListener('keydown',e=>{
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){
       e.preventDefault(); if(list.hidden) open();
@@ -1834,7 +1861,7 @@ function hourBars(hs){
   if(!hs.length) return '<span class="muted">기록 없음</span>';
   const mx=Math.max(1,...hs.map(h=>h.games));
   return '<div class="hourbars">'+hs.map(h=>{
-    const hgt=Math.max(8,(h.games/mx)*54);
+    const hgt=Math.max(6,(h.games/mx)*30);
     const col=h.winrate>=0.6?'#4cc38a':(h.winrate<0.4?'#e5484d':'#3aa0ee');
     return `<div class="hb" data-tip="${String(h.hour).padStart(2,'0')}시 · ${h.games}판 · 승률 ${pct(h.winrate)}">`+
       `<span style="height:${hgt}px;background:${col}"></span><b>${h.hour}</b></div>`;}).join('')+'</div>';
@@ -2221,7 +2248,7 @@ function playerDetailHTML(p,dur){
   }).join('')||'<span class="muted">기록 없음</span>';
   const build=(p.build||[]).length
     ? `<div class="pdbuild">`+(p.build||[]).map(x=>
-        `<span class="pdit" data-tip="${x.minute}분">${itemImg(x.item)}`+
+        `<span class="pdit${x.sold?' sold':''}" data-tip="${x.minute}분${x.sold?' 판매':''}">${itemImg(x.item)}`+
         `<i>${x.minute}′</i></span>`).join('<span class="pdar">›</span>')+`</div>`
     : '<span class="muted">구매 기록 없음</span>';
   const sp=(p.spells||[]).filter(Boolean).map(x=>SPELL_KO[x]||('주문'+x)).join(' · ')||'—';
@@ -2231,7 +2258,7 @@ function playerDetailHTML(p,dur){
       <span class="pdk">룬</span><span>${pk}</span></div>
     ${kdaTimeline(p,dur)}
     <div class="pdk" style="margin-top:8px">아이템 구매 순서
-      <span class="muted" style="font-weight:400">— 산 순서입니다. 되판 것은 빠져 있어요.</span></div>
+      <span class="muted" style="font-weight:400">— 산 순서입니다. <span style="color:#e5484d">✕</span> 는 되판 것.</span></div>
     ${build}
     <div class="pdk" style="margin-top:10px">이 판의 세부 기록</div>
     <div class="pdstats">${stats}</div>
@@ -2269,6 +2296,28 @@ function scoreboard(d){
     `</tbody></table></div>`;
 }
 
+// 킬 지도 — 어디서 싸움이 났고 누가 죽었는지. 좌표는 0~1 (맵 한 변 16000 기준).
+// 점 색 = **잡은 팀**. 회색 사각형 = 처형(포탑·미니언에게 죽음).
+function killMap(d){
+  const ks=d.kills||[];
+  if(!ks.length) return '';
+  const who={};             // pid → {name, team}
+  (d.teams||[]).forEach((t,ti)=>(t.players||[]).forEach(p=>{
+    who[p.pid]={name:p.name,team:ti};}));
+  const dots=ks.map(k=>{
+    const kk=who[k.a],vv=who[k.v];
+    const cls=k.a?(kk&&kk.team===0?'b':'r'):'x';
+    const tip=`${k.m}분 · ${kk?esc(kk.name):'처형(포탑·미니언)'} → ${vv?esc(vv.name):'?'}`;
+    // Riot 좌표는 y가 위로 자란다 → bottom 기준으로 놓는다
+    return `<span class="kd ${cls}" style="left:${(k.x*100).toFixed(1)}%;bottom:${(k.y*100).toFixed(1)}%" data-tip="${tip}"></span>`;
+  }).join('');
+  return `<h2 style="margin:14px 0 8px">🗺️ 킬 지도</h2>
+    <div class="killmap">${dots}</div>
+    <div class="kmlegend"><span><i style="background:#3aa0ee"></i>블루팀이 잡음</span>
+      <span><i style="background:#e5484d"></i>레드팀이 잡음</span>
+      <span><i style="background:#9aa6b2;border-radius:2px"></i>처형</span>
+      <span class="muted">${ks.length}킬 · 왼쪽 아래가 블루 진영</span></div>`;
+}
 function matchDetailHTML(d){
   if(!d||!d.teams||d.teams.length<2) return goldChart((d&&d.timeline)||{});
   const A=d.teams[0],B=d.teams[1],o=t=>t.objectives||{};
@@ -2298,6 +2347,7 @@ function matchDetailHTML(d){
   if(d.timeline&&d.timeline.minutes&&d.timeline.minutes.length>1)
     h+=`<h2 style="margin:14px 0 8px">📈 골드 차이</h2>`+goldChart(d.timeline);
   h+=`<h2 style="margin:14px 0 8px">📋 스코어보드</h2>`+scoreboard(d);
+  h+=killMap(d);
   return h;
 }
 function renderSynHeat(){
@@ -2721,7 +2771,9 @@ function attachTableFilters(root){
     const box = document.createElement('div');
     box.className = 'tfilter';
     box.innerHTML = `<label class="sronly" for="${id}">${name} 안에서 찾기</label>`+
-      `<input type="search" id="${id}" placeholder="이름으로 거르기" autocomplete="off">`+
+      `<input type="search" id="${id}" placeholder="${
+        ((tb.querySelector('th')||{}).textContent||'').includes('챔피언')
+          ?'챔피언 검색':'이름으로 거르기'}" autocomplete="off">`+
       `<span class="tfhit muted"></span>`;
     // overflow 감싸개가 있으면 그 바깥에 둔다(가로 스크롤 안에 갇히지 않게)
     const anchor = (tb.parentElement && /auto|scroll/.test(
@@ -2816,7 +2868,9 @@ function tierBadge(name){
 function laneCell(c, isMain){
   const n=c.games||0, placed=!!c.placed;
   const cls = isMain ? 'main placed' : (placed ? 'placed' : (n ? 'thin' : 'none'));
-  const sub = n ? `${n}판` : '안 뜀';
+  // 라인 배치(5판)가 안 끝난 칸은 판수 대신 '배치 n/5' — 점선만으로는 안 읽힌다
+  //   (실측 피드백: "원딜 1판인데 티어가 정해진 것처럼 보인다").
+  const sub = placed ? `${n}판` : (n ? `배치 ${n}/${cpConst().lane_prior_k||5}` : '안 뜀');
   return `<span class="lcell ${cls} ${tierCls(c.tier)}"
     data-tip="${esc(c.tier)} ${c.points}점 · ${n?`${n}판`:'이 라인은 아직 안 뛰었습니다'}${
       isMain?' · 주 라인':''}${placed||isMain?'':` · 배치 ${cpConst().lane_prior_k||5}판 중 ${n}판`}"
@@ -2877,6 +2931,8 @@ function renderCp(){
              `<span class="bar"><i style="width:${w.toFixed(1)}%"></i></span></div>`;}},
     {k:'to_next',h:'다음까지',num:1,nullLast:1,
      fmt:(v,r)=>(!r.placed||v==null)?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
+    {k:'mmr',h:'MMR',num:1,hlp:'CP',
+     fmt:(v,r)=>r.placed?`<span class="muted">${v}</span>`:'<span class="muted">—</span>'},
     {k:'games',h:'판수',num:1},
     {k:'_lane',h:'주 라인'},
     {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',
@@ -2927,6 +2983,20 @@ function renderCp(){
             `판이 쌓이면 이 값을 다시 잽니다.`)
       : '');
   labelTips($('#cpLaneGrid'));
+  // 클릭한 행 강조 유지 — 호버는 떼면 사라져서 26명 표에서 자기 줄을 놓친다.
+  // 컨테이너 위임이라 정렬로 표가 다시 그려져도 리스너는 산다(강조만 리셋된다).
+  [['#cpT'],['#cpLaneGrid']].forEach(([sel])=>{
+    const el=$(sel);
+    if(el && !el._rowsel){
+      el._rowsel=1;
+      el.addEventListener('click',e=>{
+        const tr=e.target.closest('tbody tr'); if(!tr) return;
+        const on=tr.classList.contains('rowsel');
+        el.querySelectorAll('tr.rowsel').forEach(x=>x.classList.remove('rowsel'));
+        if(!on) tr.classList.add('rowsel');
+      });
+    }
+  });
 
   // ── 계산식 ──
   const w=C.contrib_weights||{};
