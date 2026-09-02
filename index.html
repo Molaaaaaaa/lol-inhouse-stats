@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-JFb8bp9NsgpsWRyeTfX55BlzgWR6Ka14/lIo6UC7zAI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-XYRoCbFmlfi6ngP5K9GP3IeUUc8KKStRcJ9cO8LkBu8='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -2252,7 +2252,14 @@ function jsBalance(players,decl){
   const sm={}; (DATA.synergy||[]).forEach(s=>sm[[s.na,s.nb].sort().join('|')]=s.synergy);
   const synB=ids=>{let t=0;const nm=ids.map(d=>DATA.ratings[d].name);
     for(let i=0;i<nm.length;i++)for(let j=i+1;j<nm.length;j++)t+=sm[[nm[i],nm[j]].sort().join('|')]||0;return t;};
-  let best=null;
+  let best=null, bestInfo=null, nCand=0;
+  const sig=x=>1/(1+Math.exp(-Math.max(-30,Math.min(30,x))));
+  const RC=DATA.rating_constants||{}, INFO={window:RC.info_e_window!=null?RC.info_e_window:0.05, S:RC.info_kernel_logit||0.1151};
+  const CC=DATA.cp_constants||{};
+  // CP 의 K 일정과 같은 불확실성: 배치 2.0 → 1.0 → 판이 쌓이면 0.5
+  const kFor=n=>{ const need=CC.placement_games||3; if(n<need)return CC.k_place||64; if(CC.k_decay_half==null)return CC.k_norm||32; return Math.max(CC.k_min||16,(CC.k_norm||32)*CC.k_decay_half/(CC.k_decay_half+(n-need))); };
+  const unc=d=>kFor(+((DATA.ratings[d]||{}).games||0))/(CC.k_norm||32);
+  const pairInfo=(a,b)=>{ const sa=DATA.ratings[a].strength||0, sb=DATA.ratings[b].strength||0; return unc(a)*unc(b)*Math.exp(-Math.pow((sa-sb)/INFO.S,2)); };
   for(const A of combos(players,half)){const sA0=new Set(A),B=players.filter(p=>!sA0.has(p));
     let sA,sB,lA={},lB={};
     if(useRoles){const ra=bestRole(A,decl),rb=bestRole(B,decl);if(!ra||!rb)continue;
@@ -2260,14 +2267,18 @@ function jsBalance(players,decl){
     else{A.forEach(d=>lA[d]=decl[d]||null);B.forEach(d=>lB[d]=decl[d]||null);
       sA=A.reduce((t,d)=>t+bStrength(d,lA[d]),0);sB=B.reduce((t,d)=>t+bStrength(d,lB[d]),0);}
     const sc=Math.abs(sA-sB)-0.5*(synB(A)+synB(B));
-    if(!best||sc<best.sc)best={sc,A,B,sA,sB,lA,lB};}
+    if(!best||sc<best.sc)best={sc,A,B,sA,sB,lA,lB};
+    // 정보 최대화(balance.py 와 같은 규칙): 기대 승률이 창 안인 후보 중 info 최대, 같으면 예전 점수
+    if(Math.abs(sig(sA-sB)-0.5)<=INFO.window){ let info=0; for(const a of A)for(const b of B)info+=pairInfo(a,b); nCand++;
+      const key=[Math.round(info*1e9)/1e9,-sc];
+      if(!bestInfo||key[0]>bestInfo.key[0]||(key[0]===bestInfo.key[0]&&key[1]>bestInfo.key[1]))bestInfo={key,info,sc,A,B,sA,sB,lA,lB}; } }
   if(!best)return{error:'라인 지정이 충돌합니다.'};
-  const sig=x=>1/(1+Math.exp(-Math.max(-30,Math.min(30,x))));
+  const infoPick=!!bestInfo; if(bestInfo)best=bestInfo;
   const mk=(ids,ln)=>ids.map(d=>({name:DATA.ratings[d].name,lane:ln[d],
     mmr:Math.round(1000+250*bStrength(d,ln[d])),
     off:ln[d]&&!((DATA.ratings[d].lanes||{})[ln[d]])})).sort((a,b)=>BAL_ROLES.indexOf(a.lane)-BAL_ROLES.indexOf(b.lane));
   const TA=mk(best.A,best.lA),TB=mk(best.B,best.lB);
-  return{teamA:TA,teamB:TB,pA:sig(best.sA-best.sB),
+  return{teamA:TA,teamB:TB,pA:sig(best.sA-best.sB),infoPick,nCand,
     mmrA:TA.reduce((t,m)=>t+m.mmr,0),mmrB:TB.reduce((t,m)=>t+m.mmr,0)};}
 // 선택 상태는 DOM이 아니라 여기 둔다 — 다시 그려도 살아남는다.
 const balSel=new Map();     // id -> 지정 라인('' 이면 자동)
@@ -2296,6 +2307,8 @@ function runBalance(){
     out.innerHTML=`<p class="stack neg">${res.error}</p>`; return;}
   const pa=Math.round(res.pA*100), gap=Math.abs(pa-50);
   // 숫자만 던지지 않고 한 줄로 해석해 준다 — 이게 '간단명료'의 핵심이다.
+  // 정보 최대화가 골랐으면 그 이유를 한 줄로 — '왜 이 나눔이냐'에 답한다
+  const why=res.infoPick?`<p class="note-sm muted">5:5 에 가까운 나눔 ${res.nCand}개 중, 아직 순서가 불확실한 사람들을 서로 반대편에 두는 나눔입니다 — 공정성은 같고 한 판이 더 많이 가립니다.</p>`:'';
   const verdict=gap<=3?['거의 완벽한 5:5','good']
     :gap<=8?['살짝 기울지만 할 만합니다','']
     :['많이 기울었습니다 — 한 명 바꿔보세요','bad'];
@@ -2310,7 +2323,7 @@ function runBalance(){
   out.innerHTML=`<div class="bverdict ${verdict[1]}">${pa} : ${100-pa}<span>${verdict[0]}</span></div>`+
     `<div class="bteams">`+team(res.teamA,'A팀','<i class="dot b"></i>')+team(res.teamB,'B팀','<i class="dot r"></i>')+`</div>`+
     (hasLane?'':`<p class="note muted">라인은 5:5일 때만 배정합니다.</p>`)+
-    `<div class="stack row"><button id="balCopy" class="chip">${ico('clipboard-list')} 팀 구성 복사</button>`+
+    why+`<div class="stack row"><button id="balCopy" class="chip">${ico('clipboard-list')} 팀 구성 복사</button>`+
     `<span class="sm muted" id="balCopyMsg"></span></div>`;
   // 팀을 갈라 놓고 옮길 방법이 없으면 열 명을 다시 타이핑해야 한다 — 그게 실제로
   // 이 화면을 쓰는 마지막 단계다. 디스코드에 그대로 붙는 글로 만든다.
