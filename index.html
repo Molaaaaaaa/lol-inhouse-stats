@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-rR0yXaj9t4R5ce7OHiQ1gJv2UCQPfx8rweUqUcl2jBs='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-LfycF/Tc3O7pPcsIUICn+ZmB+GhRbx/Znlqet7YNUT0='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -60,6 +60,17 @@
   /* 시각은 값이 아니라 딸린 정보다 — 헤드라인 크기로 쓰면 줄바꿈이 행을 늘린다 */
   .kpi .value.ts{font-size:16px;font-weight:600;color:var(--dim)}
   .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  /* 아이콘 — 인라인 SVG 스프라이트(#i-*). 글자색을 따르고 글자 크기에 맞춘다. */
+  .ic{width:1em;height:1em;display:inline-block;vertical-align:-.15em;flex:none;
+    fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+  h1 .ic{width:1.15em;height:1.15em;color:var(--acc)}
+  h2 .ic{margin-right:6px;color:var(--dim)}
+  .tab .ic,.subtab .ic{margin-right:5px}
+  .dot{display:inline-block;width:.75em;height:.75em;border-radius:50%;vertical-align:-.05em;margin-right:5px}
+  .dot.b{background:var(--good)} .dot.r{background:var(--danger)}
+  .medal{width:1.1em;height:1.1em;vertical-align:-.2em;margin-right:2px}
+  .medal.m1{color:var(--t1)} .medal.m2{color:var(--mid)} .medal.m3{color:var(--t4)}
+  .sbcar .ic{width:12px;height:12px;vertical-align:-2px}
   .tab{padding:8px 15px;border:1px solid var(--line);border-radius:999px;cursor:pointer;
     color:var(--dim);user-select:none;transition:.12s}
   .tab:hover{color:var(--txt)}
@@ -476,7 +487,8 @@
 .accbox>summary{cursor:pointer;padding:7px 11px;font-size:12.5px;color:var(--dim);
   list-style:none;display:flex;align-items:center;gap:6px;min-height:34px}
 .accbox>summary::-webkit-details-marker{display:none}
-.accbox>summary::after{content:'▾';margin-left:auto;opacity:.6;transition:transform .15s}
+.accbox>summary::after{content:'';width:.9em;height:.9em;margin-left:auto;opacity:.6;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .15s}
 .accbox[open]>summary::after{transform:rotate(180deg)}
 .accbox>summary:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
 .accbox .body{padding:0 11px 10px}
@@ -497,7 +509,7 @@
 .cbo::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
   pointer-events:none;opacity:.55;font-size:11px}
 /* 🔍 — 이 칸은 입력해서 검색하는 칸이다. 아이콘이 없으면 그냥 드롭다운으로 보인다(실제 제보). */
-.cbo::before{content:'🔍';position:absolute;left:8px;top:50%;transform:translateY(-50%);
+.cbo::before{content:'';width:14px;height:14px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") center/contain no-repeat;position:absolute;left:8px;top:50%;transform:translateY(-50%);
   pointer-events:none;opacity:.5;font-size:12px}
 .cbo>ul{position:absolute;z-index:40;left:0;right:0;top:calc(100% + 4px);margin:0;
   padding:4px;list-style:none;max-height:270px;overflow-y:auto;background:var(--panel2);
@@ -565,10 +577,69 @@
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<!-- 아이콘 세트: Lucide (MIT, lucide.dev) 기반 — 선 1.75px 한 굵기, 둥근 끝. 이모지 대신 쓴다. -->
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+<symbol id="i-trending-up" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
+<symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></symbol>
+<symbol id="i-scroll" viewBox="0 0 24 24"><path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+<symbol id="i-sigma" viewBox="0 0 24 24"><path d="M18 7V4H6l6 8-6 8h12v-3"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+<symbol id="i-bar-chart" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+<symbol id="i-swords" viewBox="0 0 24 24"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></symbol>
+<symbol id="i-sword" viewBox="0 0 24 24"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+<symbol id="i-book-open" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+<symbol id="i-crown" viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+<symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+<symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+<symbol id="i-skull" viewBox="0 0 24 24"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></symbol>
+<symbol id="i-arrow-left-right" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
+<symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+<symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></symbol>
+<symbol id="i-id-card" viewBox="0 0 24 24"><path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/></symbol>
+<symbol id="i-keyboard" viewBox="0 0 24 24"><path d="M10 8h.01"/><path d="M12 12h.01"/><path d="M14 8h.01"/><path d="M16 12h.01"/><path d="M18 8h.01"/><path d="M6 8h.01"/><path d="M7 16h10"/><path d="M8 12h.01"/><rect width="20" height="16" x="2" y="4" rx="2"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></symbol>
+<symbol id="i-alert-triangle" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-thumbs-up" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></symbol>
+<symbol id="i-thumbs-down" viewBox="0 0 24 24"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 24 24"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+<symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></symbol>
+<symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-tree-pine" viewBox="0 0 24 24"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"/><path d="M12 22v-3"/></symbol>
+<symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></symbol>
+<symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+<symbol id="i-castle" viewBox="0 0 24 24"><path d="M22 20v-9H2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2Z"/><path d="M18 11V4H6v7"/><path d="M15 22v-4a3 3 0 0 0-6 0v4"/><path d="M22 11V9"/><path d="M2 11V9"/><path d="M6 4V2"/><path d="M18 4V2"/><path d="M10 4V2"/><path d="M14 4V2"/></symbol>
+<symbol id="i-bird" viewBox="0 0 24 24"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></symbol>
+<symbol id="i-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol>
+<symbol id="i-medal" viewBox="0 0 24 24"><path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/></symbol>
+<symbol id="i-gamepad" viewBox="0 0 24 24"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></symbol>
+<symbol id="i-circle-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></symbol>
+</svg>
 <header>
-  <h1>🎮 <span class="g">내전 해체 분석기</span></h1>
+  <h1><svg class="ic" aria-hidden="true"><use href="#i-gamepad"/></svg> <span class="g">내전 해체 분석기</span></h1>
   <select id="guildSel" data-tip="다른 서버(길드) 고르기"></select>
-  <button id="refresh" data-tip="최신 전적 다시 불러오기">🔄</button>
+  <button id="refresh" data-tip="최신 전적 다시 불러오기"><svg class="ic" aria-hidden="true"><use href="#i-refresh-cw"/></svg></button>
   <div class="meta" id="meta">데이터를 불러오는 중…</div>
 </header>
 
@@ -581,28 +652,28 @@
   <div class="kpis" id="kpis"></div>
 
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
-    <div class="tab on" role="tab" data-t="tier">🏆 티어</div>
-    <div class="tab" role="tab" data-t="board">📈 순위</div>
-    <div class="tab" role="tab" data-t="records">🏅 기록</div>
-    <div class="tab" role="tab" data-t="syn">🤝 시너지</div>
-    <div class="tab" role="tab" data-t="champ">🧙 챔피언</div>
-    <div class="tab" role="tab" data-t="matches">📜 경기</div>
-    <div class="tab" role="tab" data-t="player">👤 플레이어</div>
-    <div class="tab" role="tab" data-t="balance">🧮 밸런스</div>
+    <div class="tab on" role="tab" data-t="tier"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 티어</div>
+    <div class="tab" role="tab" data-t="board"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg> 순위</div>
+    <div class="tab" role="tab" data-t="records"><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 기록</div>
+    <div class="tab" role="tab" data-t="syn"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 시너지</div>
+    <div class="tab" role="tab" data-t="champ"><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언</div>
+    <div class="tab" role="tab" data-t="matches"><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 경기</div>
+    <div class="tab" role="tab" data-t="player"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg> 플레이어</div>
+    <div class="tab" role="tab" data-t="balance"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 밸런스</div>
   </nav>
   <main id="views">
 
   <section id="tier" class="view" data-subtabs>
-    <div class="card" data-sub="🏆 사다리"><h2>🏆 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span><span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
+    <div class="card" data-sub="사다리" data-ico="trophy"><h2><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span><span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
       <p class="muted" id="cpIntro"></p>
       <div class="tierlegend" id="cpLegend"></div>
       <div class="lnpicks" id="cpLanePick" role="group" aria-label="보기 선택"></div>
       <div id="cpT"></div>
       <div class="muted" id="cpNote" style="margin-top:8px;font-size:12px"></div></div>
-    <div class="card" data-sub="📐 CP 계산식"><h2>📐 CP 는 어떻게 나오나</h2>
+    <div class="card" data-sub="CP 계산식" data-ico="sigma"><h2><svg class="ic" aria-hidden="true"><use href="#i-sigma"/></svg> CP 는 어떻게 나오나</h2>
       <div id="cpMath"></div></div>
-    <div class="card" data-sub="🎯 MMR 검산">
-      <h2>📐 이 숫자는 어떻게 나왔나</h2>
+    <div class="card" data-sub="MMR 검산" data-ico="target">
+      <h2><svg class="ic" aria-hidden="true"><use href="#i-sigma"/></svg> 이 숫자는 어떻게 나왔나</h2>
       <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
         <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
       <div class="row" style="margin:10px 0">
@@ -613,11 +684,11 @@
   </section>
 
   <section id="board" class="view hidden" data-subtabs>
-    <div data-sub="📈 승률" class="card"><h2>🏆 승률 리더보드</h2>
+    <div data-sub="승률" data-ico="trending-up" class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 승률 리더보드</h2>
         <div class="lnpicks" id="boardLanes" role="group" aria-label="라인 선택"></div>
         <div id="boardT"></div><div id="boardNote"></div>
         <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div>
-    <div data-sub="📊 지표" class="card">
+    <div data-sub="지표" data-ico="bar-chart" class="card">
         <div class="mpick">
           <div class="grp">
             <span class="muted" style="font-size:12.5px">분류</span>
@@ -638,47 +709,47 @@
         </div>
         <div id="rankT"></div>
       </div>
-    <div class="grid2" data-sub="🧭 로밍 · 한타 · 오브젝트">
-      <div class="card"><h2>🧭 로밍 비율<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
-      <div class="card"><h2>⚔️ 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
-      <div class="card"><h2>🐲 용 종류별 성적</h2><div id="funDragon"></div></div>
+    <div class="grid2" data-sub="로밍 · 한타 · 오브젝트" data-ico="compass">
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg> 로밍 비율<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-swords"/></svg> 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg> 용 종류별 성적</h2><div id="funDragon"></div></div>
     </div>
-    <div class="card" data-sub="🧮 지표 설명"><h2>🧮 나머지 지표</h2><div id="mathRest"></div></div>
+    <div class="card" data-sub="지표 설명" data-ico="book-open"><h2><svg class="ic" aria-hidden="true"><use href="#i-book-open"/></svg> 나머지 지표</h2><div id="mathRest"></div></div>
   </section>
 
   <section id="records" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🏅 명예의 전당"><h2>🏅 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
-    <div class="grid2" data-sub="👑 MVP · 펜타">
-      <div class="card"><h2>👑 MVP 랭킹<span class="qmark" tabindex="0" role="button" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
-      <div class="card"><h2>🔥 펜타킬</h2><div id="pentaT"></div></div>
+    <div class="card" data-sub="명예의 전당" data-ico="award"><h2><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
+    <div class="grid2" data-sub="MVP · 펜타" data-ico="crown">
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-crown"/></svg> MVP 랭킹<span class="qmark" tabindex="0" role="button" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg> 펜타킬</h2><div id="pentaT"></div></div>
     </div>
-    <div data-sub="🔄 역전 · 데스">
-      <div class="card"><h2>🔄 역전 · 리드 실패<span class="qmark" tabindex="0" role="button" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
+    <div data-sub="역전 · 데스" data-ico="rotate-ccw">
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-rotate-ccw"/></svg> 역전 · 리드 실패<span class="qmark" tabindex="0" role="button" data-tip-key="역전" aria-label="역전 설명">?</span></h2>
         <div id="funComeback"></div></div>
-      <div class="card" style="margin-top:10px"><h2>💀 데스 분석<span class="qmark" tabindex="0" role="button" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2><svg class="ic" aria-hidden="true"><use href="#i-skull"/></svg> 데스 분석<span class="qmark" tabindex="0" role="button" data-tip-key="죽음" aria-label="죽음 설명">?</span></h2>
         <div id="funDeath"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🗺️ 데스 히트맵<span class="qmark" tabindex="0" role="button" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg> 데스 히트맵<span class="qmark" tabindex="0" role="button" data-tip-key="히트맵" aria-label="히트맵 설명">?</span></h2>
         <div id="funHeat"></div></div>
     </div>
   </section>
 
   <section id="syn" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🤝 듀오"><h2>🤝 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
+    <div class="card" data-sub="듀오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
       <div id="synT"></div></div>
-    <div class="card" data-sub="👥 트리오"><h2>👥 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
-    <div class="card" data-sub="🔥 히트맵"><h2>🔥 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
-    <div data-sub="🤝 관계">
-      <div class="card"><h2>💀 동반 사망<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
+    <div class="card" data-sub="트리오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
+    <div class="card" data-sub="히트맵" data-ico="grid"><h2><svg class="ic" aria-hidden="true"><use href="#i-grid"/></svg> 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
+    <div data-sub="관계" data-ico="users">
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-skull"/></svg> 동반 사망<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
         <p class="muted">같은 팀 두 사람이 <b>10초 안에, 가까운 데서</b> 같이 죽은 횟수입니다.
           맵 반대편에서 각자 죽은 건 빠집니다. 실력 지표가 아니라 커플 인증입니다.</p>
         <div id="funCouple"></div></div>
-      <div class="card" style="margin-top:10px"><h2>🤝 어시스트 관계<span class="qmark" tabindex="0" role="button" data-tip-key="어시스트" aria-label="어시스트 관계 설명">?</span></h2>
+      <div class="card" style="margin-top:10px"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 어시스트 관계<span class="qmark" tabindex="0" role="button" data-tip-key="어시스트" aria-label="어시스트 관계 설명">?</span></h2>
         <p class="muted">누가 누구 킬을 깔아 줬나(어시스트 기준). 옆의 <b>비중</b>은 받은 사람
           전체 킬 중 이 사람 어시가 낀 비율입니다 — 원시 횟수는 그냥 킬 많은 사람이 위로 옵니다.</p>
         <div id="funAssist"></div></div>
       <div class="grid2" style="margin-top:10px">
-        <div class="card"><h2>🔥 최장 연속킬</h2><div id="funSpree"></div></div>
-        <div class="card"><h2>🛑 연속킬 저지</h2>
+        <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> 최장 연속킬</h2><div id="funSpree"></div></div>
+        <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg> 연속킬 저지</h2>
           <p class="muted">한참 달리던 사람을 처음 끊은 사람입니다. 아무도 못 끊고 끝난 폭주도 많아 따로 냅니다.</p>
           <div id="funStopper"></div></div>
       </div>
@@ -686,13 +757,13 @@
   </section>
 
   <section id="champ" class="view hidden" data-subtabs>
-    <div class="card" data-sub="🧙 메타"><h2>🧙 챔피언 메타 (서버 전체)</h2>
+    <div class="card" data-sub="메타" data-ico="sparkles"><h2><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언 메타 (서버 전체)</h2>
       <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
       <div id="champT"></div></div>
-    <div class="card" data-sub="⚔️ 매치업"><h2>같은 라인 챔피언 매치업</h2><div id="champMatchT"></div></div>
-    <div class="card" data-sub="🚫 밴"><h2>🚫 밴 통계</h2><div id="banT"></div></div>
-    <div data-sub="🧙 챔피언 폭">
-      <div class="card" style="margin-top:10px"><h2>🧙 라인별 챔피언 폭<span class="qmark" tabindex="0" role="button" data-tip-key="챔피언폭" aria-label="챔피언 폭 설명">?</span></h2>
+    <div class="card" data-sub="매치업" data-ico="swords"><h2>같은 라인 챔피언 매치업</h2><div id="champMatchT"></div></div>
+    <div class="card" data-sub="밴" data-ico="ban"><h2><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg> 밴 통계</h2><div id="banT"></div></div>
+    <div data-sub="챔피언 폭" data-ico="sparkles">
+      <div class="card" style="margin-top:10px"><h2><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 라인별 챔피언 폭<span class="qmark" tabindex="0" role="button" data-tip-key="챔피언폭" aria-label="챔피언 폭 설명">?</span></h2>
         <p class="muted">몇 판을 몇 종으로 돌렸나. 7판에 7종이면 매판 다른 챔피언,
           7판에 2종이면 장인입니다.</p>
         <div id="funPool"></div></div>
@@ -700,31 +771,31 @@
   </section>
 
   <section id="matches" class="view hidden" data-subtabs>
-    <div data-sub="📜 최근 경기" class="card"><h2>📜 최근 경기</h2><div id="matchT"></div></div>
-    <div data-sub="🔵 진영">
-      <div class="card"><h2>🔵 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
+    <div data-sub="최근 경기" data-ico="scroll" class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 최근 경기</h2><div id="matchT"></div></div>
+    <div data-sub="진영" data-ico="circle-dot">
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-circle-dot"/></svg> 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
         <p class="muted">시간대별 승률과 달리 이건 <b>구조적으로 50%가 아니다</b> —
           한 경기에 블루 하나 레드 하나라 어느 쪽이 더 이겼는지가 실제 정보입니다.</p>
         <div id="funSide"></div></div>
     </div>
-    <div class="grid2" data-sub="🌙 시간대 · 경기 길이">
-      <div class="card"><h2>🌙 시간대별 승률</h2><div id="funHour"></div></div>
-      <div class="card"><h2>⏱ 경기 길이별 승률<span class="qmark" tabindex="0" role="button" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
+    <div class="grid2" data-sub="시간대 · 경기 길이" data-ico="moon">
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg> 시간대별 승률</h2><div id="funHour"></div></div>
+      <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg> 경기 길이별 승률<span class="qmark" tabindex="0" role="button" data-tip-key="길이" aria-label="길이 설명">?</span></h2><div id="funDur"></div></div>
     </div>
   </section>
 
   <section id="player" class="view hidden" data-subtabs>
-    <div data-sub="👤 개인" class="card">
+    <div data-sub="개인" data-ico="user" class="card">
         <div class="row"><span>플레이어</span><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
         <div id="playerBody"></div></div>
-    <div data-sub="⚖️ 비교" class="card">
+    <div data-sub="비교" data-ico="arrow-left-right" class="card">
         <div class="row"><select id="cmpA"></select><span class="vs">VS</span><select id="cmpB"></select></div>
         <div id="cmpBody"></div></div>
   </section>
 
   <section id="balance" class="view hidden" data-subtabs>
-    <div data-sub="🧮 팀 나누기" class="card">
-        <h2>🧮 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
+    <div data-sub="팀 나누기" data-ico="scale" class="card">
+        <h2><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
         <p class="muted" id="balNote">오늘 온 사람을 눌러서 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 갈립니다.</p>
         <div id="balPick" class="chips"></div>
         <div id="balResult"></div>
@@ -734,7 +805,7 @@
   </section>
 </div>
 <section class="fbsec" id="fbsec">
-  <h2>💬 피드백</h2>
+  <h2><svg class="ic" aria-hidden="true"><use href="#i-message-circle"/></svg> 피드백</h2>
   <p class="lead">숫자가 이상하거나, 이런 걸 보고 싶거나, 그냥 할 말이 있으면 남겨주세요.</p>
   <div class="fbrow">
     <label>누구<select id="fbWho"></select></label>
@@ -767,6 +838,8 @@ const sgn = x => (x>0?'+':'')+(+x).toFixed(3);
 // (롤 닉네임은 라이엇이 제한하지만 Discord 서버명 등은 임의 문자가 가능)
 const ESC={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'};
 const esc = s => String(s).replace(/[&<>"'`]/g, c=>ESC[c]);
+// 아이콘 — 스프라이트(#i-*)에서 꺼낸다. 장식이라 보조기술에는 숨긴다.
+const ico=(n,cls='')=>`<svg class="ic${cls?' '+cls:''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 // 색은 :root 토큰 한 곳에서만 온다. SVG 속성(fill/stroke)은 var() 를 못 읽으므로 스크립트
 // 시작 때 계산값을 한 번 떠 둔다(인라인 style 은 var() 를 그대로 쓴다).
 const TOK=(()=>{ const cs=getComputedStyle(document.documentElement);
@@ -980,7 +1053,8 @@ function help(key){
   return `<span class="qmark" tabindex="0" role="button" data-tip="${t}" aria-label="${key} 설명">?</span>`;
 }
 
-const MEDAL=['🥇','🥈','🥉'];
+// 1·2·3위 — 색은 티어 금색·중립·동색 토큰. 보조기술에는 '1위' 로 읽힌다.
+const MEDAL=[1,2,3].map(n=>`<svg class="ic medal m${n}" role="img" aria-label="${n}위"><use href="#i-medal"/></svg>`);
 function minGamesNote(lane){
   // 1판만 뛰고 지표 1위가 되는 걸 막는 기준. 왜 누가 안 보이는지도 함께 밝힌다.
   const n=DATA.min_games||1, ex=DATA.min_games_excluded||0;
@@ -1020,7 +1094,7 @@ function jumpTo(sectionId, subLabel){
 function openMathFor(id){
   if(!id||!(DATA.ratings||{})[id]) return;
   $('#mathWho').value=id; renderMathMmr();
-  jumpTo('tier', '🎯 MMR 검산');
+  jumpTo('tier', 'MMR 검산');
 }
 // 리더보드에서 지금 고른 라인. ''(빈 문자열)이면 통합.
 let curBoardLane='';
@@ -1160,7 +1234,7 @@ function renderRank(){
   const pend=(DATA.rankings_pending||[]);
   const pn=$('#rankPending');
   if(pn) pn.innerHTML=pend.length
-    ? `⏳ 아직 기록이 없는 지표 ${pend.length}개 — `
+    ? `${ico('hourglass')} 아직 기록이 없는 지표 ${pend.length}개 — `
       + pend.map(x=>`<span class="pill" data-tip="${x.reason}">${x.label||mLabel(x.key)}</span>`).join('')
     : '';
   $('#laneBtns').style.display=byLane?'':'none';
@@ -1283,27 +1357,27 @@ function renderRecords(){
   const sub=o=>{const b=[];
     if(o.win!=null) b.push(`<span class="${o.win?'pos':'neg'}">${o.win?'승':'패'}</span>`);
     if(o.k!=null&&(o.k||o.d||o.a)) b.push(`${o.k}/${o.d}/${o.a}`);
-    if(o.dur) b.push(`⏱ ${mmss2(o.dur)}`);
+    if(o.dur) b.push(`${ico('timer')} ${mmss2(o.dur)}`);
     if(o.ts) b.push(new Date(o.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'}));
     return b.length?`<div class="muted" style="font-size:11px;margin-top:2px">${b.join(' · ')}</div>`:'';};
   const num=v=>typeof v==='number'?v.toLocaleString():v;
   // 기록 목록은 여기 한 줄로 관리한다 — 서버가 새 기록을 보내면 라벨만 추가하면 된다
   const DEFS=[
-    ['best_kda','⚔️','최고 KDA'],['most_dmg','💥','최다 딜'],
-    ['most_cs','🌾','최다 CS'],['most_cs15','🌱','최다 CS@15'],
-    ['most_gold','💰','최다 골드'],['best_lane_cs_adv','📏','최대 라인전 CS 격차'],
-    ['most_plates','🧱','최다 포탑 방패'],['most_solo_kills','🗡️','최다 솔로킬'],
-    ['most_heal_shield','💚','최다 힐·실드'],['most_vision','👁️','최고 시야 점수'],
-    ['most_jungle_cs10','🌲','최다 정글 CS@10'],['most_steals','🪝','스틸'],
-    ['most_dmg_taken','🛡️','최다 탱킹'],['most_bounty','🎯','최다 현상금 수급'],
-    ['longest_living','🧘','최장 생존'],
+    ['best_kda',ico('swords'),'최고 KDA'],['most_dmg',ico('zap'),'최다 딜'],
+    ['most_cs',ico('sprout'),'최다 CS'],['most_cs15',ico('leaf'),'최다 CS@15'],
+    ['most_gold',ico('coins'),'최다 골드'],['best_lane_cs_adv',ico('ruler'),'최대 라인전 CS 격차'],
+    ['most_plates',ico('layers'),'최다 포탑 방패'],['most_solo_kills',ico('sword'),'최다 솔로킬'],
+    ['most_heal_shield',ico('heart'),'최다 힐·실드'],['most_vision',ico('eye'),'최고 시야 점수'],
+    ['most_jungle_cs10',ico('tree-pine'),'최다 정글 CS@10'],['most_steals',ico('hand'),'스틸'],
+    ['most_dmg_taken',ico('shield'),'최다 탱킹'],['most_bounty',ico('target'),'최다 현상금 수급'],
+    ['longest_living',ico('activity'),'최장 생존'],
   ];
   const cards=DEFS.filter(([k])=>r[k]&&r[k].name).map(([k,icon,label])=>
     `<div class="kpi"><div class="label">${icon} ${label}</div>`+
     `<div class="value" style="font-size:15px">${champImg(r[k].champ)}${r[k].name} `+
     `<span class="acc">${num(r[k].value)}</span></div>${sub(r[k])}</div>`).join('');
   const streak=(r.longest_streak&&r.longest_streak.name)?
-    `<div class="kpi"><div class="label">🔥 최장 연승</div><div class="value" style="font-size:15px">`+
+    `<div class="kpi"><div class="label">${ico('flame')} 최장 연승</div><div class="value" style="font-size:15px">`+
     `${r.longest_streak.name} <span class="acc">${r.longest_streak.value}연승</span></div></div>`:'';
   $('#recCards').innerHTML=serverRecordsHTML()+`<div class="kpis recgrid">`+cards+streak+`</div>`+minGamesNote();
   renderTable($('#mvpT'),DATA.mvp||[],[{k:'name',h:'멤버'},
@@ -1334,7 +1408,7 @@ function renderChamp(){
     // 종료화면 스크린샷에는 밴이 찍히지 않는다. 빈 표를 두면 "아무도 밴을 안 했다"로
     // 읽히므로, 왜 없는지와 언제 채워지는지를 적는다.
     $('#banT').innerHTML='<p class="muted" style="font-size:12px;line-height:1.7">'+
-      '⏳ 아직 집계할 수 없습니다.<br>내전 기록을 <b>종료화면 스크린샷</b>으로 모으고 있는데, '+
+      ico('hourglass')+' 아직 집계할 수 없습니다.<br>내전 기록을 <b>종료화면 스크린샷</b>으로 모으고 있는데, '+
       '밴은 그 화면에 나오지 않습니다.<br>라이엇 프로덕션 키가 승인되면 '+
       'Tournament-V5 로 밴/픽 순서까지 그대로 들어옵니다.</p>';
   } else {
@@ -1488,7 +1562,7 @@ function heatmap(pts){
     `<line x1="${W*0.72}" y1="0" x2="${W}" y2="${W*0.28}" stroke="${TOK.grid}"/>`+
     dots+`</svg>`+
     `<p class="muted" style="font-size:11px;margin-top:6px">`+
-    `<span style="color:var(--bad)">●</span> 15분 이전 &nbsp; <span style="color:var(--good)">●</span> 15분 이후 `+
+    `<i class="dot" style="background:var(--bad)"></i>15분 이전 &nbsp; <i class="dot" style="background:var(--good)"></i>15분 이후 `+
     `· 좌하단이 블루 진영입니다.</p>`;
 }
 
@@ -1515,7 +1589,7 @@ function renderMatches(){
     //    담아** 안에 있는 선수 10명·챔피언이 스크린리더에서 개별로 안 읽힌다.
     //    마우스로는 줄 전체가 눌리게 두고(예전 그대로), 키보드용 버튼은 돋보기에만 준다.
     const eye=has?`<span class="muted mexp" role="button" tabindex="0" aria-expanded="false"`+
-      ` aria-label="${d} 경기 상세 펼치기" data-tip="눌러서 경기 상세 보기">🔎</span>`:'';
+      ` aria-label="${d} 경기 상세 펼치기" data-tip="눌러서 경기 상세 보기">${ico('search')}</span>`:'';
     return `<div class="match ${has?'clickable':''}" data-idx="${idx}"><span class="muted hide-sm" style="width:96px">${d}</span>${t}${eye}</div>${detail}`;
   };
   const paint=(from,to)=>ms.slice(from,to).map((m,i)=>row(m,from+i)).join('');
@@ -1620,7 +1694,7 @@ function attachCombo(sel, placeholder){
     // ⚠️ 포커스 직후에는 입력칸에 **지금 선택된 이름**이 들어 있다. 그걸 검색어로
     //    쓰면 목록이 그 한 명으로 걸러진다(실측). 타이핑 전에는 전체를 보여준다.
     const q=typed?inp.value.trim().toLowerCase():'';
-    const hint=typed?'':'<li class="none" role="presentation">⌨️ 입력하면 이름·부캐로 검색됩니다</li>';
+    const hint=typed?'':'<li class="none" role="presentation">'+ico('keyboard')+' 입력하면 이름·부캐로 검색됩니다</li>';
     items=[...sel.options].map(o=>o.value).filter(v=>!q||hay(v).includes(q));
     if(!items.length){ list.innerHTML='<li class="none" role="presentation">맞는 사람이 없습니다</li>'; }
     else list.innerHTML=hint+items.map((v,i)=>
@@ -1672,7 +1746,7 @@ function fillPlayerSelect(sel,q,withAll){
   const keep=sel.value;
   // '전체 보기'는 **플레이어 탭에만** 있다. 비교 탭에 넣으면 "전체 vs 누구"라는
   // 말이 안 되는 조합이 생긴다.
-  sel.innerHTML=(withAll?`<option value="">📋 전체 보기</option>`:'')
+  sel.innerHTML=(withAll?`<option value="">전체 보기</option>`:'')
     +ids.map(id=>`<option value="${id}">${playerLabel(id)}</option>`).join('');
   if(ids.includes(keep)||(withAll&&keep==='')) sel.value=keep;   // 보던 것 유지
   return ids.length;
@@ -1691,7 +1765,7 @@ function accRecords(p){
   //    보인다(실측 반응: "병합 아예 안됐는데?" — 데이터는 멀쩡했는데 표가 그렇게 생겼다).
   //    계정 줄은 ↳ 로 합계에 딸려 붙는다.
   return `<details class="accbox">
-    <summary role="group" aria-label="계정별로 나눠 보기">🪪 이 <b>${tot}판</b>은 계정 ${rows.length}개를 합친 기록입니다 — 계정별로 나눠 보기</summary>
+    <summary role="group" aria-label="계정별로 나눠 보기">${ico('id-card')} 이 <b>${tot}판</b>은 계정 ${rows.length}개를 합친 기록입니다 — 계정별로 나눠 보기</summary>
     <div class="body"><table><thead><tr>
       <th scope="col">계정</th><th scope="col" class="num">판</th>
       <th scope="col" class="num">승</th><th scope="col" class="num">패</th>
@@ -1810,9 +1884,9 @@ function renderPlayerBody(){
     <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
     <span class="pill">KDA ${r.kda}</span><span class="pill">${mLabel('kp')} ${pct(r.kp)}</span>
     <span class="pill">${mLabel('dpm')} ${r.dpm}</span>${streak}</div>
-    ${(p.account_records&&p.account_records.length>1)?accRecords(p):(((p.account_count||(p.accounts||[]).length)>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">🪪 계정 ${p.account_count||p.accounts.length}개 합산${p.accounts?': '+p.accounts.join(', '):''}</div>`:'')}
+    ${(p.account_records&&p.account_records.length>1)?accRecords(p):(((p.account_count||(p.accounts||[]).length)>1)?`<div class="muted" style="margin:-4px 0 10px;font-size:12px">${ico('id-card')} 계정 ${p.account_count||p.accounts.length}개 합산${p.accounts?': '+p.accounts.join(', '):''}</div>`:'')}
     <div id="plPanes">
-      <div data-sub="📊 요약">
+      <div data-sub="요약" data-ico="bar-chart">
         <div class="grid2">
           <div><h2>라인 분포</h2>${donut(p.role_dist)}</div>
           <div><h2>능력치 <span class="qmark" tabindex="0" role="button" data-tip-key="능력치" aria-label="능력치 설명">?</span></h2>${radar(p,$('#playerSel').value)}</div>
@@ -1822,32 +1896,32 @@ function renderPlayerBody(){
           <div><h2>챔피언</h2><div id="plChamp"></div></div>
         </div>
       </div>
-      <div data-sub="⚔️ 상대별 전적">
+      <div data-sub="상대별 전적" data-ico="swords">
         <h2>상대별 전적<span class="qmark" tabindex="0" role="button" data-tip-key="상대별" aria-label="상대별 전적 설명">?</span></h2>
         <p class="muted">위에 있을수록 나를 많이 이긴 상대입니다. 판수를 먼저 보세요 —
           이 방은 한 상대와 최대 6판밖에 안 붙어서 <b>4승 0패도 4판짜리</b>입니다.</p>
         <div id="plVs"></div><div id="plVsNote"></div>
       </div>
-      <div data-sub="📜 최근 · 시간대">
+      <div data-sub="최근 · 시간대" data-ico="scroll">
         <div><h2>최근 경기</h2><div id="plRecent"></div></div>
-        <div style="margin-top:10px"><h2>🌙 시간대별 승률</h2>${hourBars(p.by_hour)}</div>
+        <div style="margin-top:10px"><h2>${ico('moon')} 시간대별 승률</h2>${hourBars(p.by_hour)}</div>
       </div>
-      <div data-sub="🤝 파트너 · 상대 챔피언">
+      <div data-sub="파트너 · 상대 챔피언" data-ico="users">
         <div class="grid2">
-          <div class="card"><h2>👍 잘 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>${best}</div>
-          <div class="card"><h2>👎 안 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>${worst}</div>
+          <div class="card"><h2>${ico('thumbs-up')} 잘 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>${best}</div>
+          <div class="card"><h2>${ico('thumbs-down')} 안 맞는 파트너<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>${worst}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
           <div class="card"><h2>상대하기 어려운 챔피언</h2>${nemesis}</div>
           <div class="card"><h2>상대하기 쉬운 챔피언</h2>${victim}</div>
         </div>
         <div class="grid2" style="margin-top:6px">
-          <div class="card"><h2>💀 나를 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed_by)}</div>
-          <div class="card"><h2>🗡️ 내가 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed)}</div>
+          <div class="card"><h2>${ico('skull')} 나를 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed_by)}</div>
+          <div class="card"><h2>${ico('sword')} 내가 죽인 챔피언</h2>${kcList(p.killer_champions&&p.killer_champions.killed)}</div>
         </div>
       </div>
-      <div data-sub="📐 세부 지표">
-        <h2>📐 세부 지표<span class="qmark" tabindex="0" role="button" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
+      <div data-sub="세부 지표" data-ico="list">
+        <h2>${ico('list')} 세부 지표<span class="qmark" tabindex="0" role="button" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
         <div id="plMetrics"></div>
       </div>
     </div>`;
@@ -1981,7 +2055,7 @@ function openCompare(a,b){
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   ensureView('player');                  // 아직 안 그린 화면이면 select 가 비어 값이 안 들어간다
   $('#cmpA').value=a; $('#cmpB').value=b; renderCompare();
-  jumpTo('player', '⚖️ 비교');
+  jumpTo('player', '비교');
 }
 function kcList(arr){
   return (arr||[]).length
@@ -2204,11 +2278,11 @@ function runBalance(){
     t.slice().sort((x,y)=>laneIdx(x.lane)-laneIdx(y.lane)).map(m=>
       `<div class="brow">${hasLane?`<span class="lane">${LANE_KR[m.lane]||'-'}</span>`:''}`+
       `<span class="bn">${m.name}</span>`+
-      `${m.off?'<span class="bad" data-tip="주로 하던 라인이 아닙니다">⚠️</span>':''}</div>`).join('')+`</div>`;
+      `${m.off?'<span class="bad" data-tip="주로 하던 라인이 아닙니다">'+ico('alert-triangle')+'</span>':''}</div>`).join('')+`</div>`;
   out.innerHTML=`<div class="bverdict ${verdict[1]}">${pa} : ${100-pa}<span>${verdict[0]}</span></div>`+
-    `<div class="bteams">`+team(res.teamA,'A팀','🔵')+team(res.teamB,'B팀','🔴')+`</div>`+
+    `<div class="bteams">`+team(res.teamA,'A팀','<i class="dot b"></i>')+team(res.teamB,'B팀','<i class="dot r"></i>')+`</div>`+
     (hasLane?'':`<p class="muted" style="font-size:12px;margin:8px 0 0">라인은 5:5일 때만 배정합니다.</p>`)+
-    `<div class="row" style="margin-top:10px"><button id="balCopy" class="chip">📋 복사</button>`+
+    `<div class="row" style="margin-top:10px"><button id="balCopy" class="chip">${ico('clipboard-list')} 복사</button>`+
     `<span class="muted" id="balCopyMsg" style="font-size:12px"></span></div>`;
   // 팀을 갈라 놓고 옮길 방법이 없으면 열 명을 다시 타이핑해야 한다 — 그게 실제로
   // 이 화면을 쓰는 마지막 단계다. 디스코드에 그대로 붙는 글로 만든다.
@@ -2300,7 +2374,7 @@ function itemImg(id){
   if(!id||!DATA.patch||!/^\d+$/.test(String(id))) return '<span class="itemslot"></span>';
   return `<img class="itemslot" src="https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/item/${id}.png" loading="lazy" decoding="async" alt="">`;
 }
-const OBJ_ICON={towers:'🏰',dragons:'🐉',barons:'👑',heralds:'🦅',grubs:'🐛'};
+const OBJ_ICON={towers:ico('castle'),dragons:ico('flame'),barons:ico('crown'),heralds:ico('bird'),grubs:ico('bug')};
 function dmgBars(d){
   const max=Math.max(1,...d.teams.flatMap(t=>(t.players||[]).map(p=>+p.dmg||0)));
   const col=t=>t.team_id===100?'var(--good)':'var(--bad)';
@@ -2403,7 +2477,7 @@ function scoreboard(d){
   const cols=[
     {h:'라인',cell:p=>`<td class="lncell">${laneKo(p.lane)}</td>`,on:true},
     {h:'플레이어',cell:p=>`<td><span class="sbname">${champImg(p.champ)}${p.name}`+
-      `<i class="sbcar">▾</i></span></td>`,on:true},
+      `<i class="sbcar">${ico('chevron-down')}</i></span></td>`,on:true},
     {h:'KDA',num:1,cell:p=>`<td class="num">${p.k}/${p.d}/${p.a}</td>`,on:true},
     {h:'CS',num:1,cell:p=>`<td class="num">${p.cs}</td>`,on:has('cs')},
     {h:'딜',num:1,cell:p=>`<td class="num">${K(p.dmg)}</td>`,on:has('dmg')},
@@ -2422,7 +2496,7 @@ function scoreboard(d){
     playerDetailHTML(p,d.duration)+`</td></tr>`;
   let n=0;
   return `<div style="overflow-x:auto"><table class="sb" aria-label="경기 스코어보드 — 양 팀 10명"><thead>${head}</thead><tbody>`+
-    d.teams.map(t=>`<tr class="sbteam"><td colspan="${cols.length}">${t.team_id===100?'🔵 블루팀':'🔴 레드팀'} ${t.win?'(승)':'(패)'}</td></tr>`+
+    d.teams.map(t=>`<tr class="sbteam"><td colspan="${cols.length}">${t.team_id===100?'<i class="dot b"></i>블루팀':'<i class="dot r"></i>레드팀'} ${t.win?'(승)':'(패)'}</td></tr>`+
       (t.players||[]).slice().sort((a,b)=>laneIdx(a.lane)-laneIdx(b.lane))
         .map(p=>row(p,'p'+(n++))).join('')).join('')+
     `</tbody></table></div>`;
@@ -2443,7 +2517,7 @@ function killMap(d){
     // Riot 좌표는 y가 위로 자란다 → bottom 기준으로 놓는다
     return `<span class="kd ${cls}" style="left:${(k.x*100).toFixed(1)}%;bottom:${(k.y*100).toFixed(1)}%" data-tip="${tip}"></span>`;
   }).join('');
-  return `<h2 style="margin:14px 0 8px">🗺️ 킬 지도</h2>
+  return `<h2 style="margin:14px 0 8px">${ico('map')} 킬 지도</h2>
     <div class="killmap">${dots}</div>
     <div class="kmlegend"><span><i style="background:var(--good)"></i>블루팀이 잡음</span>
       <span><i style="background:var(--danger)"></i>레드팀이 잡음</span>
@@ -2457,28 +2531,28 @@ function matchDetailHTML(d){
   const mm=Math.floor((d.duration||0)/60),ss=String((d.duration||0)%60).padStart(2,'0');
   const sr=(label,a,b,icon)=>`<div class="gstat"><span class="ga">${a}</span><span class="gl">${icon} ${label}</span><span class="gb">${b}</span></div>`;
   let h=`<div class="mdhead"><span class="res ${A.win?'w':'l'}">${A.win?'WIN':'LOSS'}</span>`+
-    `<b>🔵 ${A.kills}/${A.deaths}/${A.assists}</b><span class="muted">⏱ ${mm}:${ss}</span>`+
-    `<b>${B.kills}/${B.deaths}/${B.assists} 🔴</b><span class="res ${B.win?'w':'l'}">${B.win?'WIN':'LOSS'}</span></div>`;
+    `<b><i class="dot b"></i>${A.kills}/${A.deaths}/${A.assists}</b><span class="muted">${ico('timer')} ${mm}:${ss}</span>`+
+    `<b>${B.kills}/${B.deaths}/${B.assists} <i class="dot r" style="margin:0 0 0 5px"></i></b><span class="res ${B.win?'w':'l'}">${B.win?'WIN':'LOSS'}</span></div>`;
   // 스크린샷 기록에는 오브젝트·밴이 아예 없다. 0으로 그리면 '한 번도 못 먹었다'로
   // 읽히므로 값이 없는 경기에서는 줄 자체를 빼고 사유를 적는다.
   const hasObj=DATA.objectives_available, hasBan=DATA.ban_available;
   h+=`<div class="gstats">`+
-    sr('골드',(A.gold/1000).toFixed(1)+'K',(B.gold/1000).toFixed(1)+'K','💰')+
+    sr('골드',(A.gold/1000).toFixed(1)+'K',(B.gold/1000).toFixed(1)+'K',ico('coins'))+
     (hasObj? sr('타워',o(A).towers??0,o(B).towers??0,OBJ_ICON.towers)+
       sr('드래곤',o(A).dragons??0,o(B).dragons??0,OBJ_ICON.dragons)+
       sr('바론',o(A).barons??0,o(B).barons??0,OBJ_ICON.barons)+
       sr('전령',o(A).heralds??0,o(B).heralds??0,OBJ_ICON.heralds)+
       sr('유충',o(A).grubs??0,o(B).grubs??0,OBJ_ICON.grubs):'')+
-    (hasBan?`<div class="gstat"><span class="ga">${ban(A)}</span><span class="gl">🚫 밴</span><span class="gb">${ban(B)}</span></div>`:'')+
+    (hasBan?`<div class="gstat"><span class="ga">${ban(A)}</span><span class="gl">${ico('ban')} 밴</span><span class="gb">${ban(B)}</span></div>`:'')+
     `</div>`+
     ((hasObj&&hasBan)?'':`<p class="muted" style="text-align:center;font-size:11px;margin:6px 0 0">`+
       `종료화면 스크린샷에 없는 정보: `+
       `${[hasObj?null:'드래곤·바론·타워',hasBan?null:'밴'].filter(Boolean).join(', ')}`+
       ` — 라이엇 프로덕션 키 승인 후 표시됩니다.</p>`);
-  h+=`<h2 style="margin:14px 0 8px">⚔️ 딜량</h2>`+dmgBars(d);
+  h+=`<h2 style="margin:14px 0 8px">${ico('swords')} 딜량</h2>`+dmgBars(d);
   if(d.timeline&&d.timeline.minutes&&d.timeline.minutes.length>1)
-    h+=`<h2 style="margin:14px 0 8px">📈 골드 차이</h2>`+goldChart(d.timeline);
-  h+=`<h2 style="margin:14px 0 8px">📋 스코어보드</h2>`+scoreboard(d);
+    h+=`<h2 style="margin:14px 0 8px">${ico('trending-up')} 골드 차이</h2>`+goldChart(d.timeline);
+  h+=`<h2 style="margin:14px 0 8px">${ico('clipboard-list')} 스코어보드</h2>`+scoreboard(d);
   h+=killMap(d);
   return h;
 }
@@ -2799,10 +2873,10 @@ function renderMathMmr(){
     <h3>⑤ 합계</h3>
     <p class="fml">실력점수 = ${nf(b.bt_term,6)} ${b.perf_term<0?'−':'+'} ${nf0(Math.abs(b.perf_term),6)}
       ${b.form_term<0?'−':'+'} ${nf0(Math.abs(b.form_term),6)} = <b>${nf(b.strength,6)}</b>
-      ${okSum?'':' <span class="neg">⚠ 항 합이 안 맞습니다</span>'}</p>
+      ${okSum?'':' <span class="neg">'+ico('alert-triangle')+' 항 합이 안 맞습니다</span>'}</p>
     <p class="fml">MMR = ${C.mmr_base} + ${C.mmr_scale} × ${nf0(b.strength,6)}
       = ${nf0(b.mmr_exact,3)} → 반올림 <b class="acc">${r.mmr}</b>
-      ${okMmr?'':' <span class="neg">⚠ 반올림이 안 맞습니다</span>'}</p>
+      ${okMmr?'':' <span class="neg">'+ico('alert-triangle')+' 반올림이 안 맞습니다</span>'}</p>
 
     <h3>라인별 MMR</h3>
     <p class="fml">라인 MMR = ${C.mmr_base} + ${C.mmr_scale} × (실력점수 + ${C.lane_adj_weight}×(보정승률 − 0.5))<br>
@@ -3264,7 +3338,7 @@ function renderCpLanes(rows){
         shown=true;
         const bar=document.createElement('div');
         bar.id='freshBar'; bar.setAttribute('role','status');
-        bar.innerHTML='🔄 사이트가 업데이트됐습니다 — 새 화면을 보려면 새로고침하세요. '
+        bar.innerHTML=ico('refresh-cw')+' 사이트가 업데이트됐습니다 — 새 화면을 보려면 새로고침하세요. '
           +'<button type="button">새로고침</button>';
         bar.querySelector('button').onclick=()=>location.reload();
         document.body.prepend(bar);
@@ -3319,7 +3393,7 @@ function renderAll(){
   // ⚠️ 발행 쪽은 경고를 실어 보내는데(예: 표시명이 겹쳐 두 사람 통계가 섞임) 화면이
   //    한 번도 읽지 않아 로그에만 남았다. 통계가 섞이는 건 화면에서 밝혀야 한다.
   const wb=$('#warnBar'), ws=DATA.warnings||[];
-  wb.innerHTML=ws.map(w=>`<div>⚠️ ${esc(w)}</div>`).join('');
+  wb.innerHTML=ws.map(w=>`<div>${ico('alert-triangle')} ${esc(w)}</div>`).join('');
   wb.classList.toggle('hidden', !ws.length);
   renderKpis(); renderMath(); buildSubtabs();
   // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
@@ -3445,7 +3519,7 @@ function buildSubtabs(root){
     panes.forEach((pane,i)=>{
       const btn=document.createElement('button');
       btn.className='subtab'+(i?'':' on'); btn.type='button';
-      btn.textContent=pane.dataset.sub;
+      btn.innerHTML=(pane.dataset.ico?ico(pane.dataset.ico)+' ':'')+esc(pane.dataset.sub);
       btn.setAttribute('role','tab'); btn.setAttribute('aria-selected',!i);
       btn.addEventListener('click',()=>{
         bar.querySelectorAll('.subtab').forEach((b,j)=>{
