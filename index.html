@@ -100,6 +100,7 @@
     .tfilter input,.mpick input[type=search],.psearch,input[type=search]{
       min-height:44px;font-size:16px}
     .subtab,.mchip,.lnpick,.chip{min-height:44px}
+    select,#balance button{min-height:44px}   /* 실측 37px·35px */
     #champ .tab,#board .tab{min-height:44px}
     /* 읽으라고 쓴 글은 11px 로 두지 않는다(설명문·안내). 차트 눈금·아이콘은 그대로. */
     p.muted,.card>.muted,.axnote{font-size:12.5px}
@@ -2938,6 +2939,97 @@ function tierBadge(name){
 // 사다리 보기 상태 — ''=통합(1인 1행) · 'ALL'=라인별 전부 · 라인키=그 라인만.
 // 다시 그려도 유지된다.
 let cpView='', cpLaneEst=false;
+function renderCpMath(){
+  // ⚠️ 보기(통합/라인별)와 **무관하게** 그려야 한다. 한때 이 블록이 renderCpLanes 안에
+  //    있어서 기본 화면에서는 계산식이 비어 있었다(실측 cpMath 길이 0).
+  const C=cpConst();
+  if(!Object.keys(DATA.cp||{}).length){ $('#cpMath').innerHTML=''; return; }
+  const base=C.cp_base||1000, need=C.placement_games||3, FULLP=C.tier_points||100;
+  // ── 계산식 ──
+  const w=C.contrib_weights||{};
+  const zs=C.contrib_z_scale??0.15, pw=C.perf_w??0.5;
+  $('#cpMath').innerHTML=`
+    <p>점수는 둘이 한 쌍으로 굴러갑니다 — 롤이 MMR 과 LP 를 나눈 것과 같은 구조입니다.</p>
+    <div class="fml">MMR   숨은 추정기. 증거만큼 움직인다(한 판 10~38점꼴).
+      다음 판 이길 확률 계산과, CP 를 끌어당기는 기준점으로 쓴다.
+CP    보이는 점수. 이기면 +${C.cp_min}~${C.cp_max}, 지면 −${C.cp_min}~${C.cp_max} 로 규칙적.
+티어   CP 를 ${FULLP}점 단위로 쪼갠 것 — 그래서 CP 와 티어는 어긋날 수 없다.</div>
+
+    <h3 style="font-size:14px;margin:12px 0 4px">① 이 판에 쓰는 실력 — 실제로 선 라인 기준</h3>
+    <div class="fml">실력 = MMR + 라인편차(그 판의 라인)
+라인편차 = (n×관측 + ${C.lane_prior_k}×사전) / (n + ${C.lane_prior_k})      n = 그 라인 판수
+  관측 = ((그 라인 잔차평균 − 전체 잔차평균) × ${C.dev_scale}) 을 ±${C.dev_cap} 로 자름
+  사전 = 0 (주 라인) / ${C.off_lane_prior} (그 외)</div>
+    <p class="muted">서폿 주력이 미드를 가면 미드 실력으로 계산됩니다. n/(n+${C.lane_prior_k}) 는
+       라인 배치 ${C.lane_prior_k}판 — 1판짜리 라인이 실력처럼 보이면 안 되기 때문입니다.
+       주 라인의 사전값이 0 인 이유: 전체 MMR 자체가 대부분 주 라인에서 만들어진 숫자라,
+       거기에도 벌점을 걸면 다섯 라인이 전부 자기 CP 아래로 내려갑니다.</p>
+
+    <h3 style="font-size:14px;margin:12px 0 4px">② 이길 확률 — 팀 대 팀, 다섯 명이 같은 값</h3>
+    <div class="fml">E = 1 / (1 + 10^((상대팀 평균실력 − 우리팀 평균실력) / 400))</div>
+    <p class="muted">개인 대 상대 팀으로 재면 안 됩니다 — 밸런스를 맞춘 방에서 강한 사람은
+       개인 기대치가 0.8 인데 팀이 반반이라 50% 밖에 못 이기고, 그 어긋남이
+       <b>판수에 비례해 점수를 흘려보냅니다.</b> 결과를 정하는 건 팀 합뿐입니다.</p>
+
+    <h3 style="font-size:14px;margin:12px 0 4px">③ 기여도 — 라인 안에서, 팀 안에서</h3>
+    <div class="fml">재료 = ${Object.entries(w).map(([k,v])=>
+       `${({kp:'킬관여',dmg_share:'딜비중',kda_n:'ln(1+KDA)'})[k]||k} ${Math.round(v*100)}%`).join(' · ')}
+각 재료를 <b>그 라인의</b> 평균·표준편차로 z 화   (기준값은 n/(n+${C.lane_base_k}) 로 수축)
+기여도 = 1 + ${zs} × (z − 팀평균 z)   를 ${C.contrib_lo}~${C.contrib_hi} 로 자름
+기여보정 = (기여도 − 1) × ${pw}   ← 팀 안에서 합이 0</div>
+    <p class="muted">라인 안에서 재는 이유: 딜비중·킬관여는 라인을 심하게 탑니다
+       (실측: 서폿 딜비중 0.099 vs 원딜 0.257). 라인 보정 없이 재면 기여도가 실력이
+       아니라 <b>라인</b>을 재고, 탑이 판당 1점씩 깎였습니다. 팀 안에서 합이 0 이라
+       차등은 팀 안에서만 재분배되고 총점은 안 샙니다.</p>
+
+    <h3 style="font-size:14px;margin:12px 0 4px">④ MMR 갱신 — 정확성 담당</h3>
+    <div class="fml">ΔMMR = K × ((결과 − E) + 기여보정)      결과 = 승 1 / 패 0
+K = ${C.k_place} (배치 ${need}판 동안) → ${C.k_norm} (그 후)</div>
+    <p class="muted">기여보정을 곱하지 않고 <b>더하는</b> 이유: 곱하면 진 경기를 캐리한
+       사람이 <b>더</b> 잃습니다. 더하면 잘한 사람은 이길 때 더 받고 <b>져도 덜 잃습니다.</b></p>
+
+    <h3 style="font-size:14px;margin:12px 0 4px">⑤ CP 갱신 — 한 판에 ${C.cp_min}~${C.cp_max}</h3>
+    <div class="fml">ec  = E 를 ${C.e_clamp}~${(1-C.e_clamp).toFixed(3)} 로 자름
+기본폭 = ${C.cp_size} × (1−ec)   (이길 때)   /   ${C.cp_size} × ec   (질 때)
+gap = ((MMR − CP) / ${C.cp_gap_div}) 을 ±${C.cp_gap_cap} 로 자름
+보정 = gap + 기여보정 × ${C.cp_adj_w}
+이기면  ΔCP = +(기본폭 + 보정) 을 ${C.cp_min}~${C.cp_max} 로 자름
+지면    ΔCP = −(기본폭 − 보정) 을 ${C.cp_min}~${C.cp_max} 로 자름</div>
+    <p class="muted"><b>${C.cp_size} 와 ${C.e_clamp} 는 고른 값이 아니라 유도된 값입니다.</b>
+       점수 총합이 흘러가지 않으려면 이길 때 얻는 값과 질 때 잃는 값의 합이
+       ${C.cp_min}+${C.cp_max}=${C.cp_size} 로 고정돼야 하고, 두 값이 ${C.cp_min}~${C.cp_max} 안에
+       있으려면 E 가 ${C.e_clamp}~${(1-C.e_clamp).toFixed(3)} 안이어야 합니다.
+       불리한 판을 이기면 ${C.cp_max} 에 가깝게, 유리한 판을 이기면 ${C.cp_min} 에 가깝게 받습니다.</p>
+    <p class="muted"><b>gap 이 롤의 "LP 가 MMR 을 따라가는" 그 장치입니다.</b> CP 가 MMR 보다
+       뒤처져 있으면 판마다 최대 ±${C.cp_gap_cap} 씩 더 얹어 따라붙게 합니다
+       (실측: 19경기 뒤 둘의 거리 평균 11점 · 최대 29점 — 티어 반 칸 미만).</p>
+
+    <h3 style="font-size:14px;margin:12px 0 4px">⑥ 티어 — CP 에 눈금을 그은 것</h3>
+    <div class="fml">티어 = CP 가 어느 ${FULLP}점 칸에 있나       티어 점수 = 그 칸 안에서 몇 점인가
+배치 ${need}판을 마치기 전에는 티어를 보여 주지 않는다 (그 구간은 K=${C.k_place} 라 크게 흔들린다)</div>
+    <p class="muted">경계가 ${cpTiers().filter(t=>t.cp!=null).map(t=>t.cp).join(' · ')} 인 이유:
+       점수 총합이 보존되어 방 평균이 ${base} 에 고정되므로, 평균인 사람이 가운데 티어의
+       <b>한가운데</b>에 오게 놓았습니다 — 경계를 ${base} 에 두면 방의 절반이 영원히
+       경계 위에서 오르내립니다. 승급 보호(버퍼)는 일부러 없습니다: 넣어 봤더니
+       "CP 는 높은데 티어는 낮은" 역전이 생겼습니다. 대신 경계 근처의 오르내림은
+       숨기지 않고 <b>다음 티어까지 몇 점</b>으로 드러냅니다.</p>
+    <p class="muted"><b>1티어는 ${FULLP-1}점을 넘어갑니다.</b> 위가 없으니 자를 이유가
+       없습니다. 위로 갈수록 오르기 힘든 건 따로 규칙 없이 이미 그렇습니다 —
+       유리한 쪽은 이겨도 ${C.cp_min} 에 가깝게 받고 져도 ${C.cp_max} 에 가깝게 잃습니다
+       (실측: 상위권 승 +17.7 / 패 −22.0, 하위권 승 +21.1 / 패 −18.2).
+       <b>마지막 티어는 0점에서 멈추되 보이는 점수만</b> 멈춥니다 — 속까지 막으면
+       그 사람을 이긴 쪽에 점수가 새로 생겨 전체가 부풉니다.</p>
+    <div class="tierlegend">${cpTiers().map(t=>
+      `<span>${tierBadge(t.name)} <span class="muted">${
+        t.open_top?'위로 열림':(t.cp==null?'맨 아래':'속 점수 '+t.cp+'+')}</span></span>`
+      ).join('')}</div>
+    <p class="muted" style="margin-top:6px"><b>왜 5단계인가</b> — 판이 쌓여도 점수 폭은
+       400 근처에서 멈춥니다(실측: 19판 217 · 200판 403 · 400판 399). 티어 하나가 운과
+       구분되려면 그만한 폭이 필요하니 400÷${FULLP}≈4~5단계가 이 방의 해상도입니다.
+       10단계로 나눠 봤더니 <b>한 판 두고 티어가 바뀐 비율이 79%</b>였습니다 —
+       그건 티어가 아니라 점수판이었습니다.</p>`;
+}
+
 function renderCp(){
   const cp=DATA.cp||{};
   const ids=Object.keys(cp);
@@ -2995,6 +3087,7 @@ function renderCp(){
   const estT=$('#cpLaneEstT');
   if(estT) estT.onchange=()=>{cpLaneEst=estT.checked; renderCp();};
 
+  renderCpMath();                       // 보기와 무관하게 항상
   if(cpView){ renderCpLanes(rows); return; }
   renderTable($('#cpT'),rows,[
     {k:'name',h:'멤버',fmt:(v,r)=>(r._medal||'')+esc(v)},
@@ -3088,90 +3181,6 @@ function renderCpLanes(rows){
       });
     }
   });
-
-  // ── 계산식 ──
-  const w=C.contrib_weights||{};
-  const zs=C.contrib_z_scale??0.15, pw=C.perf_w??0.5;
-  $('#cpMath').innerHTML=`
-    <p>점수는 둘이 한 쌍으로 굴러갑니다 — 롤이 MMR 과 LP 를 나눈 것과 같은 구조입니다.</p>
-    <div class="fml">MMR   숨은 추정기. 증거만큼 움직인다(한 판 10~38점꼴).
-      다음 판 이길 확률 계산과, CP 를 끌어당기는 기준점으로 쓴다.
-CP    보이는 점수. 이기면 +${C.cp_min}~${C.cp_max}, 지면 −${C.cp_min}~${C.cp_max} 로 규칙적.
-티어   CP 를 ${FULLP}점 단위로 쪼갠 것 — 그래서 CP 와 티어는 어긋날 수 없다.</div>
-
-    <h3 style="font-size:14px;margin:12px 0 4px">① 이 판에 쓰는 실력 — 실제로 선 라인 기준</h3>
-    <div class="fml">실력 = MMR + 라인편차(그 판의 라인)
-라인편차 = (n×관측 + ${C.lane_prior_k}×사전) / (n + ${C.lane_prior_k})      n = 그 라인 판수
-  관측 = ((그 라인 잔차평균 − 전체 잔차평균) × ${C.dev_scale}) 을 ±${C.dev_cap} 로 자름
-  사전 = 0 (주 라인) / ${C.off_lane_prior} (그 외)</div>
-    <p class="muted">서폿 주력이 미드를 가면 미드 실력으로 계산됩니다. n/(n+${C.lane_prior_k}) 는
-       라인 배치 ${C.lane_prior_k}판 — 1판짜리 라인이 실력처럼 보이면 안 되기 때문입니다.
-       주 라인의 사전값이 0 인 이유: 전체 MMR 자체가 대부분 주 라인에서 만들어진 숫자라,
-       거기에도 벌점을 걸면 다섯 라인이 전부 자기 CP 아래로 내려갑니다.</p>
-
-    <h3 style="font-size:14px;margin:12px 0 4px">② 이길 확률 — 팀 대 팀, 다섯 명이 같은 값</h3>
-    <div class="fml">E = 1 / (1 + 10^((상대팀 평균실력 − 우리팀 평균실력) / 400))</div>
-    <p class="muted">개인 대 상대 팀으로 재면 안 됩니다 — 밸런스를 맞춘 방에서 강한 사람은
-       개인 기대치가 0.8 인데 팀이 반반이라 50% 밖에 못 이기고, 그 어긋남이
-       <b>판수에 비례해 점수를 흘려보냅니다.</b> 결과를 정하는 건 팀 합뿐입니다.</p>
-
-    <h3 style="font-size:14px;margin:12px 0 4px">③ 기여도 — 라인 안에서, 팀 안에서</h3>
-    <div class="fml">재료 = ${Object.entries(w).map(([k,v])=>
-       `${({kp:'킬관여',dmg_share:'딜비중',kda_n:'ln(1+KDA)'})[k]||k} ${Math.round(v*100)}%`).join(' · ')}
-각 재료를 <b>그 라인의</b> 평균·표준편차로 z 화   (기준값은 n/(n+${C.lane_base_k}) 로 수축)
-기여도 = 1 + ${zs} × (z − 팀평균 z)   를 ${C.contrib_lo}~${C.contrib_hi} 로 자름
-기여보정 = (기여도 − 1) × ${pw}   ← 팀 안에서 합이 0</div>
-    <p class="muted">라인 안에서 재는 이유: 딜비중·킬관여는 라인을 심하게 탑니다
-       (실측: 서폿 딜비중 0.099 vs 원딜 0.257). 라인 보정 없이 재면 기여도가 실력이
-       아니라 <b>라인</b>을 재고, 탑이 판당 1점씩 깎였습니다. 팀 안에서 합이 0 이라
-       차등은 팀 안에서만 재분배되고 총점은 안 샙니다.</p>
-
-    <h3 style="font-size:14px;margin:12px 0 4px">④ MMR 갱신 — 정확성 담당</h3>
-    <div class="fml">ΔMMR = K × ((결과 − E) + 기여보정)      결과 = 승 1 / 패 0
-K = ${C.k_place} (배치 ${need}판 동안) → ${C.k_norm} (그 후)</div>
-    <p class="muted">기여보정을 곱하지 않고 <b>더하는</b> 이유: 곱하면 진 경기를 캐리한
-       사람이 <b>더</b> 잃습니다. 더하면 잘한 사람은 이길 때 더 받고 <b>져도 덜 잃습니다.</b></p>
-
-    <h3 style="font-size:14px;margin:12px 0 4px">⑤ CP 갱신 — 한 판에 ${C.cp_min}~${C.cp_max}</h3>
-    <div class="fml">ec  = E 를 ${C.e_clamp}~${(1-C.e_clamp).toFixed(3)} 로 자름
-기본폭 = ${C.cp_size} × (1−ec)   (이길 때)   /   ${C.cp_size} × ec   (질 때)
-gap = ((MMR − CP) / ${C.cp_gap_div}) 을 ±${C.cp_gap_cap} 로 자름
-보정 = gap + 기여보정 × ${C.cp_adj_w}
-이기면  ΔCP = +(기본폭 + 보정) 을 ${C.cp_min}~${C.cp_max} 로 자름
-지면    ΔCP = −(기본폭 − 보정) 을 ${C.cp_min}~${C.cp_max} 로 자름</div>
-    <p class="muted"><b>${C.cp_size} 와 ${C.e_clamp} 는 고른 값이 아니라 유도된 값입니다.</b>
-       점수 총합이 흘러가지 않으려면 이길 때 얻는 값과 질 때 잃는 값의 합이
-       ${C.cp_min}+${C.cp_max}=${C.cp_size} 로 고정돼야 하고, 두 값이 ${C.cp_min}~${C.cp_max} 안에
-       있으려면 E 가 ${C.e_clamp}~${(1-C.e_clamp).toFixed(3)} 안이어야 합니다.
-       불리한 판을 이기면 ${C.cp_max} 에 가깝게, 유리한 판을 이기면 ${C.cp_min} 에 가깝게 받습니다.</p>
-    <p class="muted"><b>gap 이 롤의 "LP 가 MMR 을 따라가는" 그 장치입니다.</b> CP 가 MMR 보다
-       뒤처져 있으면 판마다 최대 ±${C.cp_gap_cap} 씩 더 얹어 따라붙게 합니다
-       (실측: 19경기 뒤 둘의 거리 평균 11점 · 최대 29점 — 티어 반 칸 미만).</p>
-
-    <h3 style="font-size:14px;margin:12px 0 4px">⑥ 티어 — CP 에 눈금을 그은 것</h3>
-    <div class="fml">티어 = CP 가 어느 ${FULLP}점 칸에 있나       티어 점수 = 그 칸 안에서 몇 점인가
-배치 ${need}판을 마치기 전에는 티어를 보여 주지 않는다 (그 구간은 K=${C.k_place} 라 크게 흔들린다)</div>
-    <p class="muted">경계가 ${cpTiers().filter(t=>t.cp!=null).map(t=>t.cp).join(' · ')} 인 이유:
-       점수 총합이 보존되어 방 평균이 ${base} 에 고정되므로, 평균인 사람이 가운데 티어의
-       <b>한가운데</b>에 오게 놓았습니다 — 경계를 ${base} 에 두면 방의 절반이 영원히
-       경계 위에서 오르내립니다. 승급 보호(버퍼)는 일부러 없습니다: 넣어 봤더니
-       "CP 는 높은데 티어는 낮은" 역전이 생겼습니다. 대신 경계 근처의 오르내림은
-       숨기지 않고 <b>다음 티어까지 몇 점</b>으로 드러냅니다.</p>
-    <p class="muted"><b>1티어는 ${FULLP-1}점을 넘어갑니다.</b> 위가 없으니 자를 이유가
-       없습니다. 위로 갈수록 오르기 힘든 건 따로 규칙 없이 이미 그렇습니다 —
-       유리한 쪽은 이겨도 ${C.cp_min} 에 가깝게 받고 져도 ${C.cp_max} 에 가깝게 잃습니다
-       (실측: 상위권 승 +17.7 / 패 −22.0, 하위권 승 +21.1 / 패 −18.2).
-       <b>마지막 티어는 0점에서 멈추되 보이는 점수만</b> 멈춥니다 — 속까지 막으면
-       그 사람을 이긴 쪽에 점수가 새로 생겨 전체가 부풉니다.</p>
-    <div class="tierlegend">${cpTiers().map(t=>
-      `<span>${tierBadge(t.name)} <span class="muted">${
-        t.open_top?'위로 열림':(t.cp==null?'맨 아래':'속 점수 '+t.cp+'+')}</span></span>`
-      ).join('')}</div>
-    <p class="muted" style="margin-top:6px"><b>왜 5단계인가</b> — 판이 쌓여도 점수 폭은
-       400 근처에서 멈춥니다(실측: 19판 217 · 200판 403 · 400판 399). 티어 하나가 운과
-       구분되려면 그만한 폭이 필요하니 400÷${FULLP}≈4~5단계가 이 방의 해상도입니다.
-       10단계로 나눠 봤더니 <b>한 판 두고 티어가 바뀐 비율이 79%</b>였습니다 —
-       그건 티어가 아니라 점수판이었습니다.</p>`;
 }
 
 // ── 새 버전 감지 ────────────────────────────────────────────────────────────
