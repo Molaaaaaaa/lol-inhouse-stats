@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-0woStuBeDIb+mzbNiXuFPVhKqvWLxwOHLKig1ID1jwE='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-JFb8bp9NsgpsWRyeTfX55BlzgWR6Ka14/lIo6UC7zAI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -983,7 +983,7 @@ const HELP={
   동반사망:'같은 팀 두 사람이 10초 안에, 서로 2500 유닛 이내에서 죽은 횟수입니다.\n거리 조건이 없으면 맵 반대편에서 각자 죽은 것도 잡힙니다.\n판당 횟수로 세웁니다 — 총 횟수로 하면 많이 뛴 사람이 자동으로 위에 옵니다.\n데스가 많은 라인(정글)이 잘 걸리니 실력으로 읽지 마세요.',
   어시스트:'킬을 낸 사람과 그 킬에 어시를 준 사람 쌍을 셉니다.\n비중 = 이 어시 수 ÷ 받은 사람의 총 킬.\n원시 횟수만 보면 사실상 킬 수 차이라, 서포터와 정글러를 구분하는 것에 가깝습니다.\n같이 3판 이상 뛴 조합만 나옵니다.',
   신뢰성:'승률을 그대로 믿으면 2판 2승(100%)이 20판 14승(70%)보다 위로 갑니다.\nWilson 신뢰구간의 아래끝을 써서 표본이 적을수록 더 깎아 내립니다.\n판수가 쌓일수록 실제 승률에 가까워집니다. 리더보드 정렬 기준입니다.',
-  MVP:'경기마다 킬 관여·딜 비중·KDA를 합쳐 가장 높은 사람에게 1회 줍니다.\n이긴 팀에서만 뽑습니다. 표의 숫자는 누적 횟수입니다.',
+  MVP:'경기마다 이긴 팀에서 기여도(킬 관여·딜 비중·KDA 를 라인 안에서 재고 팀 안에서 상대값으로 만든 것) 1위에게 1회 줍니다.\n티어 계산의 기여도와 같은 숫자라 정의가 하나입니다. 라인을 타지 않습니다(예전 식은 정글·원딜이 27회 중 20회를 가져갔습니다).\n표의 숫자는 누적 횟수입니다.',
   MMR:'단순 승률이 아니라 "누구를 이겼나"를 봅니다(Bradley-Terry).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다.\n1000이 평균이고 팀 밸런싱에 그대로 쓰입니다.',
   시너지:'둘이 같이 이긴 비율에서 "각자 실력만으로 기대되는 승률"을 뺀 값입니다.\n기대 승률은 두 사람이 함께한 판을 빼고 계산해 자기 자신과 비교하지 않습니다.\n+면 같이 할 때 더 잘 맞고, −면 덜 맞습니다.',
   밸런스:'실력 점수는 단순 승률이 아니라 "누구를 이겼나"(Bradley-Terry)입니다.\n여기에 그 사람이 그 라인에서 보인 숙련도와 퍼포먼스를 더해\n두 팀의 예측 승률이 50:50에 가장 가까워지는 조합을 고릅니다.\n라인을 지정하지 않으면 각자 잘하는 라인으로 알아서 배치합니다.',
@@ -2230,10 +2230,11 @@ const BAL_ROLES=['TOP','JUNGLE','MIDDLE','BOTTOM','UTILITY'];
 // 라인 이름은 LANE_KO 하나만 쓴다. 예전엔 내용이 똑같은 LANE_KR 이 따로 있어
 // 한쪽만 고치면 조용히 갈라졌다(지표 이름에서 실제로 그렇게 갈라졌다).
 const LANE_KR=LANE_KO;
-const OFF_PEN=0.8;
+// 오프롤 벌점은 발행 상수에서만 읽는다(단일 출처) — CP 오프롤 사전값(-30 Elo)의 logit 환산
+const OFF_PEN=()=>{const c=(DATA.rating_constants||{}); return c.off_role_penalty!=null?c.off_role_penalty:0.0345;};
 function bStrength(did,lane){const r=(DATA.ratings||{})[did]||{};
   if(lane&&r.lanes&&r.lanes[lane])return r.lanes[lane].strength;
-  const b=r.strength||0; return lane?b-OFF_PEN:b;}
+  const b=r.strength||0; return lane?b-OFF_PEN():b;}
 function* combos(a,k,s=0,acc=[]){if(acc.length===k){yield acc.slice();return;}
   for(let i=s;i<a.length;i++){acc.push(a[i]);yield* combos(a,k,i+1,acc);acc.pop();}}
 function* perms(a){if(a.length<=1){yield a.slice();return;}
@@ -3194,7 +3195,7 @@ CP    보이는 점수. 이기면 +${C.cp_min}~${C.cp_max}, 지면 −${C.cp_min
 
     <h3 class="subh">④ MMR 갱신 — 정확성 담당</h3>
     <div class="fml">ΔMMR = K × ((결과 − E) + 기여보정)      결과 = 승 1 / 패 0
-K = ${C.k_place} (배치 ${need}판 동안) → ${C.k_norm} (그 후)</div>
+K = ${C.k_place} (배치 ${need}판 동안) → ${C.k_norm} 에서 시작해 ${C.k_decay_half}판마다 절반, 최소 ${C.k_min} (판이 쌓일수록 승패 잡음이 덜 쌓이게)</div>
     <p class="muted">기여보정을 곱하지 않고 <b>더하는</b> 이유: 곱하면 진 경기를 캐리한
        사람이 <b>더</b> 잃습니다. 더하면 잘한 사람은 이길 때 더 받고 <b>져도 덜 잃습니다.</b></p>
 
