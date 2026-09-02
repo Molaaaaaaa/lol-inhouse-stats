@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-LfycF/Tc3O7pPcsIUICn+ZmB+GhRbx/Znlqet7YNUT0='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-C1pJmTRNlluUi9zR15/lly+EITpkQIsSoQqSfLHmYkY='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -26,7 +26,7 @@
     /* 라인색 — 탑·정글은 승/패 색을 같이 쓴다(기존 그대로) */
     --lane-bot:#9b7ede; --lane-sup:#5ec8b0;
     /* 티어색 — 1티어부터 */
-    --t1:#e8c46a; --t2:#7b8fe8; --t3:#4aa88a; --t4:#b0764a; --t5:#8a8079;
+    --t1:#e8c46a; --t2:#7b8fe8; --t3:#4aa88a; --t4:#c4865a; --t5:#9a918a;
     --shadow:0 4px 18px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
@@ -204,6 +204,9 @@
   .sidepl{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
   /* 물음표는 누를 수 있는 것 — 모바일엔 커서가 없어 시각 신호가 필요하다 */
   .qmark{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  /* ?·돋보기는 글줄 안의 14px 표시라 키우면 흐름이 깨진다 — 보이는 크기는 두고 히트 영역만 44px */
+  .qmark,.mexp{position:relative}
+  @media (pointer:coarse){ .qmark::before,.mexp::before{content:'';position:absolute;inset:-15px} }
   .qmark:active{opacity:.6}
   .mmrlink,.vslink{color:inherit;text-decoration:none;cursor:pointer;
     border-bottom:1px dashed var(--dim);-webkit-tap-highlight-color:transparent}
@@ -573,7 +576,7 @@
   border-bottom:1px solid var(--acc);font-size:13px}
 #freshBar button{background:var(--acc);color:var(--on-acc);border:0;border-radius:8px;
   padding:6px 14px;font-weight:700;cursor:pointer;min-height:32px}
-@media (pointer:coarse){ #freshBar button,.meta .retry{min-height:44px} }
+@media (pointer:coarse){ #freshBar button,.meta .retry,#refresh,#fbSend{min-height:44px} #refresh{min-width:44px} }
 </style>
 </head>
 <body>
@@ -677,7 +680,7 @@
       <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
         <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
       <div class="row" style="margin:10px 0">
-        <label>MMR 검산할 사람 <select id="mathWho"></select></label>
+        <label>MMR 검산할 멤버 <select id="mathWho"></select></label>
       </div>
       <div id="mathMmr"></div>
     </div>
@@ -796,10 +799,10 @@
   <section id="balance" class="view hidden" data-subtabs>
     <div data-sub="팀 나누기" data-ico="scale" class="card">
         <h2><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
-        <p class="muted" id="balNote">오늘 온 사람을 눌러서 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 갈립니다.</p>
+        <p class="muted" id="balNote">오늘 온 멤버를 눌러 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 나뉩니다.</p>
         <div id="balPick" class="chips"></div>
         <div id="balResult"></div>
-        <div class="row" style="margin-top:10px"><button id="balClear">비우기</button>
+        <div class="row" style="margin-top:10px"><button id="balClear">선택 해제</button>
           <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정하기</label></div>
       </div>
   </section>
@@ -808,8 +811,8 @@
   <h2><svg class="ic" aria-hidden="true"><use href="#i-message-circle"/></svg> 피드백</h2>
   <p class="lead">숫자가 이상하거나, 이런 걸 보고 싶거나, 그냥 할 말이 있으면 남겨주세요.</p>
   <div class="fbrow">
-    <label>누구<select id="fbWho"></select></label>
-    <label>무슨 얘기<select id="fbKind">
+    <label>보내는 사람<select id="fbWho"></select></label>
+    <label>종류<select id="fbKind">
       <option>숫자가 이상함</option><option>버그</option>
       <option>이런 걸 보고 싶다</option><option>기타</option>
     </select></label>
@@ -891,7 +894,7 @@ function announce(msg){
   el.textContent=''; setTimeout(()=>{el.textContent=msg;},50);
 }
 function renderTable(el, rows, cols, sortKey, sortDir){
-  if(!rows || !rows.length){ el.innerHTML='<p class="muted">데이터 없음</p>'; return; }
+  if(!rows || !rows.length){ el.innerHTML='<p class="muted">아직 표시할 데이터가 없습니다.</p>'; return; }
   // 바 컬럼 최대값
   const maxes={};
   cols.forEach(c=>{ if(c.bar){ maxes[c.k]=Math.max(...rows.map(r=>+r[c.k]||0),0.0001); }});
@@ -1383,7 +1386,7 @@ function renderRecords(){
   renderTable($('#mvpT'),DATA.mvp||[],[{k:'name',h:'멤버'},
     {k:'mvp',h:'MVP',num:1,bar:1},{k:'games',h:'판',num:1}],'mvp',-1);
   const pentas=r.pentas||[];
-  $('#pentaT').innerHTML=pentas.length?pentas.map(p=>`${champImg(p.champ)}${p.name}`).join('<br>'):'<p class="muted">아직 없음</p>';
+  $('#pentaT').innerHTML=pentas.length?pentas.map(p=>`${champImg(p.champ)}${p.name}`).join('<br>'):'<p class="muted">아직 펜타킬이 없습니다.</p>';
 }
 let champLane='';  // '' = 전체(챔프 합계), 그 외 = 라인별
 function buildChampLaneBtns(){
@@ -1440,12 +1443,12 @@ function renderFun(){
       `<span class="muted">${blue.games}경기 · ${blue.wins}승 vs ${red.wins}승</span>`+
       `<span class="sv red">${rw}%</span></div></div>`+
       renderSidePlayers(SD.players||[])
-    : '<p class="muted">데이터 없음</p>';
+    : '<p class="muted">아직 표시할 데이터가 없습니다.</p>';
   renderTable($('#funPool'),(F.champ_pool||[]).slice(),[
     {k:'discord_name',h:'멤버'},{k:'lane',h:'라인',fmt:laneKo},
     {k:'champs',h:'챔피언',num:1,fmt:v=>`${v}종`},
     {k:'games',h:'판',num:1},
-    {k:'variety',h:'챔프폭',num:1,bar:1,fmt:v=>pct(v)},
+    {k:'variety',h:'챔피언 폭',num:1,bar:1,fmt:v=>pct(v)},
   ],'games',-1);
 
   // 시간대 — 승률 열은 **구조적으로 항상 50%** 라 뺐다. 내전은 우리끼리 5대5라
@@ -1462,7 +1465,7 @@ function renderFun(){
     '</tbody></table>'+
     '<p class="muted" style="font-size:12px;margin:8px 0 0">우리끼리 하는 내전이라 어느 '+
     '시간대든 승률은 정확히 50%가 됩니다(승과 패가 상쇄). 그래서 승률 대신 언제 모이는지를 봅니다.</p>'
-    : '<p class="muted">데이터 없음</p>';
+    : '<p class="muted">아직 표시할 데이터가 없습니다.</p>';
 
   // 경기 길이
   renderTable($('#funDur'),F.by_duration||[],[
@@ -1507,7 +1510,7 @@ function renderFun(){
     {k:'per_game',h:'판당',num:1,bar:1,fmt:v=>(+v).toFixed(2)},
   ],'per_game',-1);
   renderTable($('#funAssist'),F.assist_flow||[],[
-    {k:'giver',h:'어시스트 준 사람'},{k:'taker',h:'킬을 낸 사람'},
+    {k:'giver',h:'어시스트 준 멤버'},{k:'taker',h:'킬을 낸 멤버'},
     {k:'assists',h:'어시',num:1},
     {k:'share',h:'그 사람 킬 대비',num:1,fmt:v=>pct(v),bar:1},
     {k:'games',h:'같이 뛴 판',num:1},
@@ -1519,7 +1522,7 @@ function renderFun(){
     {k:'minute',h:'시점',num:1,fmt:v=>`${v}분`},
   ],'streak',-1);
   renderTable($('#funStopper'),SP.stoppers||[],[
-    {k:'stopper',h:'저지한 사람'},{k:'runner',h:'연속킬 중이던 사람'},
+    {k:'stopper',h:'저지한 멤버'},{k:'runner',h:'연속킬 중이던 멤버'},
     {k:'streak',h:'당시 연속킬',num:1,bar:1},
   ],'streak',-1);
 
@@ -1548,7 +1551,7 @@ function renderFun(){
 }
 // 소환사의 협곡 좌표계는 0~14870, y축이 위로 자란다(SVG는 아래로) → 뒤집어 그린다
 function heatmap(pts){
-  if(!pts.length) return '<p class="muted">데이터 없음</p>';
+  if(!pts.length) return '<p class="muted">아직 표시할 데이터가 없습니다.</p>';
   const S=14870, W=260;
   const dots=pts.map(p=>{
     const x=(p.x/S)*W, y=W-(p.y/S)*W;
@@ -1569,7 +1572,7 @@ function heatmap(pts){
 const MATCH_PAGE=50;   // 한 번에 그리는 경기 수 — 판이 쌓여도 첫 화면 DOM 이 선형으로 늘지 않게
 function renderMatches(){
   const ms=DATA.recent_matches||[];
-  if(!ms.length){ $('#matchT').innerHTML='<p class="muted">경기 없음</p>'; return; }
+  if(!ms.length){ $('#matchT').innerHTML='<p class="muted">아직 기록된 경기가 없습니다.</p>'; return; }
   const root=$('#matchT');
   const row=(m,idx)=>{
     const d=m.ts?new Date(m.ts).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
@@ -1665,7 +1668,7 @@ function attachCombo(sel, placeholder){
   const id='cbo'+(++_cboSeq);
   const box=document.createElement('div'); box.className='cbo';
   const inp=document.createElement('input');
-  inp.type='text'; inp.autocomplete='off'; inp.placeholder=placeholder||'이름 검색';
+  inp.type='text'; inp.autocomplete='off'; inp.placeholder=placeholder||'소환사명 검색';
   inp.setAttribute('role','combobox');
   inp.setAttribute('aria-expanded','false');
   inp.setAttribute('aria-controls',id);
@@ -1694,9 +1697,9 @@ function attachCombo(sel, placeholder){
     // ⚠️ 포커스 직후에는 입력칸에 **지금 선택된 이름**이 들어 있다. 그걸 검색어로
     //    쓰면 목록이 그 한 명으로 걸러진다(실측). 타이핑 전에는 전체를 보여준다.
     const q=typed?inp.value.trim().toLowerCase():'';
-    const hint=typed?'':'<li class="none" role="presentation">'+ico('keyboard')+' 입력하면 이름·부캐로 검색됩니다</li>';
+    const hint=typed?'':'<li class="none" role="presentation">'+ico('keyboard')+' 소환사명이나 부캐 이름을 입력하세요</li>';
     items=[...sel.options].map(o=>o.value).filter(v=>!q||hay(v).includes(q));
-    if(!items.length){ list.innerHTML='<li class="none" role="presentation">맞는 사람이 없습니다</li>'; }
+    if(!items.length){ list.innerHTML='<li class="none" role="presentation">일치하는 멤버가 없습니다</li>'; }
     else list.innerHTML=hint+items.map((v,i)=>
       `<li role="option" id="${id}-${i}" aria-selected="${v===sel.value}"`+
       `${i===cur?' class="on"':''} data-v="${esc(v)}">${esc(label(v))}${altOf(v,q)}</li>`).join('');
@@ -1824,11 +1827,11 @@ function playerHomeHTML(){
       `<span class="${wrClass(r.winrate,r.games)}">${pct(r.winrate)}</span>`+
       `<span>KDA ${r.kda??'—'}</span></span></button>`;
   }).join('');
-  return `${hlHtml}<div class="pdk" style="margin-bottom:8px">선수 목록
-      <span class="muted" style="font-weight:400">— 누르면 그 선수가 열립니다. 순서는 티어 순.</span></div>
+  return `${hlHtml}<div class="pdk" style="margin-bottom:8px">멤버 목록
+      <span class="muted" style="font-weight:400">— 누르면 그 멤버가 열립니다. 순서는 티어 순.</span></div>
     <div class="row" style="margin-bottom:9px">
-      <label class="sronly" for="plHomeSearch">선수 검색</label>
-      <input type="search" id="plHomeSearch" class="psearch" placeholder="이름 검색 — 부캐 이름도 찾습니다" autocomplete="off">
+      <label class="sronly" for="plHomeSearch">소환사명 검색</label>
+      <input type="search" id="plHomeSearch" class="psearch" placeholder="소환사명 검색 (부캐 이름도 찾습니다)" autocomplete="off">
       <span class="muted" id="plHomeHit" style="font-size:12px"></span></div>
     <div class="plgrid" id="plHomeGrid">${cards}</div>`;
 }
@@ -2001,7 +2004,7 @@ function renderSidePlayers(list){
 function renderPlayerVs(meId){
   const box=$('#plVs'); if(!box) return;
   const P=DATA.players||{}, H=DATA.h2h||{}, K=killPairs();
-  if(!P[meId]){ box.innerHTML='<p class="muted">기록 없음</p>'; return; }
+  if(!P[meId]){ box.innerHTML='<p class="muted">아직 기록이 없습니다.</p>'; return; }
   const rows=[];
   Object.keys(P).forEach(oppId=>{
     if(oppId===meId) return;
@@ -2060,11 +2063,11 @@ function openCompare(a,b){
 function kcList(arr){
   return (arr||[]).length
     ? arr.map(x=>`${champImg(x.champion)}${champKo(x.champion)} <span class="muted">${x.n}회</span>`).join(', ')
-    : '<span class="muted">기록 없음</span>';
+    : '<span class="muted">아직 기록이 없습니다</span>';
 }
 function hourBars(hs){
   hs=(hs||[]).slice().sort((a,b)=>a.hour-b.hour);
-  if(!hs.length) return '<span class="muted">기록 없음</span>';
+  if(!hs.length) return '<span class="muted">아직 기록이 없습니다</span>';
   const mx=Math.max(1,...hs.map(h=>h.games));
   return '<div class="hourbars">'+hs.map(h=>{
     const hgt=Math.max(6,(h.games/mx)*30);
@@ -2140,7 +2143,7 @@ function bindLanePicks(el,p){
 function renderCompare(){
   const P=DATA.players||{}, ka=$('#cmpA').value, kb=$('#cmpB').value;
   const a=P[ka], b=P[kb];
-  if(!a||!b){ $('#cmpBody').innerHTML='<p class="muted">선택하세요</p>'; return; }
+  if(!a||!b){ $('#cmpBody').innerHTML='<p class="muted">팀을 나눌 멤버를 선택하세요 (짝수 4~10명).</p>'; return; }
   if(ka===kb){ $('#cmpBody').innerHTML='<p class="muted">서로 다른 두 명을 고르세요</p>'; return; }
   // 'VS'는 나란히 놓은 지표가 아니라 **적으로 만났을 때 누가 이겼나**다.
   const h=(DATA.h2h||{}), rec=h[ka+'|'+kb]||h[kb+'|'+ka];
@@ -2179,7 +2182,7 @@ function renderCompare(){
   let radarHTML='';
   try{ radarHTML=radarSVG([{name:a.name,profile:a.profile,color:TOK.good},
                            {name:b.name,profile:b.profile,color:TOK.bad}]); }
-  catch(err){ radarHTML='<span class="muted">능력치를 그릴 수 없습니다</span>'; }
+  catch(err){ radarHTML='<span class="muted">능력치를 그리지 못했습니다</span>'; }
   const both=(a.profile||[]).length>=3&&(b.profile||[]).length>=3
     ? `<div class="cmpradar">`+radarHTML+
       `<div class="cmpleg">`+
@@ -2219,7 +2222,7 @@ function bestRole(team,decl){let best=null;
   return best;}
 function jsBalance(players,decl){
   players=players.filter(p=>(DATA.ratings||{})[p]); const n=players.length;
-  if(n<4||n%2)return{error:'짝수 4~10명을 선택하세요.'};
+  if(n<4||n%2)return{error:'짝수 4~10명을 선택해야 팀을 나눌 수 있습니다.'};
   const half=n/2,useRoles=(half===5);
   const sm={}; (DATA.synergy||[]).forEach(s=>sm[[s.na,s.nb].sort().join('|')]=s.synergy);
   const synB=ids=>{let t=0;const nm=ids.map(d=>DATA.ratings[d].name);
@@ -2245,7 +2248,7 @@ function jsBalance(players,decl){
 const balSel=new Map();     // id -> 지정 라인('' 이면 자동)
 function renderBalancePicker(){
   const R=DATA.ratings||{},ids=Object.keys(R);
-  if(!ids.length){$('#balPick').innerHTML='<p class="muted">MMR 데이터가 없습니다 (내전이 쌓이면 활성화됩니다).</p>';return;}
+  if(!ids.length){$('#balPick').innerHTML='<p class="muted">아직 MMR 이 없습니다. 내전이 쌓이면 팀을 나눌 수 있습니다.</p>';return;}
   const laneMode=$('#balLaneMode')&&$('#balLaneMode').checked;
   $('#balPick').innerHTML=ids.sort((a,b)=>R[b].mmr-R[a].mmr).map(id=>{
     const on=balSel.has(id), ln=balSel.get(id)||'';
@@ -2282,7 +2285,7 @@ function runBalance(){
   out.innerHTML=`<div class="bverdict ${verdict[1]}">${pa} : ${100-pa}<span>${verdict[0]}</span></div>`+
     `<div class="bteams">`+team(res.teamA,'A팀','<i class="dot b"></i>')+team(res.teamB,'B팀','<i class="dot r"></i>')+`</div>`+
     (hasLane?'':`<p class="muted" style="font-size:12px;margin:8px 0 0">라인은 5:5일 때만 배정합니다.</p>`)+
-    `<div class="row" style="margin-top:10px"><button id="balCopy" class="chip">${ico('clipboard-list')} 복사</button>`+
+    `<div class="row" style="margin-top:10px"><button id="balCopy" class="chip">${ico('clipboard-list')} 팀 구성 복사</button>`+
     `<span class="muted" id="balCopyMsg" style="font-size:12px"></span></div>`;
   // 팀을 갈라 놓고 옮길 방법이 없으면 열 명을 다시 타이핑해야 한다 — 그게 실제로
   // 이 화면을 쓰는 마지막 단계다. 디스코드에 그대로 붙는 글로 만든다.
@@ -2451,12 +2454,12 @@ function playerDetailHTML(p,dur){
     const v=+ex[k]||0;
     const disp=kind===2?mmss(v):kind===1?K(v):v;
     return `<div class="pdstat"><span class="muted">${lab}</span><b>${disp}</b></div>`;
-  }).join('')||'<span class="muted">기록 없음</span>';
+  }).join('')||'<span class="muted">아직 기록이 없습니다</span>';
   const build=(p.build||[]).length
     ? `<div class="pdbuild">`+(p.build||[]).map(x=>
         `<span class="pdit${x.sold?' sold':''}" data-tip="${x.minute}분${x.sold?' 판매':''}">${itemImg(x.item)}`+
         `<i>${x.minute}′</i></span>`).join('<span class="pdar">›</span>')+`</div>`
-    : '<span class="muted">구매 기록 없음</span>';
+    : '<span class="muted">구매 기록이 없습니다</span>';
   const sp=(p.spells||[]).filter(Boolean).map(x=>SPELL_KO[x]||('주문'+x)).join(' · ')||'—';
   const pk=(p.perks||[]).filter(Boolean).map(x=>PERK_KO[x]||('룬'+x)).join(' · ')||'—';
   return `<div class="pdwrap">
@@ -2476,12 +2479,12 @@ function scoreboard(d){
   const K=v=>(v/1000).toFixed(1)+'K';
   const cols=[
     {h:'라인',cell:p=>`<td class="lncell">${laneKo(p.lane)}</td>`,on:true},
-    {h:'플레이어',cell:p=>`<td><span class="sbname">${champImg(p.champ)}${p.name}`+
+    {h:'멤버',cell:p=>`<td><span class="sbname">${champImg(p.champ)}${p.name}`+
       `<i class="sbcar">${ico('chevron-down')}</i></span></td>`,on:true},
     {h:'KDA',num:1,cell:p=>`<td class="num">${p.k}/${p.d}/${p.a}</td>`,on:true},
     {h:'CS',num:1,cell:p=>`<td class="num">${p.cs}</td>`,on:has('cs')},
     {h:'딜',num:1,cell:p=>`<td class="num">${K(p.dmg)}</td>`,on:has('dmg')},
-    {h:'받은피해',num:1,cell:p=>`<td class="num">${K(p.dmg_taken)}</td>`,on:has('dmg_taken')},
+    {h:'받은 피해',num:1,cell:p=>`<td class="num">${K(p.dmg_taken)}</td>`,on:has('dmg_taken')},
     {h:'포탑',num:1,cell:p=>`<td class="num">${K(p.dmg_turret)}</td>`,on:has('dmg_turret')},
     {h:'시야',num:1,cell:p=>`<td class="num">${p.vision}</td>`,on:has('vision')},
     {h:'골드',num:1,cell:p=>`<td class="num">${K(p.gold)}</td>`,on:has('gold')},
@@ -2559,7 +2562,7 @@ function matchDetailHTML(d){
 function renderSynHeat(){
   const el=$('#synHeat'); if(!el) return;
   const syn=DATA.synergy||[]; const names=[...new Set(syn.flatMap(s=>[s.na,s.nb]))];
-  if(names.length<2){ el.innerHTML='<p class="muted">데이터 없음</p>'; return; }
+  if(names.length<2){ el.innerHTML='<p class="muted">아직 표시할 데이터가 없습니다.</p>'; return; }
   const map={}, gmap={};
   syn.forEach(s=>{ map[s.na+'|'+s.nb]=s.synergy; map[s.nb+'|'+s.na]=s.synergy;
                    gmap[s.na+'|'+s.nb]=s.games;  gmap[s.nb+'|'+s.na]=s.games; });
@@ -2825,7 +2828,7 @@ function renderMathMmr(){
   const R=DATA.ratings||{}, C=DATA.rating_constants||{};
   const r=R[$('#mathWho').value];
   const box=$('#mathMmr');
-  if(!r||!r.breakdown){ box.innerHTML='<p class="muted">이 사람은 MMR 계산에 필요한 데이터가 없습니다.</p>'; return; }
+  if(!r||!r.breakdown){ box.innerHTML='<p class="muted">이 멤버는 아직 MMR 을 계산할 판이 없습니다.</p>'; return; }
   const b=r.breakdown, K=C.blend_k, SK=C.perf_shrink_k, PW=C.perf_weight, FW=C.form_weight;
   const sum=b.bt_term+b.perf_term+b.form_term;
   // 항 합이 strength와 어긋나면 숨기지 말고 드러낸다 — 검산 페이지가 거짓말하면 안 된다
@@ -2979,7 +2982,7 @@ function attachTableFilters(root){
     box.innerHTML = `<label class="sronly" for="${id}">${name} 안에서 찾기</label>`+
       `<input type="search" id="${id}" placeholder="${
         ((tb.querySelector('th')||{}).textContent||'').includes('챔피언')
-          ?'챔피언 검색':'이름으로 거르기'}" autocomplete="off">`+
+          ?'챔피언 검색':'소환사명 검색'}" autocomplete="off">`+
       `<span class="tfhit muted"></span>`;
     // overflow 감싸개가 있으면 그 바깥에 둔다(가로 스크롤 안에 갇히지 않게)
     const anchor = (tb.parentElement && /auto|scroll/.test(
@@ -3046,7 +3049,7 @@ function labelTables(){
     // 카드 밖에 있는 표 둘 — 랭킹표는 고른 지표가 이름이고, 비교표는 두 선수다
     if(!name && t.parentElement){
       if(t.parentElement.id==='rankT') name=(mLabel?mLabel(curMetric):'')+' 랭킹';
-      else if(t.classList.contains('cmp')) name='두 선수 비교';
+      else if(t.classList.contains('cmp')) name='두 멤버 비교';
     }
     if(name) t.setAttribute('aria-label',name);
   });
@@ -3365,9 +3368,9 @@ function setupPlayerView(){
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   const ids=Object.keys(DATA.players||{}); if(ids[1]) $('#cmpB').value=ids[1];
   // 검색창과 드롭다운을 한 칸으로 — 두 칸이면 어디에 치고 어디서 고르는지가 헷갈린다
-  attachCombo($('#playerSel'),'이름 검색');
-  attachCombo($('#cmpA'),'이름 검색');
-  attachCombo($('#cmpB'),'이름 검색');
+  attachCombo($('#playerSel'),'소환사명 검색');
+  attachCombo($('#cmpA'),'소환사명 검색');
+  attachCombo($('#cmpB'),'소환사명 검색');
   renderCompare();
 }
 const VIEW_RENDER={
@@ -3447,9 +3450,9 @@ function fillFeedbackWho(){
       if(j&&j.ok){ msg.className='fbmsg ok'; msg.textContent='고맙습니다. 잘 받았습니다.';
         body.value=''; cnt.textContent='0 / 2000'; }
       else { msg.className='fbmsg err';
-        msg.textContent=(j&&j.error)||'전송에 실패했습니다.'; showAlt('대신'); }
+        msg.textContent=(j&&j.error)||'보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.'; showAlt('대신'); }
     }catch(e){
-      msg.className='fbmsg err'; msg.textContent='전송 창구가 아직 연결되지 않았습니다.';
+      msg.className='fbmsg err'; msg.textContent='피드백 창구가 아직 연결되지 않았습니다.';
       showAlt('대신');
     }
     send.disabled=false;
@@ -3590,7 +3593,7 @@ document.addEventListener('click',e=>{
   det.classList.toggle('hidden',!open);
   tr.classList.toggle('on',open);
   tr.setAttribute('aria-expanded', open?'true':'false');
-  announce(open?'선수 상세를 폈다':'선수 상세를 접었다');
+  announce(open?'멤버 상세를 폈다':'멤버 상세를 접었다');
 });
 $('#playerBody').addEventListener('click',e=>{
   const a=e.target.closest('.vslink'); if(!a) return;
