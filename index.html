@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-viOuciyY+KHg8beFf8bthAj3LM6cbDUGLlyPy/ynUwc='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-2tjuXd+D0zxHVXGrLHUYmn21TFHO4yDkHrE3bjhvhpk='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -1971,6 +1971,7 @@ function renderPlayerVs(meId){
 function openCompare(a,b){
   const P=DATA.players||{}; if(!P[a]||!P[b]) return;
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
+  ensureView('player');                  // 아직 안 그린 화면이면 select 가 비어 값이 안 들어간다
   $('#cmpA').value=a; $('#cmpB').value=b; renderCompare();
   jumpTo('player', '⚖️ 비교');
 }
@@ -2289,7 +2290,7 @@ function goldChart(tl){
 
 function itemImg(id){
   if(!id||!DATA.patch||!/^\d+$/.test(String(id))) return '<span class="itemslot"></span>';
-  return `<img class="itemslot" src="https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/item/${id}.png" loading="lazy" alt="">`;
+  return `<img class="itemslot" src="https://ddragon.leagueoflegends.com/cdn/${DATA.patch}/img/item/${id}.png" loading="lazy" decoding="async" alt="">`;
 }
 const OBJ_ICON={towers:'🏰',dragons:'🐉',barons:'👑',heralds:'🦅',grubs:'🐛'};
 function dmgBars(d){
@@ -3268,15 +3269,12 @@ function renderCpLanes(rows){
   setInterval(probe, 10*60*1000);
 })();
 
-function renderAll(){
-  $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
-  // ⚠️ 발행 쪽은 경고를 실어 보내는데(예: 표시명이 겹쳐 두 사람 통계가 섞임) 화면이
-  //    한 번도 읽지 않아 로그에만 남았다. 통계가 섞이는 건 화면에서 밝혀야 한다.
-  const wb=$('#warnBar'), ws=DATA.warnings||[];
-  wb.innerHTML=ws.map(w=>`<div>⚠️ ${esc(w)}</div>`).join('');
-  wb.classList.toggle('hidden', !ws.length);
-  renderKpis(); renderCp(); renderBoard(); buildRankControls(); renderRank(); renderSyn();
-  buildChampLaneBtns(); renderChamp(); renderRecords(); renderFun(); renderMatches();
+// ---------- 화면별 지연 렌더 ----------
+// 화면(탭)마다 처음 켤 때 한 번 그린다. renderFun 은 여러 화면에 걸쳐 쓰므로 한 번만.
+const RENDERED=new Set();
+let FUN_DONE=false;
+function ensureFun(){ if(FUN_DONE) return; FUN_DONE=true; renderFun(); }
+function setupPlayerView(){
   fillPlayerSelect($('#playerSel'),'',true);
   $('#playerSel').value='';               // 첫 화면은 특정인이 아니라 전체 보기
   renderPlayerBody();
@@ -3286,7 +3284,38 @@ function renderAll(){
   attachCombo($('#playerSel'),'이름 검색');
   attachCombo($('#cmpA'),'이름 검색');
   attachCombo($('#cmpB'),'이름 검색');
-  renderCompare(); renderBalancePicker(); renderMath(); buildSubtabs();
+  renderCompare();
+}
+const VIEW_RENDER={
+  tier:    ()=>{ renderCp(); },
+  board:   ()=>{ renderBoard(); buildRankControls(); renderRank(); ensureFun(); },
+  records: ()=>{ renderRecords(); ensureFun(); },
+  syn:     ()=>{ renderSyn(); ensureFun(); },
+  champ:   ()=>{ buildChampLaneBtns(); renderChamp(); ensureFun(); },
+  matches: ()=>{ renderMatches(); ensureFun(); },
+  player:  setupPlayerView,
+  balance: ()=>{ renderBalancePicker(); },
+};
+function ensureView(id){
+  if(!DATA || RENDERED.has(id) || !VIEW_RENDER[id]) return;
+  RENDERED.add(id);
+  VIEW_RENDER[id]();
+  const sec=$('#'+id);
+  labelTables(); labelTips(sec); attachTableFilters(sec);   // 새로 생긴 표·툴팁에 이름표
+}
+
+function renderAll(){
+  $('#meta').innerHTML=`<b>${DATA.name||'내전'}</b> · 패치 ${DATA.patch||'-'}`;
+  // ⚠️ 발행 쪽은 경고를 실어 보내는데(예: 표시명이 겹쳐 두 사람 통계가 섞임) 화면이
+  //    한 번도 읽지 않아 로그에만 남았다. 통계가 섞이는 건 화면에서 밝혀야 한다.
+  const wb=$('#warnBar'), ws=DATA.warnings||[];
+  wb.innerHTML=ws.map(w=>`<div>⚠️ ${esc(w)}</div>`).join('');
+  wb.classList.toggle('hidden', !ws.length);
+  renderKpis(); renderMath(); buildSubtabs();
+  // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
+  // 아무도 안 보는 채로 쌓인다(실측). 데이터를 다시 받으면 전부 무효화하고 보는 화면만 다시.
+  RENDERED.clear(); FUN_DONE=false;
+  ensureView((($('#tabs .tab.on')||{}).dataset||{}).t||'tier');
   // ⚠️ Riot 고지는 **여기** 있어야 한다. 정적 HTML 에만 두면 이 줄이 덮어써서 사라진다.
   //    Riot 은 서드파티 앱에 '공식 관여가 아니다'라는 표기를 요구한다.
   $('#foot').innerHTML=`<div>내전 해체 분석기 · ${DATA.name||''}</div>`+
@@ -3435,6 +3464,7 @@ function activateTab(t){
   // 가로 스크롤 탭바에서는 선택된 탭이 화면 밖일 수 있다 → 끌어다 놓는다
   if(t.scrollIntoView) t.scrollIntoView({block:'nearest',inline:'nearest'});
   document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
+  ensureView(t.dataset.t);                 // 처음 켜는 화면이면 지금 그린다
   const view=$('#'+t.dataset.t); if(view) view.classList.remove('hidden');
 }
 $('#tabs').addEventListener('click',e=>activateTab(e.target.closest('.tab')));
