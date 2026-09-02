@@ -90,7 +90,7 @@
   .pos{color:var(--good)} .neg{color:var(--bad)}
   .wr-h{color:var(--good);font-weight:650} .wr-m{color:var(--mid)} .wr-l{color:var(--bad)}
   /* 판수가 모자라 좋고 나쁨을 말할 수 없는 값 — 숫자는 보여주되 색으로 단정하지 않는다 */
-  .wr-dim{color:var(--dim);opacity:.85}
+  .wr-dim{color:var(--dim)}   /* opacity .85 는 패널 위 4.28:1 로 AA 미달이었다(재감사 실측) — 회색 자체가 '단정하지 않음'이다 */
   .wr-h::after{content:' \25B2';font-size:.72em} .wr-l::after{content:' \25BC';font-size:.72em}
   .pill{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--panel2);
     border:1px solid var(--line);color:var(--dim);font-size:12px;margin:2px 3px 2px 0}
