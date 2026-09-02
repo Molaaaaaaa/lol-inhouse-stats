@@ -102,6 +102,8 @@
   .barwrap i{position:absolute;right:0;bottom:-3px;height:4px;border-radius:3px;
     background:var(--acc);opacity:.55}
   .muted{color:var(--dim)}
+  /* 읽는 문단은 72ch 에서 끊는다 — 1280px 에서 한 줄 143자였다. 표·차트·수식(.fml)은 제외. */
+  .card>p,.card p.muted,.mathwrap p.muted,.fbsec .lead,#cpIntro,#cpNote{max-width:72ch}
   /* !important 인 이유: .grid2{display:grid} 처럼 나중에 선언된 같은 특이도 규칙이
      .hidden 을 이겨서 '숨긴' 요소가 그대로 보였다(실측: 재미 탭 서브탭 3개 동시 노출). */
   .hidden{display:none!important}
@@ -478,7 +480,7 @@
 .cpbar{position:relative;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .cpbar>i{position:absolute;inset:0 auto 0 0;border-radius:3px;background:currentColor}
 .tierlegend{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px}
-.tierlegend span{font-size:11px}
+.tierlegend span{font-size:12px}
 @media (max-width:640px){
   /* 모바일에서는 격자를 가로로 굴린다 — 5칸을 2열로 접으면 라인 순서가 무너진다 */
   .lanewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -568,7 +570,7 @@
 .plcard:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
 .plcard b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .plcard .sub{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--dim);flex-wrap:wrap}
-.plcard .tierbadge{font-size:10.5px;padding:1px 7px}
+.plcard .tierbadge{font-size:12px;padding:1px 8px}
 
 /* 새 버전 배너 — 배포 전에 열어 둔 탭에게 알린다 */
 #freshBar{position:sticky;top:0;z-index:60;display:flex;gap:10px;align-items:center;
