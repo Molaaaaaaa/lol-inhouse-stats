@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-nPvXkY5tFFSOs9ZxFRgHDyqKWHWN/lRbOcnW0ESgIlk='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-0woStuBeDIb+mzbNiXuFPVhKqvWLxwOHLKig1ID1jwE='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -188,6 +188,11 @@
   .goldfoot{font-size:12px;text-align:right;margin-top:2px}
   /* 캐릭터 스탯 카드 — 도형(모양) + 막대(값)를 나란히 */
   .statwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .bline{width:100%;border-collapse:collapse;margin-top:6px}
+  .bline td{padding:5px 8px;border-bottom:1px solid var(--line);font-size:13px;white-space:normal}
+  /* 폰에서도 표로 둔다(카드로 풀면 축 이름 없는 둘째 줄이 제목 없는 카드가 된다) */
+  @media(max-width:640px){ .bline td{padding:5px 4px;font-size:12.5px} .bline .side-sm{display:block;margin:0} }
+  .bline td:first-child{padding-left:0} .bline .lv{white-space:nowrap}
   .axbars{flex:1;min-width:180px;display:flex;flex-direction:column;gap:7px}
   .axrow{display:grid;grid-template-columns:52px 34px 1fr;align-items:center;gap:8px;
     font-size:12.5px;cursor:default}
@@ -452,24 +457,24 @@
     .team .pl{flex:0 0 auto}
     .team .pl img{flex:0 0 auto}
     .team .pn{display:none}
-    table:not(.sb):not(.heat):not(.cmp) thead{display:none}
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) thead{display:none}
     /* ⚠️ .cmp(두 선수 비교)는 제외한다 — '값 · 항목 · 값' 3열이라 카드로 쌓으면
        무엇과 무엇을 견주는지가 깨진다. 원래도 좁아서 표 그대로가 낫다.
        표를 줄마다 카드로 쌓는다. 한 줄에 칸을 **2개씩** 넣어 높이를 반으로 줄인다 —
        한 칸씩 세로로만 쌓으면 리더보드 21명이 8.5화면이 된다(칸 10개 × 30px = 307px).
        첫 칸(이름)은 한 줄을 다 쓴다 — 카드의 제목이라 값 옆에 붙으면 안 읽힌다. */
-    table:not(.sb):not(.heat):not(.cmp) tbody tr{display:grid;grid-template-columns:1fr 1fr;
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) tbody tr{display:grid;grid-template-columns:1fr 1fr;
       column-gap:12px;border:1px solid var(--line);border-radius:10px;
       margin-bottom:8px;padding:4px 10px;background:var(--panel2)}
-    table:not(.sb):not(.heat):not(.cmp) tbody tr>td:first-child{grid-column:1/-1;
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) tbody tr>td:first-child{grid-column:1/-1;
       font-weight:650;border-bottom:1px solid var(--line);margin-bottom:2px}
-    table:not(.sb):not(.heat):not(.cmp) tbody tr>td:first-child::before{display:none}
-    table:not(.sb):not(.heat):not(.cmp) td{display:flex;justify-content:space-between;align-items:center;
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) tbody tr>td:first-child::before{display:none}
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) td{display:flex;justify-content:space-between;align-items:center;
       border:none;padding:4px 0;white-space:normal;min-width:0}
-    table:not(.sb):not(.heat):not(.cmp) td::before{content:attr(data-label);color:var(--dim);
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) td::before{content:attr(data-label);color:var(--dim);
       font-size:11px;margin-right:8px;flex:0 0 auto}
     /* 값이 길면(닉네임·챔프 이름) 칸을 밀어내지 않고 줄바꿈한다 */
-    table:not(.sb):not(.heat):not(.cmp) td>*{min-width:0}
+    table:not(.sb):not(.heat):not(.cmp):not(.bline) td>*{min-width:0}
   }
 
 /* ── 티어 ──────────────────────────────────────────────────────────────
@@ -967,6 +972,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
   CP:'내전 전적만으로 낸 점수입니다. 솔랭 티어와는 무관합니다.\n한 판에 15~25 움직이고, 이기고 지는 것만 반영합니다 — 많이 뛴다고 오르지 않습니다.\n같은 팀 안에서는 내 MMR 이 팀 평균보다 낮을수록, 그 판에 더 기여했을수록 더 받습니다.\n기여가 컸으면 졌을 때도 덜 잃습니다.',
+  기준선:'골드·에메랄드·다이아·마스터 솔랭 표본(라인마다 약 10만 판, 패치 16.10 이후)을 합친 분포 위에 이 사람의 내전 값을 놓고 상위 몇 % 인지 잰 것입니다.\n같은 정의·같은 라인끼리만 견줍니다. 방 안 점수(능력치)와 달리 사람이 바뀌어도 움직이지 않습니다.\n"에메랄드 수준" 같은 티어 이름은 일부러 붙이지 않습니다 — 실측으로 판당 딜·딜 비중·시야는 골드와 마스터의 중앙값이 거의 같아 근거가 없기 때문입니다.\n라인전·개인기 축은 표본에 그 지표가 없어 기준을 내지 않습니다. 내전 티어(CP)와는 무관합니다.',
   라인티어:'라인마다 티어를 따로 냅니다. 그 판에 실제로 선 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 사람이 미드를 간다고 미드도 같은 티어인 것은 아닙니다.\n안 뛴 라인도 칸을 비우지 않고 추정치로 채우되, 점선으로 아직 표본이 모자라다는 것을 표시합니다.\n라인 편차 = 다섯 라인 중 가장 높은 칸과 가장 낮은 칸 차이의 절반입니다.',
   라인MMR:'그 라인에서의 MMR 입니다.\n통합 실력에 **그 라인 승률 보정**을 더한 값이고, 라인마다 처음부터 다시 매긴 값이 아닙니다.\n그래서 통합 MMR 과 크게 벌어지지 않습니다(실측 편차 중앙 14).\n판수가 적은 라인은 보정이 거의 안 걸려 통합값에 가까워집니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
@@ -2752,6 +2758,52 @@ function axisBars(p){
 // 스탯 카드 한 줄 요약 — 나루토 인물집의 '合計' 자리. 다만 **순위로 쓰지 않는다.**
 // 방 전체 합이 구조적으로 상수라(등수로만 정해진다) 다 같이 늘어도 안 오르고,
 // MMR 과도 상관이 중간(r≈0.5)이라 나란히 놓으면 모순으로 읽힌다.
+// ---------- 솔랭 기준선 ----------
+// 능력치 점수는 방 안 상대 위치라 사람이 바뀌면 같이 움직인다. 골드~마스터 솔랭 표본 위에
+// 같은 지표(같은 정의·같은 라인)를 놓으면 방과 무관한 눈금이 생긴다. 라인전·개인기 축은
+// 표본에 그 열이 없어 '기준 없음'으로 비운다 — 있는 척하지 않는다.
+// ⚠️ 티어 이름("에메랄드 수준")은 붙이지 않는다. 실측: 판당 딜·딜 비중·시야는 골드와 마스터의
+//    중앙값이 거의 같다(딜은 골드가 오히려 높다). 합산 표본 안의 백분위만 말한다.
+// 백분위는 분위수 [p5..p95] 사이 선형 보간, 끝 밖은 2.5·97.5 (파이썬 baseline.place 와 같다).
+function baselinePlace(q, v, lower){
+  const P=DATA.baseline.quantiles; let pct=P[P.length-1];
+  if(v<=q[0]) pct=P[0]/2; else if(v>=q[q.length-1]) pct=(100+P[P.length-1])/2;
+  else for(let i=0;i<q.length-1;i++){ if(q[i]<=v&&v<=q[i+1]){ const span=q[i+1]-q[i]; pct=P[i]+(P[i+1]-P[i])*(span?(v-q[i])/span:0.5); break; } }
+  return lower?100-pct:pct;
+}
+function baselinePos(cell, v, lower){
+  const pos=baselinePlace(cell.q, v, lower);
+  const top=Math.max(1,Math.min(99,Math.round(100-pos)));
+  return {label:`솔랭 상위 ${top}%`, pos, cls: pos>=75?'good':(pos<=25?'bad':'')};
+}
+function baselineHTML(p, ratingKey){
+  const B=DATA.baseline; if(!B||!B.metrics||!Object.keys(B.metrics).length) return '';
+  const main=((DATA.ratings||{})[ratingKey]||{}).main_lane||'';
+  const lane=curAxisLane||main;
+  if(!lane) return '';
+  const per=p&&p.profile_lane;
+  const prof=(per&&per[lane])||(p&&p.profile)||[];
+  if(!prof.length) return '';
+  const lower=new Set(DATA.lower_better||[]);
+  const rows=prof.map(a=>{
+    const cells=(a.parts||[]).filter(pt=>B.metrics[pt.key]&&B.metrics[pt.key].by_role[lane]);
+    if(!cells.length) return `<tr><td>${a.label}</td><td colspan="3" class="muted">솔랭 기준 없음 — 내전 전용 지표</td></tr>`;
+    // 축을 만든 지표가 둘이면 두 줄로 — 합쳐서 하나로 뭉개지 않는다
+    return cells.map((pt,i)=>{
+      const m=B.metrics[pt.key]; const t=baselinePos(m.by_role[lane], +pt.value, lower.has(pt.key));
+      return `<tr><td>${i?'':a.label}</td>`+
+        `<td class="num">${fmtMetric(pt.key, pt.value)}<span class="side-sm muted">${m.label}</span></td>`+
+        `<td class="lv"><span class="pill ${t.cls}">${t.label}</span></td>`+
+        `<td class="num muted">${a.games!=null?a.games+'판':''}</td></tr>`;
+    }).join('');
+  }).join('');
+  const games=Object.values(B.games||{}).reduce((t,n)=>t+n,0);
+  return `<div class="subh">솔랭 기준선<span class="qmark" tabindex="0" role="button" data-tip-key="기준선" aria-label="솔랭 기준선 설명">?</span></div>`+
+    `<p class="note-sm muted">${laneKo(lane)} 기준 · 골드~마스터 솔랭 ${games.toLocaleString()}판(패치 ${B.patch_min} 이후)의 같은 라인 값 안에서 이 사람의 내전 값이 상위 몇 % 인지. `+
+    `방 안 점수와 달리 사람이 바뀌어도 움직이지 않습니다. 내전 티어(CP)와는 무관합니다.</p>`+
+    `<table class="bline" aria-label="솔랭 기준선"><tbody>${rows}</tbody></table>`;
+}
+
 function statHead(p,ratingName){
   const SC=SCALE(), MAX=SC.max||5;
   const ax=axesOf(p).filter(a=>a.score!=null);
@@ -2794,7 +2846,7 @@ function radar(p,ratingKey){
                    :'라인을 고르면 그 라인끼리 견줍니다'}</span></div>`
     : '';
   return picker+`<div class="statwrap">${radarSVG([{name:'',profile:axesOf(p),color:TOK.good}])}`+
-         `${axisBars(p)}</div>`+statHead(p,ratingKey);
+         `${axisBars(p)}</div>`+statHead(p,ratingKey)+baselineHTML(p,ratingKey);
 }
 
 const fmtDur=sec=>{
