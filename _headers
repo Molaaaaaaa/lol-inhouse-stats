@@ -8,5 +8,5 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
   X-Frame-Options: DENY
-  Content-Security-Policy: default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-viOuciyY+KHg8beFf8bthAj3LM6cbDUGLlyPy/ynUwc='; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-rR0yXaj9t4R5ce7OHiQ1gJv2UCQPfx8rweUqUcl2jBs='; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
