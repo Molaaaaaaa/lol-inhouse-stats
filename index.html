@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-2tjuXd+D0zxHVXGrLHUYmn21TFHO4yDkHrE3bjhvhpk='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-rR0yXaj9t4R5ce7OHiQ1gJv2UCQPfx8rweUqUcl2jBs='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -34,11 +34,9 @@
     color:var(--txt);font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px;
     line-height:1.55;min-height:100vh}
   header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 22px;
-    border-bottom:1px solid var(--line);background:linear-gradient(180deg,#16202c,var(--panel0));
-    box-shadow:var(--shadow)}
+    border-bottom:1px solid var(--line);background:var(--panel)}
   h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.3px}
-  h1 .g{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;
-    background-clip:text;color:transparent}
+  h1 .g{color:var(--acc)}
   select,button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
     border-radius:9px;padding:7px 12px;font-size:14px;cursor:pointer;font-family:inherit}
   button:hover,select:hover{border-color:var(--acc)}
@@ -47,8 +45,8 @@
     background:transparent;color:var(--acc);font-size:12.5px;font-weight:700;cursor:pointer}
   .wrap{max-width:1180px;margin:0 auto;padding:20px}
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-  .kpi{background:linear-gradient(160deg,var(--panel),var(--panel0));border:1px solid var(--line);
-    border-radius:14px;padding:15px 17px;box-shadow:var(--shadow)}
+  .kpi{background:var(--panel);border:1px solid var(--line);
+    border-radius:14px;padding:15px 17px}
   .kpi .label{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
   .kpi .value{font-size:25px;font-weight:750;margin-top:6px}
   .kpi .value.acc{color:var(--acc)}
@@ -58,9 +56,9 @@
   .tab{padding:8px 15px;border:1px solid var(--line);border-radius:999px;cursor:pointer;
     color:var(--dim);user-select:none;transition:.12s}
   .tab:hover{color:var(--txt)}
-  .tab.on{background:linear-gradient(90deg,var(--acc),var(--acc-deep));color:var(--on-acc);border-color:transparent;font-weight:650}
+  .tab.on{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+    padding:16px 18px;margin-bottom:16px}
   .card h2{font-size:15px;margin:0 0 12px;font-weight:650}
   .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
   table{width:100%;border-collapse:collapse}
@@ -84,7 +82,7 @@
     border:1px solid var(--line)}
   .barwrap{position:relative;display:flex;justify-content:flex-end;align-items:center;gap:8px}
   .barwrap i{position:absolute;right:0;bottom:-3px;height:4px;border-radius:3px;
-    background:linear-gradient(90deg,var(--acc-deep),var(--acc));opacity:.55}
+    background:var(--acc);opacity:.55}
   .muted{color:var(--dim)}
   /* !important 인 이유: .grid2{display:grid} 처럼 나중에 선언된 같은 특이도 규칙이
      .hidden 을 이겨서 '숨긴' 요소가 그대로 보였다(실측: 재미 탭 서브탭 3개 동시 노출). */
@@ -94,7 +92,7 @@
   .mathwrap h3:first-child{margin-top:0}
   .mathwrap .fml{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     font-size:12.5px;line-height:1.75;background:var(--ink);border:1px solid var(--line);
-    border-left:3px solid var(--acc);border-radius:8px;padding:10px 13px;margin:0 0 8px;
+    border-radius:8px;padding:10px 13px;margin:0 0 8px;
     overflow-x:auto}
   .tfilter{display:flex;align-items:center;gap:8px;margin:0 0 8px}
   .tfilter input{flex:0 1 220px;padding:6px 10px;border:1px solid var(--line);
@@ -171,7 +169,7 @@
   .axrow .axv{text-align:right;font-weight:700;
     font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .axb{height:7px;border-radius:4px;background:var(--ink);overflow:hidden}
-  .axb i{display:block;height:100%;background:linear-gradient(90deg,var(--good),var(--acc))}
+  .axb i{display:block;height:100%;background:var(--acc)}
   .stathead{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
   .stathead .pill.acc{background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);border-color:transparent}
   /* 진영별 성적 — 파랑/주황은 이 사이트의 승/패 색과 겹치지 않게 브랜드 2색을 쓴다 */
@@ -216,7 +214,7 @@
   .mchip{padding:5px 11px;border:1px solid var(--line);border-radius:8px;cursor:pointer;
     color:var(--dim);font-size:12.5px;background:none;transition:.12s}
   .mchip:hover{color:var(--txt);border-color:var(--dim)}
-  .mchip.on{background:linear-gradient(90deg,var(--acc),var(--acc-deep));color:var(--on-acc);
+  .mchip.on{background:var(--acc);color:var(--on-acc);
     border-color:transparent;font-weight:650}
   /* 칩이 켜지면 배경이 밝아지는데 안의 개수 숫자는 .muted(어두운 회색)라 안 읽혔다.
      글자색을 물려받되 살짝만 죽인다. */
@@ -373,10 +371,12 @@
   .sb th,.sb td{padding:5px 7px;font-size:12px}
   .sb .sbteam td{color:var(--dim);background:var(--panel2);font-weight:650}
   @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
-  /* 움직임에 민감한 사람에게는 전환을 없앤다 */
+  /* 움직임에 민감한 사람: 실제로 움직이는 것(부드러운 스크롤·회전)만 없앤다.
+     색 전환(.1~.15s)은 상태가 바뀌었다는 정보라 그대로 둔다 — 전역 .001ms 강제는
+     그 정보까지 지운다. 스크롤은 JS 쪽(SCROLL_MODE)이 같은 질의를 본다. */
   @media(prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
-      transition-duration:.001ms!important;scroll-behavior:auto!important}
+    html{scroll-behavior:auto}
+    .accbox>summary::after{transition:none}
   }
   @media(max-width:640px){
     /* 예전엔 탭 11개를 한 줄 가로 스크롤로 두었다. 접으면 180px 를 먹었기 때문이다.
@@ -1005,7 +1005,7 @@ function jumpTo(sectionId, subLabel){
     if(i<0){ console.warn('jumpTo: 없는 패널', sectionId, subLabel); }
     else showSubtab(sec, i);
   }
-  sec.scrollIntoView({behavior:'smooth',block:'start'});
+  sec.scrollIntoView({behavior:SCROLL_MODE,block:'start'});
   return true;
 }
 
@@ -1760,7 +1760,7 @@ function renderPlayerBody(){
       sel.value=b.dataset.pid;
       sel.dispatchEvent(new Event('change',{bubbles:true}));   // 콤보박스 표시 동기화
       renderPlayerBody();
-      $('#player').scrollIntoView({behavior:'smooth',block:'start'});
+      $('#player').scrollIntoView({behavior:SCROLL_MODE,block:'start'});
     });
     // 검색창 — 카드를 실시간으로 거른다. 부캐 이름으로도 찾아진다(playerHaystack).
     const inp=$('#plHomeSearch');
@@ -2972,6 +2972,8 @@ function labelTables(){
 // ---------- 티어 (CP) ----------
 // ⚠️ 티어 컷·상수는 **하나도 여기 적지 않는다.** 전부 DATA.cp_constants 에서 읽는다.
 //    화면과 코드 양쪽에 상수를 적으면 반드시 어긋난다(라인 최소 판수에서 겪었다).
+// 움직임 줄이기 설정이면 스크롤도 바로 간다 — 이 사이트의 유일한 실제 움직임이다
+const SCROLL_MODE=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
 const cpConst = () => DATA.cp_constants || {};
 const cpTiers = () => (cpConst().tiers || []);
 function tierOf(cp){
@@ -3443,7 +3445,7 @@ function buildSubtabs(root){
         });
         panes.forEach((x,j)=>x.classList.toggle('hidden',j!==i));
         // 전환하면 섹션 머리로 — 아래쪽에서 눌렀는데 화면이 그대로면 안 바뀐 줄 안다
-        sec.scrollIntoView({behavior:'smooth',block:'start'});
+        sec.scrollIntoView({behavior:SCROLL_MODE,block:'start'});
       });
       bar.appendChild(btn);
       if(i) pane.classList.add('hidden');
