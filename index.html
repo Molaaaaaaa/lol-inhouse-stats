@@ -19,7 +19,7 @@
     /* 표면 — 어두운 순서: ink(우물: 입력·차트 바닥) < bg < panel0 < panel < panel2 */
     --ink:#0c121a; --bg:#0a0e14; --panel0:#0e141d; --panel:#121821; --panel2:#1a2332;
     --line:#243044; --line2:#3d4d66; --grid:#1d2735;
-    --txt:#e8eef6; --dim:#8a98ad; --dim2:#5b6b7f;
+    --txt:#e8eef6; --dim:#8a98ad; --dim2:#728499;
     --acc:#0bc5d4; --acc-deep:#0a93a8; --on-acc:#04121a; --acc2:#c8aa6e;
     /* 의미색 — 승·블루 / 패·레드 / 중립 / 위험(레드팀 킬·되판 아이템·낮은 승률) / 상승 / 경고 */
     --good:#3aa0ee; --bad:#e8833a; --mid:#9aa6b2; --danger:#e5484d; --up:#4cc38a; --warn:#e8b34a;
@@ -30,6 +30,13 @@
     --shadow:0 4px 18px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
+  /* 브라우저가 그리는 표면도 팔레트를 따른다 — 초점 고리·선택 영역·캐럿·스크롤바·
+     네이티브 select 목록(color-scheme 이 없으면 흰 목록이 튄다). */
+  :root{color-scheme:dark;accent-color:var(--acc);caret-color:var(--acc);
+    scrollbar-color:var(--line2) var(--bg)}
+  :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  ::selection{background:color-mix(in srgb,var(--acc) 35%,transparent);color:var(--txt)}
+  ::placeholder{color:var(--dim);opacity:1}
   body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#10202b 0%,var(--bg) 60%);
     color:var(--txt);font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px;
     line-height:1.55;min-height:100vh}
@@ -97,7 +104,7 @@
   .tfilter{display:flex;align-items:center;gap:8px;margin:0 0 8px}
   .tfilter input{flex:0 1 220px;padding:6px 10px;border:1px solid var(--line);
     border-radius:8px;background:var(--ink);color:var(--txt);font-size:13px}
-  .tfilter input:focus{outline:none;border-color:var(--acc)}
+  .tfilter input:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
   .tfilter .tfhit{font-size:12px}
   tr.tfhide{display:none}
   /* 손가락으로 누르는 화면에서는 44px 은 돼야 한다.
@@ -190,7 +197,8 @@
   .mmrlink,.vslink{color:inherit;text-decoration:none;cursor:pointer;
     border-bottom:1px dashed var(--dim);-webkit-tap-highlight-color:transparent}
   .mmrlink:hover,.vslink:hover,.mmrlink:focus-visible,.vslink:focus-visible{
-    color:var(--acc);border-bottom-color:var(--acc);outline:none}
+    color:var(--acc);border-bottom-color:var(--acc)}
+  .mmrlink:focus-visible,.vslink:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:3px}
   .mmrlink:active,.vslink:active{opacity:.6}
   /* 섹션 안 서브탭 — 한 화면에 한 주제만. 스크롤로 훑게 하지 않는다 */
   .subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
@@ -210,7 +218,7 @@
     padding-top:6px;min-width:64px}
   .mpick input[type=search]{background:var(--ink);border:1px solid var(--line);border-radius:8px;
     color:var(--txt);padding:6px 11px;font-size:12.5px;min-width:170px}
-  .mpick input[type=search]:focus{outline:none;border-color:var(--acc)}
+  .mpick input[type=search]:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
   .mchip{padding:5px 11px;border:1px solid var(--line);border-radius:8px;cursor:pointer;
     color:var(--dim);font-size:12.5px;background:none;transition:.12s}
   .mchip:hover{color:var(--txt);border-color:var(--dim)}
@@ -251,7 +259,7 @@
   .fbsec textarea{width:100%;min-height:92px;background:var(--panel2);color:var(--txt);
     border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:13px;
     resize:vertical}
-  .fbsec textarea:focus{outline:none;border-color:var(--acc)}
+  .fbsec textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
   .fbfoot{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap}
   .fbmsg{font-size:12px;color:var(--dim)}
   .fbmsg.ok{color:var(--good)} .fbmsg.err{color:var(--bad)}
@@ -339,7 +347,7 @@
   @media(max-width:560px){.mrow{grid-template-columns:1fr 70px 52px}.mrow .mb{display:none}}
   .psearch{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
     border-radius:9px;padding:7px 11px;font:inherit;font-size:13px;width:150px}
-  .psearch:focus{outline:none;border-color:var(--acc)}
+  .psearch:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
   .sronly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
     clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
   footer{color:var(--dim);font-size:12px;text-align:center;padding:24px;
