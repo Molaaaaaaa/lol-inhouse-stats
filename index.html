@@ -421,6 +421,12 @@
     .tab{flex:0 0 auto;padding:7px 10px;font-size:13px;
       min-height:44px;display:inline-flex;align-items:center}
   }
+  /* 아주 작은 폰: 탭 8개를 4열 격자로 — 320px 에서 3줄이 되던 것(실측)을 2줄로 */
+  @media(max-width:340px){
+    .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .tab{padding:7px 4px;font-size:12px;justify-content:center;white-space:nowrap}
+    .tab .ic{margin-right:3px}
+  }
   @media(max-width:480px){
     .wrap{padding:12px}.hide-sm{display:none}
     /* 좁은 화면에서 두 팀을 가로로 나눠 가지면 한 팀에 100px 밖에 안 돌아가
