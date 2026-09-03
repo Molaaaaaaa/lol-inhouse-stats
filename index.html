@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-bK9tkuRRgxTHHVZ9oBfL0xrDae9Lj8/zeHsSumO032M='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-DEClLrvYypA7pmKh1C/7sHpRQRxqYq7MCeE/jv1h6go='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -40,7 +40,7 @@
   body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#10202b 0%,var(--bg) 60%);
     color:var(--txt);font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px;
     line-height:1.55;min-height:100vh}
-  header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 22px;
+  header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 22px;
     border-bottom:1px solid var(--line);background:var(--panel)}
   h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.3px}
   h1 .g{color:var(--acc)}
@@ -51,15 +51,15 @@
   .meta .retry{margin-left:6px;padding:4px 12px;min-height:32px;border:1px solid var(--acc);border-radius:8px;
     background:transparent;color:var(--acc);font-size:12.5px;font-weight:700;cursor:pointer}
   .wrap{max-width:1180px;margin:0 auto;padding:20px}
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
   .kpi{background:var(--panel);border:1px solid var(--line);
-    border-radius:14px;padding:15px 17px}
+    border-radius:14px;padding:9px 13px}
   .kpi .label{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
-  .kpi .value{font-size:25px;font-weight:750;margin-top:6px}
+  .kpi .value{font-size:19px;font-weight:750;margin-top:2px}
   .kpi .value.acc{color:var(--acc)}
   /* 시각은 값이 아니라 딸린 정보다 — 헤드라인 크기로 쓰면 줄바꿈이 행을 늘린다 */
   .kpi .value.ts{font-size:16px;font-weight:600;color:var(--dim)}
-  .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
   /* 아이콘 — 인라인 SVG 스프라이트(#i-*). 글자색을 따르고 글자 크기에 맞춘다. */
   .ic{width:1em;height:1em;display:inline-block;vertical-align:-.15em;flex:none;
     fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
@@ -76,8 +76,8 @@
   .tab:hover{color:var(--txt)}
   .tab.on{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    padding:16px 18px;margin-bottom:16px}
-  .card h2{font-size:15px;margin:0 0 12px;font-weight:650}
+    padding:14px 16px;margin-bottom:12px}
+  .card h2{font-size:15px;margin:0 0 8px;font-weight:650}
   .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
   table{width:100%;border-collapse:collapse}
   th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -110,7 +110,7 @@
   .sm{font-size:12px} .xs{font-size:10.5px} .reg{font-weight:400}
   .match-detail h2{margin:14px 0 8px}
   /* 읽는 문단은 72ch 에서 끊는다 — 1280px 에서 한 줄 143자였다. 표·차트·수식(.fml)은 제외. */
-  .card>p,.card p.muted,.mathwrap p.muted,.fbsec .lead,#cpIntro,#cpNote{max-width:72ch}
+  .card>p,.card p.muted,.mathwrap p.muted,#cpIntro,#cpNote{max-width:72ch}
   /* !important 인 이유: .grid2{display:grid} 처럼 나중에 선언된 같은 특이도 규칙이
      .hidden 을 이겨서 '숨긴' 요소가 그대로 보였다(실측: 재미 탭 서브탭 3개 동시 노출). */
   .hidden{display:none!important}
@@ -277,22 +277,6 @@
   .res{font-weight:700;border-radius:6px;padding:2px 8px;font-size:12px}
   .res.w{background:color-mix(in srgb,var(--acc) 13%,transparent);color:var(--acc)} .res.l{background:color-mix(in srgb,var(--danger) 13%,transparent);color:var(--bad)}
   /* 피드백 창구 — 친구들 대부분 GitHub 계정이 없어 사이트에서 바로 받는다 */
-  .fbsec{max-width:1180px;margin:0 auto;padding:20px 22px 8px;border-top:1px solid var(--line)}
-  .fbsec h2{font-size:16px;margin:0 0 6px}
-  .fbsec .lead{color:var(--dim);font-size:13px;margin:0 0 12px}
-  .fbrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-  /* select 의 기본 너비는 가장 긴 option 이다 — 36자 이름을 넣어 보니 label 이 375px 을
-     39px 넘겨 페이지가 가로로 흔들렸다. 라벨 너비를 flex 가 정하고 select 는 그 안을 채운다. */
-  .fbrow label{flex:1 1 160px;min-width:0}
-  .fbrow select{width:100%;min-width:0}
-  .fbsec label{font-size:11px;color:var(--dim);display:flex;flex-direction:column;gap:4px}
-  .fbsec textarea{width:100%;min-height:92px;background:var(--panel2);color:var(--txt);
-    border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:13px;
-    resize:vertical}
-  .fbsec textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
-  .fbfoot{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap}
-  .fbmsg{font-size:12px;color:var(--dim)}
-  .fbmsg.ok{color:var(--good)} .fbmsg.err{color:var(--bad)}
   .qmark{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
     border:1px solid var(--dim);border-radius:50%;font-size:10px;color:var(--dim);
     margin-left:4px;cursor:help;vertical-align:middle;line-height:1}
@@ -601,42 +585,14 @@
   border-bottom:1px solid var(--acc);font-size:13px}
 #freshBar button{background:var(--acc);color:var(--on-acc);border:0;border-radius:8px;
   padding:6px 14px;font-weight:700;cursor:pointer;min-height:32px}
-@media (pointer:coarse){ #freshBar button,.meta .retry,#refresh,#fbSend{min-height:44px} #refresh{min-width:44px} }
-  /* 내 성적 한눈에 — 숫자는 크게, 말은 짧게. 표 글자를 키우지 않고 이 패널만 크다. */
-  .home .homehead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-  .home .homehead h2{margin:0;flex:1 1 auto;font-size:16px}
-  .home .homehead button{font-size:14px;min-height:40px}
-  .home .homepick{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-  .home .homepick label{font-size:17px;color:var(--dim)}
-  .home #homeWho{font-size:18px;min-height:48px;padding:8px 14px;border-radius:12px;flex:1 1 220px;max-width:420px}
-  .home .hname{font-size:26px;font-weight:750;margin:4px 0 2px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;line-height:1.2}
-  .home .hname .tierbadge{font-size:17px;padding:5px 14px}
-  .home .hgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}   /* 375px 폰: 2열 */
-  .home .hrow2{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}
-  @media (min-width:820px){ .home .hrow2{grid-template-columns:1fr 1fr} .home .hrow2 .hsay{margin-top:0} }
-  @media (max-width:640px){ .home .hcell{padding:12px 12px} .home .hcell .v{font-size:22px;white-space:nowrap} .home .hcell .v.vs{font-size:20px} .home .hname{font-size:23px} }   /* 375px 폰: '20승 13패'가 한 줄(실측 143px 칸) */
-  .home .hcell{background:var(--panel0);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-  .home .hcell .l{font-size:14px;color:var(--dim);margin-bottom:6px}
-  .home .hcell .v{font-size:28px;font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-  .home .hcell .v.vs{font-size:22px}
-  .home .hcell .s{font-size:14px;color:var(--dim);margin-top:6px;line-height:1.5}
-  .home .hcell .s b{color:var(--txt);font-weight:650}
-  .home .hdots{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 4px}
-  .home .hdot{width:42px;height:42px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;
-    font-weight:750;font-size:17px;border:1px solid transparent}
-  .home .hdot.w{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
-  .home .hdot.l{background:color-mix(in srgb,var(--bad) 20%,transparent);color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
-  .home .hsay{font-size:17px;line-height:1.6;margin:12px 0 0;padding-left:22px}
-  .home .hsay li{margin:4px 0}
-  .home p.hsay{padding-left:0}
-  .home .hq{font-size:16px;margin:18px 0 8px;color:var(--dim);font-weight:600}
-  .home .hmenu{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  @media(max-width:640px){ .home .hmenu{grid-template-columns:1fr 1fr} }   /* 폰: 3행 2열, 세로 한 화면 안 */
-  .home .hmenu button{font-size:16px;min-height:52px;padding:10px 16px;border-radius:12px;text-align:left;
-    display:flex;align-items:center;gap:10px;justify-content:flex-start}
-  .home .hmenu button .ic{color:var(--acc);width:1.2em;height:1.2em}
-  .home .hmenu button[disabled]{opacity:.45;cursor:not-allowed}
-  .home #meOnly[aria-pressed=true]{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
+@media (pointer:coarse){ #freshBar button,.meta .retry,#refresh{min-height:44px} #refresh{min-width:44px} }
+  /* 내 이름 막대 — 한 줄. 이름을 고르면 표들이 그 사람 중심으로 바뀐다. */
+  .mebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+  .mebar label{color:var(--dim);font-size:13px}
+  .mebar select{flex:0 1 220px;min-width:0;max-width:100%}   /* 기본 너비 = 가장 긴 option — 폰에서 가로로 넘친다(실측) */
+  .mebar #meNote{flex:1 1 100%;font-size:12px}
+  @media(max-width:640px){ .mebar{gap:8px} .mebar select{flex:1 1 140px} }
+  #meOnly[aria-pressed=true]{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
   /* 내 줄 강조(순위 표) — 배경은 강조색 12%, 이름은 굵게 */
   tr.merow>td{background:color-mix(in srgb,var(--acc) 12%,transparent)}
   tr.merow>td:first-child{font-weight:750;color:var(--acc)}
@@ -645,9 +601,7 @@
   .tfmore{display:block;margin:6px 0 10px;font-size:13px;min-height:36px}
   /* 보조 열(다음까지·MMR·라인 편차·신뢰성·킬관여·DPM)은 폰에서 감춘다 — 카드형 행 8줄 → 5줄 */
   @media(max-width:640px){ th.lo,td.lo{display:none!important} }
-  .home .hgo{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-  .home .hgo button{font-size:16px;min-height:48px;padding:10px 18px;border-radius:12px}
-  .home .hgo .go1{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
+  #cpIntro{font-size:12.5px;margin:0 0 8px}
 </style>
 </head>
 <body>
@@ -723,32 +677,15 @@
   <!-- 화면이 바뀐 걸 스크린리더에 알린다. 시각적으로는 감추되 display:none 은 쓰지 않는다
        (display:none 이면 보조기술도 못 읽는다). -->
   <div id="sr" class="sronly" aria-live="polite" role="status"></div>
-  <!-- 내 성적 한눈에 — 처음 온 사람·큰 글씨가 필요한 사람의 첫 화면. 이름 하나 고르면
-       티어·순위·전적·최근 판을 큰 글씨 몇 줄로 보여 준다. 표는 아래 탭에 그대로 있다.
-       (최상위 탭은 8개가 상한이라 탭이 아니라 탭 위의 패널이다.) -->
-  <section class="card home" id="home" aria-labelledby="homeH">
-    <div class="homehead">
-      <h2 id="homeH"><svg class="ic" aria-hidden="true"><use href="#i-id-card"/></svg> 내 성적 한눈에</h2>
-      <button id="meOnly" type="button" aria-pressed="true" hidden data-tip="목록 표는 내 줄만 남기고, 순위 표는 내 줄을 표시합니다">내 것만 보기</button>
-      <button id="homeFold" type="button" aria-expanded="true" aria-controls="homeBody">접기</button>
-    </div>
-    <div id="homeBody">
-      <div class="homepick"><label for="homeWho">내 이름</label><select id="homeWho"><option value="">이름을 고르세요</option></select></div>
-      <div id="homeMe"><p class="hsay muted">이름을 고르면 티어·순위·전적을 큰 글씨로 보여 줍니다.</p></div>
-      <h3 class="hq">무엇을 보시겠어요?</h3>
-      <div class="hmenu" id="homeMenu">
-        <button type="button" data-go="tier" data-sub="사다리" data-me="mark"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 내 티어와 순위</button>
-        <button type="button" data-go="player" data-sub="개인" data-me="pick"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg> 내 전적·라인·챔피언</button>
-        <button type="button" data-go="syn" data-sub="듀오" data-me="filter"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 나와 잘 맞는 사람</button>
-        <button type="button" data-go="board" data-sub="승률" data-me="mark"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg> 전체 순위표</button>
-        <button type="button" data-go="matches" data-sub="최근 경기"><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 최근 경기</button>
-        <button type="button" data-go="balance"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 오늘 팀 나누기</button>
-      </div>
-      <p class="note-sm muted" id="homeMeNote"></p>
-    </div>
-  </section>
   <div class="kpis" id="kpis"></div>
 
+  <!-- 내 이름 한 줄 — 고르면 목록 표는 내 줄만, 순위 표는 내 줄 강조(applyMe). 큰 패널은 요청으로 뺐다(2026-09-03). -->
+  <div class="mebar" id="mebar">
+    <label for="meWho">내 이름</label>
+    <select id="meWho"><option value="">고르지 않음</option></select>
+    <button id="meOnly" type="button" aria-pressed="true" hidden data-tip="목록 표는 내 줄만 남기고, 순위 표는 내 줄을 표시합니다">내 것만 보기</button>
+    <span class="muted sm" id="meNote"></span>
+  </div>
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
     <div class="tab on" role="tab" data-t="tier"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 티어</div>
     <div class="tab" role="tab" data-t="board"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg> 순위</div>
@@ -902,26 +839,6 @@
       </div>
   </section>
 </div>
-<section class="fbsec" id="fbsec">
-  <h2><svg class="ic" aria-hidden="true"><use href="#i-message-circle"/></svg> 피드백</h2>
-  <p class="lead">숫자가 이상하거나, 이런 걸 보고 싶거나, 그냥 할 말이 있으면 남겨주세요.</p>
-  <div class="fbrow">
-    <label>보내는 사람<select id="fbWho"></select></label>
-    <label>종류<select id="fbKind">
-      <option>숫자가 이상함</option><option>버그</option>
-      <option>이런 걸 보고 싶다</option><option>기타</option>
-    </select></label>
-  </div>
-  <label style="display:block">내용
-    <textarea id="fbBody" maxlength="2000"
-      placeholder="예) 내 승률이 이상합니다. 부캐로 한 판이 안 합쳐진 것 같아요."></textarea></label>
-  <div class="fbfoot">
-    <button id="fbSend">보내기</button>
-    <span class="fbmsg" id="fbMsg"></span>
-    <span class="muted" id="fbCount" style="margin-left:auto;font-size:11px">0 / 2000</span>
-  </div>
-  <p class="muted" id="fbAlt" style="display:none;font-size:12px;margin-top:8px"></p>
-</section>
   </main>
 <footer id="foot"></footer>
 
@@ -980,7 +897,7 @@ function wrClass(w, n){
   return w>0.55?'wr-h':(w<0.45?'wr-l':'wr-m');
 }
 // 문턱은 발행 쪽 min_games 를 따른다 — 화면이 따로 정하면 반드시 어긋난다.
-function minGamesNeeded(){ return (DATA && DATA.min_games) || 3; }
+function minGamesNeeded(){ return (DATA && DATA.min_games) || 5; }
 
 // --- 정렬 가능한 테이블 ---
 // 보조기술에 상태 변화를 알린다. 같은 문자열을 연속으로 넣으면 다시 안 읽히므로 비웠다 채운다.
@@ -1058,7 +975,7 @@ const HELP={
   MVP:'경기마다 이긴 팀에서 기여도(킬 관여·딜 비중·KDA 를 라인 안에서 재고 팀 안에서 상대값으로 만든 것) 1위에게 1회 줍니다.\n티어 계산의 기여도와 같은 숫자라 정의가 하나입니다. 라인을 타지 않습니다(예전 식은 정글·원딜이 27회 중 20회를 가져갔습니다).\n표의 숫자는 누적 횟수입니다.',
   MMR:'숨은 실력 점수입니다. 팀 대 팀 기대 승률과 실제 결과의 차이만큼 움직입니다(Elo).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다. 판수가 많다고 오르지 않습니다.\n1000이 시작점이고, 티어(CP)·순위·팀 나누기가 전부 이 하나의 숫자를 씁니다. MMR 검산에서 경기별로 확인할 수 있습니다.',
   시너지:'둘이 같이 이긴 비율에서 "각자 실력만으로 기대되는 승률"을 뺀 값입니다.\n기대 승률은 두 사람이 함께한 판을 빼고 계산해 자기 자신과 비교하지 않습니다.\n+면 같이 할 때 더 잘 맞고, −면 덜 맞습니다.',
-  밸런스:'두 팀의 기대 승률을 MMR(라인 편차 포함)로 계산해 0.45~0.55 안에 드는 나눔을 후보로 두고,\n그중 아직 순서가 불확실한 사람들을 서로 반대편에 두는 나눔을 고릅니다 — 공정성은 같고 한 판이 더 많이 가립니다.\n시너지가 좋은 두 사람은 같은 팀에 두는 쪽을 조금 선호합니다.',
+  밸런스:'두 팀의 기대 승률을 MMR(라인 편차 포함)로 계산해 가장 5:5 에 가까운 나눔을 고릅니다.\n역할 배정도 같이 최적화하고, 안 뛰어 본 라인은 사전값(−30)만큼 낮게 봅니다.\n시너지가 좋은 두 사람은 같은 팀에 두는 쪽을 조금 선호합니다.',
   상대전적:'적으로 만난 판에서 서로 몇 번 이겼는지 셉니다.\n왼쪽이 더 많이 이긴 쪽, 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.\n같은 편이었던 판은 세지 않습니다.',
   킬관계:'적으로 만난 판에서 서로 몇 번 잡았는지 셉니다(킬 기준).\n왼쪽이 더 많이 잡은 쪽, 숫자는 (잡은 수 : 당한 수) 입니다.\n양쪽 합이 3킬 미만인 조합은 우연이라 보고 뺍니다.\n많이 잡혀도 그 판을 이겼을 수 있으니 승패는 상대별 전적에서 보세요.',
   길이:'경기 시간을 25분·35분으로 끊어 각 구간 승률을 봅니다.\n짧은 판에 강하면 라인전형, 긴 판에 강하면 후반 캐리형입니다.\n괄호 안은 그 구간의 판수입니다.',
@@ -1167,7 +1084,7 @@ function minGamesNote(lane){
       ? ` (라인별 지표는 ${DATA.min_games_lane}판)` : '')+
     (ex?` — ${ex}명이 판수 미달로 빠져 있습니다`:'')+
     (dx?`${ex?', ':' — '}${dx}명이 참여 일수 미달(${DATA.min_days}일)로 빠져 있습니다`:'')+
-    `. <span class="qmark" tabindex="0" role="button" data-tip="총 경기 수의 20%(최소 3판)를 요구합니다.&#10;경기가 쌓이면 기준도 같이 올라가서, 한두 판 뛴 기록이 계속 1위에 남지 않습니다." aria-label="최소 판수 설명">?</span></p>`;
+    `. <span class="qmark" tabindex="0" role="button" data-tip="순위·티어 모두 ${n}판 이상부터입니다.&#10;그 전에는 표본이 작아 한 판이 순위를 크게 흔듭니다." aria-label="최소 판수 설명">?</span></p>`;
 }
 // MMR 숫자를 누르면 그 사람의 계산 과정으로 바로 간다 — "이 숫자 어디서 나왔냐"에
 // 답이 두 번의 클릭 안에 있어야 한다.
@@ -1277,7 +1194,7 @@ function renderBoard(){
 
 function renderBoardLane(){
   const lane=curBoardLane, rows=boardLaneRows(lane);
-  const need=(DATA.min_games)||3;
+  const need=(DATA.min_games)||5;
   // 메달은 라인 MMR 기준 등수로 미리 박는다(정렬을 따라다니면 안 된다 — 통합 표와 같은 이유)
   rows.slice().sort((a,b)=>(b.mmr||0)-(a.mmr||0))
       .forEach((r,i)=>{ r._medal=i<3?MEDAL[i]+' ':''; });
@@ -2199,7 +2116,7 @@ function renderPlayerMetrics(p){
     el.innerHTML=picker+'<p class="muted">이 라인에서 낼 수 있는 지표가 없습니다.</p>';
     bindLanePicks(el,p); return;
   }
-  const need=(DATA.min_games)||3;
+  const need=(DATA.min_games)||5;
   el.innerHTML=picker+groups.map(g=>
     `<div class="mgroup"><div class="mgh">${g.group}</div>`+
     g.metrics.map(k=>{const c=m[k];
@@ -2326,7 +2243,7 @@ function jsBalance(players,decl){
     for(let i=0;i<nm.length;i++)for(let j=i+1;j<nm.length;j++)t+=sm[[nm[i],nm[j]].sort().join('|')]||0;return t;};
   let best=null, bestInfo=null, nCand=0;
   const sig=x=>1/(1+Math.exp(-Math.max(-30,Math.min(30,x))));
-  const RC=DATA.rating_constants||{}, INFO={window:RC.info_e_window!=null?RC.info_e_window:0.05, S:RC.info_kernel_logit||0.1151};
+  const RC=DATA.rating_constants||{}, INFO={window:RC.info_e_window!=null?RC.info_e_window:0, S:RC.info_kernel_logit||0.1151};
   const CC=DATA.cp_constants||{};
   // CP 의 K 일정과 같은 불확실성: 배치 2.0 → 1.0 → 판이 쌓이면 0.5
   const kFor=n=>{ const need=CC.placement_games||3; if(n<need)return CC.k_place||64; if(CC.k_decay_half==null)return CC.k_norm||32; return Math.max(CC.k_min||16,(CC.k_norm||32)*CC.k_decay_half/(CC.k_decay_half+(n-need))); };
@@ -3501,70 +3418,24 @@ function setupPlayerView(){
   attachCombo($('#cmpB'),'소환사명 검색');
   renderCompare();
 }
-// ---------- 내 성적 한눈에 ----------
-// 처음 온 사람의 첫 화면. 이름 하나 고르면 티어·순위·전적·최근 판을 큰 글씨 몇 줄로.
-// 고른 이름·접힘은 이 브라우저에만 기억된다(익명 키 p… 뿐, 실명 저장 없음).
-const ME_KEY='inh.me', FOLD_KEY='inh.homefold';
-function lsGet(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }
-function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ /* 사생활 모드 등 — 기억만 못 할 뿐 */ } }
-function applyFold(folded){
-  const body=$('#homeBody'), b=$('#homeFold'); if(!body||!b) return;
-  body.hidden=!!folded; b.setAttribute('aria-expanded',folded?'false':'true'); b.textContent=folded?'펼치기':'접기';
-}
-const hdate=ts=>ts?new Date(ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'}):'';
-function homeRank(id){
-  const C=DATA.cp||{};
-  const placed=Object.entries(C).filter(([,v])=>v.placed).sort((a,b)=>(b[1].mmr-a[1].mmr)||(b[1].cp-a[1].cp));
-  const i=placed.findIndex(([k])=>k===id);
-  return {rank:i<0?null:i+1, n:placed.length};
-}
-function renderHome(){
-  const C=DATA.cp||{}, sel=$('#homeWho'); if(!sel) return;
-  const ids=Object.keys(C).sort((a,b)=>C[a].name.localeCompare(C[b].name,'ko'));
-  sel.innerHTML='<option value="">이름을 고르세요</option>'+ids.map(k=>`<option value="${k}">${esc(C[k].name)}</option>`).join('');
-  const me=lsGet(ME_KEY); if(me&&C[me]) sel.value=me;
-  renderHomeMe();
-}
-function renderHomeMe(){
-  const id=$('#homeWho').value, C=DATA.cp||{}, P=DATA.players||{}, r=C[id], p=P[id], box=$('#homeMe');
-  if(!r||!p){ box.innerHTML='<p class="hsay muted">이름을 고르면 티어·순위·전적을 큰 글씨로 보여 줍니다.</p>'; return; }
-  const rec=p.record||{}, K=cpConst(), PG=K.placement_games||3, {rank,n}=homeRank(id);
-  const recent=(p.recent_games||[]).slice(0,5), w5=recent.filter(g=>g.win).length;
-  const dots=recent.map(g=>`<span class="hdot ${g.win?'w':'l'}" title="${esc(champKo(g.champion_name))} · ${hdate(g.game_creation)}">${g.win?'승':'패'}</span>`).join('');
-  const lane=r.main_lane?laneKo(r.main_lane):'—';
-  const lrec=(p.lanes||[]).find(x=>x.lane===r.main_lane);
-  const champs=(p.champions||[]).filter(c=>c.games>=2).sort((a,b)=>(b.winrate-a.winrate)||(b.games-a.games)).slice(0,3);
-  const pc=x=>Math.round((x||0)*100)+'%';
-  const say=[];
-  if(!r.placed) say.push(`배치 ${PG}판 중 ${r.games}판을 했습니다. ${PG-r.games}판 더 하면 티어가 정해집니다.`);
-  else if(r.to_next!=null&&r.tier!=='1티어') say.push(`다음 티어까지 ${r.to_next}점 남았습니다. 한 판 이기면 ${K.cp_min||15}~${K.cp_max||25}점이 오릅니다.`);
-  if(recent.length>=3) say.push(w5>=recent.length-1?`최근 ${recent.length}판 ${w5}승 — 상승세입니다.`
-    :w5<=1?`최근 ${recent.length}판 ${w5}승 — 잠시 주춤합니다.`:`최근 ${recent.length}판 ${w5}승 ${recent.length-w5}패입니다.`);
-  if(lrec&&lrec.games>=3) say.push(`${lane}에서 ${lrec.games}판 뛰어 승률 ${pc(lrec.winrate)}입니다.`);
-  box.innerHTML=`
-    <div class="hname">${esc(r.name)} ${r.placed?tierBadge(r.tier):'<span class="tierbadge">배치 중</span>'}</div>
-    <div class="hgrid">
-      <div class="hcell"><div class="l">내전 순위</div><div class="v">${rank?rank+'위':'—'}</div>
-        <div class="s">${rank?`${n}명 중 · MMR ${r.mmr}`:'배치가 끝나면 나옵니다'}</div></div>
-      <div class="hcell"><div class="l">전적</div><div class="v">${rec.wins??0}승 ${rec.losses??0}패</div>
-        <div class="s">${rec.games?`승률 ${pc(rec.winrate)} · ${rec.games}판`:'아직 판이 없습니다'}</div></div>
-      <div class="hcell"><div class="l">티어 점수</div><div class="v">${r.placed?r.cp:'—'}</div>
-        <div class="s">${r.placed?`${r.tier} ${r.points}점`:`배치 ${r.games}/${PG}판`}</div></div>
-      <div class="hcell"><div class="l">주 라인</div><div class="v vs">${esc(lane)}</div>
-        <div class="s">${lrec?`${lrec.games}판 · 승률 ${pc(lrec.winrate)}`:'—'}</div></div>
-    </div>
-    <div class="hrow2"><div class="hcell"><div class="l">최근 ${recent.length}판</div><div class="hdots">${dots||'<span class="muted">아직 없음</span>'}</div>
-      ${champs.length?`<div class="s">잘하는 챔피언 · ${champs.map(c=>`<b>${esc(champKo(c.champion_name))}</b> ${c.games}판 ${pc(c.winrate)}`).join(' · ')}</div>`:''}</div>
-    ${say.length?`<ul class="hsay">${say.map(s=>`<li>${s}</li>`).join('')}</ul>`:''}</div>
-    `;
-}
-// ── 내 것만 보기 ──
+// ---------- 내 이름 막대 · 내 것만 보기 · 긴 표 접기 ----------
+// 피드백(2026-09-03): 글자가 아니라 **목록이 너무 많고 난잡해서** 내 파트를 못 찾는다.
 // 표 34개(실측)를 다 읽는 사람은 없다. 이름을 고르면 목록 표(시너지·챔피언·기록…)는 내 줄만 남기고,
 // 순위 표(사다리·리더보드·지표 랭킹)는 내 줄을 표시한다 — 순위는 남들 사이의 자리라서 거르면 뜻이 없다.
-const MEONLY_KEY='inh.meonly';
-const meName=()=>{ const id=$('#homeWho')&&$('#homeWho').value; return id&&(DATA.cp||{})[id]?DATA.cp[id].name:''; };
+// 고른 이름은 이 브라우저에만 기억된다(익명 키 p… 뿐, 실명 저장 없음).
+const ME_KEY='inh.me', MEONLY_KEY='inh.meonly';
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ /* 사생활 모드 등 — 기억만 못 할 뿐 */ } }
+const meName=()=>{ const id=$('#meWho')&&$('#meWho').value; return id&&(DATA.cp||{})[id]?DATA.cp[id].name:''; };
 const meOn=()=>!!meName() && lsGet(MEONLY_KEY)!=='0';
 const isRankTable=tb=>!!tb.closest('#cpT, #boardT, #rankT') || ((tb.tHead&&tb.tHead.rows[0]&&tb.tHead.rows[0].cells[0].textContent.trim())==='#');
+function renderMeBar(){
+  const C=DATA.cp||{}, sel=$('#meWho'); if(!sel) return;
+  const ids=Object.keys(C).sort((a,b)=>C[a].name.localeCompare(C[b].name,'ko'));
+  sel.innerHTML='<option value="">고르지 않음</option>'+ids.map(k=>`<option value="${k}">${esc(C[k].name)}</option>`).join('');
+  const me=lsGet(ME_KEY); if(me&&C[me]) sel.value=me;
+  labelTips($('#mebar'));
+}
 function applyMe(root){
   const nm=meName(), on=meOn(), low=nm.toLowerCase();
   (root||document).querySelectorAll('table').forEach(tb=>{
@@ -3583,9 +3454,8 @@ function applyMe(root){
     if(on && has){ if(field.value!==nm){ field.value=nm; field.dispatchEvent(new Event('input')); } tb.dataset.mefilt='1'; }
     else if(tb.dataset.mefilt==='1'){ field.value=''; field.dispatchEvent(new Event('input')); delete tb.dataset.mefilt; }
   });
-  const chip=$('#meOnly'); if(chip){ chip.hidden=!nm; chip.setAttribute('aria-pressed',on?'true':'false'); chip.textContent=nm?`${nm} 것만 보기`:'내 것만 보기'; }
-  const note=$('#homeMeNote'); if(note) note.textContent=nm?(on?`아래 탭의 표에서 ${nm} 줄만 남기고, 순위 표에서는 ${nm} 줄을 표시합니다. 끄려면 위의 '${nm} 것만 보기'를 누르세요.`:'내 것만 보기가 꺼져 있어 전체 표가 보입니다.'):'';
-  $('#homeMenu').querySelectorAll('[data-me]').forEach(b=>{ b.disabled=!nm; });
+  const chip=$('#meOnly'); if(chip){ chip.hidden=!nm; chip.setAttribute('aria-pressed',on?'true':'false'); }
+  const note=$('#meNote'); if(note) note.textContent=nm?(on?`표마다 ${nm} 줄만 남기고, 순위 표는 ${nm} 줄을 표시합니다`:'전체 표를 봅니다'):'';
 }
 // ── 긴 표 접기 ──
 // 시너지 듀오 138줄·트리오 181줄·챔피언 메타 77줄(실측). 위 10줄이 답의 대부분이다 — 나머지는 눌러서.
@@ -3611,27 +3481,8 @@ function foldSync(tb, filtering){
   const open=filtering||tb.dataset.unfolded==='1';
   tb.classList.toggle('fold',!open); if(tb._foldBtn) tb._foldBtn.hidden=open;
 }
-$('#homeWho').addEventListener('change',()=>{ lsSet(ME_KEY,$('#homeWho').value); renderHomeMe(); applyMe(); });
+$('#meWho').addEventListener('change',()=>{ lsSet(ME_KEY,$('#meWho').value); applyMe(); announce(meName()?`${meName()} 기준으로 봅니다`:'전체 보기'); });
 $('#meOnly').addEventListener('click',()=>{ lsSet(MEONLY_KEY, meOn()?'0':'1'); applyMe(); announce(meOn()?'내 것만 보기 켬':'내 것만 보기 끔'); });
-$('#homeMenu').addEventListener('click',e=>{
-  const b=e.target.closest('[data-go]'); if(!b||b.disabled) return;
-  const id=$('#homeWho').value, nm=meName();
-  jumpTo(b.dataset.go, b.dataset.sub||undefined);
-  if(b.dataset.me==='pick'&&id){ const ps=$('#playerSel'); if(ps){ ps.value=id; renderPlayerBody(); } }
-  if(b.dataset.me==='mark'&&nm){
-    const row=[...document.querySelectorAll('#'+b.dataset.go+' tr.merow')][0];
-    if(row) setTimeout(()=>row.scrollIntoView({behavior:SCROLL_MODE,block:'center'}),50);
-  }
-});
-
-$('#homeFold').addEventListener('click',()=>{ const f=!$('#homeBody').hidden; applyFold(f); lsSet(FOLD_KEY,f?'1':'0'); });
-$('#homeMe').addEventListener('click',e=>{
-  const b=e.target.closest('[data-go]'); if(!b) return;
-  const id=$('#homeWho').value;
-  if(b.dataset.go==='player'){ jumpTo('player','개인'); const ps=$('#playerSel'); if(ps&&id){ ps.value=id; renderPlayerBody(); } }
-  else jumpTo(b.dataset.go);
-});
-applyFold(lsGet(FOLD_KEY)==='1');
 
 const VIEW_RENDER={
   tier:    ()=>{ renderCp(); },
@@ -3659,7 +3510,7 @@ function renderAll(){
   const wb=$('#warnBar'), ws=DATA.warnings||[];
   wb.innerHTML=ws.map(w=>`<div>${ico('alert-triangle')} ${esc(w)}</div>`).join('');
   wb.classList.toggle('hidden', !ws.length);
-  renderKpis(); renderHome(); renderMath(); buildSubtabs(); applyMe();
+  renderKpis(); renderMeBar(); renderMath(); buildSubtabs(); applyMe();
   // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
   // 아무도 안 보는 채로 쌓인다(실측). 데이터를 다시 받으면 전부 무효화하고 보는 화면만 다시.
   RENDERED.clear(); FUN_DONE=false;
@@ -3675,50 +3526,8 @@ function renderAll(){
   labelTables();
   labelTips();
   attachTableFilters();   // labelTables 뒤 — 표 이름을 라벨로 쓴다
-  fillFeedbackWho();   // DATA는 sanitize된 값
+    // DATA는 sanitize된 값
 }
-
-// ---------- 피드백 창구 ----------
-// 정적 사이트라 서버가 없다. Cloudflare에 올라가 있으면 /api/feedback(worker.js)이 받아
-// 디스코드 웹훅으로 넘기고, GitHub Pages처럼 없는 곳에서는 안내 문구로 우아하게 물러난다.
-const FB_REPO = "https://github.com/Molaaaaaaa/lol-inhouse-stats/issues";
-function fillFeedbackWho(){
-  const sel = $('#fbWho'); if(!sel) return;
-  const names = Object.values(DATA.players||{}).map(p=>p.name).filter(Boolean).sort();
-  sel.innerHTML = '<option value="">익명으로</option>' +
-    names.map(n=>`<option value="${n}">${n}</option>`).join('');
-  try{ const last=localStorage.getItem('fbWho'); if(last) sel.value=last; }catch(e){}
-}
-(function(){
-  const who=$('#fbWho'), kind=$('#fbKind'), body=$('#fbBody'),
-        send=$('#fbSend'), msg=$('#fbMsg'), cnt=$('#fbCount'), alt=$('#fbAlt');
-  if(!send) return;
-  who.onchange=()=>{ try{ localStorage.setItem('fbWho',who.value); }catch(e){} };
-  body.oninput=()=>{ cnt.textContent=`${body.value.length} / 2000`; };
-  const showAlt=lead=>{ alt.style.display='block';
-    alt.innerHTML=`${lead} <a href="${FB_REPO}" target="_blank" rel="noopener">GitHub Issues</a>`
-      + ' 또는 디스코드로 남겨주세요.'; };
-  send.onclick=async()=>{
-    const t=(body.value||'').trim();
-    if(t.length<5){ msg.className='fbmsg err'; msg.textContent='내용을 다섯 글자 이상 적어주세요.'; return; }
-    send.disabled=true; msg.className='fbmsg'; msg.textContent='보내는 중...';
-    try{
-      const r=await fetch('/api/feedback',{method:'POST',
-        headers:{'content-type':'application/json'},
-        body:JSON.stringify({who:who.value,kind:kind.value,body:t,
-                             page:(DATA&&DATA.name)||''})});
-      let j=null; try{ j=await r.json(); }catch(e){}
-      if(j&&j.ok){ msg.className='fbmsg ok'; msg.textContent='고맙습니다. 잘 받았습니다.';
-        body.value=''; cnt.textContent='0 / 2000'; }
-      else { msg.className='fbmsg err';
-        msg.textContent=(j&&j.error)||'보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.'; showAlt('대신'); }
-    }catch(e){
-      msg.className='fbmsg err'; msg.textContent='피드백 창구가 아직 연결되지 않았습니다.';
-      showAlt('대신');
-    }
-    send.disabled=false;
-  };
-})();
 
 let GID='';                     // 상세 파일 경로에 쓴다
 const MDCACHE={};               // 한 번 받은 경기 상세는 다시 안 받는다

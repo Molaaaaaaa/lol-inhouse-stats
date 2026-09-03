@@ -1,11 +1,8 @@
-# Cloudflare Workers — 정적 사이트 + 피드백 수신
+# Cloudflare Workers — 정적 사이트
 #
-# 정적 파일(index.html, data/*.json, riot.txt)은 [assets]가 서빙하고,
-# worker.js 가 /api/feedback 만 가로채 디스코드 웹훅으로 넘긴다.
+# 정적 파일(index.html, data/*.json, riot.txt)은 [assets]가 서빙한다. worker.js 는 헤더만 붙인다.
 #   대시보드 Build command 는 비우고, Deploy command 는 `npx wrangler deploy`.
-#
-# 배포 후 반드시 설정: Workers → Settings → Variables and Secrets
-#   FEEDBACK_WEBHOOK = 디스코드 채널 웹훅 URL   ← Secret 으로 저장(코드에 넣지 말 것)
+#   (피드백 창구와 FEEDBACK_WEBHOOK 시크릿은 2026-09-03 제거.)
 #
 # ⚠️ riot.txt 는 루트(/riot.txt)로 그대로 서빙돼야 한다 — 라이엇 도메인 검증용.
 
