@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-DEClLrvYypA7pmKh1C/7sHpRQRxqYq7MCeE/jv1h6go='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-xbeda7BafISMql2EAju/OeV3gE+x+hvrdjzhBjaOKHM='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -586,16 +586,17 @@
 #freshBar button{background:var(--acc);color:var(--on-acc);border:0;border-radius:8px;
   padding:6px 14px;font-weight:700;cursor:pointer;min-height:32px}
 @media (pointer:coarse){ #freshBar button,.meta .retry,#refresh{min-height:44px} #refresh{min-width:44px} }
-  /* 내 이름 막대 — 한 줄. 이름을 고르면 표들이 그 사람 중심으로 바뀐다. */
-  .mebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
-  .mebar label{color:var(--dim);font-size:13px}
-  .mebar select{flex:0 1 220px;min-width:0;max-width:100%}   /* 기본 너비 = 가장 긴 option — 폰에서 가로로 넘친다(실측) */
-  .mebar #meNote{flex:1 1 100%;font-size:12px}
-  @media(max-width:640px){ .mebar{gap:8px} .mebar select{flex:1 1 140px} }
-  #meOnly[aria-pressed=true]{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
-  /* 내 줄 강조(순위 표) — 배경은 강조색 12%, 이름은 굵게 */
-  tr.merow>td{background:color-mix(in srgb,var(--acc) 12%,transparent)}
-  tr.merow>td:first-child{font-weight:750;color:var(--acc)}
+  /* 소환사명 검색 — 입력 아래 결과가 바(칩 줄)로 뜬다. 결과 하나가 곧 그 멤버의 페이지다. */
+  .mebar{margin:0 0 12px}
+  .mebar input{width:100%;max-width:420px;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;
+    background:var(--ink);color:var(--txt);font:inherit;font-size:15px}
+  .mebar input:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
+  .mehits{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .mehit{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:6px 14px;border-radius:999px;
+    border:1px solid var(--line2);background:var(--panel2);color:var(--txt);font:inherit;font-size:14px;cursor:pointer}
+  .mehit:hover,.mehit:focus-visible{border-color:var(--acc);color:var(--acc)}
+  .mehit .m{color:var(--dim);font-size:12px}
+  .mehits .none{color:var(--dim);font-size:13px;padding:6px 2px}
   /* 긴 표 접기 — 10줄 + '나머지 보기'. 폰의 카드형 행(display:grid)보다 세야 해서 !important */
   table.fold tbody tr:nth-child(n+11){display:none!important}
   .tfmore{display:block;margin:6px 0 10px;font-size:13px;min-height:36px}
@@ -679,12 +680,11 @@
   <div id="sr" class="sronly" aria-live="polite" role="status"></div>
   <div class="kpis" id="kpis"></div>
 
-  <!-- 내 이름 한 줄 — 고르면 목록 표는 내 줄만, 순위 표는 내 줄 강조(applyMe). 큰 패널은 요청으로 뺐다(2026-09-03). -->
+  <!-- 소환사명 검색 — 치면 밑에 맞는 이름이 바 형태로 뜨고, 누르면 그 멤버의 플레이어 화면으로 간다(요청 2026-09-03). -->
   <div class="mebar" id="mebar">
-    <label for="meWho">내 이름</label>
-    <select id="meWho"><option value="">고르지 않음</option></select>
-    <button id="meOnly" type="button" aria-pressed="true" hidden data-tip="목록 표는 내 줄만 남기고, 순위 표는 내 줄을 표시합니다">내 것만 보기</button>
-    <span class="muted sm" id="meNote"></span>
+    <label for="meQ" class="sronly">소환사명 검색</label>
+    <input type="search" id="meQ" placeholder="소환사명 검색 — 예) 앙앙" autocomplete="off" aria-controls="meHits" aria-expanded="false">
+    <div id="meHits" class="mehits" role="listbox" aria-label="검색 결과" hidden></div>
   </div>
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
     <div class="tab on" role="tab" data-t="tier"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 티어</div>
@@ -748,6 +748,12 @@
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg> 로밍 비율<span class="qmark" tabindex="0" role="button" data-tip-key="로밍" aria-label="로밍 설명">?</span></h2><div id="funRoam"></div></div>
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-swords"/></svg> 한타 참여율<span class="qmark" tabindex="0" role="button" data-tip-key="한타" aria-label="한타 설명">?</span></h2><div id="funFight"></div></div>
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg> 용 종류별 성적</h2><div id="funDragon"></div></div>
+    </div>
+    <div class="card" data-sub="개인 산출" data-ico="activity"><h2><svg class="ic" aria-hidden="true"><use href="#i-activity"/></svg> 개인 산출<span class="qmark" tabindex="0" role="button" data-tip-key="개인산출" aria-label="개인 산출 설명">?</span></h2>
+      <p class="muted" id="outIntro"></p>
+      <div id="outT"></div>
+      <div class="row" style="margin:10px 0 4px"><label>분해 볼 멤버 <select id="outWho"></select></label></div>
+      <div id="outParts"></div>
     </div>
     <div class="card" data-sub="지표 설명" data-ico="book-open"><h2><svg class="ic" aria-hidden="true"><use href="#i-book-open"/></svg> 나머지 지표</h2><div id="mathRest"></div></div>
   </section>
@@ -948,7 +954,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   el.innerHTML=h+'</tbody></table>';
   // ⚠️ 여기서 표가 통째로 갈린다. aria-label 과 거르기 칸도 같이 날아가므로 다시 붙인다
   //    (안 하면 랭킹 지표를 바꾸는 순간 거르기 칸이 사라진다 — 실측).
-  labelTables(); labelTips(el); attachTableFilters(el); foldLongTables(el); applyMe(el);
+  labelTables(); labelTips(el); attachTableFilters(el); foldLongTables(el);
   el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
     const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
       labelTables();
@@ -975,6 +981,7 @@ const HELP={
   MVP:'경기마다 이긴 팀에서 기여도(킬 관여·딜 비중·KDA 를 라인 안에서 재고 팀 안에서 상대값으로 만든 것) 1위에게 1회 줍니다.\n티어 계산의 기여도와 같은 숫자라 정의가 하나입니다. 라인을 타지 않습니다(예전 식은 정글·원딜이 27회 중 20회를 가져갔습니다).\n표의 숫자는 누적 횟수입니다.',
   MMR:'숨은 실력 점수입니다. 팀 대 팀 기대 승률과 실제 결과의 차이만큼 움직입니다(Elo).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다. 판수가 많다고 오르지 않습니다.\n1000이 시작점이고, 티어(CP)·순위·팀 나누기가 전부 이 하나의 숫자를 씁니다. MMR 검산에서 경기별로 확인할 수 있습니다.',
   시너지:'둘이 같이 이긴 비율에서 "각자 실력만으로 기대되는 승률"을 뺀 값입니다.\n기대 승률은 두 사람이 함께한 판을 빼고 계산해 자기 자신과 비교하지 않습니다.\n+면 같이 할 때 더 잘 맞고, −면 덜 맞습니다.',
+  개인산출:'승패와 분리해 고른 개인 지표 10개(딜 비중·골드 비중·골드당 딜·제어 와드·맞라인 우위·시야·킬관여…)를 고정 가중치로 합친 값입니다.\n라인 안에서 표준화하므로 서폿과 원딜을 같은 잣대로 재지 않습니다. 0 이 방 평균이고, 판수가 적으면 0 쪽으로 당깁니다(n/(n+4)).\nMMR 과는 다른 것을 잽니다 — 팀이 이겼는지가 아니라 그 사람이 얼마나 냈는지. 기준(가중치·평균)은 v1 으로 얼려 두어 안 뛴 사람의 값은 움직이지 않습니다.',
   밸런스:'두 팀의 기대 승률을 MMR(라인 편차 포함)로 계산해 가장 5:5 에 가까운 나눔을 고릅니다.\n역할 배정도 같이 최적화하고, 안 뛰어 본 라인은 사전값(−30)만큼 낮게 봅니다.\n시너지가 좋은 두 사람은 같은 팀에 두는 쪽을 조금 선호합니다.',
   상대전적:'적으로 만난 판에서 서로 몇 번 이겼는지 셉니다.\n왼쪽이 더 많이 이긴 쪽, 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.\n같은 편이었던 판은 세지 않습니다.',
   킬관계:'적으로 만난 판에서 서로 몇 번 잡았는지 셉니다(킬 기준).\n왼쪽이 더 많이 잡은 쪽, 숫자는 (잡은 수 : 당한 수) 입니다.\n양쪽 합이 3킬 미만인 조합은 우연이라 보고 뺍니다.\n많이 잡혀도 그 판을 이겼을 수 있으니 승패는 상대별 전적에서 보세요.',
@@ -1896,7 +1903,7 @@ function renderPlayerBody(){
   }).join(', ')||'—';
   const nemesis=nvf(nv.nemesis), victim=nvf(nv.victim);
   let h=`<div class="row">
-    <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>
+    <span class="pill">${r.games}판 ${r.wins}승 ${r.losses}패</span>${outPill(sel.value)}
     <span class="pill ${wrClass(r.winrate)}">승률 ${pct(r.winrate)}</span>
     <span class="pill">KDA ${r.kda}</span><span class="pill">${mLabel('kp')} ${pct(r.kp)}</span>
     <span class="pill">${mLabel('dpm')} ${r.dpm}</span>${streak}</div>
@@ -2899,6 +2906,59 @@ function renderMath(){
   renderMathRest();
 }
 
+// ---------- 개인 산출 (v1 고정 기준) ----------
+// 승패와 분리된 개인 지표 10개의 고정 가중치 합. 기준은 발행 쪽 output_ref_v1.json 에 얼려 있다 —
+// 화면은 payload 의 output/output_constants 만 읽는다(숫자를 따로 적지 않는다).
+const outC=()=>DATA.output_constants||{};
+const sgn2=v=>(v>0?'+':'')+(+v).toFixed(2);
+function outRows(){
+  const O=DATA.output||{}, C=DATA.cp||{};
+  return Object.entries(O).map(([k,v])=>{
+    const parts=(v.parts||[]).slice().sort((a,b)=>b.contrib-a.contrib);
+    return {_id:k, name:(C[k]||{}).name||k, score:v.score, games:v.games, mmr:(C[k]||{}).mmr,
+      best:parts[0]?parts[0].label:'—', worst:parts[parts.length-1]?parts[parts.length-1].label:'—'};
+  }).sort((a,b)=>b.score-a.score);
+}
+function renderOutput(){
+  const K=outC(), rows=outRows(), box=$('#outT'); if(!box) return;
+  if(!rows.length){ box.innerHTML='<p class="muted">아직 개인 산출을 낼 만큼 뛴 사람이 없습니다.</p>'; return; }
+  $('#outIntro').innerHTML=`승패와 분리된 개인 지표 ${(K.weights||[]).length}개를 고정 가중치로 합친 값입니다. `+
+    `<b>0</b> 이 그 라인의 방 평균, 사람 간 표준편차가 0.17 쯤입니다. 기준 <b>v${K.version||1}</b>`+
+    `${K.frozen_at?` (${K.frozen_at} · ${K.frozen_games}판 기준)`:''} — 안 뛴 사람의 값은 다음 기준 갱신까지 움직이지 않습니다. `+
+    `${minGamesNeeded()}판 이상만 싣습니다.`;
+  rows.forEach((r,i)=>{ r._rank=i+1; });
+  renderTable(box, rows, [
+    {k:'_rank',h:'#',num:1},
+    {k:'name',h:'멤버'},
+    {k:'score',h:'개인 산출',num:1,bar:1,fmt:v=>sgn2(v),cls:r=>'num '+(r.score>0?'pos':r.score<0?'neg':'')},
+    {k:'games',h:'판수',num:1},
+    {k:'mmr',h:'MMR',num:1,lo:1,hlp:'MMR',fmt:v=>v==null?'—':`<span class="muted">${v}</span>`},
+    {k:'best',h:'가장 강한 지표',lo:1},
+    {k:'worst',h:'가장 약한 지표',lo:1},
+  ],'score',-1);
+  const sel=$('#outWho');
+  sel.innerHTML=rows.map(r=>`<option value="${r._id}">${esc(r.name)} · ${sgn2(r.score)}</option>`).join('');
+  sel.onchange=renderOutputParts; renderOutputParts();
+}
+function renderOutputParts(){
+  const id=$('#outWho').value, v=(DATA.output||{})[id], K=outC(), box=$('#outParts');
+  if(!v){ box.innerHTML=''; return; }
+  const tr=(v.parts||[]).map(p=>`<tr><td>${esc(p.label)}</td><td class="num">${p.w.toFixed(3)}</td><td class="num">${p.z>=0?'+':''}${p.z.toFixed(2)}</td>`+
+    `<td class="num muted">${p.n}</td><td class="num ${p.contrib>0?'pos':p.contrib<0?'neg':''}">${p.contrib>=0?'+':''}${p.contrib.toFixed(3)}</td></tr>`).join('');
+  box.innerHTML=`<div class="mathwrap">
+    <p class="fml">개인 산출 = Σ 가중치 × (라인 안 z 의 판 평균) × n/(n+${K.shrink_k||4}) &nbsp;·&nbsp; z 는 판마다 ±${K.z_clip||3} 로 자름</p>
+    <div class="tbl"><table><thead><tr><th scope="col">지표</th><th scope="col" class="num">가중치</th><th scope="col" class="num">평균 z</th>
+      <th scope="col" class="num">판</th><th scope="col" class="num">기여</th></tr></thead><tbody>${tr}</tbody></table></div>
+    <p class="fml">합 = <b class="acc">${sgn2(v.score)}</b> &nbsp;·&nbsp; 수축 n/(n+${K.shrink_k||4}) = ${v.games}/${v.games+(K.shrink_k||4)} = ${v.shrink.toFixed(3)}</p>
+  </div>`;
+}
+
+// 플레이어 요약의 개인 산출 알약 — 순위 탭과 같은 payload 를 읽는다.
+function outPill(id){
+  const v=(DATA.output||{})[id]; if(!v) return '';
+  const rows=outRows(); const i=rows.findIndex(r=>r._id===id);
+  return `<span class="pill" data-tip-key="개인산출">개인 산출 ${sgn2(v.score)}${i>=0?` · ${i+1}위/${rows.length}`:''}</span>`;
+}
 function renderMathMmr(){
   // 검산 = 그 사람의 경기별 리플레이. 손으로 더하면 MMR·CP·티어가 그대로 나와야 한다.
   // 예전엔 밸런스 도구의 BT 항 분해를 보여 줬는데, 그건 티어와 무관한 다른 숫자였다(2026-09-02 통합).
@@ -3418,44 +3478,44 @@ function setupPlayerView(){
   attachCombo($('#cmpB'),'소환사명 검색');
   renderCompare();
 }
-// ---------- 내 이름 막대 · 내 것만 보기 · 긴 표 접기 ----------
-// 피드백(2026-09-03): 글자가 아니라 **목록이 너무 많고 난잡해서** 내 파트를 못 찾는다.
-// 표 34개(실측)를 다 읽는 사람은 없다. 이름을 고르면 목록 표(시너지·챔피언·기록…)는 내 줄만 남기고,
-// 순위 표(사다리·리더보드·지표 랭킹)는 내 줄을 표시한다 — 순위는 남들 사이의 자리라서 거르면 뜻이 없다.
-// 고른 이름은 이 브라우저에만 기억된다(익명 키 p… 뿐, 실명 저장 없음).
-const ME_KEY='inh.me', MEONLY_KEY='inh.meonly';
-function lsGet(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }
-function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ /* 사생활 모드 등 — 기억만 못 할 뿐 */ } }
-const meName=()=>{ const id=$('#meWho')&&$('#meWho').value; return id&&(DATA.cp||{})[id]?DATA.cp[id].name:''; };
-const meOn=()=>!!meName() && lsGet(MEONLY_KEY)!=='0';
-const isRankTable=tb=>!!tb.closest('#cpT, #boardT, #rankT') || ((tb.tHead&&tb.tHead.rows[0]&&tb.tHead.rows[0].cells[0].textContent.trim())==='#');
-function renderMeBar(){
-  const C=DATA.cp||{}, sel=$('#meWho'); if(!sel) return;
-  const ids=Object.keys(C).sort((a,b)=>C[a].name.localeCompare(C[b].name,'ko'));
-  sel.innerHTML='<option value="">고르지 않음</option>'+ids.map(k=>`<option value="${k}">${esc(C[k].name)}</option>`).join('');
-  const me=lsGet(ME_KEY); if(me&&C[me]) sel.value=me;
-  labelTips($('#mebar'));
+// ---------- 소환사명 검색 · 긴 표 접기 ----------
+// 피드백(2026-09-03): 목록이 너무 많고 난잡해서 내 파트를 못 찾는다. 이름을 치면 밑에 맞는 이름이 바로 뜨고,
+// 누르면 그 멤버의 플레이어 화면(전적·라인·챔피언·개인 산출)으로 간다. 표 강조나 걸러 보기는 하지 않는다(요청).
+const isRankTable=tb=>!!tb.closest('#cpT, #boardT, #rankT, #outT') || ((tb.tHead&&tb.tHead.rows[0]&&tb.tHead.rows[0].cells[0].textContent.trim())==='#');
+const norm=s=>String(s||'').toLowerCase().replace(/\s+/g,'');
+// 초성 검색 — 'ㅇㅇㅁ' 도 앙앙맹을 찾는다. 자음만 친 질의는 이름의 초성 문자열과 견준다.
+const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+const cho=s=>[...norm(s)].map(ch=>{const c=ch.charCodeAt(0); return (c>=0xAC00&&c<=0xD7A3)?CHO[Math.floor((c-0xAC00)/588)]:ch;}).join('');
+function searchHits(q){
+  const C=DATA.cp||{}, k=norm(q); if(!k) return [];
+  const jamo=/^[ㄱ-ㅎ]+$/.test(k);
+  const key=id=>jamo?cho(C[id].name):norm(C[id].name);
+  return Object.keys(C).filter(id=>key(id).includes(k))
+    .sort((a,b)=>(key(a).indexOf(k)-key(b).indexOf(k))||C[a].name.localeCompare(C[b].name,'ko')).slice(0,12);
 }
-function applyMe(root){
-  const nm=meName(), on=meOn(), low=nm.toLowerCase();
-  (root||document).querySelectorAll('table').forEach(tb=>{
-    if(tb.classList.contains('sb')||tb.classList.contains('heat')||tb.closest('.match-detail')) return;
-    const body=tb.tBodies[0]; if(!body) return;
-    if(isRankTable(tb)){
-      for(const tr of body.rows) tr.classList.toggle('merow', on && !!nm && (tr.cells[0]||{}).textContent.trim().toLowerCase().includes(low));
-      return;
-    }
-    if(!tb.dataset.filt) return;                       // 짧은 표(20줄 미만)는 검색칸이 없다 — 그대로 둔다
-    const anchor=(tb.parentElement && /auto|scroll/.test(getComputedStyle(tb.parentElement).overflowX))?tb.parentElement:tb;
-    const box=anchor.previousElementSibling;
-    const field=box&&box.classList&&box.classList.contains('tfilter')?box.querySelector('input'):null;
-    if(!field) return;
-    const has=nm && body.textContent.toLowerCase().includes(low);
-    if(on && has){ if(field.value!==nm){ field.value=nm; field.dispatchEvent(new Event('input')); } tb.dataset.mefilt='1'; }
-    else if(tb.dataset.mefilt==='1'){ field.value=''; field.dispatchEvent(new Event('input')); delete tb.dataset.mefilt; }
-  });
-  const chip=$('#meOnly'); if(chip){ chip.hidden=!nm; chip.setAttribute('aria-pressed',on?'true':'false'); }
-  const note=$('#meNote'); if(note) note.textContent=nm?(on?`표마다 ${nm} 줄만 남기고, 순위 표는 ${nm} 줄을 표시합니다`:'전체 표를 봅니다'):'';
+function renderSearch(){
+  const inp=$('#meQ'), box=$('#meHits'); if(!inp||!box) return;
+  const draw=()=>{
+    const hits=searchHits(inp.value), C=DATA.cp||{};
+    if(!inp.value.trim()){ box.hidden=true; box.innerHTML=''; inp.setAttribute('aria-expanded','false'); return; }
+    box.innerHTML=hits.length?hits.map(id=>`<button type="button" class="mehit" role="option" data-id="${id}">${esc(C[id].name)}`+
+      `<span class="m">${C[id].placed?esc(C[id].tier):'배치 중'} · ${C[id].games}판</span></button>`).join('')
+      :'<span class="none">맞는 이름이 없습니다</span>';
+    box.hidden=false; inp.setAttribute('aria-expanded','true');
+  };
+  inp.oninput=draw;
+  inp.onkeydown=e=>{
+    if(e.key==='Enter'){ const b=box.querySelector('.mehit'); if(b){ e.preventDefault(); b.click(); } }
+    else if(e.key==='Escape'){ inp.value=''; draw(); }
+    else if(e.key==='ArrowDown'){ const b=box.querySelector('.mehit'); if(b){ e.preventDefault(); b.focus(); } }
+  };
+  box.onclick=e=>{ const b=e.target.closest('.mehit'); if(!b) return; openPlayer(b.dataset.id); inp.value=''; draw(); };
+}
+// 그 멤버의 플레이어 화면으로 — 탭·패널을 켜고 선택을 맞춘 뒤 그린다.
+function openPlayer(id){
+  jumpTo('player','개인');
+  const ps=$('#playerSel'); if(ps&&id){ ps.value=id; renderPlayerBody(); }
+  const nm=((DATA.cp||{})[id]||{}).name; if(nm) announce(`${nm} 화면`);
 }
 // ── 긴 표 접기 ──
 // 시너지 듀오 138줄·트리오 181줄·챔피언 메타 77줄(실측). 위 10줄이 답의 대부분이다 — 나머지는 눌러서.
@@ -3481,12 +3541,10 @@ function foldSync(tb, filtering){
   const open=filtering||tb.dataset.unfolded==='1';
   tb.classList.toggle('fold',!open); if(tb._foldBtn) tb._foldBtn.hidden=open;
 }
-$('#meWho').addEventListener('change',()=>{ lsSet(ME_KEY,$('#meWho').value); applyMe(); announce(meName()?`${meName()} 기준으로 봅니다`:'전체 보기'); });
-$('#meOnly').addEventListener('click',()=>{ lsSet(MEONLY_KEY, meOn()?'0':'1'); applyMe(); announce(meOn()?'내 것만 보기 켬':'내 것만 보기 끔'); });
 
 const VIEW_RENDER={
   tier:    ()=>{ renderCp(); },
-  board:   ()=>{ renderBoard(); buildRankControls(); renderRank(); ensureFun(); },
+  board:   ()=>{ renderBoard(); buildRankControls(); renderRank(); renderOutput(); ensureFun(); },
   records: ()=>{ renderRecords(); ensureFun(); },
   syn:     ()=>{ renderSyn(); ensureFun(); },
   champ:   ()=>{ buildChampLaneBtns(); renderChamp(); ensureFun(); },
@@ -3500,7 +3558,7 @@ function ensureView(id){
   VIEW_RENDER[id]();
   const sec=$('#'+id);
   labelTables(); labelTips(sec); attachTableFilters(sec);   // 새로 생긴 표·툴팁에 이름표
-  foldLongTables(sec); applyMe(sec);                     // 긴 표 접기 · 내 것만 보기
+  foldLongTables(sec);                                   // 긴 표 접기
 }
 
 function renderAll(){
@@ -3510,7 +3568,7 @@ function renderAll(){
   const wb=$('#warnBar'), ws=DATA.warnings||[];
   wb.innerHTML=ws.map(w=>`<div>${ico('alert-triangle')} ${esc(w)}</div>`).join('');
   wb.classList.toggle('hidden', !ws.length);
-  renderKpis(); renderMeBar(); renderMath(); buildSubtabs(); applyMe();
+  renderKpis(); renderSearch(); renderMath(); buildSubtabs();
   // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
   // 아무도 안 보는 채로 쌓인다(실측). 데이터를 다시 받으면 전부 무효화하고 보는 화면만 다시.
   RENDERED.clear(); FUN_DONE=false;
