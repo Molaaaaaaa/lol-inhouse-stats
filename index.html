@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-urOuJA2DJGG7eVTJelTyr/0NKYSaNPe7iq4sDez6Mbw='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-QxxH9gnIyD7iOFGYP7uIqkREuB5L8N2y6dkK5usH+0o='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -600,6 +600,39 @@
 #freshBar button{background:var(--acc);color:var(--on-acc);border:0;border-radius:8px;
   padding:6px 14px;font-weight:700;cursor:pointer;min-height:32px}
 @media (pointer:coarse){ #freshBar button,.meta .retry,#refresh,#fbSend{min-height:44px} #refresh{min-width:44px} }
+  /* 내 성적 한눈에 — 숫자는 크게, 말은 짧게. 표 글자를 키우지 않고 이 패널만 크다. */
+  .home .homehead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .home .homehead h2{margin:0;flex:1 1 auto;font-size:16px}
+  .home .homehead button{font-size:14px;min-height:40px}
+  .home #homeBig[aria-pressed=true]{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
+  .home .homepick{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .home .homepick label{font-size:17px;color:var(--dim)}
+  .home #homeWho{font-size:18px;min-height:48px;padding:8px 14px;border-radius:12px;flex:1 1 220px;max-width:420px}
+  .home .hname{font-size:26px;font-weight:750;margin:4px 0 2px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;line-height:1.2}
+  .home .hname .tierbadge{font-size:17px;padding:5px 14px}
+  .home .hgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}   /* 375px 폰: 2열 */
+  .home .hrow2{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}
+  @media (min-width:820px){ .home .hrow2{grid-template-columns:1fr 1fr} .home .hrow2 .hsay{margin-top:0} }
+  @media (max-width:640px){ .home .hcell{padding:12px 12px} .home .hcell .v{font-size:22px;white-space:nowrap} .home .hcell .v.vs{font-size:20px} .home .hname{font-size:23px} }   /* 375px 폰: '20승 13패'가 한 줄(실측 143px 칸) */
+  .home .hcell{background:var(--panel0);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .home .hcell .l{font-size:14px;color:var(--dim);margin-bottom:6px}
+  .home .hcell .v{font-size:28px;font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .home .hcell .v.vs{font-size:22px}
+  .home .hcell .s{font-size:14px;color:var(--dim);margin-top:6px;line-height:1.5}
+  .home .hcell .s b{color:var(--txt);font-weight:650}
+  .home .hdots{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 4px}
+  .home .hdot{width:42px;height:42px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;
+    font-weight:750;font-size:17px;border:1px solid transparent}
+  .home .hdot.w{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
+  .home .hdot.l{background:color-mix(in srgb,var(--bad) 20%,transparent);color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+  .home .hsay{font-size:17px;line-height:1.6;margin:12px 0 0;padding-left:22px}
+  .home .hsay li{margin:4px 0}
+  .home p.hsay{padding-left:0}
+  .home .hgo{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .home .hgo button{font-size:16px;min-height:48px;padding:10px 18px;border-radius:12px}
+  .home .hgo .go1{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
+  /* 글자 크게 — 화면 전체를 20% 확대. 글꼴만 키우면 표 정렬이 어긋나서 배율로 키운다. */
+  html.big{zoom:1.2}
 </style>
 </head>
 <body>
@@ -675,6 +708,20 @@
   <!-- 화면이 바뀐 걸 스크린리더에 알린다. 시각적으로는 감추되 display:none 은 쓰지 않는다
        (display:none 이면 보조기술도 못 읽는다). -->
   <div id="sr" class="sronly" aria-live="polite" role="status"></div>
+  <!-- 내 성적 한눈에 — 처음 온 사람·큰 글씨가 필요한 사람의 첫 화면. 이름 하나 고르면
+       티어·순위·전적·최근 판을 큰 글씨 몇 줄로 보여 준다. 표는 아래 탭에 그대로 있다.
+       (최상위 탭은 8개가 상한이라 탭이 아니라 탭 위의 패널이다.) -->
+  <section class="card home" id="home" aria-labelledby="homeH">
+    <div class="homehead">
+      <h2 id="homeH"><svg class="ic" aria-hidden="true"><use href="#i-id-card"/></svg> 내 성적 한눈에</h2>
+      <button id="homeBig" type="button" aria-pressed="false" data-tip="화면 전체 글자를 20% 키웁니다"><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg> 글자 크게</button>
+      <button id="homeFold" type="button" aria-expanded="true" aria-controls="homeBody">접기</button>
+    </div>
+    <div id="homeBody">
+      <div class="homepick"><label for="homeWho">내 이름</label><select id="homeWho"><option value="">이름을 고르세요</option></select></div>
+      <div id="homeMe"><p class="hsay muted">이름을 고르면 티어·순위·전적을 큰 글씨로 보여 줍니다.</p></div>
+    </div>
+  </section>
   <div class="kpis" id="kpis"></div>
 
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
@@ -3426,6 +3473,82 @@ function setupPlayerView(){
   attachCombo($('#cmpB'),'소환사명 검색');
   renderCompare();
 }
+// ---------- 내 성적 한눈에 ----------
+// 처음 온 사람의 첫 화면. 이름 하나 고르면 티어·순위·전적·최근 판을 큰 글씨 몇 줄로.
+// 고른 이름·글자 크기·접힘은 이 브라우저에만 기억된다(익명 키 p… 뿐, 실명 저장 없음).
+const ME_KEY='inh.me', BIG_KEY='inh.big', FOLD_KEY='inh.homefold';
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ /* 사생활 모드 등 — 기억만 못 할 뿐 */ } }
+function applyBig(on){
+  document.documentElement.classList.toggle('big',!!on);
+  const b=$('#homeBig'); if(b) b.setAttribute('aria-pressed',on?'true':'false');
+}
+function applyFold(folded){
+  const body=$('#homeBody'), b=$('#homeFold'); if(!body||!b) return;
+  body.hidden=!!folded; b.setAttribute('aria-expanded',folded?'false':'true'); b.textContent=folded?'펼치기':'접기';
+}
+const hdate=ts=>ts?new Date(ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'}):'';
+function homeRank(id){
+  const C=DATA.cp||{};
+  const placed=Object.entries(C).filter(([,v])=>v.placed).sort((a,b)=>(b[1].mmr-a[1].mmr)||(b[1].cp-a[1].cp));
+  const i=placed.findIndex(([k])=>k===id);
+  return {rank:i<0?null:i+1, n:placed.length};
+}
+function renderHome(){
+  const C=DATA.cp||{}, sel=$('#homeWho'); if(!sel) return;
+  const ids=Object.keys(C).sort((a,b)=>C[a].name.localeCompare(C[b].name,'ko'));
+  sel.innerHTML='<option value="">이름을 고르세요</option>'+ids.map(k=>`<option value="${k}">${esc(C[k].name)}</option>`).join('');
+  const me=lsGet(ME_KEY); if(me&&C[me]) sel.value=me;
+  renderHomeMe();
+}
+function renderHomeMe(){
+  const id=$('#homeWho').value, C=DATA.cp||{}, P=DATA.players||{}, r=C[id], p=P[id], box=$('#homeMe');
+  if(!r||!p){ box.innerHTML='<p class="hsay muted">이름을 고르면 티어·순위·전적을 큰 글씨로 보여 줍니다.</p>'; return; }
+  const rec=p.record||{}, K=cpConst(), PG=K.placement_games||3, {rank,n}=homeRank(id);
+  const recent=(p.recent_games||[]).slice(0,5), w5=recent.filter(g=>g.win).length;
+  const dots=recent.map(g=>`<span class="hdot ${g.win?'w':'l'}" title="${esc(champKo(g.champion_name))} · ${hdate(g.game_creation)}">${g.win?'승':'패'}</span>`).join('');
+  const lane=r.main_lane?laneKo(r.main_lane):'—';
+  const lrec=(p.lanes||[]).find(x=>x.lane===r.main_lane);
+  const champs=(p.champions||[]).filter(c=>c.games>=2).sort((a,b)=>(b.winrate-a.winrate)||(b.games-a.games)).slice(0,3);
+  const pc=x=>Math.round((x||0)*100)+'%';
+  const say=[];
+  if(!r.placed) say.push(`배치 ${PG}판 중 ${r.games}판을 했습니다. ${PG-r.games}판 더 하면 티어가 정해집니다.`);
+  else if(r.to_next!=null&&r.tier!=='1티어') say.push(`다음 티어까지 ${r.to_next}점 남았습니다. 한 판 이기면 ${K.cp_min||15}~${K.cp_max||25}점이 오릅니다.`);
+  if(recent.length>=3) say.push(w5>=recent.length-1?`최근 ${recent.length}판 ${w5}승 — 상승세입니다.`
+    :w5<=1?`최근 ${recent.length}판 ${w5}승 — 잠시 주춤합니다.`:`최근 ${recent.length}판 ${w5}승 ${recent.length-w5}패입니다.`);
+  if(lrec&&lrec.games>=3) say.push(`${lane}에서 ${lrec.games}판 뛰어 승률 ${pc(lrec.winrate)}입니다.`);
+  box.innerHTML=`
+    <div class="hname">${esc(r.name)} ${r.placed?tierBadge(r.tier):'<span class="tierbadge">배치 중</span>'}</div>
+    <div class="hgrid">
+      <div class="hcell"><div class="l">내전 순위</div><div class="v">${rank?rank+'위':'—'}</div>
+        <div class="s">${rank?`${n}명 중 · MMR ${r.mmr}`:'배치가 끝나면 나옵니다'}</div></div>
+      <div class="hcell"><div class="l">전적</div><div class="v">${rec.wins??0}승 ${rec.losses??0}패</div>
+        <div class="s">${rec.games?`승률 ${pc(rec.winrate)} · ${rec.games}판`:'아직 판이 없습니다'}</div></div>
+      <div class="hcell"><div class="l">티어 점수</div><div class="v">${r.placed?r.cp:'—'}</div>
+        <div class="s">${r.placed?`${r.tier} ${r.points}점`:`배치 ${r.games}/${PG}판`}</div></div>
+      <div class="hcell"><div class="l">주 라인</div><div class="v vs">${esc(lane)}</div>
+        <div class="s">${lrec?`${lrec.games}판 · 승률 ${pc(lrec.winrate)}`:'—'}</div></div>
+    </div>
+    <div class="hrow2"><div class="hcell"><div class="l">최근 ${recent.length}판</div><div class="hdots">${dots||'<span class="muted">아직 없음</span>'}</div>
+      ${champs.length?`<div class="s">잘하는 챔피언 · ${champs.map(c=>`<b>${esc(champKo(c.champion_name))}</b> ${c.games}판 ${pc(c.winrate)}`).join(' · ')}</div>`:''}</div>
+    ${say.length?`<ul class="hsay">${say.map(s=>`<li>${s}</li>`).join('')}</ul>`:''}</div>
+    <div class="hgo">
+      <button class="go1" data-go="player">${ico('user')} 내 기록 자세히</button>
+      <button data-go="tier">${ico('trophy')} 전체 티어</button>
+      <button data-go="matches">${ico('scroll')} 최근 경기</button>
+    </div>`;
+}
+$('#homeWho').addEventListener('change',()=>{ lsSet(ME_KEY,$('#homeWho').value); renderHomeMe(); });
+$('#homeBig').addEventListener('click',()=>{ const on=!document.documentElement.classList.contains('big'); applyBig(on); lsSet(BIG_KEY,on?'1':'0'); });
+$('#homeFold').addEventListener('click',()=>{ const f=!$('#homeBody').hidden; applyFold(f); lsSet(FOLD_KEY,f?'1':'0'); });
+$('#homeMe').addEventListener('click',e=>{
+  const b=e.target.closest('[data-go]'); if(!b) return;
+  const id=$('#homeWho').value;
+  if(b.dataset.go==='player'){ jumpTo('player','개인'); const ps=$('#playerSel'); if(ps&&id){ ps.value=id; renderPlayerBody(); } }
+  else jumpTo(b.dataset.go);
+});
+applyBig(lsGet(BIG_KEY)==='1'); applyFold(lsGet(FOLD_KEY)==='1');
+
 const VIEW_RENDER={
   tier:    ()=>{ renderCp(); },
   board:   ()=>{ renderBoard(); buildRankControls(); renderRank(); ensureFun(); },
@@ -3451,7 +3574,7 @@ function renderAll(){
   const wb=$('#warnBar'), ws=DATA.warnings||[];
   wb.innerHTML=ws.map(w=>`<div>${ico('alert-triangle')} ${esc(w)}</div>`).join('');
   wb.classList.toggle('hidden', !ws.length);
-  renderKpis(); renderMath(); buildSubtabs();
+  renderKpis(); renderHome(); renderMath(); buildSubtabs();
   // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
   // 아무도 안 보는 채로 쌓인다(실측). 데이터를 다시 받으면 전부 무효화하고 보는 화면만 다시.
   RENDERED.clear(); FUN_DONE=false;
