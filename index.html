@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-xbeda7BafISMql2EAju/OeV3gE+x+hvrdjzhBjaOKHM='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-i3PMzSVYf5TNjWq+AFs1+C2Ud3SazF0GgJJTC6Qh55A='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -667,8 +667,8 @@
 </svg>
 <header>
   <h1><svg class="ic" aria-hidden="true"><use href="#i-gamepad"/></svg> <span class="g">내전 해체 분석기</span></h1>
-  <select id="guildSel" data-tip="다른 서버(길드) 고르기"></select>
-  <button id="refresh" data-tip="최신 전적 다시 불러오기"><svg class="ic" aria-hidden="true"><use href="#i-refresh-cw"/></svg></button>
+  <select id="guildSel" data-tip="서버 선택"></select>
+  <button id="refresh" data-tip="새로고침"><svg class="ic" aria-hidden="true"><use href="#i-refresh-cw"/></svg></button>
   <div class="meta" id="meta">데이터를 불러오는 중…</div>
 </header>
 
@@ -683,7 +683,7 @@
   <!-- 소환사명 검색 — 치면 밑에 맞는 이름이 바 형태로 뜨고, 누르면 그 멤버의 플레이어 화면으로 간다(요청 2026-09-03). -->
   <div class="mebar" id="mebar">
     <label for="meQ" class="sronly">소환사명 검색</label>
-    <input type="search" id="meQ" placeholder="소환사명 검색 — 예) 앙앙" autocomplete="off" aria-controls="meHits" aria-expanded="false">
+    <input type="search" id="meQ" placeholder="소환사명 검색" autocomplete="off" aria-controls="meHits" aria-expanded="false">
     <div id="meHits" class="mehits" role="listbox" aria-label="검색 결과" hidden></div>
   </div>
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
@@ -705,14 +705,14 @@
       <div class="lnpicks" id="cpLanePick" role="group" aria-label="보기 선택"></div>
       <div id="cpT"></div>
       <div class="muted" id="cpNote" style="margin-top:8px;font-size:12px"></div></div>
-    <div class="card" data-sub="CP 계산식" data-ico="sigma"><h2><svg class="ic" aria-hidden="true"><use href="#i-sigma"/></svg> CP 는 어떻게 나오나</h2>
+    <div class="card" data-sub="CP 계산식" data-ico="sigma"><h2><svg class="ic" aria-hidden="true"><use href="#i-sigma"/></svg> CP 계산식</h2>
       <div id="cpMath"></div></div>
     <div class="card" data-sub="MMR 검산" data-ico="target">
-      <h2><svg class="ic" aria-hidden="true"><use href="#i-sigma"/></svg> 이 숫자는 어떻게 나왔나</h2>
-      <p class="lead">모든 지표의 식과 상수를 그대로 공개합니다. MMR은 아래에서 사람을 고르면
-        <b>중간 계산까지 전부</b> 펼쳐지니, 손으로 더해 보면 화면의 값과 정확히 맞습니다.</p>
+      <h2><svg class="ic" aria-hidden="true"><use href="#i-sigma"/></svg> MMR 검산</h2>
+      <p class="lead">모든 지표의 계산식과 상수를 공개합니다. 멤버를 선택하면 MMR 의 <b>경기별 계산 과정</b>이 표시되며,
+        합계가 화면의 값과 일치합니다.</p>
       <div class="row" style="margin:10px 0">
-        <label>MMR 검산할 멤버 <select id="mathWho"></select></label>
+        <label>멤버 선택 <select id="mathWho"></select></label>
       </div>
       <div id="mathMmr"></div>
     </div>
@@ -722,13 +722,13 @@
     <div data-sub="승률" data-ico="trending-up" class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 승률 리더보드</h2>
         <div class="lnpicks" id="boardLanes" role="group" aria-label="라인 선택"></div>
         <div id="boardT"></div><div id="boardNote"></div>
-        <div class="muted" style="margin-top:8px;font-size:12px">정렬 = 신뢰성(소표본 보정). <span class="hide-sm">헤더 클릭으로 재정렬.</span></div></div>
+        <div class="muted" style="margin-top:8px;font-size:12px">신뢰성 순 정렬<span class="hide-sm"> · 열 제목을 누르면 정렬 기준이 바뀝니다</span></div></div>
     <div data-sub="지표" data-ico="bar-chart" class="card">
         <div class="mpick">
           <div class="grp">
             <span class="muted" style="font-size:12.5px">분류</span>
             <span id="metricGroups"></span>
-            <input type="search" id="metricSearch" placeholder="지표 검색 (예: 골드)"
+            <input type="search" id="metricSearch" placeholder="지표 검색"
                    aria-label="지표 검색">
             <span class="cnt" id="metricCount"></span>
           </div>
@@ -752,14 +752,14 @@
     <div class="card" data-sub="개인 산출" data-ico="activity"><h2><svg class="ic" aria-hidden="true"><use href="#i-activity"/></svg> 개인 산출<span class="qmark" tabindex="0" role="button" data-tip-key="개인산출" aria-label="개인 산출 설명">?</span></h2>
       <p class="muted" id="outIntro"></p>
       <div id="outT"></div>
-      <div class="row" style="margin:10px 0 4px"><label>분해 볼 멤버 <select id="outWho"></select></label></div>
+      <div class="row" style="margin:10px 0 4px"><label>멤버 선택 <select id="outWho"></select></label></div>
       <div id="outParts"></div>
     </div>
-    <div class="card" data-sub="지표 설명" data-ico="book-open"><h2><svg class="ic" aria-hidden="true"><use href="#i-book-open"/></svg> 나머지 지표</h2><div id="mathRest"></div></div>
+    <div class="card" data-sub="지표 설명" data-ico="book-open"><h2><svg class="ic" aria-hidden="true"><use href="#i-book-open"/></svg> 지표 설명</h2><div id="mathRest"></div></div>
   </section>
 
   <section id="records" class="view hidden" data-subtabs>
-    <div class="card" data-sub="명예의 전당" data-ico="award"><h2><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 기록실 (명예의 전당)</h2><div id="recCards"></div></div>
+    <div class="card" data-sub="명예의 전당" data-ico="award"><h2><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 명예의 전당</h2><div id="recCards"></div></div>
     <div class="grid2" data-sub="MVP · 펜타" data-ico="crown">
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-crown"/></svg> MVP 랭킹<span class="qmark" tabindex="0" role="button" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg> 펜타킬</h2><div id="pentaT"></div></div>
@@ -777,36 +777,36 @@
   <section id="syn" class="view hidden" data-subtabs>
     <div class="card" data-sub="듀오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
       <div id="synT"></div></div>
-    <div class="card" data-sub="트리오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 트리오 시너지 (3인 조합)</h2><div id="trioT"></div></div>
+    <div class="card" data-sub="트리오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 트리오 시너지</h2><div id="trioT"></div></div>
     <div class="card" data-sub="히트맵" data-ico="grid"><h2><svg class="ic" aria-hidden="true"><use href="#i-grid"/></svg> 시너지 히트맵</h2><div id="synHeat" style="overflow-x:auto"></div></div>
     <div data-sub="관계" data-ico="users">
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-skull"/></svg> 동반 사망<span class="qmark" tabindex="0" role="button" data-tip-key="동반사망" aria-label="동반 사망 설명">?</span></h2>
-        <p class="muted">같은 팀 두 사람이 <b>10초 안에, 가까운 데서</b> 같이 죽은 횟수입니다.
-          맵 반대편에서 각자 죽은 건 빠집니다. 실력 지표가 아니라 커플 인증입니다.</p>
+        <p class="muted">같은 팀 두 멤버가 <b>10초 안에 가까운 위치에서</b> 함께 죽은 횟수입니다.
+          맵 반대편에서 각자 죽은 경우는 제외합니다. 실력 지표는 아닙니다.</p>
         <div id="funCouple"></div></div>
       <div class="stack card"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 어시스트 관계<span class="qmark" tabindex="0" role="button" data-tip-key="어시스트" aria-label="어시스트 관계 설명">?</span></h2>
-        <p class="muted">누가 누구 킬을 깔아 줬나(어시스트 기준). 옆의 <b>비중</b>은 받은 사람
-          전체 킬 중 이 사람 어시가 낀 비율입니다 — 원시 횟수는 그냥 킬 많은 사람이 위로 옵니다.</p>
+        <p class="muted">어시스트 기준으로 킬을 도운 관계입니다. <b>비중</b>은 킬 멤버의 전체 킬 중
+          이 멤버의 어시스트가 포함된 비율입니다.</p>
         <div id="funAssist"></div></div>
       <div class="stack grid2">
         <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> 최장 연속킬</h2><div id="funSpree"></div></div>
         <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg> 연속킬 저지</h2>
-          <p class="muted">한참 달리던 사람을 처음 끊은 사람입니다. 아무도 못 끊고 끝난 폭주도 많아 따로 냅니다.</p>
+          <p class="muted">연속킬을 처음 끊은 멤버입니다.</p>
           <div id="funStopper"></div></div>
       </div>
     </div>
   </section>
 
   <section id="champ" class="view hidden" data-subtabs>
-    <div class="card" data-sub="메타" data-ico="sparkles"><h2><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언 메타 (서버 전체)</h2>
+    <div class="card" data-sub="메타" data-ico="sparkles"><h2><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언 메타</h2>
       <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
       <div id="champT"></div></div>
-    <div class="card" data-sub="매치업" data-ico="swords"><h2>같은 라인 챔피언 매치업</h2><div id="champMatchT"></div></div>
+    <div class="card" data-sub="매치업" data-ico="swords"><h2>라인 매치업</h2><div id="champMatchT"></div></div>
     <div class="card" data-sub="밴" data-ico="ban"><h2><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg> 밴 통계</h2><div id="banT"></div></div>
     <div data-sub="챔피언 폭" data-ico="sparkles">
       <div class="stack card"><h2><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 라인별 챔피언 폭<span class="qmark" tabindex="0" role="button" data-tip-key="챔피언폭" aria-label="챔피언 폭 설명">?</span></h2>
-        <p class="muted">몇 판을 몇 종으로 돌렸나. 7판에 7종이면 매판 다른 챔피언,
-          7판에 2종이면 장인입니다.</p>
+        <p class="muted">판수 대비 사용한 챔피언 종류입니다. 7판 7종이면 매판 다른 챔피언,
+          7판 2종이면 한 챔피언에 집중한 것입니다.</p>
         <div id="funPool"></div></div>
     </div>
   </section>
@@ -815,8 +815,8 @@
     <div data-sub="최근 경기" data-ico="scroll" class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 최근 경기</h2><div id="matchT"></div></div>
     <div data-sub="진영" data-ico="circle-dot">
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-circle-dot"/></svg> 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
-        <p class="muted">시간대별 승률과 달리 이건 <b>구조적으로 50%가 아니다</b> —
-          한 경기에 블루 하나 레드 하나라 어느 쪽이 더 이겼는지가 실제 정보입니다.</p>
+        <p class="muted">블루·레드 진영별 승률입니다. 한 경기에 블루 1팀·레드 1팀이므로
+          <b>어느 진영이 더 이겼는지</b>가 실제 정보입니다.</p>
         <div id="funSide"></div></div>
     </div>
     <div class="grid2" data-sub="시간대 · 경기 길이" data-ico="moon">
@@ -837,11 +837,11 @@
   <section id="balance" class="view hidden" data-subtabs>
     <div data-sub="팀 나누기" data-ico="scale" class="card">
         <h2><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
-        <p class="muted" id="balNote">오늘 온 멤버를 눌러 담으세요. 짝수로 4~10명이 차면 자동으로 팀이 나뉩니다.</p>
+        <p class="muted" id="balNote">오늘 참여할 멤버를 선택하세요. 짝수 4~10명이 되면 팀이 자동으로 구성됩니다.</p>
         <div id="balPick" class="chips"></div>
         <div id="balResult"></div>
-        <div class="stack row"><button id="balClear">선택 해제</button>
-          <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정하기</label></div>
+        <div class="stack row"><button id="balClear">전체 해제</button>
+          <label class="mini" style="gap:6px"><input type="checkbox" id="balLaneMode">라인 지정</label></div>
       </div>
   </section>
 </div>
@@ -968,10 +968,10 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 const HELP={
   CP:'내전 전적만으로 낸 점수입니다. 솔랭 티어와는 무관합니다.\n한 판에 15~25 움직이고, 이기고 지는 것만 반영합니다 — 많이 뛴다고 오르지 않습니다.\n같은 팀 안에서는 내 MMR 이 팀 평균보다 낮을수록, 그 판에 더 기여했을수록 더 받습니다.\n기여가 컸으면 졌을 때도 덜 잃습니다.',
   기준선:'골드·에메랄드·다이아·마스터 솔랭 표본(라인마다 약 10만 판, 패치 16.10 이후)을 합친 분포 위에 이 사람의 내전 값을 놓고 상위 몇 % 인지 잰 것입니다.\n같은 정의·같은 라인끼리만 견줍니다. 방 안 점수(능력치)와 달리 사람이 바뀌어도 움직이지 않습니다.\n"에메랄드 수준" 같은 티어 이름은 일부러 붙이지 않습니다 — 실측으로 판당 딜·딜 비중·시야는 골드와 마스터의 중앙값이 거의 같아 근거가 없기 때문입니다.\n라인전·개인기 축은 표본에 그 지표가 없어 기준을 내지 않습니다. 내전 티어(CP)와는 무관합니다.',
-  라인티어:'라인마다 티어를 따로 냅니다. 그 판에 실제로 선 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 사람이 미드를 간다고 미드도 같은 티어인 것은 아닙니다.\n안 뛴 라인도 칸을 비우지 않고 추정치로 채우되, 점선으로 아직 표본이 모자라다는 것을 표시합니다.\n라인 편차 = 다섯 라인 중 가장 높은 칸과 가장 낮은 칸 차이의 절반입니다.',
-  라인MMR:'그 라인에서의 MMR = 통합 MMR + 라인 편차입니다.\n편차는 그 라인에서 기대보다 얼마나 더 이겼나를 5판 사전값으로 수축한 값이라 통합 MMR 과 크게 벌어지지 않습니다.\n안 뛴 라인은 사전값(−30)만 남아 점선으로 표시됩니다.',
+  라인티어:'라인마다 티어를 따로 냅니다. 그 판에 실제로 선 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 사람이 미드를 간다고 미드도 같은 티어인 것은 아닙니다.\n미출전 라인도 칸을 비우지 않고 추정치로 채우되, 점선으로 아직 표본이 모자라다는 것을 표시합니다.\n라인 편차 = 다섯 라인 중 가장 높은 칸과 가장 낮은 칸 차이의 절반입니다.',
+  라인MMR:'그 라인에서의 MMR = 통합 MMR + 라인 편차입니다.\n편차는 그 라인에서 기대보다 얼마나 더 이겼나를 5판 사전값으로 수축한 값이라 통합 MMR 과 크게 벌어지지 않습니다.\n미출전 라인은 사전값(−30)만 남아 점선으로 표시됩니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
-  시너지:'같이 한 팀이었을 때의 전적입니다.\n시너지 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
+  시너지:'같이 한 팀이었을 때의 전적입니다.\n시너지 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n함께 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
   진영:'블루(왼쪽 아래)와 레드(오른쪽 위) 진영의 승률입니다.\n한 경기에 블루 하나 레드 하나라 두 진영 승수의 합이 경기 수이고,\n어느 쪽이 더 이겼는지는 상쇄되지 않는 실제 정보입니다.\n표본이 작으면 크게 흔들리니 경기 수를 같이 보세요.',
   챔피언폭:'그 라인에서 서로 다른 챔피언을 몇 종 썼는지입니다.\n챔프폭 = 챔피언 종 수 ÷ 판수. 100%면 매판 다른 챔프,\n낮을수록 한 챔프를 반복해서 씁니다. 잘한다/못한다와는 무관합니다.',
   상대별:'맞대결 = 적으로 만난 판. 같은 팀 = 한편이었던 판.\n킬 주고받음 = (내가 잡은 수 : 나를 잡은 수), 맞대결한 판에서만 셉니다.\n기본 정렬은 상대가 나를 이긴 만큼(승수 차)이라 1판 1패가 4판 4패보다 위로 못 갑니다.\n맞대결이 0판인 상대는 맨 아래에 모읍니다.',
@@ -981,7 +981,7 @@ const HELP={
   MVP:'경기마다 이긴 팀에서 기여도(킬 관여·딜 비중·KDA 를 라인 안에서 재고 팀 안에서 상대값으로 만든 것) 1위에게 1회 줍니다.\n티어 계산의 기여도와 같은 숫자라 정의가 하나입니다. 라인을 타지 않습니다(예전 식은 정글·원딜이 27회 중 20회를 가져갔습니다).\n표의 숫자는 누적 횟수입니다.',
   MMR:'숨은 실력 점수입니다. 팀 대 팀 기대 승률과 실제 결과의 차이만큼 움직입니다(Elo).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다. 판수가 많다고 오르지 않습니다.\n1000이 시작점이고, 티어(CP)·순위·팀 나누기가 전부 이 하나의 숫자를 씁니다. MMR 검산에서 경기별로 확인할 수 있습니다.',
   시너지:'둘이 같이 이긴 비율에서 "각자 실력만으로 기대되는 승률"을 뺀 값입니다.\n기대 승률은 두 사람이 함께한 판을 빼고 계산해 자기 자신과 비교하지 않습니다.\n+면 같이 할 때 더 잘 맞고, −면 덜 맞습니다.',
-  개인산출:'승패와 분리해 고른 개인 지표 10개(딜 비중·골드 비중·골드당 딜·제어 와드·맞라인 우위·시야·킬관여…)를 고정 가중치로 합친 값입니다.\n라인 안에서 표준화하므로 서폿과 원딜을 같은 잣대로 재지 않습니다. 0 이 방 평균이고, 판수가 적으면 0 쪽으로 당깁니다(n/(n+4)).\nMMR 과는 다른 것을 잽니다 — 팀이 이겼는지가 아니라 그 사람이 얼마나 냈는지. 기준(가중치·평균)은 v1 으로 얼려 두어 안 뛴 사람의 값은 움직이지 않습니다.',
+  개인산출:'승패와 분리해 고른 개인 지표 10개(딜 비중·골드 비중·골드당 딜·제어 와드·맞라인 우위·시야·킬관여…)를 고정 가중치로 합친 값입니다.\n라인 안에서 표준화하므로 서폿과 원딜을 같은 잣대로 재지 않습니다. 0 이 방 평균이고, 판수가 적으면 0 쪽으로 당깁니다(n/(n+4)).\nMMR 과는 다른 것을 잽니다 — 팀이 이겼는지가 아니라 그 사람이 얼마나 냈는지. 기준(가중치·평균)은 v1 으로 얼려 두어 미출전 멤버의 값은 움직이지 않습니다.',
   밸런스:'두 팀의 기대 승률을 MMR(라인 편차 포함)로 계산해 가장 5:5 에 가까운 나눔을 고릅니다.\n역할 배정도 같이 최적화하고, 안 뛰어 본 라인은 사전값(−30)만큼 낮게 봅니다.\n시너지가 좋은 두 사람은 같은 팀에 두는 쪽을 조금 선호합니다.',
   상대전적:'적으로 만난 판에서 서로 몇 번 이겼는지 셉니다.\n왼쪽이 더 많이 이긴 쪽, 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.\n같은 편이었던 판은 세지 않습니다.',
   킬관계:'적으로 만난 판에서 서로 몇 번 잡았는지 셉니다(킬 기준).\n왼쪽이 더 많이 잡은 쪽, 숫자는 (잡은 수 : 당한 수) 입니다.\n양쪽 합이 3킬 미만인 조합은 우연이라 보고 뺍니다.\n많이 잡혀도 그 판을 이겼을 수 있으니 승패는 상대별 전적에서 보세요.',
@@ -1086,11 +1086,11 @@ function minGamesNote(lane){
   const dx=DATA.min_days_excluded||0;
   if(n<=1&&!dx) return '';
   return `<p class="note muted">`+
-    `${n}판 이상 뛴 사람만 집계합니다`+
+    `${n}판 이상 참여한 멤버만 집계합니다`+
     (lane&&DATA.min_games_lane&&DATA.min_games_lane!==n
       ? ` (라인별 지표는 ${DATA.min_games_lane}판)` : '')+
-    (ex?` — ${ex}명이 판수 미달로 빠져 있습니다`:'')+
-    (dx?`${ex?', ':' — '}${dx}명이 참여 일수 미달(${DATA.min_days}일)로 빠져 있습니다`:'')+
+    (ex?` · ${ex}명은 판수 미달로 제외`:'')+
+    (dx?` · ${dx}명은 참여 일수 미달(${DATA.min_days}일)로 제외`:'')+
     `. <span class="qmark" tabindex="0" role="button" data-tip="순위·티어 모두 ${n}판 이상부터입니다.&#10;그 전에는 표본이 작아 한 판이 순위를 크게 흔듭니다." aria-label="최소 판수 설명">?</span></p>`;
 }
 // MMR 숫자를 누르면 그 사람의 계산 과정으로 바로 간다 — "이 숫자 어디서 나왔냐"에
@@ -1160,8 +1160,8 @@ function renderBoard(){
       `<button type="button" class="lnpick${curBoardLane===v?' on':''}" data-lane="${v}"`+
       ` aria-pressed="${curBoardLane===v}">${t}${v?` <span class="muted">${have[v]}</span>`:''}</button>`).join('')
       +`<span class="side-sm muted">${curBoardLane
-        ?`${laneKo(curBoardLane)}에서 뛴 판만 · MMR 도 ${laneKo(curBoardLane)} 기준`
-        :'라인을 고르면 그 라인 판만 봅니다'}</span>`;
+        ?`${laneKo(curBoardLane)} 경기만 · MMR 도 ${laneKo(curBoardLane)} 기준`
+        :'라인을 선택하면 해당 라인 경기만 집계합니다'}</span>`;
     lb.querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
       curBoardLane=b.dataset.lane; renderBoard();
       announce(curBoardLane?`${laneKo(curBoardLane)} 리더보드`:'전체 리더보드');
@@ -1186,7 +1186,7 @@ function renderBoard(){
      //    화면 안에서 이동하는 것뿐이므로 버튼으로 둔다. title= 도 쓰지 않는다 —
      //    기본 툴팁은 1초쯤 지연되고 흰 OS 박스라 이 사이트 디자인과 따로 논다.
      fmt:(v,r)=>r._rid?`<span class="mmrlink" role="button" tabindex="0"
-       data-who="${r._rid}" data-tip="누르면 이 MMR 이 어떻게 나왔는지 계산 과정을 펼칩니다">${v}</span>`:v},
+       data-who="${r._rid}" data-tip="MMR 계산 과정 보기">${v}</span>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
@@ -1209,7 +1209,7 @@ function renderBoardLane(){
     {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v},
     {k:'mmr',h:`${laneKo(lane)} MMR`,num:1,bar:1,hlp:'라인MMR',
      fmt:(v,r)=>r._rid?`<span class="mmrlink" role="button" tabindex="0"
-       data-who="${r._rid}" data-tip="누르면 이 MMR 이 어떻게 나왔는지 계산 과정을 펼칩니다">${v}</span>`:v},
+       data-who="${r._rid}" data-tip="MMR 계산 과정 보기">${v}</span>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},{k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
     {k:'kda',h:'KDA',num:1},
@@ -1220,10 +1220,10 @@ function renderBoardLane(){
   const thin=rows.filter(r=>r.games<need).length;
   $('#boardNote').innerHTML=
     `<p class="note-sm muted">`+
-    `${laneKo(lane)}${josa(laneKo(lane),['을','를'])} 한 판이라도 뛴 ${rows.length}명입니다`+
+    `${laneKo(lane)} 1판 이상 출전한 ${rows.length}명`+
     `${thin?` — 그중 ${thin}명은 ${need}판 미만입니다`:''}. `+
-    `<b>${laneKo(lane)} MMR</b> 은 그 사람의 통합 실력에 ${laneKo(lane)} 승률 보정을 더한 값입니다`+
-    ` — 라인마다 처음부터 다시 매긴 값이 아니고, 판수가 적으면 보정이 거의 안 걸려 통합값에 가깝습니다.</p>`;
+    `<b>${laneKo(lane)} MMR</b> = 통합 MMR + ${laneKo(lane)} 라인 편차입니다.`+
+    ` 라인별로 새로 매긴 값이 아니며, 판수가 적으면 통합 MMR 에 가깝습니다.</p>`;
 }
 
 // 지표 목록·라벨·포맷은 **서버가 준 것만** 쓴다. 예전엔 여기에도 배열을 두고
@@ -1252,12 +1252,12 @@ function renderRank(){
   let rows=((DATA.rankings||{})[curMetric]||[]).slice();
   const byLane=rows.length&&('lane' in rows[0]);
   if(curLane && byLane) rows=rows.filter(r=>r.lane===curLane);
-  $('#rankNote').innerHTML=(byLane?'(라인별 분리) ':'')
+  $('#rankNote').innerHTML=(byLane?'(라인별) ':'')
     +(lowerBetter(curMetric)?'<span class="pill">낮을수록 좋음</span> ':'')+minGamesNote(byLane);
   const pend=(DATA.rankings_pending||[]);
   const pn=$('#rankPending');
   if(pn) pn.innerHTML=pend.length
-    ? `${ico('hourglass')} 아직 기록이 없는 지표 ${pend.length}개 — `
+    ? `${ico('hourglass')} 기록 없는 지표 ${pend.length}개 — `
       + pend.map(x=>`<span class="pill" data-tip="${x.reason}">${x.label||mLabel(x.key)}</span>`).join('')
     : '';
   $('#laneBtns').style.display=byLane?'':'none';
@@ -1314,7 +1314,7 @@ function buildRankControls(){
   $('#metricChips').innerHTML=hits.length
     ? hits.map(k=>`<button type="button" class="mchip ${k===curMetric?'on':''}" data-m="${k}"
         >${mLabel(k)}</button>`).join('')
-    : `<span class="muted" style="font-size:12.5px">'${metricQuery}' 에 맞는 지표가 없습니다.</span>`;
+    : `<span class="muted" style="font-size:12.5px">'${metricQuery}' 검색 결과가 없습니다.</span>`;
   $('#metricCount').textContent=q?`검색 ${hits.length}개 / 전체 ${flat.length}개`
                                  :`${flat.length}개 지표`;
   // 아래 칩들이 '어느 분류의 지표인지' 항상 밝힌다
@@ -1346,7 +1346,7 @@ function renderSyn(){
   renderTable($('#synT'),DATA.synergy||[],[
     {k:'na',h:'듀오',fmt:(v,r)=>`${r.na} <span class="muted">＋</span> ${r.nb}`},
     {k:'games',h:'함께',num:1},
-    {k:'winrate',h:'함께 승률',num:1,fmt:pct},{k:'expected',h:'기대',num:1,fmt:pct},
+    {k:'winrate',h:'함께 승률',num:1,fmt:pct},{k:'expected',h:'기대 승률',num:1,fmt:pct},
     {k:'synergy',h:'시너지',num:1,fmt:sgn,hlp:'시너지',cls:r=>'num '+(r.synergy>0?'pos':(r.synergy<0?'neg':''))},
   ],'synergy',-1);
   renderTable($('#trioT'),DATA.trios||[],[
@@ -1368,7 +1368,7 @@ function serverRecordsHTML(){
     `<div class="value" style="font-size:19px">${v}</div>`+
     `<div class="muted" style="font-size:11px;margin-top:3px">${sub}</div></div>`;
   return `<div class="kpis" style="margin:0 0 12px">`+
-    cell('평균 킬 / 경기', sr.avg_kills, `${DATA.summary?.total_games??''}경기 기준`)+
+    cell('경기당 평균 킬', sr.avg_kills, `${DATA.summary?.total_games??''}경기 기준`)+
     cell('최단 경기', mm(sr.shortest.dur), `${dt(sr.shortest.ts)} · ${sr.shortest.kills}킬`)+
     cell('최장 경기', mm(sr.longest.dur), `${dt(sr.longest.ts)} · ${sr.longest.kills}킬`)+
     cell('최다 킬 경기', sr.most_kills.kills+'킬', `${dt(sr.most_kills.ts)} · ${mm(sr.most_kills.dur)}`)+
@@ -1431,9 +1431,8 @@ function renderChamp(){
     // 종료화면 스크린샷에는 밴이 찍히지 않는다. 빈 표를 두면 "아무도 밴을 안 했다"로
     // 읽히므로, 왜 없는지와 언제 채워지는지를 적는다.
     $('#banT').innerHTML='<p class="muted" style="font-size:12px;line-height:1.7">'+
-      ico('hourglass')+' 아직 집계할 수 없습니다.<br>내전 기록을 <b>종료화면 스크린샷</b>으로 모으고 있는데, '+
-      '밴은 그 화면에 나오지 않습니다.<br>라이엇 프로덕션 키가 승인되면 '+
-      'Tournament-V5 로 밴/픽 순서까지 그대로 들어옵니다.</p>';
+      ico('hourglass')+' 아직 집계할 수 없습니다.<br>현재 기록 방식(<b>종료 화면</b>)에는 밴 정보가 없습니다.<br>'+
+      '라이엇 프로덕션 키 승인 후 밴·픽 순서까지 제공됩니다.</p>';
   } else {
     renderTable($('#banT'),DATA.ban_meta||[],[
       {k:'champion_name',h:'챔피언',img:'champion_name',fmt:(v,r)=>r.champion_kr||v},
@@ -1483,8 +1482,8 @@ function renderFun(){
       `<td class="num">${barCell(h.games,hmax,h.games)}</td>`+
       `<td class="num muted">${pct(h.games/htot)}</td></tr>`).join('')+
     '</tbody></table>'+
-    '<p class="note muted">우리끼리 하는 내전이라 어느 '+
-    '시간대든 승률은 정확히 50%가 됩니다(승과 패가 상쇄). 그래서 승률 대신 언제 모이는지를 봅니다.</p>'
+    '<p class="note muted">내전은 승패가 상쇄되어 시간대별 승률이 항상 50%입니다. '+
+    '대신 시간대별 참여 판수를 봅니다.</p>'
     : '<p class="muted">아직 표시할 데이터가 없습니다.</p>';
 
   // 경기 길이
@@ -1516,24 +1515,24 @@ function renderFun(){
     {k:'games',h:'판',num:1},
     // ⚠️ 분모는 games 다. death_stats 는 deaths 를 안 내보내는데 그걸 게이트로 써서
     //    19행 전부 '-' 로 나오고 있었다(값은 멀쩡히 있었다).
-    {k:'fb_given',h:'처음 죽은 비율',num:1,fmt:(v,r)=>r.games?pct(v):'-',
+    {k:'fb_given',h:'퍼블 헌납률',num:1,fmt:(v,r)=>r.games?pct(v):'-',
      cls:r=>'num '+(r.games&&r.fb_given>0.2?'neg':'')},
     {k:'first_death_min',h:'첫 데스',num:1,fmt:v=>v==null?'-':`${v}분`},
-    {k:'bounty_given',h:'내준 현상금',num:1,fmt:v=>v==null?'-':(+v).toLocaleString(),bar:1},
+    {k:'bounty_given',h:'헌납 현상금',num:1,fmt:v=>v==null?'-':(+v).toLocaleString(),bar:1},
   ],'bounty_given',-1);
 
   // 관계 지표 — 동반 사망 / 어시스트 관계 / 연속킬
   renderTable($('#funCouple'),F.co_deaths||[],[
     {k:'a',h:'조합',fmt:(v,r)=>`${r.a} <span class="muted">＋</span> ${r.b}`},
-    {k:'games',h:'같이 뛴 판',num:1},
+    {k:'games',h:'함께 뛴 판',num:1},
     {k:'n',h:'동반 사망',num:1},
     {k:'per_game',h:'판당',num:1,bar:1,fmt:v=>(+v).toFixed(2)},
   ],'per_game',-1);
   renderTable($('#funAssist'),F.assist_flow||[],[
-    {k:'giver',h:'어시스트 준 멤버'},{k:'taker',h:'킬을 낸 멤버'},
+    {k:'giver',h:'어시스트 멤버'},{k:'taker',h:'킬 멤버'},
     {k:'assists',h:'어시',num:1},
-    {k:'share',h:'그 사람 킬 대비',num:1,fmt:v=>pct(v),bar:1},
-    {k:'games',h:'같이 뛴 판',num:1},
+    {k:'share',h:'비중',num:1,fmt:v=>pct(v),bar:1},
+    {k:'games',h:'함께 뛴 판',num:1},
   ],'assists',-1);
   const SP=F.sprees||{};
   renderTable($('#funSpree'),SP.sprees||[],[
@@ -1542,7 +1541,7 @@ function renderFun(){
     {k:'minute',h:'시점',num:1,fmt:v=>`${v}분`},
   ],'streak',-1);
   renderTable($('#funStopper'),SP.stoppers||[],[
-    {k:'stopper',h:'저지한 멤버'},{k:'runner',h:'연속킬 중이던 멤버'},
+    {k:'stopper',h:'저지 멤버'},{k:'runner',h:'연속킬 멤버'},
     {k:'streak',h:'당시 연속킬',num:1,bar:1},
   ],'streak',-1);
 
@@ -1564,7 +1563,7 @@ function renderFun(){
   renderTable($('#funDragon'),F.dragons||[],[
     {k:'dragon',h:'용',fmt:v=>DRAGON_KO[v]||v},
     {k:'taken',h:'획득',num:1,bar:1},
-    {k:'winrate',h:'그 판 승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
+    {k:'winrate',h:mLabel('winrate'),num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
   ],'taken',-1);
 
   $('#funHeat').innerHTML=heatmap(F.death_positions||[]);
@@ -1612,7 +1611,7 @@ function renderMatches(){
     //    담아** 안에 있는 선수 10명·챔피언이 스크린리더에서 개별로 안 읽힌다.
     //    마우스로는 줄 전체가 눌리게 두고(예전 그대로), 키보드용 버튼은 돋보기에만 준다.
     const eye=has?`<span class="muted mexp" role="button" tabindex="0" aria-expanded="false"`+
-      ` aria-label="${d} 경기 상세 펼치기" data-tip="눌러서 경기 상세 보기">${ico('search')}</span>`:'';
+      ` aria-label="${d} 경기 상세 펼치기" data-tip="경기 상세 보기">${ico('search')}</span>`:'';
     return `<div class="match ${has?'clickable':''}" data-idx="${idx}"><span class="muted hide-sm" style="width:96px">${d}</span>${t}${eye}</div>${detail}`;
   };
   const paint=(from,to)=>ms.slice(from,to).map((m,i)=>row(m,from+i)).join('');
@@ -1622,12 +1621,12 @@ function renderMatches(){
   const syncMore=shown=>{ if(!more) return; const left=ms.length-shown;
     if(left<=0){ more.remove(); return; }
     more.dataset.shown=shown;
-    more.textContent=`이전 경기 ${Math.min(left,MATCH_PAGE)}개 더 보기 · 남은 ${left}경기`; };
+    more.textContent=`이전 경기 더 보기 (${Math.min(left,MATCH_PAGE)} / 남은 ${left}경기)`; };
   syncMore(MATCH_PAGE);
   if(more) more.onclick=()=>{ const shown=+more.dataset.shown;
     more.insertAdjacentHTML('beforebegin',paint(shown,shown+MATCH_PAGE));
     bind(); labelTips(root); syncMore(shown+MATCH_PAGE);
-    announce(`경기 ${Math.min(ms.length,shown+MATCH_PAGE)}개까지 보입니다`); };
+    announce(`최근 ${Math.min(ms.length,shown+MATCH_PAGE)}경기 표시`); };
   const bind=()=>root.querySelectorAll('.match.clickable:not([data-bound])').forEach(el=>{ el.dataset.bound='1'; el.onclick=async()=>{
     const idx=el.dataset.idx;
     const d=$('#matchT').querySelector(`.match-detail[data-d="${idx}"]`);
@@ -1642,8 +1641,8 @@ function renderMatches(){
         det=await loadMatchDetail(m.match_id);
         delete d.dataset.loading;
         if(!det){
-          d.innerHTML='<p class="muted" style="padding:12px">경기 상세를 불러오지 못했습니다. 다시 누르면 다시 시도합니다.</p>';
-          announce('경기 상세를 불러오지 못했다. 다시 누르면 다시 시도한다');
+          d.innerHTML='<p class="muted" style="padding:12px">경기 상세를 불러오지 못했습니다. 다시 눌러 주세요.</p>';
+          announce('경기 상세를 불러오지 못했습니다. 다시 눌러 주세요.');
           return;                    // built 를 안 세워 다음에 다시 시도한다
         }
       }
@@ -1653,14 +1652,14 @@ function renderMatches(){
       d.classList.remove('hidden');
       const eye0=el.querySelector('.mexp');
       if(eye0) eye0.setAttribute('aria-expanded','true');
-      announce('경기 상세를 폈다');
+      announce('경기 상세 펼침');
       return;
     }
     d.classList.toggle('hidden');
     const open=!d.classList.contains('hidden');
     const eye=el.querySelector('.mexp');
     if(eye) eye.setAttribute('aria-expanded', open?'true':'false');
-    announce(open?'경기 상세를 폈다':'경기 상세를 접었다');
+    announce(open?'경기 상세 펼침':'경기 상세 접힘');
   };});
   bind();
 }
@@ -1717,9 +1716,9 @@ function attachCombo(sel, placeholder){
     // ⚠️ 포커스 직후에는 입력칸에 **지금 선택된 이름**이 들어 있다. 그걸 검색어로
     //    쓰면 목록이 그 한 명으로 걸러진다(실측). 타이핑 전에는 전체를 보여준다.
     const q=typed?inp.value.trim().toLowerCase():'';
-    const hint=typed?'':'<li class="none" role="presentation">'+ico('keyboard')+' 소환사명이나 부캐 이름을 입력하세요</li>';
+    const hint=typed?'':'<li class="none" role="presentation">'+ico('keyboard')+' 소환사명을 입력하세요 (부캐 포함)</li>';
     items=[...sel.options].map(o=>o.value).filter(v=>!q||hay(v).includes(q));
-    if(!items.length){ list.innerHTML='<li class="none" role="presentation">일치하는 멤버가 없습니다</li>'; }
+    if(!items.length){ list.innerHTML='<li class="none" role="presentation">검색 결과가 없습니다</li>'; }
     else list.innerHTML=hint+items.map((v,i)=>
       `<li role="option" id="${id}-${i}" aria-selected="${v===sel.value}"`+
       `${i===cur?' class="on"':''} data-v="${esc(v)}">${esc(label(v))}${altOf(v,q)}</li>`).join('');
@@ -1788,7 +1787,7 @@ function accRecords(p){
   //    보인다(실측 반응: "병합 아예 안됐는데?" — 데이터는 멀쩡했는데 표가 그렇게 생겼다).
   //    계정 줄은 ↳ 로 합계에 딸려 붙는다.
   return `<details class="accbox">
-    <summary role="group" aria-label="계정별로 나눠 보기">${ico('id-card')} 이 <b>${tot}판</b>은 계정 ${rows.length}개를 합친 기록입니다 — 계정별로 나눠 보기</summary>
+    <summary role="group" aria-label="계정별 보기">${ico('id-card')} 이 <b>${tot}판</b>은 계정 ${rows.length}개를 합친 기록입니다 · 계정별 보기</summary>
     <div class="body"><table><thead><tr>
       <th scope="col">계정</th><th scope="col" class="num">판</th>
       <th scope="col" class="num">승</th><th scope="col" class="num">패</th>
@@ -1822,7 +1821,7 @@ function playerHomeHTML(){
   const lb=(DATA.leaderboard||[])[0];
   const top=k=>((DATA.rankings||{})[k]||[])[0];
   const hl=[
-    lb?['승률 1위 (신뢰성)',lb.discord_name,`${pct(lb.winrate)} · ${lb.games}판`]:null,
+    lb?['승률 1위 (신뢰성 기준)',lb.discord_name,`${pct(lb.winrate)} · ${lb.games}판`]:null,
     top('kda')?['KDA 1위',top('kda').discord_name,`${top('kda').value} · ${top('kda').games}판`]:null,
     top('dpm')?['분당 딜 1위',top('dpm').discord_name,`${Math.round(top('dpm').value)} · ${top('dpm').games}판`]:null,
     top('kp')?['킬 관여 1위',top('kp').discord_name,`${pct(top('kp').value)} · ${top('kp').games}판`]:null,
@@ -1851,7 +1850,7 @@ function playerHomeHTML(){
       <span class="reg muted">— 누르면 그 멤버가 열립니다. 순서는 티어 순.</span></div>
     <div class="row" style="margin-bottom:9px">
       <label class="sronly" for="plHomeSearch">소환사명 검색</label>
-      <input type="search" id="plHomeSearch" class="psearch" placeholder="소환사명 검색 (부캐 이름도 찾습니다)" autocomplete="off">
+      <input type="search" id="plHomeSearch" class="psearch" placeholder="소환사명 검색 (부캐 포함)" autocomplete="off">
       <span class="sm muted" id="plHomeHit"></span></div>
     <div class="plgrid" id="plHomeGrid">${cards}</div>`;
 }
@@ -1884,13 +1883,13 @@ function renderPlayerBody(){
   const r=p.record||{}, f=p.form||{};
   const streak=f.streak?`<span class="pill ${f.dir==='W'?'good':'bad'}">${f.streak}${f.dir} 연속</span>`:'';
   // 예전엔 시너지 점수만 덩그러니 있어서 그게 무슨 숫자인지 알 수 없었다
-  // → 같이 뛴 판수·승패를 먼저 보여주고, 시너지 점수는 괄호로.
+  // → 함께 뛴 판수·승패를 먼저 보여주고, 시너지 점수는 괄호로.
   const pf=(arr,cls)=>(arr||[]).map(x=>{
     const g=x.games||0, w=Math.round((x.winrate||0)*g);
     return `<div class="mini" style="justify-content:space-between">`+
       `<span>${x.partner}</span>`+
       `<span><b class="${x.winrate>=0.5?'pos':'neg'}">${w}승 ${g-w}패</b>`+
-      `<span class="muted"> · 같이 ${g}판 · 시너지 <span class="${cls}">${sgn(x.synergy)}</span></span></span></div>`;
+      `<span class="muted"> · 함께 ${g}판 · 시너지 <span class="${cls}">${sgn(x.synergy)}</span></span></span></div>`;
   }).join('')||'<span class="muted">—</span>';
   const best=pf(p.partners_best,'pos'), worst=pf(p.partners_worst,'neg');
   const nv=p.nemesis_victim||{nemesis:[],victim:[]};
@@ -1944,7 +1943,7 @@ function renderPlayerBody(){
         </div>
       </div>
       <div data-sub="세부 지표" data-ico="list">
-        <h2>${ico('list')} 세부 지표<span class="qmark" tabindex="0" role="button" data-tip="우리 방 안에서의 순위와 백분위입니다.&#10;막대가 길수록 방에서 상위권." aria-label="세부 지표 설명">?</span></h2>
+        <h2>${ico('list')} 세부 지표<span class="qmark" tabindex="0" role="button" data-tip="내전 멤버 중 순위와 백분위입니다.&#10;막대가 길수록 상위권입니다." aria-label="세부 지표 설명">?</span></h2>
         <div id="plMetrics"></div>
       </div>
     </div>`;
@@ -1975,8 +1974,8 @@ function renderPlayerBody(){
   // 통합값과 라인별이 왜 다른지 한 줄로 — 안 적으면 "숫자가 안 맞는다"로 읽힌다
   const lanesN=(p.lanes||[]).length;
   if(lanesN>1) $('#plLaneNote').innerHTML=(
-    `<p class="note-sm muted">위 요약의 ${mLabel('dpm')} ${r.dpm} 은 `+
-    `${lanesN}개 라인을 합친 값입니다. 라인마다 하는 일이 달라서 여기 숫자와 다릅니다.</p>`);
+    `<p class="note-sm muted">요약의 ${mLabel('dpm')} ${r.dpm} 은 `+
+    `${lanesN}개 라인을 합산한 값이라 라인별 수치와 다릅니다.</p>`);
   else $('#plLaneNote').innerHTML='';
   renderTable($('#plChamp'),p.champions,[{k:'champion_name',h:'챔피언',img:'champion_name',fmt:v=>champKo(v)},
     {k:'lane',h:'라인',fmt:laneKo},
@@ -2014,7 +2013,7 @@ function renderSidePlayers(list){
   }).filter(x=>x.gap!=null).sort((a,b)=>Math.abs(b.gap)-Math.abs(a.gap)).slice(0,6);
   if(!rows.length) return '';
   return `<div class="sidepl"><div class="muted" style="font-size:12px;margin-bottom:6px">`+
-    `진영을 많이 타는 사람 (양쪽 다 뛴 사람만)</div>`+
+    `진영별 승률 차이가 큰 멤버 (양쪽 진영 모두 출전)</div>`+
     rows.map(x=>`<div class="mini" style="justify-content:space-between">`+
       `<span>${x.discord_name}</span>`+
       `<span class="muted">블루 ${x.blue_g}판 ${x.blue_w}승 · 레드 ${x.red_g}판 ${x.red_w}승 `+
@@ -2049,12 +2048,12 @@ function renderPlayerVs(meId){
       killDiff: vg?(kGot-kLost):null,
     });
   });
-  if(!rows.length){ box.innerHTML='<p class="muted">아직 만난 상대가 없습니다.</p>'; return; }
+  if(!rows.length){ box.innerHTML='<p class="muted">아직 상대 전적이 없습니다.</p>'; return; }
   // 동점이면 판수 많은 쪽이 위 — 안정 정렬이라 renderTable 이 다시 정렬해도 유지된다
   rows.sort((a,b)=>(b.vsGames||0)-(a.vsGames||0));
   renderTable(box,rows,[
     {k:'opp',h:'상대',fmt:(v,r)=>`<span class="vslink" role="button" tabindex="0"`+
-      ` data-who="${r._oid}" data-tip="누르면 이 상대와의 상세를 봅니다">${v}</span>`},
+      ` data-who="${r._oid}" data-tip="상대 전적 상세 보기">${v}</span>`},
     {k:'vsMargin',h:'맞대결',num:1,nullLast:1,
      fmt:(v,r)=>r.vs||'<span class="muted">—</span>',
      cls:r=>'num '+(r.vsMargin==null?'':(r.vsMargin>0?'neg':(r.vsMargin<0?'pos':'')))},
@@ -2069,7 +2068,7 @@ function renderPlayerVs(meId){
   const note=$('#plVsNote');
   if(note) note.innerHTML=
     `<p class="note muted">맞대결 합계 ${tot.n}판 ${tot.w}승 ${tot.n-tot.w}패`+
-    ` · 이름을 누르면 그 상대와의 상세를 봅니다.</p>`;
+    ` · 이름을 누르면 상세 전적을 볼 수 있습니다.</p>`;
 }
 // 두 명 상세(비교 탭)로 이동. 검색 필터가 걸려 있으면 option 이 없어 값 대입이
 // 조용히 실패하므로 반드시 먼저 비운다.
@@ -2114,13 +2113,13 @@ function renderPlayerMetrics(p){
       btn('','전체')+lanes.map(L=>btn(L,laneKo(L))).join('')+
       `<span class="side-sm muted">`+
       `${curMetricLane?`${laneKo(curMetricLane)}에서 뛴 판만, ${laneKo(curMetricLane)}끼리 비교`
-                     :'라인을 고르면 그 라인 판만 봅니다'}</span></div>`;
+                     :'라인을 선택하면 해당 라인 경기만 집계합니다'}</span></div>`;
   }
 
   const groups=(DATA.metric_groups||[]).map(g=>({group:g.group,
     metrics:(g.metrics||[]).filter(k=>m[k])})).filter(g=>g.metrics.length);
   if(!groups.length){
-    el.innerHTML=picker+'<p class="muted">이 라인에서 낼 수 있는 지표가 없습니다.</p>';
+    el.innerHTML=picker+'<p class="muted">이 라인의 지표가 없습니다.</p>';
     bindLanePicks(el,p); return;
   }
   const need=(DATA.min_games)||5;
@@ -2163,8 +2162,8 @@ function bindLanePicks(el,p){
 function renderCompare(){
   const P=DATA.players||{}, ka=$('#cmpA').value, kb=$('#cmpB').value;
   const a=P[ka], b=P[kb];
-  if(!a||!b){ $('#cmpBody').innerHTML='<p class="muted">팀을 나눌 멤버를 선택하세요 (짝수 4~10명).</p>'; return; }
-  if(ka===kb){ $('#cmpBody').innerHTML='<p class="muted">서로 다른 두 명을 고르세요</p>'; return; }
+  if(!a||!b){ $('#cmpBody').innerHTML='<p class="muted">비교할 두 멤버를 선택하세요.</p>'; return; }
+  if(ka===kb){ $('#cmpBody').innerHTML='<p class="muted">서로 다른 두 멤버를 선택하세요.</p>'; return; }
   // 'VS'는 나란히 놓은 지표가 아니라 **적으로 만났을 때 누가 이겼나**다.
   const h=(DATA.h2h||{}), rec=h[ka+'|'+kb]||h[kb+'|'+ka];
   const flip=!!(h[kb+'|'+ka] && !h[ka+'|'+kb]);      // 키 순서가 반대면 승패를 뒤집는다
@@ -2190,11 +2189,11 @@ function renderCompare(){
         `킬 주고받음 ${kGot} : ${kLost}</p>`:'');
   const lanes=(rec&&rec.lanes||[]).filter(x=>x.same_lane);
   const laneNote=lanes.length?`<p class="muted" style="font-size:12px;margin:10px 0 0">`+
-      `같은 라인에서 붙은 판 ${lanes.length}회 — `+
+      `같은 라인 맞대결 ${lanes.length}회 — `+
       lanes.slice(0,5).map(x=>`${laneKo(x.lane)} ${champKo(flip?x.b_champ:x.a_champ)} vs ${champKo(flip?x.a_champ:x.b_champ)}`+
         ` <span class="${(flip? !x.a_win : x.a_win)?'pos':'neg'}">${(flip? !x.a_win : x.a_win)?'승':'패'}</span>`).join(' · ')+`</p>`:'';
   const withNote=rec&&rec.with_games?
-    `<p class="muted" style="font-size:12px;margin:6px 0 0">같은 편이었던 판 ${rec.with_games}회 · 그때 승률 ${pct(rec.with_winrate)}</p>`:'';
+    `<p class="muted" style="font-size:12px;margin:6px 0 0">같은 팀 ${rec.with_games}회 · 승률 ${pct(rec.with_winrate)}</p>`:'';
   // 능력치 겹쳐 그리기 — 도형이 겹쳐도 축마다 숫자를 둘 다 적어 읽힌다.
   //    색만으로 구분하지 않게 B 는 점선으로 그린다(색각 대응).
   // ⚠️ 여기서 던지면 아래 innerHTML 대입 전이라 **이전 두 사람 화면이 그대로 남는다**.
@@ -2202,7 +2201,7 @@ function renderCompare(){
   let radarHTML='';
   try{ radarHTML=radarSVG([{name:a.name,profile:a.profile,color:TOK.good},
                            {name:b.name,profile:b.profile,color:TOK.bad}]); }
-  catch(err){ radarHTML='<span class="muted">능력치를 그리지 못했습니다</span>'; }
+  catch(err){ radarHTML='<span class="muted">능력치를 표시할 수 없습니다</span>'; }
   const both=(a.profile||[]).length>=3&&(b.profile||[]).length>=3
     ? `<div class="cmpradar">`+radarHTML+
       `<div class="cmpleg">`+
@@ -2218,7 +2217,7 @@ function renderCompare(){
       ${row(mLabel('kp'),ra.kp,rb.kp,pct)}
       ${row(mLabel('dpm'),ra.dpm,rb.dpm)}
     </tbody></table>`+laneNote+withNote+
-    (vs?'':'<p class="stack muted">아직 적으로 만난 기록이 없습니다.</p>');
+    (vs?'':'<p class="stack muted">아직 맞대결 기록이 없습니다.</p>');
 }
 
 // --- 밸런서 (balance.py JS 포팅) ---
@@ -2280,7 +2279,7 @@ function jsBalance(players,decl){
 const balSel=new Map();     // id -> 지정 라인('' 이면 자동)
 function renderBalancePicker(){
   const R=DATA.ratings||{},ids=Object.keys(R);
-  if(!ids.length){$('#balPick').innerHTML='<p class="muted">아직 MMR 이 없습니다. 내전이 쌓이면 팀을 나눌 수 있습니다.</p>';return;}
+  if(!ids.length){$('#balPick').innerHTML='<p class="muted">아직 MMR 이 없습니다. 내전 기록이 쌓이면 팀을 구성할 수 있습니다.</p>';return;}
   const laneMode=$('#balLaneMode')&&$('#balLaneMode').checked;
   $('#balPick').innerHTML=ids.sort((a,b)=>R[b].mmr-R[a].mmr).map(id=>{
     const on=balSel.has(id), ln=balSel.get(id)||'';
@@ -2295,7 +2294,7 @@ function runBalance(){
   const decl={}; balSel.forEach((v,k)=>{if(v)decl[k]=v;});
   const note=$('#balNote'), out=$('#balResult');
   if(chosen.length<4||chosen.length%2){
-    note.textContent=`${chosen.length}명 선택 — 짝수로 4~10명이 되면 자동으로 팀이 갈립니다.`;
+    note.textContent=`${chosen.length}명 선택 · 짝수 4~10명이 되면 팀이 자동으로 구성됩니다.`;
     out.innerHTML=''; return;
   }
   const res=jsBalance(chosen,decl);
@@ -2306,8 +2305,8 @@ function runBalance(){
   // 정보 최대화가 골랐으면 그 이유를 한 줄로 — '왜 이 나눔이냐'에 답한다
   const why=res.infoPick?`<p class="note-sm muted">5:5 에 가까운 나눔 ${res.nCand}개 중, 아직 순서가 불확실한 사람들을 서로 반대편에 두는 나눔입니다 — 공정성은 같고 한 판이 더 많이 가립니다.</p>`:'';
   const verdict=gap<=3?['거의 완벽한 5:5','good']
-    :gap<=8?['살짝 기울지만 할 만합니다','']
-    :['많이 기울었습니다 — 한 명 바꿔보세요','bad'];
+    :gap<=8?['약간 기울었지만 괜찮습니다','']
+    :['많이 기울었습니다. 멤버를 바꿔 보세요','bad'];
   note.textContent=`${chosen.length}명 선택`;
   // 라인은 5:5일 때만 배정된다(3v3 등에는 라인 개념이 없다) → 없으면 칸 자체를 뺀다
   const hasLane=res.teamA.some(m=>m.lane);
@@ -2318,7 +2317,7 @@ function runBalance(){
       `${m.off?'<span class="bad" data-tip="주로 하던 라인이 아닙니다">'+ico('alert-triangle')+'</span>':''}</div>`).join('')+`</div>`;
   out.innerHTML=`<div class="bverdict ${verdict[1]}">${pa} : ${100-pa}<span>${verdict[0]}</span></div>`+
     `<div class="bteams">`+team(res.teamA,'A팀','<i class="dot b"></i>')+team(res.teamB,'B팀','<i class="dot r"></i>')+`</div>`+
-    (hasLane?'':`<p class="note muted">라인은 5:5일 때만 배정합니다.</p>`)+
+    (hasLane?'':`<p class="note muted">라인 배정은 5:5 일 때만 합니다.</p>`)+
     why+`<div class="stack row"><button id="balCopy" class="chip">${ico('clipboard-list')} 팀 구성 복사</button>`+
     `<span class="sm muted" id="balCopyMsg"></span></div>`;
   // 팀을 갈라 놓고 옮길 방법이 없으면 열 명을 다시 타이핑해야 한다 — 그게 실제로
@@ -2332,12 +2331,12 @@ function runBalance(){
     const msg=$('#balCopyMsg');
     try{
       await navigator.clipboard.writeText(txt);
-      msg.textContent='복사했습니다 — 디스코드에 붙여넣으세요';
+      msg.textContent='복사했습니다. 디스코드에 붙여넣으세요.';
     }catch(e){
       // 클립보드가 막힌 브라우저(구형·비보안 맥락)에서는 고를 수 있게 펼쳐 준다
       const ta=document.createElement('textarea');
       ta.value=txt; ta.style.cssText='width:100%;height:150px;margin-top:8px';
-      msg.textContent='자동 복사가 막혀 있습니다 — 아래 글을 직접 복사하세요';
+      msg.textContent='자동 복사를 할 수 없습니다. 아래 내용을 직접 복사하세요.';
       msg.parentElement.appendChild(ta); ta.select();
     }
     announce('팀 배정을 복사했습니다');
@@ -2388,7 +2387,7 @@ function goldChart(tl){
     `<span class="muted">골드 차이 (블루 − 레드)</span>`+
     `<span class="red">▼ 레드 우세</span></div>
     <svg class="chart" viewBox="0 0 ${W} ${H}" role="img"
-         aria-label="골드 차이 추이 — 위쪽은 블루팀 우세, 아래쪽은 레드팀 우세">
+         aria-label="골드 차이 추이 (위: 블루 우세 · 아래: 레드 우세)">
       <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="${TOK.good}" stop-opacity=".30"/>
         <stop offset="${zf}%" stop-color="${TOK.good}" stop-opacity=".05"/>
@@ -2583,7 +2582,7 @@ function matchDetailHTML(d){
     (hasBan?`<div class="gstat"><span class="ga">${ban(A)}</span><span class="gl">${ico('ban')} 밴</span><span class="gb">${ban(B)}</span></div>`:'')+
     `</div>`+
     ((hasObj&&hasBan)?'':`<p class="muted" style="text-align:center;font-size:11px;margin:6px 0 0">`+
-      `종료화면 스크린샷에 없는 정보: `+
+      `종료 화면에 없는 정보: `+
       `${[hasObj?null:'드래곤·바론·타워',hasBan?null:'밴'].filter(Boolean).join(', ')}`+
       ` — 라이엇 프로덕션 키 승인 후 표시됩니다.</p>`);
   h+=`<h2>${ico('swords')} 딜량</h2>`+dmgBars(d);
@@ -2618,8 +2617,8 @@ function renderSynHeat(){
   }).join('')+'</tr>'; }
   // 눈금이 데이터에 맞춰 늘어나므로 **양 끝이 얼마인지** 적어야 오해가 없다
   el.innerHTML=h+'</table><p class="muted" style="margin-top:8px;font-size:12px">'+
-    `파랑=시너지 높음 / 주황=낮음 · 가장 진한 색이 ±${peak.toFixed(2)} 입니다`+
-    ' · 칸을 '+TAPHINT+' 함께 뛴 판수가 나옵니다</p>';
+    `파랑 = 시너지 높음 · 주황 = 낮음 · 가장 진한 색 = ±${peak.toFixed(2)}`+
+    ' · 칸을 '+TAPHINT+' 함께 뛴 판수를 볼 수 있습니다</p>';
 }
 function donut(dist){
   if(!dist||!dist.length) return '<span class="muted">-</span>';
@@ -2695,7 +2694,7 @@ function radarSVG(series,opt){
       if(m) return m;
     }
   }).filter(Boolean);
-  if(base.length<3) return '<span class="muted">판수가 모자라 능력치를 그릴 수 없습니다</span>';
+  if(base.length<3) return '<span class="muted">판수가 부족해 능력치를 표시할 수 없습니다</span>';
   const SC=SCALE(), MAX=SC.max||5, RINGS=SC.rings||5;
   const N=base.length, cx=118, cy=112, R=70;
   let g='';
@@ -2833,13 +2832,10 @@ function statHead(p,ratingName){
         `${mv.delta.toFixed(2)}</span></span>`:'';})()+`</div>`+
     `<p class="note-sm muted">`+
     `${curAxisLane?`${laneKo(curAxisLane)}끼리 견준 점수입니다 — `:''}`+
-    `${curAxisLane?laneKo(curAxisLane):'방'} 평균이 ${SC.room_avg} 입니다. 순위가 아니라 <b>값</b>에서 나온 점수라,`+
-    ` 잘하면 오르고 못하면 내려갑니다 — 남이 못해서 오르지 않습니다.`+
-    ` 판수가 적으면 평균 쪽으로 당겨 둡니다.`+
-    ` 승패를 반영하는 MMR 과는 다른 숫자입니다.`+
-    ` 경기 하나에 0.13쯤 움직이니 소수 둘째 자리는 오늘의 값으로만 보세요.`+
-    ` ▲▼ 는 지난 내전 대비 변화이고, ${SC.delta_min||0.3} 이상 움직였을 때만 나옵니다`+
-    ` — 그보다 작으면 잡음과 구분이 안 됩니다.</p>`;
+    `${curAxisLane?laneKo(curAxisLane):'전체'} 평균 ${SC.room_avg}. 순위가 아닌 <b>값</b> 기준 점수라 본인 성적에 따라 오르내립니다.`+
+    ` 판수가 적으면 평균 쪽으로 보정됩니다. 승패 기반 MMR 과는 다른 수치입니다.`+
+    ` 한 경기에 약 0.13 변동하므로 소수 둘째 자리는 참고만 하세요.`+
+    ` ▲▼ 는 지난 내전 대비 ${SC.delta_min||0.3} 이상 변화한 경우에만 표시됩니다.</p>`;
 }
 function radar(p,ratingKey){
   // 라인을 골랐으면 레이더도 그 라인 축으로 그린다(막대·머리말과 같은 출처).
@@ -2855,7 +2851,7 @@ function radar(p,ratingKey){
         ` aria-pressed="${curAxisLane===v}">${t}</button>`).join('')+
       `<span class="side-sm muted">`+
       `${curAxisLane?`${laneKo(curAxisLane)}에서 뛴 판만, ${laneKo(curAxisLane)}끼리 비교`
-                   :'라인을 고르면 그 라인끼리 견줍니다'}</span></div>`
+                   :'라인을 선택하면 같은 라인끼리 비교합니다'}</span></div>`
     : '';
   return picker+`<div class="statwrap">${radarSVG([{name:'',profile:axesOf(p),color:TOK.good}])}`+
          `${axisBars(p)}</div>`+statHead(p,ratingKey)+baselineHTML(p,ratingKey);
@@ -2921,11 +2917,11 @@ function outRows(){
 }
 function renderOutput(){
   const K=outC(), rows=outRows(), box=$('#outT'); if(!box) return;
-  if(!rows.length){ box.innerHTML='<p class="muted">아직 개인 산출을 낼 만큼 뛴 사람이 없습니다.</p>'; return; }
-  $('#outIntro').innerHTML=`승패와 분리된 개인 지표 ${(K.weights||[]).length}개를 고정 가중치로 합친 값입니다. `+
-    `<b>0</b> 이 그 라인의 방 평균, 사람 간 표준편차가 0.17 쯤입니다. 기준 <b>v${K.version||1}</b>`+
-    `${K.frozen_at?` (${K.frozen_at} · ${K.frozen_games}판 기준)`:''} — 안 뛴 사람의 값은 다음 기준 갱신까지 움직이지 않습니다. `+
-    `${minGamesNeeded()}판 이상만 싣습니다.`;
+  if(!rows.length){ box.innerHTML='<p class="muted">아직 개인 산출을 산정할 멤버가 없습니다.</p>'; return; }
+  $('#outIntro').innerHTML=`승패와 무관한 개인 지표 ${(K.weights||[]).length}개를 고정 가중치로 합산한 값입니다. `+
+    `<b>0</b> = 같은 라인 평균, 표준편차 약 0.17. 기준 <b>v${K.version||1}</b>`+
+    `${K.frozen_at?` (${K.frozen_at} · ${K.frozen_games}판)`:''} · ${minGamesNeeded()}판 이상 집계 · `+
+    `기준 갱신 전까지 미출전 멤버의 값은 변하지 않습니다.`;
   rows.forEach((r,i)=>{ r._rank=i+1; });
   renderTable(box, rows, [
     {k:'_rank',h:'#',num:1},
@@ -2933,8 +2929,8 @@ function renderOutput(){
     {k:'score',h:'개인 산출',num:1,bar:1,fmt:v=>sgn2(v),cls:r=>'num '+(r.score>0?'pos':r.score<0?'neg':'')},
     {k:'games',h:'판수',num:1},
     {k:'mmr',h:'MMR',num:1,lo:1,hlp:'MMR',fmt:v=>v==null?'—':`<span class="muted">${v}</span>`},
-    {k:'best',h:'가장 강한 지표',lo:1},
-    {k:'worst',h:'가장 약한 지표',lo:1},
+    {k:'best',h:'강점',lo:1},
+    {k:'worst',h:'약점',lo:1},
   ],'score',-1);
   const sel=$('#outWho');
   sel.innerHTML=rows.map(r=>`<option value="${r._id}">${esc(r.name)} · ${sgn2(r.score)}</option>`).join('');
@@ -2965,7 +2961,7 @@ function renderMathMmr(){
   const C=DATA.cp||{}, K=cpConst();
   const id=$('#mathWho').value, r=C[id];
   const box=$('#mathMmr');
-  if(!r||!(r.replay||[]).length){ box.innerHTML='<p class="muted">이 멤버는 아직 MMR 을 계산할 판이 없습니다.</p>'; return; }
+  if(!r||!(r.replay||[]).length){ box.innerHTML='<p class="muted">아직 경기 기록이 없습니다.</p>'; return; }
   const rows=r.replay, base=K.mmr_base||1000, cbase=K.cp_base||1000;
   const sumM=rows.reduce((t,x)=>t+x.d_mmr,0), sumC=rows.reduce((t,x)=>t+x.d_cp,0);
   const tol=0.5+rows.length*0.0005, okM=Math.abs(base+sumM-r.mmr)<=tol, okC=Math.abs(cbase+sumC-r.cp)<=tol;   // 행마다 소수 3자리
@@ -2989,9 +2985,9 @@ function renderMathMmr(){
       <th scope="col" class="num">K</th><th scope="col" class="num">기여보정</th><th scope="col" class="num">ΔMMR</th><th scope="col" class="num">MMR</th>
       <th scope="col" class="num">ΔCP</th><th scope="col" class="num">CP</th></tr></thead><tbody>${tr}</tbody></table></div>
     <p class="fml">MMR = ${base} ${sumM>=0?'+':'−'} ${Math.abs(sumM).toFixed(2)} = ${(base+sumM).toFixed(2)} → 반올림 <b class="acc">${r.mmr}</b>
-      ${okM?'':' <span class="neg">'+ico('alert-triangle')+' 합이 안 맞습니다</span>'}<br>
+      ${okM?'':' <span class="neg">'+ico('alert-triangle')+' 합계 불일치</span>'}<br>
       CP = ${cbase} ${sumC>=0?'+':'−'} ${Math.abs(sumC).toFixed(2)} = ${(cbase+sumC).toFixed(2)} → <b class="acc">${r.cp}</b> → <b>${r.tier} ${r.points}점</b>
-      ${okC?'':' <span class="neg">'+ico('alert-triangle')+' 합이 안 맞습니다</span>'}</p>
+      ${okC?'':' <span class="neg">'+ico('alert-triangle')+' 합계 불일치</span>'}</p>
     <h3>라인별 MMR</h3>
     <p class="fml">라인 MMR = MMR + 라인 편차 &nbsp;·&nbsp; 편차 = (n×관측 + 5×사전) / (n + 5), 사전 = 0 (주 라인) / ${K.off_lane_prior??-30} (그 외)</p>
     <p class="fml">${lanes||'—'}</p>
@@ -3083,7 +3079,7 @@ function attachTableFilters(root){
     const name = tb.getAttribute('aria-label') || '표';
     const box = document.createElement('div');
     box.className = 'tfilter';
-    box.innerHTML = `<label class="sronly" for="${id}">${name} 안에서 찾기</label>`+
+    box.innerHTML = `<label class="sronly" for="${id}">${name} 검색</label>`+
       `<input type="search" id="${id}" placeholder="${
         ((tb.querySelector('th')||{}).textContent||'').includes('챔피언')
           ?'챔피언 검색':'소환사명 검색'}" autocomplete="off">`+
@@ -3104,9 +3100,9 @@ function attachTableFilters(root){
         tr.classList.toggle('tfhide', !on);
         if (on) n++;
       }
-      hit.textContent = q ? `${n}줄` : '';
+      hit.textContent = q ? `${n}건` : '';
       foldSync(tb, !!q);
-      if (say && q) announce(`${n}줄 남음`);
+      if (say && q) announce(`${n}건 검색됨`);
     };
     inp.addEventListener('input', () => apply(true));
     if (TFQ[key]) { inp.value = TFQ[key]; apply(false); }   // 다시 그려진 표에 복원
@@ -3180,7 +3176,7 @@ function tierBadge(name){
   return `<span class="tierbadge ${tierCls(name)}">${esc(name)}</span>`;
 }
 // 라인 칸 하나. 확신을 **모양**으로 드러낸다 — 실선(주 라인) / 실선(배치완료) /
-// 점선(표본 부족) / 흐린 점선(안 뛴 라인).
+// 점선(표본 부족) / 흐린 점선(미출전 라인).
 // 사다리 보기 상태 — ''=통합(1인 1행) · 'ALL'=라인별 전부 · 라인키=그 라인만.
 // 다시 그려도 유지된다.
 let cpView='', cpLaneEst=false;
@@ -3266,7 +3262,7 @@ gap = ((MMR − CP) / ${C.cp_gap_div}) 을 ±${C.cp_gap_cap} 로 자름
        그 사람을 이긴 쪽에 점수가 새로 생겨 전체가 부풉니다.</p>
     <div class="tierlegend">${cpTiers().map(t=>
       `<span>${tierBadge(t.name)} <span class="muted">${
-        t.open_top?'위로 열림':(t.cp==null?'맨 아래':'속 점수 '+t.cp+'+')}</span></span>`
+        t.open_top?'상한 없음':(t.cp==null?'최하위':'CP '+t.cp+'+')}</span></span>`
       ).join('')}</div>
     <p class="stack-sm muted"><b>왜 5단계인가</b> — 판이 쌓여도 점수 폭은
        400 근처에서 멈춥니다(실측: 19판 217 · 200판 403 · 400판 399). 티어 하나가 운과
@@ -3280,7 +3276,7 @@ function renderCp(){
   const ids=Object.keys(cp);
   const C=cpConst();
   if(!ids.length){
-    $('#cpT').innerHTML='<p class="muted">아직 티어를 낼 만한 판이 없습니다.</p>';
+    $('#cpT').innerHTML='<p class="muted">아직 티어를 산정할 경기가 없습니다.</p>';
     $('#cpMath').innerHTML=''; return;
   }
   const base=C.cp_base||1000, need=C.placement_games||4;
@@ -3288,9 +3284,9 @@ function renderCp(){
   // ── 사다리 ──
   const FULLP=C.tier_points||100;
   $('#cpIntro').innerHTML=
-    `내전 전적만으로 냅니다. 한 판에 <b>${C.cp_min}~${C.cp_max}점</b> 움직이고, `+
-    `<b>${FULLP}점</b>을 채우면 티어가 오릅니다(약 ${Math.round(FULLP/20)}판). `+
-    `<b>많이 뛴다고 오르지 않습니다</b> — 이기고 지는 것만 반영합니다.`;
+    `내전 전적만으로 산정합니다. 한 판에 <b>${C.cp_min}~${C.cp_max}점</b> 변동, `+
+    `<b>${FULLP}점</b>을 채우면 승급합니다(약 ${Math.round(FULLP/20)}판). `+
+    `<b>판수가 아니라 승패만</b> 반영합니다.`;
   $('#cpLegend').innerHTML=cpTiers().map(t=>
     `<span>${tierBadge(t.name)}${t.open_top?' <span class="muted">위로 열림</span>':''}</span>`
   ).join('');
@@ -3301,7 +3297,7 @@ function renderCp(){
     return {...v, _id:id,
       _lane: ml?laneKo(ml):'—',
       _lanecp: ml&&L[ml]?L[ml].cp:v.cp,
-      // 안 뛴 라인 중 가장 낮은 칸 — "다른 라인 가면 어디까지 떨어지나"
+      // 미출전 라인 중 가장 낮은 칸 — "다른 라인 가면 어디까지 떨어지나"
       _floor: Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null)),
       _spread: Math.max(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))
              - Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))};
@@ -3324,7 +3320,7 @@ function renderCp(){
       `<button type="button" class="lnpick${cpView===v?' on':''}" data-lane="${v}"`+
       ` aria-pressed="${cpView===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('')
     +(cpView?`<label class="mini" style="gap:6px;margin-left:10px">`+
-      `<input type="checkbox" id="cpLaneEstT"${cpLaneEst?' checked':''}>안 뛴 라인 추정치도 보기</label>`:'');
+      `<input type="checkbox" id="cpLaneEstT"${cpLaneEst?' checked':''}>미출전 라인 추정치 표시</label>`:'');
   $('#cpLanePick').querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
     cpView=b.dataset.lane; renderCp();
     announce(cpView===''?'통합 티어':(cpView==='ALL'?'라인별 티어':`${laneKo(cpView)} 티어`));
@@ -3347,7 +3343,7 @@ function renderCp(){
       const w=Math.max(0,Math.min(100,(v/FULL)*100));
       return `<div class="tprog ${tierCls(r.tier)}"><span class="pt">${v}</span>`+
              `<span class="bar"><i style="width:${w.toFixed(1)}%"></i></span></div>`;}},
-    {k:'to_next',h:'다음까지',num:1,nullLast:1,lo:1,
+    {k:'to_next',h:'승급까지',num:1,nullLast:1,lo:1,
      fmt:(v,r)=>(!r.placed||v==null)?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
     {k:'mmr',h:'MMR',num:1,hlp:'CP',lo:1,
      fmt:(v,r)=>r.placed?`<span class="muted">${v}</span>`:'<span class="muted">—</span>'},
@@ -3359,9 +3355,9 @@ function renderCp(){
   ],'_ord',-1);
   const unplaced=rows.filter(r=>!r.placed).length;
   $('#cpNote').innerHTML=
-    `배치는 <b>${need}판</b> 입니다`+(unplaced?` — 아직 ${unplaced}명이 배치 중입니다.`:'.')+
-    ` 배치를 마치기 전에는 티어를 보여 주지 않습니다 — 그 구간은 점수가 크게 움직여서`+
-    ` (K=${C.k_place} → ${C.k_norm}) 한두 판 결과가 티어처럼 보이면 억울한 사람이 생깁니다.`;
+    `배치 <b>${need}판</b>`+(unplaced?` · ${unplaced}명 배치 진행 중.`:'.')+
+    ` 배치가 끝나기 전에는 티어를 표시하지 않습니다.`+
+    ` 그 구간은 점수 변동이 커서(K=${C.k_place} → ${C.k_norm}) 한두 판 결과가 티어로 굳어 보이기 때문입니다.`;
 
 }
 
@@ -3377,7 +3373,7 @@ function renderCpLanes(rows){
     LANE_SEQ.forEach(l=>{
       const c=(r.lanes||{})[l]; if(!c) return;
       const played=(c.games||0)>0;
-      if(!played&&!cpLaneEst) return;            // 안 뛴 라인은 토글 켰을 때만
+      if(!played&&!cpLaneEst) return;            // 미출전 라인은 토글 켰을 때만
       if(cpView!=='ALL'&&l!==cpView) return;
       laneRows.push({name:r.name,lane:l,_laneKo:laneKo(l),games:c.games||0,
         tier:c.tier,points:c.points,cp:c.cp,mmr:c.mmr,placed:true,
@@ -3408,9 +3404,9 @@ function renderCpLanes(rows){
         :`${v} <span class="xs muted">배치 ${v}/${C.lane_prior_k||5}</span>`;}},
   ],'_ord',-1);
   $('#cpNote').innerHTML=
-    `한 사람이 여러 라인을 뛰었으면 <b>라인마다 한 줄</b>씩 나옵니다. `+
-    `그 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 끝난 것으로 봅니다(그 전에는 배치 n/${C.lane_prior_k}). `+
-    `'추정치 보기'를 켜면 안 뛴 라인을 주 라인보다 ${Math.abs(C.off_lane_prior||30)} CP 낮게 잡은 값이 회색으로 나옵니다.`;
+    `여러 라인을 뛴 멤버는 <b>라인마다 한 줄</b>씩 표시됩니다. `+
+    `해당 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 완료된 것으로 봅니다(그 전에는 배치 n/${C.lane_prior_k}). `+
+    `'미출전 라인 추정치 표시'를 켜면 미출전 라인을 주 라인보다 ${Math.abs(C.off_lane_prior||30)} CP 낮게 추정한 값이 회색으로 표시됩니다.`;
 
   // 클릭한 행 강조 유지 — 호버는 떼면 사라져서 26명 표에서 자기 줄을 놓친다.
   // 컨테이너 위임이라 정렬로 표가 다시 그려져도 리스너는 산다(강조만 리셋된다).
@@ -3446,7 +3442,7 @@ function renderCpLanes(rows){
         shown=true;
         const bar=document.createElement('div');
         bar.id='freshBar'; bar.setAttribute('role','status');
-        bar.innerHTML=ico('refresh-cw')+' 사이트가 업데이트됐습니다 — 새 화면을 보려면 새로고침하세요. '
+        bar.innerHTML=ico('refresh-cw')+' 사이트가 업데이트되었습니다. 새로고침해 주세요. '
           +'<button type="button">새로고침</button>';
         bar.querySelector('button').onclick=()=>location.reload();
         document.body.prepend(bar);
@@ -3500,7 +3496,7 @@ function renderSearch(){
     if(!inp.value.trim()){ box.hidden=true; box.innerHTML=''; inp.setAttribute('aria-expanded','false'); return; }
     box.innerHTML=hits.length?hits.map(id=>`<button type="button" class="mehit" role="option" data-id="${id}">${esc(C[id].name)}`+
       `<span class="m">${C[id].placed?esc(C[id].tier):'배치 중'} · ${C[id].games}판</span></button>`).join('')
-      :'<span class="none">맞는 이름이 없습니다</span>';
+      :'<span class="none">검색 결과가 없습니다</span>';
     box.hidden=false; inp.setAttribute('aria-expanded','true');
   };
   inp.oninput=draw;
@@ -3529,8 +3525,8 @@ function foldLongTables(root){
     tb.dataset.fold='1'; tb.classList.add('fold');
     const anchor=(tb.parentElement && /auto|scroll/.test(getComputedStyle(tb.parentElement).overflowX))?tb.parentElement:tb;
     const btn=document.createElement('button'); btn.type='button'; btn.className='tfmore';
-    btn.textContent=`나머지 ${body.rows.length-FOLD_SHOW}줄 보기`;
-    btn.onclick=()=>{ tb.classList.remove('fold'); tb.dataset.unfolded='1'; btn.hidden=true; announce(`${body.rows.length}줄 전부 보임`); };
+    btn.textContent=`더 보기 (${body.rows.length-FOLD_SHOW})`;
+    btn.onclick=()=>{ tb.classList.remove('fold'); tb.dataset.unfolded='1'; btn.hidden=true; announce(`전체 ${body.rows.length}줄 표시`); };
     anchor.insertAdjacentElement('afterend', btn);
     tb._foldBtn=btn;
   });
@@ -3721,7 +3717,7 @@ document.addEventListener('click',e=>{
   det.classList.toggle('hidden',!open);
   tr.classList.toggle('on',open);
   tr.setAttribute('aria-expanded', open?'true':'false');
-  announce(open?'멤버 상세를 폈다':'멤버 상세를 접었다');
+  announce(open?'멤버 상세 펼침':'멤버 상세 접힘');
 });
 $('#playerBody').addEventListener('click',e=>{
   const a=e.target.closest('.vslink'); if(!a) return;
