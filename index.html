@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-LhregErB17+525LjTe9RdzqjkHi+LTA9szUeOCUsl4c='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-CIuUdBCiwGR2Uoy7uunm+dK+lgoGLqK86SAmYTO0kJk='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -1211,7 +1211,8 @@ function renderBoardLane(){
       .forEach((r,i)=>{ r._medal=i<3?MEDAL[i]+' ':''; });
   const all=lane==='ALL';
   renderTable($('#boardT'),rows,[
-    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v+(all?` (${r._laneKo})`:'')},
+    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v},
+    ...(all?[{k:'_laneKo',h:'라인'}]:[]),
     {k:'mmr',h:all?'라인 MMR':`${laneKo(lane)} MMR`,num:1,bar:1,hlp:'라인MMR',
      fmt:(v,r)=>r._rid?`<span class="mmrlink" role="button" tabindex="0"
        data-who="${r._rid}" data-tip="MMR 계산 과정 보기">${v}</span>`:v},
@@ -3396,10 +3397,12 @@ function renderCpLanes(rows){
   });
   const FULL2=C.tier_points||100;
   renderTable($('#cpT'),laneRows,[
-    // '코 파 (원딜)' — 같은 사람이 라인마다 한 줄. 라인은 이름 옆에 붙인다(따로 열을 두면 폰에서 한 줄 더 먹는다).
+    // 같은 사람이 라인마다 한 줄. 라인은 **별도 열**(요청 2026-09-03 — 이름 옆 괄호 대신).
     {k:'name',h:'멤버',fmt:(v,r)=>esc(v)+(r._masked
       ?` <span class="muted" style="font-size:11px">배치 중 ${r.games}/${need}</span>`
-      :` <span class="${r._est?'muted':''}">(${r._laneKo}${r._est?'?':''})</span>`+(r._main?' <span class="xs muted">주 라인</span>':''))},
+      :(r._main?' <span class="xs muted">주 라인</span>':''))},
+    {k:'_laneKo',h:'라인',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
+      :(r._est?`<span class="muted">${v}?</span>`:v)},
     {k:'tier',h:'티어',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
       :(r._est?`<span class="muted" style="font-size:11.5px">${esc(v)} (추정)</span>`:tierBadge(v))},
     {k:'points',h:'점수',num:1,fmt:(v,r)=>{
