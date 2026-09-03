@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-XYRoCbFmlfi6ngP5K9GP3IeUUc8KKStRcJ9cO8LkBu8='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-urOuJA2DJGG7eVTJelTyr/0NKYSaNPe7iq4sDez6Mbw='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -974,7 +974,7 @@ const HELP={
   CP:'내전 전적만으로 낸 점수입니다. 솔랭 티어와는 무관합니다.\n한 판에 15~25 움직이고, 이기고 지는 것만 반영합니다 — 많이 뛴다고 오르지 않습니다.\n같은 팀 안에서는 내 MMR 이 팀 평균보다 낮을수록, 그 판에 더 기여했을수록 더 받습니다.\n기여가 컸으면 졌을 때도 덜 잃습니다.',
   기준선:'골드·에메랄드·다이아·마스터 솔랭 표본(라인마다 약 10만 판, 패치 16.10 이후)을 합친 분포 위에 이 사람의 내전 값을 놓고 상위 몇 % 인지 잰 것입니다.\n같은 정의·같은 라인끼리만 견줍니다. 방 안 점수(능력치)와 달리 사람이 바뀌어도 움직이지 않습니다.\n"에메랄드 수준" 같은 티어 이름은 일부러 붙이지 않습니다 — 실측으로 판당 딜·딜 비중·시야는 골드와 마스터의 중앙값이 거의 같아 근거가 없기 때문입니다.\n라인전·개인기 축은 표본에 그 지표가 없어 기준을 내지 않습니다. 내전 티어(CP)와는 무관합니다.',
   라인티어:'라인마다 티어를 따로 냅니다. 그 판에 실제로 선 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 사람이 미드를 간다고 미드도 같은 티어인 것은 아닙니다.\n안 뛴 라인도 칸을 비우지 않고 추정치로 채우되, 점선으로 아직 표본이 모자라다는 것을 표시합니다.\n라인 편차 = 다섯 라인 중 가장 높은 칸과 가장 낮은 칸 차이의 절반입니다.',
-  라인MMR:'그 라인에서의 MMR 입니다.\n통합 실력에 **그 라인 승률 보정**을 더한 값이고, 라인마다 처음부터 다시 매긴 값이 아닙니다.\n그래서 통합 MMR 과 크게 벌어지지 않습니다(실측 편차 중앙 14).\n판수가 적은 라인은 보정이 거의 안 걸려 통합값에 가까워집니다.',
+  라인MMR:'그 라인에서의 MMR = 통합 MMR + 라인 편차입니다.\n편차는 그 라인에서 기대보다 얼마나 더 이겼나를 5판 사전값으로 수축한 값이라 통합 MMR 과 크게 벌어지지 않습니다.\n안 뛴 라인은 사전값(−30)만 남아 점선으로 표시됩니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
   시너지:'같이 한 팀이었을 때의 전적입니다.\n시너지 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
   진영:'블루(왼쪽 아래)와 레드(오른쪽 위) 진영의 승률입니다.\n한 경기에 블루 하나 레드 하나라 두 진영 승수의 합이 경기 수이고,\n어느 쪽이 더 이겼는지는 상쇄되지 않는 실제 정보입니다.\n표본이 작으면 크게 흔들리니 경기 수를 같이 보세요.',
@@ -984,9 +984,9 @@ const HELP={
   어시스트:'킬을 낸 사람과 그 킬에 어시를 준 사람 쌍을 셉니다.\n비중 = 이 어시 수 ÷ 받은 사람의 총 킬.\n원시 횟수만 보면 사실상 킬 수 차이라, 서포터와 정글러를 구분하는 것에 가깝습니다.\n같이 3판 이상 뛴 조합만 나옵니다.',
   신뢰성:'승률을 그대로 믿으면 2판 2승(100%)이 20판 14승(70%)보다 위로 갑니다.\nWilson 신뢰구간의 아래끝을 써서 표본이 적을수록 더 깎아 내립니다.\n판수가 쌓일수록 실제 승률에 가까워집니다. 리더보드 정렬 기준입니다.',
   MVP:'경기마다 이긴 팀에서 기여도(킬 관여·딜 비중·KDA 를 라인 안에서 재고 팀 안에서 상대값으로 만든 것) 1위에게 1회 줍니다.\n티어 계산의 기여도와 같은 숫자라 정의가 하나입니다. 라인을 타지 않습니다(예전 식은 정글·원딜이 27회 중 20회를 가져갔습니다).\n표의 숫자는 누적 횟수입니다.',
-  MMR:'단순 승률이 아니라 "누구를 이겼나"를 봅니다(Bradley-Terry).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다.\n1000이 평균이고 팀 밸런싱에 그대로 쓰입니다.',
+  MMR:'숨은 실력 점수입니다. 팀 대 팀 기대 승률과 실제 결과의 차이만큼 움직입니다(Elo).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 떨어집니다. 판수가 많다고 오르지 않습니다.\n1000이 시작점이고, 티어(CP)·순위·팀 나누기가 전부 이 하나의 숫자를 씁니다. MMR 검산에서 경기별로 확인할 수 있습니다.',
   시너지:'둘이 같이 이긴 비율에서 "각자 실력만으로 기대되는 승률"을 뺀 값입니다.\n기대 승률은 두 사람이 함께한 판을 빼고 계산해 자기 자신과 비교하지 않습니다.\n+면 같이 할 때 더 잘 맞고, −면 덜 맞습니다.',
-  밸런스:'실력 점수는 단순 승률이 아니라 "누구를 이겼나"(Bradley-Terry)입니다.\n여기에 그 사람이 그 라인에서 보인 숙련도와 퍼포먼스를 더해\n두 팀의 예측 승률이 50:50에 가장 가까워지는 조합을 고릅니다.\n라인을 지정하지 않으면 각자 잘하는 라인으로 알아서 배치합니다.',
+  밸런스:'두 팀의 기대 승률을 MMR(라인 편차 포함)로 계산해 0.45~0.55 안에 드는 나눔을 후보로 두고,\n그중 아직 순서가 불확실한 사람들을 서로 반대편에 두는 나눔을 고릅니다 — 공정성은 같고 한 판이 더 많이 가립니다.\n시너지가 좋은 두 사람은 같은 팀에 두는 쪽을 조금 선호합니다.',
   상대전적:'적으로 만난 판에서 서로 몇 번 이겼는지 셉니다.\n왼쪽이 더 많이 이긴 쪽, 숫자는 (왼쪽 승 : 오른쪽 승) 입니다.\n같은 편이었던 판은 세지 않습니다.',
   킬관계:'적으로 만난 판에서 서로 몇 번 잡았는지 셉니다(킬 기준).\n왼쪽이 더 많이 잡은 쪽, 숫자는 (잡은 수 : 당한 수) 입니다.\n양쪽 합이 3킬 미만인 조합은 우연이라 보고 뺍니다.\n많이 잡혀도 그 판을 이겼을 수 있으니 승패는 상대별 전적에서 보세요.',
   길이:'경기 시간을 25분·35분으로 끊어 각 구간 승률을 봅니다.\n짧은 판에 강하면 라인전형, 긴 판에 강하면 후반 캐리형입니다.\n괄호 안은 그 구간의 판수입니다.',
@@ -2275,7 +2275,7 @@ function jsBalance(players,decl){
   if(!best)return{error:'라인 지정이 충돌합니다.'};
   const infoPick=!!bestInfo; if(bestInfo)best=bestInfo;
   const mk=(ids,ln)=>ids.map(d=>({name:DATA.ratings[d].name,lane:ln[d],
-    mmr:Math.round(1000+250*bStrength(d,ln[d])),
+    mmr:Math.round((RC.mmr_base||1000)+(RC.mmr_scale||868.589)*bStrength(d,ln[d])),
     off:ln[d]&&!((DATA.ratings[d].lanes||{})[ln[d]])})).sort((a,b)=>BAL_ROLES.indexOf(a.lane)-BAL_ROLES.indexOf(b.lane));
   const TA=mk(best.A,best.lA),TB=mk(best.B,best.lB);
   return{teamA:TA,teamB:TB,pA:sig(best.sA-best.sB),infoPick,nCand,
@@ -2909,70 +2909,42 @@ function renderMath(){
 }
 
 function renderMathMmr(){
-  const R=DATA.ratings||{}, C=DATA.rating_constants||{};
-  const r=R[$('#mathWho').value];
+  // 검산 = 그 사람의 경기별 리플레이. 손으로 더하면 MMR·CP·티어가 그대로 나와야 한다.
+  // 예전엔 밸런스 도구의 BT 항 분해를 보여 줬는데, 그건 티어와 무관한 다른 숫자였다(2026-09-02 통합).
+  const C=DATA.cp||{}, K=cpConst();
+  const id=$('#mathWho').value, r=C[id];
   const box=$('#mathMmr');
-  if(!r||!r.breakdown){ box.innerHTML='<p class="muted">이 멤버는 아직 MMR 을 계산할 판이 없습니다.</p>'; return; }
-  const b=r.breakdown, K=C.blend_k, SK=C.perf_shrink_k, PW=C.perf_weight, FW=C.form_weight;
-  const sum=b.bt_term+b.perf_term+b.form_term;
-  // 항 합이 strength와 어긋나면 숨기지 말고 드러낸다 — 검산 페이지가 거짓말하면 안 된다
-  const okSum=Math.abs(sum-b.strength)<1e-5, okMmr=Math.round(b.mmr_exact)===r.mmr;
-  const zrow=(b.perf_z||[]).map(z=>
-    `<tr><td>${z.label}</td><td class="num">${z.raw==null?'—':nf0(z.raw,3)}</td>`+
-    `<td class="num">${nf(z.z,2)}</td><td class="num">×${z.weight}</td>`+
-    `<td class="num">${z.z==null?'—':nf(z.z*z.weight,4)}</td></tr>`).join('');
-  const zsum=(b.perf_z||[]).filter(z=>z.z!=null).reduce((t,z)=>t+z.z*z.weight,0);
-  // 0.4+0.3+0.2+0.1 이 부동소수로 0.9999999999999999 가 된다 → 보기 좋게 정리
-  const zw=+((b.perf_z||[]).filter(z=>z.z!=null).reduce((t,z)=>t+z.weight,0)).toFixed(4);
+  if(!r||!(r.replay||[]).length){ box.innerHTML='<p class="muted">이 멤버는 아직 MMR 을 계산할 판이 없습니다.</p>'; return; }
+  const rows=r.replay, base=K.mmr_base||1000, cbase=K.cp_base||1000;
+  const sumM=rows.reduce((t,x)=>t+x.d_mmr,0), sumC=rows.reduce((t,x)=>t+x.d_cp,0);
+  const tol=0.5+rows.length*0.0005, okM=Math.abs(base+sumM-r.mmr)<=tol, okC=Math.abs(cbase+sumC-r.cp)<=tol;   // 행마다 소수 3자리
+  const d=ts=>ts?new Date(ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'}):'';
+  const tr=rows.map((x,i)=>`<tr><td class="num muted">${i+1}</td><td>${d(x.ts)}</td><td>${laneKo(x.lane)}</td>`+
+    `<td class="num">${x.avg_me.toFixed(0)}</td><td class="num">${x.avg_opp.toFixed(0)}</td><td class="num">${x.e.toFixed(3)}</td>`+
+    `<td><span class="res ${x.win?'w':'l'}">${x.win?'승':'패'}</span></td><td class="num">${x.k.toFixed(1)}</td>`+
+    `<td class="num">${x.adj>=0?'+':''}${x.adj.toFixed(3)}</td>`+
+    `<td class="num ${x.d_mmr>=0?'pos':'neg'}">${x.d_mmr>=0?'+':''}${x.d_mmr.toFixed(2)}</td><td class="num">${x.mmr.toFixed(1)}</td>`+
+    `<td class="num ${x.d_cp>=0?'pos':'neg'}">${x.d_cp>=0?'+':''}${x.d_cp.toFixed(2)}</td><td class="num">${x.cp.toFixed(1)}</td></tr>`).join('');
+  const lanes=Object.entries(r.lanes||{}).filter(([,v])=>v.games>0)
+    .map(([ln,v])=>`${laneKo(ln)} <b>${v.mmr}</b><span class="side-sm muted">편차 ${v.dev>=0?'+':''}${v.dev} · ${v.games}판${v.placed?'':' · 추정'}</span>`).join(' &nbsp;·&nbsp; ');
   box.innerHTML=`
   <div class="mathwrap">
-    <p class="fml">MMR = ${C.mmr_base} + ${C.mmr_scale} × 실력점수<br>
-      실력점수 = <b>α·BT</b> + <b>(1−α)·${PW}·퍼포먼스·수축</b> + <b>${FW}·(최근승률−0.5)·2·수축</b><br>
-      α = 판수/(판수+${K}) &nbsp;·&nbsp; 수축 = 판수/(판수+${SK})</p>
-
-    <h3>① 판수로 정하는 두 계수 — ${r.name}${josa(r.name,['은','는'])} ${b.games}판</h3>
-    <p class="fml">α = ${b.games}/(${b.games}+${K}) = <b>${nf0(b.alpha,6)}</b>
-      &nbsp;·&nbsp; 수축 = ${b.games}/(${b.games}+${SK}) = <b>${nf0(b.shrink,6)}</b></p>
-    <p class="muted">판수가 적을수록 α가 작아져 BT 실력을 덜 믿고, 수축도 작아져 퍼포먼스를
-      방 평균(0) 쪽으로 끌어당깁니다. 한두 판 뛰고 1위가 되는 걸 막는 장치입니다.</p>
-
-    <h3>② BT 항 — 누구를 이겼는가</h3>
-    <p class="fml">BT = <b>${nf(b.bt,6)}</b> &nbsp;→&nbsp;
-      BT항 = ${nf0(b.alpha,6)} × ${nf(b.bt,6)} = <b>${nf(b.bt_term,6)}</b></p>
-    <p class="muted">모든 경기를 한 번에 로지스틱 회귀로 적합합니다. P(100팀 승) = σ(Σr<sub>100</sub> − Σr<sub>200</sub>).
-      강한 라인업을 이기면 더 오릅니다. 표본이 적으면 L2 정규화가 0으로 당깁니다.</p>
-
-    <h3>③ 퍼포먼스 항 — 방 안에서의 상대 위치(z점수)</h3>
-    <div class="tbl"><table><thead><tr><th scope="col">항목</th><th scope="col" class="num">내 값</th>
-      <th scope="col" class="num">z</th><th scope="col" class="num">가중치</th><th scope="col" class="num">기여</th></tr></thead>
-      <tbody>${zrow}</tbody></table></div>
-    <p class="fml">퍼포먼스 = ${nf(zsum,4)} ÷ ${zw} = <b>${nf(b.perf,6)}</b><br>
-      퍼포항 = (1−${nf0(b.alpha,6)}) × ${PW} × ${nf(b.perf,6)} × ${nf0(b.shrink,6)}
-      = <b>${nf(b.perf_term,6)}</b></p>
-    <p class="muted">z는 "방 평균에서 표준편차 몇 개만큼 떨어져 있나"입니다. 0이면 딱 평균.
-      절대값이 아니라 <b>이 방 안에서의 상대 위치</b>라, 사람이 늘거나 빠지면 같이 움직입니다.</p>
-
-    <h3>④ 폼 항 — 최근 ${b.form?(b.form.split('-').reduce((t,x)=>t+(+x||0),0)):'—'}판<span class="reg muted"> (최대 5판)</span></h3>
-    <p class="fml">${b.form?`최근 ${b.form} (승률 ${nf0(b.form_winrate,3)}) →
-      ${FW} × (${nf0(b.form_winrate,3)} − 0.5) × 2 × ${nf0(b.shrink,6)} = <b>${nf(b.form_term,6)}</b>`
-      :'최근 경기 없음 → <b>0</b>'}</p>
-
-    <h3>⑤ 합계</h3>
-    <p class="fml">실력점수 = ${nf(b.bt_term,6)} ${b.perf_term<0?'−':'+'} ${nf0(Math.abs(b.perf_term),6)}
-      ${b.form_term<0?'−':'+'} ${nf0(Math.abs(b.form_term),6)} = <b>${nf(b.strength,6)}</b>
-      ${okSum?'':' <span class="neg">'+ico('alert-triangle')+' 항 합이 안 맞습니다</span>'}</p>
-    <p class="fml">MMR = ${C.mmr_base} + ${C.mmr_scale} × ${nf0(b.strength,6)}
-      = ${nf0(b.mmr_exact,3)} → 반올림 <b class="acc">${r.mmr}</b>
-      ${okMmr?'':' <span class="neg">'+ico('alert-triangle')+' 반올림이 안 맞습니다</span>'}</p>
-
+    <p class="fml">ΔMMR = K × ((결과 − E) + 기여보정) &nbsp;·&nbsp; E = 1 / (1 + 10^((상대 평균 − 우리 평균) / 400))<br>
+      ΔCP = 이기면 +[15~25], 지면 −[15~25] (CP 계산식 참고) &nbsp;·&nbsp; 기여보정 = (기여도 − 1) × ${K.perf_w??0.5}, 팀 안 합 0</p>
+    <p class="note-sm muted">우리·상대 평균은 그 판에 <b>실제로 선 라인</b>의 실력(MMR + 라인 편차)입니다. K 는 배치 ${K.placement_games||3}판 동안 ${K.k_place||64},
+      그 뒤 ${K.k_norm||32}에서 ${K.k_decay_half||20}판마다 절반(최소 ${K.k_min||16}). 결과는 승 1 · 패 0.</p>
+    <div class="tbl"><table><thead><tr><th scope="col" class="num">#</th><th scope="col">날짜</th><th scope="col">라인</th>
+      <th scope="col" class="num">우리</th><th scope="col" class="num">상대</th><th scope="col" class="num">E</th><th scope="col">결과</th>
+      <th scope="col" class="num">K</th><th scope="col" class="num">기여보정</th><th scope="col" class="num">ΔMMR</th><th scope="col" class="num">MMR</th>
+      <th scope="col" class="num">ΔCP</th><th scope="col" class="num">CP</th></tr></thead><tbody>${tr}</tbody></table></div>
+    <p class="fml">MMR = ${base} ${sumM>=0?'+':'−'} ${Math.abs(sumM).toFixed(2)} = ${(base+sumM).toFixed(2)} → 반올림 <b class="acc">${r.mmr}</b>
+      ${okM?'':' <span class="neg">'+ico('alert-triangle')+' 합이 안 맞습니다</span>'}<br>
+      CP = ${cbase} ${sumC>=0?'+':'−'} ${Math.abs(sumC).toFixed(2)} = ${(cbase+sumC).toFixed(2)} → <b class="acc">${r.cp}</b> → <b>${r.tier} ${r.points}점</b>
+      ${okC?'':' <span class="neg">'+ico('alert-triangle')+' 합이 안 맞습니다</span>'}</p>
     <h3>라인별 MMR</h3>
-    <p class="fml">라인 MMR = ${C.mmr_base} + ${C.mmr_scale} × (실력점수 + ${C.lane_adj_weight}×(보정승률 − 0.5))<br>
-      보정승률 = (그 라인 승 + ${C.lane_adj_k}×0.5) ÷ (그 라인 판 + ${C.lane_adj_k})</p>
-    <p class="muted">라인 승률을 그대로 쓰면 <b>1판짜리 라인이 ±50 MMR</b>을 움직입니다 —
-      전체 실력 폭이 140 정도니 3분의 1을 한 판이 정하는 셈입니다.
-      그래서 판수로 0.5 쪽에 끌어당깁니다(1판 전승이면 ±50 이 아니라 ±10).</p>
-    <p class="fml">${Object.entries(r.lanes||{}).map(([ln,v])=>
-      `${LANE_KO[ln]||ln} <b>${v.mmr}</b>`).join(' &nbsp;·&nbsp; ')||'—'}</p>
+    <p class="fml">라인 MMR = MMR + 라인 편차 &nbsp;·&nbsp; 편차 = (n×관측 + 5×사전) / (n + 5), 사전 = 0 (주 라인) / ${K.off_lane_prior??-30} (그 외)</p>
+    <p class="fml">${lanes||'—'}</p>
+    <p class="note-sm muted">이 표의 MMR 이 순위·플레이어·밸런스 탭에 보이는 MMR 과 같은 숫자입니다. 팀 나누기도 이 값을 그대로 씁니다.</p>
   </div>`;
 }
 
@@ -3022,10 +2994,7 @@ function renderMathRest(){
       붙은 판이라는 뜻이에요. 14분 미만은 재경기로 보고 뺍니다(롤은 15분 전 항복이 안 됩니다).</p>
 
     <h3>상수 (코드에서 그대로 가져옴)</h3>
-    <p class="fml">α의 K = ${C.blend_k} · 퍼포먼스 수축 K = ${C.perf_shrink_k}
-      · 퍼포먼스 가중 = ${C.perf_weight} · 폼 가중 = ${C.form_weight}
-      · 라인 보정 = ${C.lane_adj_weight} (수축 K = ${C.lane_adj_k})
-      · MMR = ${C.mmr_base} + ${C.mmr_scale}×실력점수</p>
+    <p class="fml">MMR: 배치 ${(DATA.cp_constants||{}).placement_games||3}판 K=${(DATA.cp_constants||{}).k_place||64} → ${(DATA.cp_constants||{}).k_norm||32}에서 ${(DATA.cp_constants||{}).k_decay_half||20}판마다 절반(최소 ${(DATA.cp_constants||{}).k_min||16}) · 시작 1000 · 팀 나누기의 strength = (MMR − 1000) ÷ ${C.mmr_scale}</p>
   </div>`;
 }
 
