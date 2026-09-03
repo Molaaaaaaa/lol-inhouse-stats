@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-QxxH9gnIyD7iOFGYP7uIqkREuB5L8N2y6dkK5usH+0o='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-bK9tkuRRgxTHHVZ9oBfL0xrDae9Lj8/zeHsSumO032M='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -126,7 +126,9 @@
     border-radius:8px;background:var(--ink);color:var(--txt);font-size:13px}
   .tfilter input:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
   .tfilter .tfhit{font-size:12px}
-  tr.tfhide{display:none}
+  /* !important: 폰의 카드형 행 규칙(table:not(…) tbody tr{display:grid}, 특이도 0,4,3)이 이겨서
+     검색으로 거른 줄이 폰에서는 하나도 안 숨었다(실측 118/138 줄, 2026-09-03). */
+  tr.tfhide{display:none!important}
   /* 손가락으로 누르는 화면에서는 44px 은 돼야 한다.
      실측(375px·터치): 지표 검색 27px · 지표 칩 29px · 서브탭 31px · 라인 버튼 33px.
      ⚠️ 보이는 크기를 키우는 게 아니라 **누를 수 있는 높이**만 올린다 — 글자 크기를
@@ -604,7 +606,6 @@
   .home .homehead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
   .home .homehead h2{margin:0;flex:1 1 auto;font-size:16px}
   .home .homehead button{font-size:14px;min-height:40px}
-  .home #homeBig[aria-pressed=true]{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
   .home .homepick{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
   .home .homepick label{font-size:17px;color:var(--dim)}
   .home #homeWho{font-size:18px;min-height:48px;padding:8px 14px;border-radius:12px;flex:1 1 220px;max-width:420px}
@@ -628,11 +629,25 @@
   .home .hsay{font-size:17px;line-height:1.6;margin:12px 0 0;padding-left:22px}
   .home .hsay li{margin:4px 0}
   .home p.hsay{padding-left:0}
+  .home .hq{font-size:16px;margin:18px 0 8px;color:var(--dim);font-weight:600}
+  .home .hmenu{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:640px){ .home .hmenu{grid-template-columns:1fr 1fr} }   /* 폰: 3행 2열, 세로 한 화면 안 */
+  .home .hmenu button{font-size:16px;min-height:52px;padding:10px 16px;border-radius:12px;text-align:left;
+    display:flex;align-items:center;gap:10px;justify-content:flex-start}
+  .home .hmenu button .ic{color:var(--acc);width:1.2em;height:1.2em}
+  .home .hmenu button[disabled]{opacity:.45;cursor:not-allowed}
+  .home #meOnly[aria-pressed=true]{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
+  /* 내 줄 강조(순위 표) — 배경은 강조색 12%, 이름은 굵게 */
+  tr.merow>td{background:color-mix(in srgb,var(--acc) 12%,transparent)}
+  tr.merow>td:first-child{font-weight:750;color:var(--acc)}
+  /* 긴 표 접기 — 10줄 + '나머지 보기'. 폰의 카드형 행(display:grid)보다 세야 해서 !important */
+  table.fold tbody tr:nth-child(n+11){display:none!important}
+  .tfmore{display:block;margin:6px 0 10px;font-size:13px;min-height:36px}
+  /* 보조 열(다음까지·MMR·라인 편차·신뢰성·킬관여·DPM)은 폰에서 감춘다 — 카드형 행 8줄 → 5줄 */
+  @media(max-width:640px){ th.lo,td.lo{display:none!important} }
   .home .hgo{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
   .home .hgo button{font-size:16px;min-height:48px;padding:10px 18px;border-radius:12px}
   .home .hgo .go1{background:var(--acc);color:var(--on-acc);border-color:transparent;font-weight:650}
-  /* 글자 크게 — 화면 전체를 20% 확대. 글꼴만 키우면 표 정렬이 어긋나서 배율로 키운다. */
-  html.big{zoom:1.2}
 </style>
 </head>
 <body>
@@ -714,12 +729,22 @@
   <section class="card home" id="home" aria-labelledby="homeH">
     <div class="homehead">
       <h2 id="homeH"><svg class="ic" aria-hidden="true"><use href="#i-id-card"/></svg> 내 성적 한눈에</h2>
-      <button id="homeBig" type="button" aria-pressed="false" data-tip="화면 전체 글자를 20% 키웁니다"><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg> 글자 크게</button>
+      <button id="meOnly" type="button" aria-pressed="true" hidden data-tip="목록 표는 내 줄만 남기고, 순위 표는 내 줄을 표시합니다">내 것만 보기</button>
       <button id="homeFold" type="button" aria-expanded="true" aria-controls="homeBody">접기</button>
     </div>
     <div id="homeBody">
       <div class="homepick"><label for="homeWho">내 이름</label><select id="homeWho"><option value="">이름을 고르세요</option></select></div>
       <div id="homeMe"><p class="hsay muted">이름을 고르면 티어·순위·전적을 큰 글씨로 보여 줍니다.</p></div>
+      <h3 class="hq">무엇을 보시겠어요?</h3>
+      <div class="hmenu" id="homeMenu">
+        <button type="button" data-go="tier" data-sub="사다리" data-me="mark"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 내 티어와 순위</button>
+        <button type="button" data-go="player" data-sub="개인" data-me="pick"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg> 내 전적·라인·챔피언</button>
+        <button type="button" data-go="syn" data-sub="듀오" data-me="filter"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 나와 잘 맞는 사람</button>
+        <button type="button" data-go="board" data-sub="승률" data-me="mark"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg> 전체 순위표</button>
+        <button type="button" data-go="matches" data-sub="최근 경기"><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 최근 경기</button>
+        <button type="button" data-go="balance"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 오늘 팀 나누기</button>
+      </div>
+      <p class="note-sm muted" id="homeMeNote"></p>
     </div>
   </section>
   <div class="kpis" id="kpis"></div>
@@ -989,7 +1014,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   let h='<table'+(capTxt?` aria-label="${esc(capTxt)}"`:'')+'><thead><tr>'+cols.map(c=>
     // ⚠️ tabindex 가 없으면 **마우스 없이는 어떤 표도 정렬할 수 없다**(표 27개 전부).
     //    aria-sort 는 지금 무엇으로 정렬돼 있는지를 소리로 알려 준다.
-    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}" tabindex="0"`+
+    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}${c.lo?' lo':''}" tabindex="0"`+
     ` aria-sort="${c.k===sortKey?(sortDir<0?'descending':'ascending'):'none'}">`+
     `${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
   data.forEach((r,i)=>{
@@ -997,7 +1022,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
       let v=r[c.k];
       let disp=c.fmt?c.fmt(v,r,i):(v==null?'':v);
       if(c.img && r[c.img]) disp=champImg(r[c.img])+disp;
-      const cls=c.cls?c.cls(r):(c.num?'num':'');
+      const cls=(c.cls?c.cls(r):(c.num?'num':''))+(c.lo?' lo':'');   // lo: 폰에서 감추는 보조 열
       if(c.bar){ const p=Math.max(0,Math.min(100,(+v/maxes[c.k])*100));
         disp=`<div class="barwrap"><span>${disp}</span><i style="width:${p}%"></i></div>`; }
       return `<td class="${cls}" data-label="${c.h}">${disp}</td>`;
@@ -1006,7 +1031,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   el.innerHTML=h+'</tbody></table>';
   // ⚠️ 여기서 표가 통째로 갈린다. aria-label 과 거르기 칸도 같이 날아가므로 다시 붙인다
   //    (안 하면 랭킹 지표를 바꾸는 순간 거르기 칸이 사라진다 — 실측).
-  labelTables(); labelTips(el); attachTableFilters(el);
+  labelTables(); labelTips(el); attachTableFilters(el); foldLongTables(el); applyMe(el);
   el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
     const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
       labelTables();
@@ -1241,9 +1266,9 @@ function renderBoard(){
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},
     {k:'losses',h:'패',num:1},
     {k:'winrate',h:'승률',num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
-    {k:'ci_lower',h:'신뢰성',num:1,fmt:v=>pct(v),hlp:'신뢰성'},
-    {k:'kda',h:'KDA',num:1},{k:'kp',h:mLabel('kp'),num:1,fmt:pct},
-    {k:'dpm',h:mLabel('dpm'),num:1,bar:1},
+    {k:'ci_lower',h:'신뢰성',num:1,fmt:v=>pct(v),hlp:'신뢰성',lo:1},
+    {k:'kda',h:'KDA',num:1},{k:'kp',h:mLabel('kp'),num:1,fmt:pct,lo:1},
+    {k:'dpm',h:mLabel('dpm'),num:1,bar:1,lo:1},
   ],'ci_lower',-1);
   // ⚠️ renderTable 이 컨테이너 innerHTML 을 덮으므로 안쪽에 붙이면 **정렬 한 번에
   //    사라지고 안 돌아온다**. 19명 중 18명만 보이는 이유를 밝히는 유일한 문구다.
@@ -2895,7 +2920,9 @@ function statHead(p,ratingName){
 function radar(p,ratingKey){
   // 라인을 골랐으면 레이더도 그 라인 축으로 그린다(막대·머리말과 같은 출처).
   const lanes=axisLanesOf(p);
-  if(!lanes.includes(curAxisLane)) curAxisLane='';   // 사람이 바뀌면 통합으로
+  // 사람이 바뀌면 **그 사람의 주 라인**으로. 방 전체 기준은 역할을 재는 것이었다 —
+  // 서폿은 공격 1.0·시야 5.0, 원딜은 3.8·2.5 (실측 공격~시야 r −0.81, 라인 안에서는 0.35).
+  if(!lanes.includes(curAxisLane)){ const ml=((DATA.cp||{})[ratingKey]||{}).main_lane; curAxisLane=lanes.includes(ml)?ml:''; }
   // 라인이 2개 이상일 때만 선택기를 낸다 — 하나면 고를 게 없다.
   const picker=lanes.length>=2
     ? `<div class="lnpicks" id="axLanes" role="group" aria-label="능력치 라인 선택">`+
@@ -3101,6 +3128,7 @@ function attachTableFilters(root){
         if (on) n++;
       }
       hit.textContent = q ? `${n}줄` : '';
+      foldSync(tb, !!q);
       if (say && q) announce(`${n}줄 남음`);
     };
     inp.addEventListener('input', () => apply(true));
@@ -3342,13 +3370,13 @@ function renderCp(){
       const w=Math.max(0,Math.min(100,(v/FULL)*100));
       return `<div class="tprog ${tierCls(r.tier)}"><span class="pt">${v}</span>`+
              `<span class="bar"><i style="width:${w.toFixed(1)}%"></i></span></div>`;}},
-    {k:'to_next',h:'다음까지',num:1,nullLast:1,
+    {k:'to_next',h:'다음까지',num:1,nullLast:1,lo:1,
      fmt:(v,r)=>(!r.placed||v==null)?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
-    {k:'mmr',h:'MMR',num:1,hlp:'CP',
+    {k:'mmr',h:'MMR',num:1,hlp:'CP',lo:1,
      fmt:(v,r)=>r.placed?`<span class="muted">${v}</span>`:'<span class="muted">—</span>'},
     {k:'games',h:'판수',num:1},
     {k:'_lane',h:'주 라인'},
-    {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',
+    {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',lo:1,
      // 라인 편차도 CP 파생값이다 — 배치 미완은 같이 가린다
      fmt:(v,r)=>(!r.placed||!v)?'<span class="muted">—</span>':`<span class="muted">±${Math.round(v/2)}</span>`},
   ],'_ord',-1);
@@ -3475,14 +3503,10 @@ function setupPlayerView(){
 }
 // ---------- 내 성적 한눈에 ----------
 // 처음 온 사람의 첫 화면. 이름 하나 고르면 티어·순위·전적·최근 판을 큰 글씨 몇 줄로.
-// 고른 이름·글자 크기·접힘은 이 브라우저에만 기억된다(익명 키 p… 뿐, 실명 저장 없음).
-const ME_KEY='inh.me', BIG_KEY='inh.big', FOLD_KEY='inh.homefold';
+// 고른 이름·접힘은 이 브라우저에만 기억된다(익명 키 p… 뿐, 실명 저장 없음).
+const ME_KEY='inh.me', FOLD_KEY='inh.homefold';
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ /* 사생활 모드 등 — 기억만 못 할 뿐 */ } }
-function applyBig(on){
-  document.documentElement.classList.toggle('big',!!on);
-  const b=$('#homeBig'); if(b) b.setAttribute('aria-pressed',on?'true':'false');
-}
 function applyFold(folded){
   const body=$('#homeBody'), b=$('#homeFold'); if(!body||!b) return;
   body.hidden=!!folded; b.setAttribute('aria-expanded',folded?'false':'true'); b.textContent=folded?'펼치기':'접기';
@@ -3532,14 +3556,74 @@ function renderHomeMe(){
     <div class="hrow2"><div class="hcell"><div class="l">최근 ${recent.length}판</div><div class="hdots">${dots||'<span class="muted">아직 없음</span>'}</div>
       ${champs.length?`<div class="s">잘하는 챔피언 · ${champs.map(c=>`<b>${esc(champKo(c.champion_name))}</b> ${c.games}판 ${pc(c.winrate)}`).join(' · ')}</div>`:''}</div>
     ${say.length?`<ul class="hsay">${say.map(s=>`<li>${s}</li>`).join('')}</ul>`:''}</div>
-    <div class="hgo">
-      <button class="go1" data-go="player">${ico('user')} 내 기록 자세히</button>
-      <button data-go="tier">${ico('trophy')} 전체 티어</button>
-      <button data-go="matches">${ico('scroll')} 최근 경기</button>
-    </div>`;
+    `;
 }
-$('#homeWho').addEventListener('change',()=>{ lsSet(ME_KEY,$('#homeWho').value); renderHomeMe(); });
-$('#homeBig').addEventListener('click',()=>{ const on=!document.documentElement.classList.contains('big'); applyBig(on); lsSet(BIG_KEY,on?'1':'0'); });
+// ── 내 것만 보기 ──
+// 표 34개(실측)를 다 읽는 사람은 없다. 이름을 고르면 목록 표(시너지·챔피언·기록…)는 내 줄만 남기고,
+// 순위 표(사다리·리더보드·지표 랭킹)는 내 줄을 표시한다 — 순위는 남들 사이의 자리라서 거르면 뜻이 없다.
+const MEONLY_KEY='inh.meonly';
+const meName=()=>{ const id=$('#homeWho')&&$('#homeWho').value; return id&&(DATA.cp||{})[id]?DATA.cp[id].name:''; };
+const meOn=()=>!!meName() && lsGet(MEONLY_KEY)!=='0';
+const isRankTable=tb=>!!tb.closest('#cpT, #boardT, #rankT') || ((tb.tHead&&tb.tHead.rows[0]&&tb.tHead.rows[0].cells[0].textContent.trim())==='#');
+function applyMe(root){
+  const nm=meName(), on=meOn(), low=nm.toLowerCase();
+  (root||document).querySelectorAll('table').forEach(tb=>{
+    if(tb.classList.contains('sb')||tb.classList.contains('heat')||tb.closest('.match-detail')) return;
+    const body=tb.tBodies[0]; if(!body) return;
+    if(isRankTable(tb)){
+      for(const tr of body.rows) tr.classList.toggle('merow', on && !!nm && (tr.cells[0]||{}).textContent.trim().toLowerCase().includes(low));
+      return;
+    }
+    if(!tb.dataset.filt) return;                       // 짧은 표(20줄 미만)는 검색칸이 없다 — 그대로 둔다
+    const anchor=(tb.parentElement && /auto|scroll/.test(getComputedStyle(tb.parentElement).overflowX))?tb.parentElement:tb;
+    const box=anchor.previousElementSibling;
+    const field=box&&box.classList&&box.classList.contains('tfilter')?box.querySelector('input'):null;
+    if(!field) return;
+    const has=nm && body.textContent.toLowerCase().includes(low);
+    if(on && has){ if(field.value!==nm){ field.value=nm; field.dispatchEvent(new Event('input')); } tb.dataset.mefilt='1'; }
+    else if(tb.dataset.mefilt==='1'){ field.value=''; field.dispatchEvent(new Event('input')); delete tb.dataset.mefilt; }
+  });
+  const chip=$('#meOnly'); if(chip){ chip.hidden=!nm; chip.setAttribute('aria-pressed',on?'true':'false'); chip.textContent=nm?`${nm} 것만 보기`:'내 것만 보기'; }
+  const note=$('#homeMeNote'); if(note) note.textContent=nm?(on?`아래 탭의 표에서 ${nm} 줄만 남기고, 순위 표에서는 ${nm} 줄을 표시합니다. 끄려면 위의 '${nm} 것만 보기'를 누르세요.`:'내 것만 보기가 꺼져 있어 전체 표가 보입니다.'):'';
+  $('#homeMenu').querySelectorAll('[data-me]').forEach(b=>{ b.disabled=!nm; });
+}
+// ── 긴 표 접기 ──
+// 시너지 듀오 138줄·트리오 181줄·챔피언 메타 77줄(실측). 위 10줄이 답의 대부분이다 — 나머지는 눌러서.
+const FOLD_MIN=16, FOLD_SHOW=10;
+function foldLongTables(root){
+  (root||document).querySelectorAll('table').forEach(tb=>{
+    if(tb.dataset.fold) return;
+    if(tb.classList.contains('sb')||tb.classList.contains('heat')||tb.classList.contains('cmp')||tb.classList.contains('bline')) return;
+    if(tb.closest('.match-detail')||isRankTable(tb)) return;
+    const body=tb.tBodies[0]; if(!body||body.rows.length<FOLD_MIN) return;
+    tb.dataset.fold='1'; tb.classList.add('fold');
+    const anchor=(tb.parentElement && /auto|scroll/.test(getComputedStyle(tb.parentElement).overflowX))?tb.parentElement:tb;
+    const btn=document.createElement('button'); btn.type='button'; btn.className='tfmore';
+    btn.textContent=`나머지 ${body.rows.length-FOLD_SHOW}줄 보기`;
+    btn.onclick=()=>{ tb.classList.remove('fold'); tb.dataset.unfolded='1'; btn.hidden=true; announce(`${body.rows.length}줄 전부 보임`); };
+    anchor.insertAdjacentElement('afterend', btn);
+    tb._foldBtn=btn;
+  });
+}
+// 검색 중에는 접지 않는다 — 걸러진 표를 또 자르면 "내 줄이 없네"가 된다.
+function foldSync(tb, filtering){
+  if(!tb.dataset.fold) return;
+  const open=filtering||tb.dataset.unfolded==='1';
+  tb.classList.toggle('fold',!open); if(tb._foldBtn) tb._foldBtn.hidden=open;
+}
+$('#homeWho').addEventListener('change',()=>{ lsSet(ME_KEY,$('#homeWho').value); renderHomeMe(); applyMe(); });
+$('#meOnly').addEventListener('click',()=>{ lsSet(MEONLY_KEY, meOn()?'0':'1'); applyMe(); announce(meOn()?'내 것만 보기 켬':'내 것만 보기 끔'); });
+$('#homeMenu').addEventListener('click',e=>{
+  const b=e.target.closest('[data-go]'); if(!b||b.disabled) return;
+  const id=$('#homeWho').value, nm=meName();
+  jumpTo(b.dataset.go, b.dataset.sub||undefined);
+  if(b.dataset.me==='pick'&&id){ const ps=$('#playerSel'); if(ps){ ps.value=id; renderPlayerBody(); } }
+  if(b.dataset.me==='mark'&&nm){
+    const row=[...document.querySelectorAll('#'+b.dataset.go+' tr.merow')][0];
+    if(row) setTimeout(()=>row.scrollIntoView({behavior:SCROLL_MODE,block:'center'}),50);
+  }
+});
+
 $('#homeFold').addEventListener('click',()=>{ const f=!$('#homeBody').hidden; applyFold(f); lsSet(FOLD_KEY,f?'1':'0'); });
 $('#homeMe').addEventListener('click',e=>{
   const b=e.target.closest('[data-go]'); if(!b) return;
@@ -3547,7 +3631,7 @@ $('#homeMe').addEventListener('click',e=>{
   if(b.dataset.go==='player'){ jumpTo('player','개인'); const ps=$('#playerSel'); if(ps&&id){ ps.value=id; renderPlayerBody(); } }
   else jumpTo(b.dataset.go);
 });
-applyBig(lsGet(BIG_KEY)==='1'); applyFold(lsGet(FOLD_KEY)==='1');
+applyFold(lsGet(FOLD_KEY)==='1');
 
 const VIEW_RENDER={
   tier:    ()=>{ renderCp(); },
@@ -3565,6 +3649,7 @@ function ensureView(id){
   VIEW_RENDER[id]();
   const sec=$('#'+id);
   labelTables(); labelTips(sec); attachTableFilters(sec);   // 새로 생긴 표·툴팁에 이름표
+  foldLongTables(sec); applyMe(sec);                     // 긴 표 접기 · 내 것만 보기
 }
 
 function renderAll(){
@@ -3574,7 +3659,7 @@ function renderAll(){
   const wb=$('#warnBar'), ws=DATA.warnings||[];
   wb.innerHTML=ws.map(w=>`<div>${ico('alert-triangle')} ${esc(w)}</div>`).join('');
   wb.classList.toggle('hidden', !ws.length);
-  renderKpis(); renderHome(); renderMath(); buildSubtabs();
+  renderKpis(); renderHome(); renderMath(); buildSubtabs(); applyMe();
   // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
   // 아무도 안 보는 채로 쌓인다(실측). 데이터를 다시 받으면 전부 무효화하고 보는 화면만 다시.
   RENDERED.clear(); FUN_DONE=false;
