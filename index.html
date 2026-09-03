@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-IGBNd8QPY1g+V8DxZIz89/gdSp1CC0OSe5nH2IvSHiI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-LhregErB17+525LjTe9RdzqjkHi+LTA9szUeOCUsl4c='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -1119,7 +1119,7 @@ function openMathFor(id){
   jumpTo('tier', 'MMR 검산');
 }
 // 리더보드에서 지금 고른 라인. ''(빈 문자열)이면 통합.
-let curBoardLane='';
+let curBoardLane='ALL';   // 기본 = 라인별(요청 2026-09-03). ''=전체, 라인키=그 라인만
 
 function boardLaneRows(lane){
   /* 그 라인만의 리더보드. 백엔드 추가 없이 이미 실린 둘을 잇는다:
@@ -1158,7 +1158,7 @@ function renderBoard(){
   const lanes=LANE_SEQ.filter(L=>(have[L]||0)>=2);
   const lb=$('#boardLanes');
   if(lb){
-    lb.innerHTML=[['','전체'],['ALL','라인별']].concat(lanes.map(L=>[L,laneKo(L)])).map(([v,t])=>
+    lb.innerHTML=[['ALL','라인별'],['','전체']].concat(lanes.map(L=>[L,laneKo(L)])).map(([v,t])=>
       `<button type="button" class="lnpick${curBoardLane===v?' on':''}" data-lane="${v}"`+
       ` aria-pressed="${curBoardLane===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${have[v]}</span>`:''}</button>`).join('')
       +`<span class="side-sm muted">${curBoardLane==='ALL'
