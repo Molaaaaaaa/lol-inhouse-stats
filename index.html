@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-BJrM+B2ACBtTGEVP5I+qpSfTvuTBlurL/Lp7T4bVja4='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-IGBNd8QPY1g+V8DxZIz89/gdSp1CC0OSe5nH2IvSHiI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -980,7 +980,7 @@ const HELP={
   신뢰성:'승률을 그대로 쓰면 2판 2승(100%)이 20판 14승(70%)보다 위에 옵니다.\nWilson 신뢰구간의 하한을 사용해 표본이 적을수록 더 낮게 평가합니다.\n판수가 쌓일수록 실제 승률에 가까워집니다. 리더보드 정렬 기준입니다.',
   MVP:'경기마다 이긴 팀에서 기여도 1위에게 1회 부여합니다.\n기여도 = 킬 관여·딜 비중·KDA 를 라인 안에서 표준화한 뒤 팀 안에서 상대값으로 만든 것입니다.\n티어 계산의 기여도와 같은 값이며 라인 영향을 받지 않습니다.\n표의 숫자는 누적 횟수입니다.',
   MMR:'실력 점수입니다. 팀 대 팀 기대 승률과 실제 결과의 차이만큼 변동합니다(Elo).\n강한 팀을 이기면 더 오르고, 약한 팀에 지면 더 내려갑니다. 판수가 많다고 오르지 않습니다.\n시작점은 1000 이며, 티어(CP)·순위·팀 밸런스가 모두 이 값을 사용합니다.\nMMR 검산에서 경기별 계산 과정을 확인할 수 있습니다.',
-  개인산출:'승패와 무관하게 고른 개인 지표 10개(딜 비중·골드 비중·골드당 딜·제어 와드·맞라인 우위·시야·킬 관여 등)를 고정 가중치로 합산한 값입니다.\n라인 안에서 표준화하므로 서폿과 원딜을 같은 잣대로 비교하지 않습니다.\n0 이 같은 라인 평균이며, 판수가 적으면 0 쪽으로 보정합니다(n/(n+4)).\nMMR 과 다른 것을 측정합니다. 팀의 승패가 아니라 개인이 낸 성과입니다.\n기준(가중치·평균)은 v1 으로 고정되어 미출전 멤버의 값은 변하지 않습니다.',
+  개인산출:'승패와 무관하게 고른 개인 지표 10개(딜 비중·골드 비중·골드당 딜·제어 와드·맞라인 우위·시야·킬 관여 등)를 고정 가중치로 합산한 값입니다.\n라인 안에서 표준화하므로 서폿과 원딜을 같은 잣대로 비교하지 않습니다.\n0 이 같은 라인 평균이며, 판수가 적으면 0 쪽으로 보정합니다(n/(n+4)).\nMMR 과 다른 것을 측정합니다. 팀의 승패가 아니라 개인이 낸 성과입니다.\n기준(가중치·평균)은 v1 으로 고정되어 미출전 멤버의 값은 변하지 않습니다.\n최근 폼이 섞인 값입니다. 같은 사람도 앞 절반과 뒤 절반의 점수가 다르게 나오므로, 순위보다 군과 오차 범위를 보세요.',
   밸런스:'두 팀의 기대 승률을 MMR(라인 편차 포함)로 계산해 5:5 에 가장 가까운 구성을 고릅니다.\n라인 배정도 함께 최적화하며, 미출전 라인은 사전값(−30)만큼 낮게 평가합니다.\n시너지가 좋은 두 멤버는 같은 팀에 두는 쪽을 약간 선호합니다.',
   상대전적:'적으로 만난 판에서 서로 몇 번 이겼는지 집계합니다.\n왼쪽이 더 많이 이긴 쪽이며, 숫자는 (왼쪽 승 : 오른쪽 승)입니다.\n같은 팀이었던 판은 집계하지 않습니다.',
   킬관계:'적으로 만난 판에서 서로 몇 번 잡았는지 집계합니다(킬 기준).\n왼쪽이 더 많이 잡은 쪽이며, 숫자는 (잡은 수 : 잡힌 수)입니다.\n양쪽 합이 3킬 미만인 조합은 제외합니다.\n많이 잡혀도 그 판을 이겼을 수 있으므로 승패는 상대별 전적에서 확인하세요.',
@@ -1130,15 +1130,18 @@ function boardLaneRows(lane){
   const ratByName={}, idByName={};
   Object.entries(DATA.ratings||{}).forEach(([id,r])=>{ratByName[r.name]=r; idByName[r.name]=id;});
   const out=[];
+  // lane==='ALL' 이면 사람 × 라인 한 줄씩('코 파 (원딜)'), 라인별 문턱(min_games_lane) 이상만.
+  const laneMin=(DATA.min_games_lane)||3;
   Object.values(DATA.players||{}).forEach(pl=>{
-    const L=(pl.lanes||[]).find(x=>x.lane===lane);
-    if(!L||!(L.games>0)) return;
-    const rt=ratByName[pl.name]||{};
-    const lm=((rt.lanes||{})[lane]||{}).mmr;
-    const wins=Math.round((L.winrate||0)*L.games);
-    out.push({discord_name:pl.name, mmr:lm||0, games:L.games, wins,
-      losses:L.games-wins, winrate:L.winrate, kda:L.kda, kp:L.kp, dpm:L.dpm,
-      cs:L.cs, ci_lower:lm||0, _rid:idByName[pl.name]||''});
+    const Ls=lane==='ALL'?(pl.lanes||[]).filter(x=>(x.games||0)>=laneMin):(pl.lanes||[]).filter(x=>x.lane===lane&&x.games>0);
+    Ls.forEach(L=>{
+      const rt=ratByName[pl.name]||{};
+      const lm=((rt.lanes||{})[L.lane]||{}).mmr;
+      const wins=Math.round((L.winrate||0)*L.games);
+      out.push({discord_name:pl.name, lane:L.lane, _laneKo:laneKo(L.lane), mmr:lm||0, games:L.games, wins,
+        losses:L.games-wins, winrate:L.winrate, kda:L.kda, kp:L.kp, dpm:L.dpm,
+        cs:L.cs, ci_lower:lm||0, _rid:idByName[pl.name]||''});
+    });
   });
   return out;
 }
@@ -1155,15 +1158,17 @@ function renderBoard(){
   const lanes=LANE_SEQ.filter(L=>(have[L]||0)>=2);
   const lb=$('#boardLanes');
   if(lb){
-    lb.innerHTML=[['','전체']].concat(lanes.map(L=>[L,laneKo(L)])).map(([v,t])=>
+    lb.innerHTML=[['','전체'],['ALL','라인별']].concat(lanes.map(L=>[L,laneKo(L)])).map(([v,t])=>
       `<button type="button" class="lnpick${curBoardLane===v?' on':''}" data-lane="${v}"`+
-      ` aria-pressed="${curBoardLane===v}">${t}${v?` <span class="muted">${have[v]}</span>`:''}</button>`).join('')
-      +`<span class="side-sm muted">${curBoardLane
+      ` aria-pressed="${curBoardLane===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${have[v]}</span>`:''}</button>`).join('')
+      +`<span class="side-sm muted">${curBoardLane==='ALL'
+        ?'멤버 × 라인 한 줄씩 · MMR 은 그 라인 기준'
+        :curBoardLane
         ?`${laneKo(curBoardLane)} 경기만 · MMR 도 ${laneKo(curBoardLane)} 기준`
         :'라인을 선택하면 해당 라인 경기만 집계합니다'}</span>`;
     lb.querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
       curBoardLane=b.dataset.lane; renderBoard();
-      announce(curBoardLane?`${laneKo(curBoardLane)} 리더보드`:'전체 리더보드');
+      announce(curBoardLane==='ALL'?'라인별 리더보드':curBoardLane?`${laneKo(curBoardLane)} 리더보드`:'전체 리더보드');
     });
   }
   if(curBoardLane){ renderBoardLane(); return; }
@@ -1204,9 +1209,10 @@ function renderBoardLane(){
   // 메달은 라인 MMR 기준 등수로 미리 박는다(정렬을 따라다니면 안 된다 — 통합 표와 같은 이유)
   rows.slice().sort((a,b)=>(b.mmr||0)-(a.mmr||0))
       .forEach((r,i)=>{ r._medal=i<3?MEDAL[i]+' ':''; });
+  const all=lane==='ALL';
   renderTable($('#boardT'),rows,[
-    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v},
-    {k:'mmr',h:`${laneKo(lane)} MMR`,num:1,bar:1,hlp:'라인MMR',
+    {k:'discord_name',h:'멤버',fmt:(v,r)=>(r._medal||'')+v+(all?` (${r._laneKo})`:'')},
+    {k:'mmr',h:all?'라인 MMR':`${laneKo(lane)} MMR`,num:1,bar:1,hlp:'라인MMR',
      fmt:(v,r)=>r._rid?`<span class="mmrlink" role="button" tabindex="0"
        data-who="${r._rid}" data-tip="MMR 계산 과정 보기">${v}</span>`:v},
     {k:'games',h:'판',num:1},{k:'wins',h:'승',num:1},{k:'losses',h:'패',num:1},
@@ -1217,8 +1223,11 @@ function renderBoardLane(){
     {k:'cs',h:'CS',num:1,fmt:v=>v==null?'-':Math.round(v)},
   ],'mmr',-1);
   const thin=rows.filter(r=>r.games<need).length;
-  $('#boardNote').innerHTML=
-    `<p class="note-sm muted">`+
+  $('#boardNote').innerHTML=all
+    ?`<p class="note-sm muted">멤버 × 라인 ${rows.length}줄 (라인 ${(DATA.min_games_lane)||3}판 이상)`+
+      `${thin?` · 그중 ${thin}줄은 ${need}판 미만`:''}. `+
+      `<b>라인 MMR</b> = 통합 MMR + 그 라인 편차입니다. 라인별로 새로 매긴 값이 아니며, 판수가 적으면 통합 MMR 에 가깝습니다.</p>`
+    :`<p class="note-sm muted">`+
     `${laneKo(lane)} 1판 이상 출전한 ${rows.length}명`+
     `${thin?` — 그중 ${thin}명은 ${need}판 미만입니다`:''}. `+
     `<b>${laneKo(lane)} MMR</b> = 통합 MMR + ${laneKo(lane)} 라인 편차입니다.`+
@@ -2911,6 +2920,7 @@ function outRows(){
   return Object.entries(O).map(([k,v])=>{
     const parts=(v.parts||[]).slice().sort((a,b)=>b.contrib-a.contrib);
     return {_id:k, name:(C[k]||{}).name||k, score:v.score, games:v.games, mmr:(C[k]||{}).mmr,
+      band:v.band, rank_lo:v.rank_lo, rank_hi:v.rank_hi, half80:v.half80,
       best:parts[0]?parts[0].label:'—', worst:parts[parts.length-1]?parts[parts.length-1].label:'—'};
   }).sort((a,b)=>b.score-a.score);
 }
@@ -2920,12 +2930,17 @@ function renderOutput(){
   $('#outIntro').innerHTML=`승패와 무관한 개인 지표 ${(K.weights||[]).length}개를 고정 가중치로 합산한 값입니다. `+
     `<b>0</b> = 같은 라인 평균, 표준편차 약 0.17. 기준 <b>v${K.version||1}</b>`+
     `${K.frozen_at?` (${K.frozen_at} · ${K.frozen_games}판)`:''} · ${minGamesNeeded()}판 이상 집계 · `+
-    `기준 갱신 전까지 미출전 멤버의 값은 변하지 않습니다.`;
-  rows.forEach((r,i)=>{ r._rank=i+1; });
+    `기준 갱신 전까지 미출전 멤버의 값은 변하지 않습니다. `+
+    `<b>군</b>은 점수 차가 오차보다 확실히 클 때만 나뉘고(같은 군 안의 순서는 의미가 없습니다), `+
+    `± 는 80% 오차, 순위 범위는 그 오차 안에서 가능한 순위입니다. 최근 폼이 섞인 값이라 판이 쌓이면 움직입니다.`;
+  // 순위 대신 군 — 33판에서는 양 끝만 확실하고 가운데 15명은 한 덩어리다(부트스트랩 실측). 이웃과
+  // P(위>아래) ≥ .8 일 때만 군이 갈린다. 순위 범위는 "확실히 위인 사람 수 + 1 ~ 전체 − 확실히 아래인 사람 수".
   renderTable(box, rows, [
-    {k:'_rank',h:'#',num:1},
+    {k:'band',h:'군',num:1,fmt:v=>v==null?'<span class="muted">—</span>':`${v}군`},
     {k:'name',h:'멤버'},
-    {k:'score',h:'개인 산출',num:1,bar:1,fmt:v=>sgn2(v),cls:r=>'num '+(r.score>0?'pos':r.score<0?'neg':'')},
+    {k:'score',h:'개인 산출',num:1,bar:1,fmt:(v,r)=>sgn2(v)+(r.half80!=null?`<span class="side-sm muted">±${r.half80.toFixed(2)}</span>`:''),
+     cls:r=>'num '+(r.score>0?'pos':r.score<0?'neg':'')},
+    {k:'rank_lo',h:'순위 범위',num:1,fmt:(v,r)=>v==null?'—':(v===r.rank_hi?`${v}위`:`${v}~${r.rank_hi}위`)},
     {k:'games',h:'판수',num:1},
     {k:'mmr',h:'MMR',num:1,lo:1,hlp:'MMR',fmt:v=>v==null?'—':`<span class="muted">${v}</span>`},
     {k:'best',h:'강점',lo:1},
@@ -2951,8 +2966,7 @@ function renderOutputParts(){
 // 플레이어 요약의 개인 산출 알약 — 순위 탭과 같은 payload 를 읽는다.
 function outPill(id){
   const v=(DATA.output||{})[id]; if(!v) return '';
-  const rows=outRows(); const i=rows.findIndex(r=>r._id===id);
-  return `<span class="pill" data-tip-key="개인산출">개인 산출 ${sgn2(v.score)}${i>=0?` · ${i+1}위/${rows.length}`:''}</span>`;
+  return `<span class="pill" data-tip-key="개인산출">개인 산출 ${sgn2(v.score)}${v.band?` · ${v.band}군`:''}${v.rank_lo?` (${v.rank_lo===v.rank_hi?v.rank_lo+'위':v.rank_lo+'~'+v.rank_hi+'위'})`:''}</span>`;
 }
 function renderMathMmr(){
   // 검산 = 그 사람의 경기별 리플레이. 손으로 더하면 MMR·CP·티어가 그대로 나와야 한다.
@@ -3178,7 +3192,7 @@ function tierBadge(name){
 // 점선(표본 부족) / 흐린 점선(미출전 라인).
 // 사다리 보기 상태 — ''=통합(1인 1행) · 'ALL'=라인별 전부 · 라인키=그 라인만.
 // 다시 그려도 유지된다.
-let cpView='', cpLaneEst=false;
+let cpView='ALL', cpLaneEst=false;   // 기본 = 라인별(요청 2026-09-03: 같은 사람도 라인마다 티어·MMR 이 다르다)
 function renderCpMath(){
   // ⚠️ 보기(통합/라인별)와 **무관하게** 그려야 한다. 한때 이 블록이 renderCpLanes 안에
   //    있어서 기본 화면에서는 계산식이 비어 있었다(실측 cpMath 길이 0).
@@ -3315,7 +3329,7 @@ function renderCp(){
   rows.filter(r=>r.placed).forEach(r=>LANE_SEQ.forEach(l=>{
     if(((r.lanes||{})[l]||{}).games>0) cnt[l]=(cnt[l]||0)+1;}));
   $('#cpLanePick').innerHTML=
-    [['','통합'],['ALL','라인별']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
+    [['ALL','라인별'],['','통합']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
       `<button type="button" class="lnpick${cpView===v?' on':''}" data-lane="${v}"`+
       ` aria-pressed="${cpView===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('')
     +(cpView?`<label class="mini" style="gap:6px;margin-left:10px">`+
@@ -3382,11 +3396,10 @@ function renderCpLanes(rows){
   });
   const FULL2=C.tier_points||100;
   renderTable($('#cpT'),laneRows,[
+    // '코 파 (원딜)' — 같은 사람이 라인마다 한 줄. 라인은 이름 옆에 붙인다(따로 열을 두면 폰에서 한 줄 더 먹는다).
     {k:'name',h:'멤버',fmt:(v,r)=>esc(v)+(r._masked
       ?` <span class="muted" style="font-size:11px">배치 중 ${r.games}/${need}</span>`
-      :(r._main?' <span class="xs muted">주 라인</span>':''))},
-    {k:'_laneKo',h:'라인',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
-      :(r._est?`<span class="muted">${v}?</span>`:v)},
+      :` <span class="${r._est?'muted':''}">(${r._laneKo}${r._est?'?':''})</span>`+(r._main?' <span class="xs muted">주 라인</span>':''))},
     {k:'tier',h:'티어',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
       :(r._est?`<span class="muted" style="font-size:11.5px">${esc(v)} (추정)</span>`:tierBadge(v))},
     {k:'points',h:'점수',num:1,fmt:(v,r)=>{
