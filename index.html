@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-kjix0nn+Qy26kPI9+qAy48LDKDH1P23sJiBEsYNI3iI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-YFFO3KpeG1kzVMI7oxDaxHkhqZQ+d2recPbbS+ymY4k='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -2904,64 +2904,6 @@ function renderMath(){
   renderMathRest();
 }
 
-// ---------- 개인 산출 (v1 고정 기준) ----------
-// 승패와 분리된 개인 지표 10개의 고정 가중치 합. 기준은 발행 쪽 output_ref_v1.json 에 얼려 있다 —
-// 화면은 payload 의 output/output_constants 만 읽는다(숫자를 따로 적지 않는다).
-const outC=()=>DATA.output_constants||{};
-const sgn2=v=>(v>0?'+':'')+(+v).toFixed(2);
-function outRows(){
-  const O=DATA.output||{}, C=DATA.cp||{};
-  return Object.entries(O).map(([k,v])=>{
-    const parts=(v.parts||[]).slice().sort((a,b)=>b.contrib-a.contrib);
-    return {_id:k, name:(C[k]||{}).name||k, score:v.score, games:v.games, mmr:(C[k]||{}).mmr,
-      band:v.band, rank_lo:v.rank_lo, rank_hi:v.rank_hi, half80:v.half80,
-      best:parts[0]?parts[0].label:'—', worst:parts[parts.length-1]?parts[parts.length-1].label:'—'};
-  }).sort((a,b)=>b.score-a.score);
-}
-function renderOutput(){
-  const K=outC(), rows=outRows(), box=$('#outT'); if(!box) return;
-  if(!rows.length){ box.innerHTML='<p class="muted">아직 개인 산출을 산정할 멤버가 없습니다.</p>'; return; }
-  $('#outIntro').innerHTML=`승패와 무관한 개인 지표 ${(K.weights||[]).length}개를 고정 가중치로 합산한 값입니다. `+
-    `<b>0</b> = 같은 라인 평균, 표준편차 약 0.17. 기준 <b>v${K.version||1}</b>`+
-    `${K.frozen_at?` (${K.frozen_at} · ${K.frozen_games}판)`:''} · ${minGamesNeeded()}판 이상 집계 · `+
-    `기준 갱신 전까지 미출전 멤버의 값은 변하지 않습니다. `+
-    `<b>군</b>은 점수 차가 오차보다 확실히 클 때만 나뉘고(같은 군 안의 순서는 의미가 없습니다), `+
-    `± 는 80% 오차, 순위 범위는 그 오차 안에서 가능한 순위입니다. 최근 폼이 섞인 값이라 판이 쌓이면 움직입니다.`;
-  // 순위 대신 군 — 33판에서는 양 끝만 확실하고 가운데 15명은 한 덩어리다(부트스트랩 실측). 이웃과
-  // P(위>아래) ≥ .8 일 때만 군이 갈린다. 순위 범위는 "확실히 위인 사람 수 + 1 ~ 전체 − 확실히 아래인 사람 수".
-  renderTable(box, rows, [
-    {k:'band',h:'군',num:1,fmt:v=>v==null?'<span class="muted">—</span>':`${v}군`},
-    {k:'name',h:'멤버'},
-    {k:'score',h:'개인 산출',num:1,bar:1,fmt:(v,r)=>sgn2(v)+(r.half80!=null?`<span class="side-sm muted">±${r.half80.toFixed(2)}</span>`:''),
-     cls:r=>'num '+(r.score>0?'pos':r.score<0?'neg':'')},
-    {k:'rank_lo',h:'순위 범위',num:1,fmt:(v,r)=>v==null?'—':(v===r.rank_hi?`${v}위`:`${v}~${r.rank_hi}위`)},
-    {k:'games',h:'판수',num:1},
-    {k:'mmr',h:'MMR',num:1,lo:1,hlp:'MMR',fmt:v=>v==null?'—':`<span class="muted">${v}</span>`},
-    {k:'best',h:'강점',lo:1},
-    {k:'worst',h:'약점',lo:1},
-  ],'score',-1);
-  const sel=$('#outWho');
-  sel.innerHTML=rows.map(r=>`<option value="${r._id}">${esc(r.name)} · ${sgn2(r.score)}</option>`).join('');
-  sel.onchange=renderOutputParts; renderOutputParts();
-}
-function renderOutputParts(){
-  const id=$('#outWho').value, v=(DATA.output||{})[id], K=outC(), box=$('#outParts');
-  if(!v){ box.innerHTML=''; return; }
-  const tr=(v.parts||[]).map(p=>`<tr><td>${esc(p.label)}</td><td class="num">${p.w.toFixed(3)}</td><td class="num">${p.z>=0?'+':''}${p.z.toFixed(2)}</td>`+
-    `<td class="num muted">${p.n}</td><td class="num ${p.contrib>0?'pos':p.contrib<0?'neg':''}">${p.contrib>=0?'+':''}${p.contrib.toFixed(3)}</td></tr>`).join('');
-  box.innerHTML=`<div class="mathwrap">
-    <p class="fml">개인 산출 = Σ 가중치 × (라인 안 z 의 판 평균) × n/(n+${K.shrink_k||4}) &nbsp;·&nbsp; z 는 판마다 ±${K.z_clip||3} 로 자름</p>
-    <div class="tbl"><table><thead><tr><th scope="col">지표</th><th scope="col" class="num">가중치</th><th scope="col" class="num">평균 z</th>
-      <th scope="col" class="num">판</th><th scope="col" class="num">기여</th></tr></thead><tbody>${tr}</tbody></table></div>
-    <p class="fml">합 = <b class="acc">${sgn2(v.score)}</b> &nbsp;·&nbsp; 수축 n/(n+${K.shrink_k||4}) = ${v.games}/${v.games+(K.shrink_k||4)} = ${v.shrink.toFixed(3)}</p>
-  </div>`;
-}
-
-// 플레이어 요약의 개인 산출 알약 — 순위 탭과 같은 payload 를 읽는다.
-function outPill(id){
-  const v=(DATA.output||{})[id]; if(!v) return '';
-  return `<span class="pill" data-tip-key="개인산출">개인 산출 ${sgn2(v.score)}${v.band?` · ${v.band}군`:''}${v.rank_lo?` (${v.rank_lo===v.rank_hi?v.rank_lo+'위':v.rank_lo+'~'+v.rank_hi+'위'})`:''}</span>`;
-}
 function renderMathMmr(){
   // 검산 = 그 사람의 경기별 리플레이. 손으로 더하면 MMR·CP·티어가 그대로 나와야 한다.
   // 예전엔 밸런스 도구의 BT 항 분해를 보여 줬는데, 그건 티어와 무관한 다른 숫자였다(2026-09-02 통합).
@@ -3484,8 +3426,8 @@ function setupPlayerView(){
 }
 // ---------- 소환사명 검색 · 긴 표 접기 ----------
 // 피드백(2026-09-03): 목록이 너무 많고 난잡해서 내 파트를 못 찾는다. 이름을 치면 밑에 맞는 이름이 바로 뜨고,
-// 누르면 그 멤버의 플레이어 화면(전적·라인·챔피언·개인 산출)으로 간다. 표 강조나 걸러 보기는 하지 않는다(요청).
-const isRankTable=tb=>!!tb.closest('#cpT, #boardT, #rankT, #outT') || ((tb.tHead&&tb.tHead.rows[0]&&tb.tHead.rows[0].cells[0].textContent.trim())==='#');
+// 누르면 그 멤버의 플레이어 화면(전적·라인·챔피언)으로 간다. 표 강조나 걸러 보기는 하지 않는다(요청).
+const isRankTable=tb=>!!tb.closest('#cpT, #boardT, #rankT') || ((tb.tHead&&tb.tHead.rows[0]&&tb.tHead.rows[0].cells[0].textContent.trim())==='#');
 const norm=s=>String(s||'').toLowerCase().replace(/\s+/g,'');
 // 초성 검색 — 'ㅇㅇㅁ' 도 앙앙맹을 찾는다. 자음만 친 질의는 이름의 초성 문자열과 견준다.
 const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
