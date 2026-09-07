@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-YFFO3KpeG1kzVMI7oxDaxHkhqZQ+d2recPbbS+ymY4k='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-OzFRnjv8BtiSOox6JPLmPLk7iULLDeDXkPB7WEmC/3M='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -742,8 +742,7 @@
             <div class="mets" id="metricChips"></div></div>
           <p class="metdesc" id="metricDesc"></p>
           <div class="row" style="margin-top:2px">
-            <span class="muted" style="font-size:12.5px">라인</span>
-            <span id="laneBtns"></span>
+            <span id="laneWrap"><span class="muted" style="font-size:12.5px">라인</span><span id="laneBtns"></span></span>
             <span class="muted" id="rankNote"></span>
           </div>
           <div class="muted" id="rankPending"></div>
@@ -967,7 +966,9 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
   CP:'내전 전적만으로 산정하는 점수입니다. 솔랭 티어와 무관합니다.\n한 판에 15~25점 변동하며 승패만 반영합니다. 판수가 많다고 오르지 않습니다.\n같은 팀 안에서는 팀 평균보다 MMR 이 낮을수록, 그 판 기여도가 높을수록 더 받습니다.\n기여도가 높으면 패배 시 덜 잃습니다.',
-  기준선:'골드~마스터 솔랭 표본(라인당 약 10만 판, 패치 16.10 이후) 분포에서 이 멤버의 내전 값이 상위 몇 % 인지 나타냅니다.\n같은 정의·같은 라인끼리만 비교합니다. 방 안 점수(능력치)와 달리 멤버 구성이 바뀌어도 변하지 않습니다.\n"에메랄드 수준" 같은 티어 이름은 붙이지 않습니다. 판당 딜·딜 비중·시야는 골드와 마스터의 중앙값이 거의 같아 근거가 없기 때문입니다.\n라인전·개인기 축은 표본에 해당 지표가 없어 기준을 제공하지 않습니다. 내전 티어(CP)와 무관합니다.',
+  // ⚠️ 표본 크기·패치는 **글에 박지 않는다.** 같은 패널 본문(baselineHTML)은 payload 로
+  //    찍는데 여기만 옛 값이라 툴팁과 본문에 서로 다른 표본 크기가 같이 떴다.
+  기준선:()=>`골드~마스터 솔랭 표본(${baseSampleText()}) 분포에서 이 멤버의 내전 값이 상위 몇 % 인지 나타냅니다.\n같은 정의·같은 라인끼리만 비교합니다. 방 안 점수(능력치)와 달리 멤버 구성이 바뀌어도 변하지 않습니다.\n"에메랄드 수준" 같은 티어 이름은 붙이지 않습니다. 판당 딜·딜 비중·시야는 골드와 마스터의 중앙값이 거의 같아 근거가 없기 때문입니다.\n라인전·개인기 축은 표본에 해당 지표가 없어 기준을 제공하지 않습니다. 내전 티어(CP)와 무관합니다.`,
   라인티어:'라인마다 티어를 따로 산정합니다. 그 판에 실제로 출전한 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 멤버가 미드로 출전해도 미드 티어가 같지는 않습니다.\n미출전 라인은 추정치로 채우고, 표본이 부족하면 점선으로 표시합니다.\n라인 편차 = 다섯 라인 중 최고 칸과 최저 칸 차이의 절반입니다.',
   라인MMR:'라인 MMR = 통합 MMR + 라인 편차입니다.\n라인 편차는 해당 라인에서 기대보다 얼마나 더 이겼는지를 5판 사전값으로 보정한 값이라 통합 MMR 과 크게 벌어지지 않습니다.\n미출전 라인은 사전값(−30)만 반영되며 점선으로 표시합니다.',
   능력치:'서로 겹치지 않는 지표로 축을 구성했습니다.\n점수는 방 평균을 2.75 로 두고, 지표 값이 평균에서 얼마나 떨어져 있는지로 산정합니다.\n순위가 아닌 값 기준이라 전체가 좋아지면 함께 오릅니다.\n판수가 적으면 평균 쪽으로 보정하여 한두 판으로 만점이 나오지 않습니다.\n한 경기에 약 0.13 변동합니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
@@ -995,7 +996,7 @@ const TIP=(()=>{
   const show=el=>{
     // data-tip 이 없으면 data-tip-key 로 HELP 에서 찾는다(카드 제목 물음표가 이 경로다).
     // textContent 라 따옴표 이스케이프 문제도 애초에 안 생긴다.
-    const txt=el.dataset.tip||HELP[el.dataset.tipKey]||'';
+    const txt=el.dataset.tip||helpText(el.dataset.tipKey);
     if(!txt){ box.style.display='none'; return; }
     box.textContent=txt; box.style.display='block';
     const r=el.getBoundingClientRect(), b=box.getBoundingClientRect();
@@ -1068,9 +1069,17 @@ const LANE_SEQ=['TOP','JUNGLE','MIDDLE','BOTTOM','UTILITY'];
 const laneKo=l=>LANE_KO[l]||l||'?';
 // 영문 챔피언 id → 한글 이름. 아이콘 URL 은 영문이 필요하므로 표기만 바꾼다.
 const champKo=c=>((DATA.champ_ko||{})[c])||c||'';
+// 설명문 중 데이터에 따라 달라지는 것은 함수로 둔다 — 상수를 글에 박으면 반드시 표류한다.
+function helpText(key){ const v=HELP[key]; return (typeof v==='function'?v():v)||''; }
+function baseSampleText(){
+  const B=DATA.baseline||{}, g=B.games;
+  // games 는 티어별 dict 다({GOLD:…, MASTER:…}) — 합쳐서 쓴다.
+  const n=(g&&typeof g==='object')?Object.values(g).reduce((s,v)=>s+(+v||0),0):(+g||0);
+  return (n?`${n.toLocaleString()}판`:'솔랭 표본')+(B.patch_min?`, 패치 ${B.patch_min} 이후`:'');
+}
 const laneIdx=l=>{const i=LANE_SEQ.indexOf(l);return i<0?9:i;};
 function help(key){
-  const t=(HELP[key]||'').replace(/"/g,'&quot;');
+  const t=helpText(key).replace(/"/g,'&quot;');
   return `<span class="qmark" tabindex="0" role="button" data-tip="${t}" aria-label="${key} 설명">?</span>`;
 }
 
@@ -1268,7 +1277,8 @@ function renderRank(){
     ? `${ico('hourglass')} 기록 없는 지표 ${pend.length}개 — `
       + pend.map(x=>`<span class="pill" data-tip="${x.reason}">${x.label||mLabel(x.key)}</span>`).join('')
     : '';
-  $('#laneBtns').style.display=byLane?'':'none';
+  // 라벨과 버튼을 같이 숨긴다 — 예전엔 버튼만 감춰 '라인' 글자만 덩그러니 남았다
+  $('#laneWrap').style.display=byLane?'':'none';
   const isDiff=curMetric.includes('diff');
   const cols=[{k:'discord_name',h:'멤버'}];
   if(byLane) cols.push({k:'lane',h:'라인',fmt:laneKo});
@@ -1606,7 +1616,7 @@ function renderMatches(){
     const t=(m.teams||[]).map(tm=>{
       const ordered=(tm.players||[]).slice().sort((a,b)=>laneIdx(a.lane)-laneIdx(b.lane));
       const players=ordered.map(p=>
-        `<span class="pl" data-tip="${laneKo(p.lane)} · ${p.name||''}${p.champ?' · '+p.champ:''}">${champImg(p.champ)}`+
+        `<span class="pl" data-tip="${laneKo(p.lane)} · ${p.name||''}${p.champ?' · '+champKo(p.champ):''}">${champImg(p.champ)}`+
         `<span class="pn">${p.name||''}</span></span>`).join('');
       return `<div class="team"><span class="res ${tm.win?'w':'l'}">${tm.win?'승':'패'}</span>${players}</div>`;
     }).join('<span class="vs">vs</span>');
@@ -2084,7 +2094,11 @@ function openCompare(a,b){
   const P=DATA.players||{}; if(!P[a]||!P[b]) return;
   fillPlayerSelect($('#cmpA')); fillPlayerSelect($('#cmpB'));
   ensureView('player');                  // 아직 안 그린 화면이면 select 가 비어 값이 안 들어간다
-  $('#cmpA').value=a; $('#cmpB').value=b; renderCompare();
+  // openPlayer 와 같은 이유 — value 만 바꾸면 두 콤보박스 입력칸에 이전 두 사람이 남는다.
+  const ca=$('#cmpA'), cb=$('#cmpB');
+  ca.value=a; cb.value=b;
+  ca.dispatchEvent(new Event('change',{bubbles:true}));   // change 리스너가 renderCompare 를 부른다
+  cb.dispatchEvent(new Event('change',{bubbles:true}));
   jumpTo('player', '비교');
 }
 function kcList(arr){
@@ -2431,7 +2445,7 @@ function dmgBars(d){
 // 소환사 주문 · 룬 계열 id → 이름. ddragon 은 CSP 로 이미지가 허용돼 있지만
 // 주문/룬 아이콘 경로는 버전마다 파일명이 달라 깨지기 쉬워서 글자로만 쓴다.
 const SPELL_KO={1:'정화',3:'탈진',4:'점멸',6:'유체화',7:'회복',11:'강타',12:'순간이동',
-  13:'総明',14:'점화',21:'방어막',32:'표식'};
+  13:'총명',14:'점화',21:'방어막',32:'표식'};
 const PERK_KO={8000:'정밀',8100:'지배',8200:'마법',8300:'영감',8400:'결의'};
 const EX_LABEL=[
   ['solo_kills','솔로킬'],['spree','최다 연속킬'],['first_blood','퍼블'],
@@ -2952,6 +2966,7 @@ function renderMathMmr(){
 
 function renderMathRest(){
   const C=DATA.rating_constants||{};
+  const K=cpConst(), cw=K.contrib_weights||{};   // 상수는 payload 에서만 읽는다(글에 안 박는다)
   const mg=DATA.min_games, lm=DATA.min_games_lane;
   $('#mathRest').innerHTML=`
   <div class="mathwrap">
@@ -2967,9 +2982,11 @@ function renderMathRest(){
       값이 위로 부풀어요(실측: 한 명이 11.20 vs 7.07). op.gg·딥롤과 같은 방식입니다.</p>
 
     <h3>MVP</h3>
-    <p class="fml">경기 점수 = 0.40×킬관여비 + 0.35×딜비중비 + 0.25×KDA비 &nbsp;(각 항목 = 그 경기 1등 대비 비율, KDA는 10 상한)</p>
-    <p class="muted">경기 <b>안에서</b> 상대화하기 때문에, 난타전이든 저점수 경기든 공평하게
-      비교됩니다. 한 경기에 MVP는 정확히 한 명이라 MVP 총합 = 경기 수입니다.</p>
+    <p class="fml">기여도 = 킬 관여 ${cw.kp} · 딜 비중 ${cw.dmg_share} · KDA ${cw.kda_n}
+      을 <b>라인 안에서</b> 표준화한 뒤 팀 안 상대값으로 (${K.contrib_lo}~${K.contrib_hi} 로 자름)</p>
+    <p class="muted">라인 안에서 표준화하는 이유는, 라인마다 킬 관여·딜 비중의 수준이 달라
+      그냥 비교하면 라인을 재게 되기 때문입니다. 티어 계산에 쓰는 기여도와 같은 값입니다.
+      한 경기에 MVP는 정확히 한 명이라 MVP 총합 = 경기 수입니다.</p>
 
     <h3>시너지 (경험적 베이즈)</h3>
     <p class="fml">시너지 = ( 같이 이긴 판 − 같이 한 판 × 기대승률 ) ÷ ( 같이 한 판 + κ )</p>
@@ -2985,10 +3002,9 @@ function renderMathRest(){
     <p class="muted">낮을수록 좋은 지표(죽어 있던 시간 등)는 방향을 뒤집어서 계산합니다.</p>
 
     <h3>최소 판수</h3>
-    <p class="fml">최소 판수 = max(3, ⌈총 경기 × 0.2⌉), 총 경기 수를 넘지 않음 → 지금 <b>${mg}판</b><br>
-      라인별 지표 = max(3, ⌈최소 판수 ÷ 2⌉), 최소 판수를 넘지 않음 → 지금 <b>${lm}판</b></p>
-    <p class="muted">경기가 쌓이면 기준도 같이 올라갑니다. 한두 판 뛴 기록이 계속 1위에
-      남지 않게 하려는 것이고, 라인별은 판수가 라인마다 쪼개지므로 완화하되 3판이 바닥입니다.</p>
+    <p class="fml">배치 · 순위표 · 능력치 모두 <b>${mg}판</b> · 라인별 지표는 <b>${lm}판</b></p>
+    <p class="muted">경기가 쌓여도 기준은 그대로입니다. 한두 판 뛴 기록이 계속 1위에
+      남지 않게 하려는 것이고, 라인별은 판수가 라인마다 쪼개지므로 조금 낮춥니다.</p>
 
     <h3>내전으로 인정하는 기준</h3>
     <p class="fml">토너먼트 코드로 치른 경기 중 · 우리 멤버 6명 이상 + 양 팀에 분포 · 14분 이상</p>
@@ -2996,7 +3012,7 @@ function renderMathRest(){
       붙은 판이라는 뜻이에요. 14분 미만은 재경기로 보고 뺍니다(롤은 15분 전 항복이 안 됩니다).</p>
 
     <h3>상수 (코드에서 그대로 가져옴)</h3>
-    <p class="fml">MMR: 배치 ${(DATA.cp_constants||{}).placement_games||3}판 K=${(DATA.cp_constants||{}).k_place||64} → ${(DATA.cp_constants||{}).k_norm||32}에서 ${(DATA.cp_constants||{}).k_decay_half||20}판마다 절반(최소 ${(DATA.cp_constants||{}).k_min||16}) · 시작 1000 · 팀 나누기의 strength = (MMR − 1000) ÷ ${C.mmr_scale}</p>
+    <p class="fml">MMR: 배치 ${K.placement_games||3}판 K=${K.k_place||64} → ${K.k_norm||32}에서 ${K.k_decay_half||20}판마다 절반(최소 ${K.k_min||16}) · 시작 ${C.mmr_base||1000} · 팀 나누기의 strength = (MMR − ${C.mmr_base||1000}) ÷ ${C.mmr_scale}</p>
   </div>`;
 }
 
@@ -3234,7 +3250,7 @@ function renderCp(){
     $('#cpT').innerHTML='<p class="muted">아직 티어를 산정할 경기가 없습니다.</p>';
     $('#cpMath').innerHTML=''; return;
   }
-  const base=C.cp_base||1000, need=C.placement_games||4;
+  const base=C.cp_base||1000, need=C.placement_games||3;
 
   // ── 사다리 ──
   const FULLP=C.tier_points||100;
@@ -3300,7 +3316,7 @@ function renderCp(){
              `<span class="bar"><i style="width:${w.toFixed(1)}%"></i></span></div>`;}},
     {k:'to_next',h:'승급까지',num:1,nullLast:1,lo:1,
      fmt:(v,r)=>(!r.placed||v==null)?'<span class="muted">—</span>':`<span class="muted">${v}</span>`},
-    {k:'mmr',h:'MMR',num:1,hlp:'CP',lo:1,
+    {k:'mmr',h:'MMR',num:1,hlp:'MMR',lo:1,
      fmt:(v,r)=>r.placed?`<span class="muted">${v}</span>`:'<span class="muted">—</span>'},
     {k:'games',h:'판수',num:1},
     {k:'_lane',h:'주 라인'},
@@ -3466,7 +3482,10 @@ function renderSearch(){
 // 그 멤버의 플레이어 화면으로 — 탭·패널을 켜고 선택을 맞춘 뒤 그린다.
 function openPlayer(id){
   jumpTo('player','개인');
-  const ps=$('#playerSel'); if(ps&&id){ ps.value=id; renderPlayerBody(); }
+  // ⚠️ value 만 바꾸면 콤보박스 입력칸이 안 따라온다 — attachCombo 는 change 이벤트로
+  //    동기화한다. 예전엔 소환사명 검색으로 들어오면 본문만 그 사람으로 바뀌고 바로 위
+  //    콤보박스에는 직전 이름이 남아 있었다(멤버 카드 경로는 이미 dispatch 한다).
+  const ps=$('#playerSel'); if(ps&&id){ ps.value=id; ps.dispatchEvent(new Event('change',{bubbles:true})); }
   const nm=((DATA.cp||{})[id]||{}).name; if(nm) announce(`${nm} 화면`);
 }
 // ── 긴 표 접기 ──
@@ -3577,7 +3596,12 @@ async function loadMatchDetail(slug){
     const r=await fetch(`data/${encodeURIComponent(GID)}/m/${encodeURIComponent(slug)}.json`);
     if(!r.ok) throw new Error(r.status);
     MDCACHE[slug]=sanitize(await r.json());
-  }catch(e){ MDCACHE[slug]=null; }
+  }catch(e){
+    // 실패는 **캐시하지 않는다.** null 을 넣어 두면 undefined 가 아니라서 두 번째
+    // 클릭부터 fetch 없이 즉시 null 을 돌려주고, 화면의 "다시 눌러 주세요" 안내가
+    // 거짓말이 된다(새로고침 전까지 그 경기 상세를 영영 못 연다).
+    return null;
+  }
   return MDCACHE[slug];
 }
 
@@ -3637,7 +3661,7 @@ function activateTab(t){
 $('#tabs').addEventListener('click',e=>activateTab(e.target.closest('.tab')));
 // 키보드 접근성. `role="tablist"` 를 선언했으면 스크린리더 쓰는 사람은 **화살표로
 // 옮겨지길 기대한다** — 안 넣으면 선언만 해 놓고 약속을 안 지키는 셈이다.
-// 옮기면 바로 전환한다(자동 활성화). 탭 11개가 다 가벼운 화면 전환이라 그게 자연스럽다.
+// 옮기면 바로 전환한다(자동 활성화). 탭 8개가 다 가벼운 화면 전환이라 그게 자연스럽다.
 (function(){
   const tabs=[...document.querySelectorAll('#tabs .tab')];
   tabs.forEach((t,i)=>{
