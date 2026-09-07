@@ -1,0 +1,6 @@
+# 멤버 19명의 롤 닉네임과 전적이 그대로 있는 페이지다. 닉네임은 실명급 식별자라
+# 검색에 걸리면 안 된다 — 링크를 아는 사람만 본다.
+# (같은 이유로 index.html 의 <meta name="robots"> 와 _headers 의 X-Robots-Tag 도 건다.
+#  robots.txt 는 크롤링을, 나머지 둘은 색인을 막는다 — 셋 다 필요하다.)
+User-agent: *
+Disallow: /

@@ -4,14 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
-     인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
+     인라인 **스타일**은 'unsafe-inline' 이 필요하지만(단일 파일 구조), 스크립트는
+     아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
+     ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
+        로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-YFFO3KpeG1kzVMI7oxDaxHkhqZQ+d2recPbbS+ymY4k='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
-<!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
-     (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
-     X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
-     meta 로 실제 동작하는 것만 여기 둔다 — CSP(위)와 referrer 가 그것이다.
-     Cloudflare 로 옮기면 worker.js + _headers 가 나머지를 붙인다. -->
+<!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
+     frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
+     — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
+     실제로 헤더를 다는 건 worker.js 가 아니라 `_headers` 다.
+     여기에는 meta 로 실제 동작하는 것만 둔다 — CSP(위)·referrer·robots. -->
 <meta name="referrer" content="no-referrer" />
+<!-- 멤버의 롤 닉네임은 실명급 식별자다. 닉네임으로 검색했을 때 이 페이지가 뜨면 안 된다.
+     robots.txt(크롤링) + 이 meta + _headers 의 X-Robots-Tag(색인) 세 겹으로 막는다. -->
+<meta name="robots" content="noindex, nofollow" />
 <title>내전 해체 분석기</title>
 <link rel="icon" href="data:," />
 <style>

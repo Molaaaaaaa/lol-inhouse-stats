@@ -9,4 +9,5 @@
   Referrer-Policy: no-referrer
   X-Frame-Options: DENY
   Content-Security-Policy: frame-ancestors 'none'
+  X-Robots-Tag: noindex, nofollow
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
