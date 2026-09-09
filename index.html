@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-KAoz/r4KtYcdyu+3hvJIM4mafXb/XO3UdqeV0U/HqbQ='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-DFkqhQylE/opI4AFAp4Pim8fLLXMPOqhGRWlG9XLaR8='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -282,7 +282,8 @@
   .team.win{} .vs{color:var(--dim);font-weight:700;padding:0 4px}
   .res{font-weight:700;border-radius:6px;padding:2px 8px;font-size:12px}
   .res.w{background:color-mix(in srgb,var(--acc) 13%,transparent);color:var(--acc)} .res.l{background:color-mix(in srgb,var(--danger) 13%,transparent);color:var(--bad)}
-  /* 피드백 창구 — 친구들 대부분 GitHub 계정이 없어 사이트에서 바로 받는다 */
+  /* 도움말 물음표 — 지표 설명 툴팁을 여는 작은 원. (피드백 창구는 제거됐다.
+     이 주석이 예전 위젯 설명으로 남아 있어 .qmark 를 그 잔재로 오해할 자리를 만들었다.) */
   .qmark{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
     border:1px solid var(--dim);border-radius:50%;font-size:10px;color:var(--dim);
     margin-left:4px;cursor:help;vertical-align:middle;line-height:1}
@@ -642,7 +643,6 @@
 <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
 <symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></symbol>
 <symbol id="i-arrow-left-right" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
-<symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
 <symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol>
 <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></symbol>
 <symbol id="i-id-card" viewBox="0 0 24 24"><path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/></symbol>
@@ -937,7 +937,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   let h='<table'+(capTxt?` aria-label="${esc(capTxt)}"`:'')+'><thead><tr>'+cols.map(c=>
     // ⚠️ tabindex 가 없으면 **마우스 없이는 어떤 표도 정렬할 수 없다**(표 27개 전부).
     //    aria-sort 는 지금 무엇으로 정렬돼 있는지를 소리로 알려 준다.
-    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}${c.lo?' lo':''}" tabindex="0"`+
+    `<th scope="col" data-k="${c.k}" class="sortable ${c.num?'num':''}${(c.lo&&c.k!==sortKey)?' lo':''}" tabindex="0"`+
     ` aria-sort="${c.k===sortKey?(sortDir<0?'descending':'ascending'):'none'}">`+
     `${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
   data.forEach((r,i)=>{
@@ -945,7 +945,10 @@ function renderTable(el, rows, cols, sortKey, sortDir){
       let v=r[c.k];
       let disp=c.fmt?c.fmt(v,r,i):(v==null?'':v);
       if(c.img && r[c.img]) disp=champImg(r[c.img])+disp;
-      const cls=(c.cls?c.cls(r):(c.num?'num':''))+(c.lo?' lo':'');   // lo: 폰에서 감추는 보조 열
+      // lo: 폰에서 감추는 보조 열. 단 **지금 정렬 기준인 열은 감추지 않는다** —
+      // 근거가 화면에 없으면 표가 아무 기준 없이 섞인 것처럼 보이고, 왜 그 순서인지
+      // 확인할 방법이 없다(aria-sort 도 display:none 인 th 에 붙어 소리로도 안 나갔다).
+      const cls=(c.cls?c.cls(r):(c.num?'num':''))+((c.lo&&c.k!==sortKey)?' lo':'');
       if(c.bar){ const p=Math.max(0,Math.min(100,(+v/maxes[c.k])*100));
         disp=`<div class="barwrap"><span>${disp}</span><i style="width:${p}%"></i></div>`; }
       return `<td class="${cls}" data-label="${c.h}">${disp}</td>`;
@@ -2761,7 +2764,7 @@ function radarSVG(series,opt){
       // 없는 축은 '—' 로 — 빈칸으로 두면 0점과 구분이 안 된다
       return `<tspan fill="${m?sr.color:TOK.dim2}">${m?fmtAx(m.score):'—'}</tspan>`;
     }).join(`<tspan fill="${TOK.dim2}"> / </tspan>`);
-    const thin=(a.games!=null&&a.games<5);
+    const thin=(a.games!=null&&a.games<(DATA.min_games||5));
     g+=`<text x="${q[0].toFixed(1)}" y="${(q[1]-2).toFixed(1)}" text-anchor="middle"`+
        ` font-size="10" fill="${thin?TOK.dim2:TOK.mid}">${a.label}</text>`+
        `<text x="${q[0].toFixed(1)}" y="${(q[1]+10).toFixed(1)}" text-anchor="middle"`+
@@ -2779,7 +2782,7 @@ function axisBars(p){
   if(!ax.length) return '';
   return `<div class="axbars">`+ax.map(a=>{
     const w=Math.max(3,Math.round(a.score/MAX*100));
-    const thin=(a.games!=null&&a.games<5);
+    const thin=(a.games!=null&&a.games<(DATA.min_games||5));
     const detail=(a.parts||[]).map(x=>`${x.label} ${fmtMetric(x.key,x.value)}`).join(' · ');
     return `<div class="axrow${thin?' thin':''}" data-tip="${a.rank}/${a.n}위 · ${a.games||'?'}판&#10;${detail}&#10;${a.desc}">`+
       `<span class="axl">${a.label}</span>`+
@@ -2919,15 +2922,6 @@ function renderKpis(){
 // ---------- 계산식 (검산 가능하게) ----------
 // 원칙: 상수는 payload(rating_constants)에서만 읽는다. 화면에 숫자를 따로 적어 두면
 // 코드와 반드시 어긋난다(라인 최소 판수에서 이미 겪었다).
-// 받침 유무로 조사를 고른다. "마빡는"처럼 틀리면 읽는 사람이 먼저 신뢰를 잃는다.
-function josa(word,pair){
-  const [withB,noB]=pair;                       // 예: ['은','는']
-  const c=(word||'').trim().slice(-1).charCodeAt(0);
-  if(!(c>=0xAC00&&c<=0xD7A3)) return noB;       // 한글이 아니면 받침 판정 불가
-  return ((c-0xAC00)%28)?withB:noB;
-}
-const nf=(v,d=4)=>v==null||!isFinite(v)?'—':(v>=0?'+':'')+Number(v).toFixed(d);
-const nf0=(v,d=4)=>v==null||!isFinite(v)?'—':Number(v).toFixed(d);
 
 function renderMath(){
   const R=DATA.ratings||{}, sel=$('#mathWho');
@@ -3146,11 +3140,6 @@ function labelTables(){
 const SCROLL_MODE=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
 const cpConst = () => DATA.cp_constants || {};
 const cpTiers = () => (cpConst().tiers || []);
-function tierOf(cp){
-  const t=cpTiers();
-  for(const x of t){ if(x.cp==null || cp>=x.cp) return x.name; }
-  return t.length?t[t.length-1].name:'';
-}
 // 티어 이름 → CSS 클래스. 이름 자체를 클래스로 쓰되 화이트리스트로 거른다
 // (payload 는 sanitize 를 거치지만, 클래스명에 값을 그대로 넣는 건 따로 막는다).
 function tierCls(name){
