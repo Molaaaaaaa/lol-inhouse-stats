@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-DFkqhQylE/opI4AFAp4Pim8fLLXMPOqhGRWlG9XLaR8='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-FkisOrtZ+p3sKqKxVZUO2e5pQEZ6GTMjvohQ3r3QWr8='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -43,7 +43,10 @@
   :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
   ::selection{background:color-mix(in srgb,var(--acc) 35%,transparent);color:var(--txt)}
   ::placeholder{color:var(--dim);opacity:1}
-  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#10202b 0%,var(--bg) 60%);
+  /* 바탕색을 그라디언트 **밑에** 한 겹 깐다. 그라디언트는 background-image 라
+     인쇄할 때 기본으로 빠지는데, 그러면 거의 흰 글자가 흰 종이에 찍혀 안 보인다. */
+  body{margin:0;background-color:var(--bg);
+    background-image:radial-gradient(1200px 600px at 50% -10%,#10202b 0%,var(--bg) 60%);
     color:var(--txt);font-family:'Segoe UI',Roboto,'Malgun Gothic',sans-serif;font-size:14px;
     line-height:1.55;min-height:100vh}
   header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 22px;
@@ -371,6 +374,12 @@
   .psearch:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
   .sronly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
     clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+  /* 건너뛰기 링크 — 평소엔 숨고 Tab 을 누르면 나타난다. 머리말·탭·서브탭을 지나야
+     본문에 닿으므로, 키보드만 쓰는 사람에게는 이 한 줄이 매번 수십 번의 Tab 을 줄인다. */
+  .skip{position:absolute;left:8px;top:-48px;z-index:50;padding:8px 14px;border-radius:8px;
+    background:var(--panel);color:var(--txt);border:1px solid var(--acc);font-size:14px;
+    transition:top .12s}
+  .skip:focus{top:8px}
   footer{color:var(--dim);font-size:12px;text-align:center;padding:24px;
     display:flex;flex-direction:column;gap:8px;align-items:center}
   /* 법적 고지는 읽히되 본문을 밀어내지 않게 — 작게, 한 단 폭으로 */
@@ -678,6 +687,7 @@
   <div class="meta" id="meta">데이터를 불러오는 중…</div>
 </header>
 
+<a class="skip" href="#views">본문으로 건너뛰기</a>
 <div class="wrap">
   <noscript><div class="card">이 페이지는 자바스크립트로 전적을 불러옵니다. 브라우저에서 JS를 허용해 주세요.</div></noscript>
   <div id="warnBar" class="hidden"></div>
@@ -703,7 +713,7 @@
     <div class="tab" role="tab" id="tab-player" aria-controls="player" data-t="player"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg> 플레이어</div>
     <div class="tab" role="tab" id="tab-balance" aria-controls="balance" data-t="balance"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 밸런스</div>
   </nav>
-  <main id="views">
+  <main id="views" tabindex="-1">
 
   <section id="tier" class="view" role="tabpanel" aria-labelledby="tab-tier" data-subtabs>
     <div class="card" data-sub="사다리" data-ico="trophy"><h2><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span><span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
@@ -827,10 +837,10 @@
 
   <section id="player" class="view hidden" role="tabpanel" aria-labelledby="tab-player" data-subtabs>
     <div data-sub="개인" data-ico="user" class="card">
-        <div class="row"><span>플레이어</span><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
+        <div class="row"><span>플레이어</span><select id="playerSel" aria-label="멤버 선택"></select><span class="muted" id="playerHit"></span></div>
         <div id="playerBody"></div></div>
     <div data-sub="비교" data-ico="arrow-left-right" class="card">
-        <div class="row"><select id="cmpA"></select><span class="vs">VS</span><select id="cmpB"></select></div>
+        <div class="row"><select id="cmpA" aria-label="비교할 멤버 1"></select><span class="vs">VS</span><select id="cmpB" aria-label="비교할 멤버 2"></select></div>
         <div id="cmpBody"></div></div>
   </section>
 
@@ -1715,7 +1725,11 @@ function attachCombo(sel, placeholder){
   inp.setAttribute('aria-expanded','false');
   inp.setAttribute('aria-controls',id);
   inp.setAttribute('aria-autocomplete','list');
-  if(sel.getAttribute('aria-label')) inp.setAttribute('aria-label',sel.getAttribute('aria-label'));
+  // 이름은 **반드시** 붙인다. placeholder 는 입력을 시작하면 사라지고 보조기술이
+  // 이름으로 읽어 준다는 보장도 없다(WCAG 3.3.2). 원본 select 의 이름을 물려받고,
+  // 없으면 placeholder 로라도 채운다 — 예전엔 셋 다 이름이 없어 소리로는 '소환사명 검색'
+  // 세 개가 똑같이 들렸다(멤버 선택인지 비교 A 인지 B 인지 구분 불가).
+  inp.setAttribute('aria-label', sel.getAttribute('aria-label') || inp.placeholder);
   const list=document.createElement('ul');
   list.id=id; list.setAttribute('role','listbox'); list.hidden=true;
   box.appendChild(inp); box.appendChild(list);
