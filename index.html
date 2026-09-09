@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-FkisOrtZ+p3sKqKxVZUO2e5pQEZ6GTMjvohQ3r3QWr8='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-fJriiZbFQkN63NbEW+3I7w5dXLOHbmFfxVCVVEy/2oc='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -1437,6 +1437,15 @@ function renderRecords(){
   $('#recCards').innerHTML=serverRecordsHTML()+`<div class="kpis recgrid">`+cards+streak+`</div>`+minGamesNote();
   renderTable($('#mvpT'),DATA.mvp||[],[{k:'name',h:'멤버'},
     {k:'mvp',h:'MVP',num:1,bar:1},{k:'games',h:'판',num:1}],'mvp',-1);
+  // 표 합계와 총 경기 수의 차이를 **여기서 메운다.** 안 적으면 개요의 '총 경기'와
+  // 이 표의 합이 어긋난 채로 남고, 검산 문장이 화면 안에서 반증된다(실측 40 vs 36).
+  const mx=DATA.mvp_excluded||{};
+  if(mx.awards>0){
+    const sum=(DATA.mvp||[]).reduce((t,r)=>t+(+r.mvp||0),0);
+    $('#mvpT').insertAdjacentHTML('afterend',
+      `<p class="note-sm muted">표 합계 ${sum}회 + 판수 미달 ${mx.players}명의 ${mx.awards}회 `+
+      `= 총 ${sum+mx.awards}경기. 문턱은 ${DATA.min_games||5}판입니다.</p>`);
+  }
   const pentas=r.pentas||[];
   $('#pentaT').innerHTML=pentas.length?pentas.map(p=>`${champImg(p.champ)}${p.name}`).join('<br>'):'<p class="muted">아직 펜타킬이 없습니다.</p>';
 }
@@ -1894,6 +1903,8 @@ function playerHomeHTML(){
 function renderPlayerBody(){
   const sel=$('#playerSel');
   const p=(DATA.players||{})[sel.value];
+  // 이 화면 안의 표 거르기는 **이 사람 것**이다(attachTableFilters 의 키에 섞인다)
+  const pane=$('#playerBody'); if(pane) pane.dataset.tfscope=sel.value||'';
   if(!p){
     // 아무도 안 골랐다 = 초기 화면(전체 보기). 카드를 누르면 그 사람으로 간다.
     $('#playerBody').innerHTML=playerHomeHTML();
@@ -2283,7 +2294,10 @@ function bestRole(team,decl){let best=null;
   return best;}
 function jsBalance(players,decl){
   players=players.filter(p=>(DATA.ratings||{})[p]); const n=players.length;
-  if(n<4||n%2)return{error:'짝수 4~10명을 선택해야 팀을 나눌 수 있습니다.'};
+  // ⚠️ 상한이 **없었다.** 안내문은 4~10 인데 12·20명도 그대로 풀었다. 나눔 수가
+  //    C(n, n/2)/2 라 20명이면 92,378개 — 클릭 한 번에 2초, 24명이면 37초 멈춘다.
+  //    게다가 10:10 을 만들어 놓고 아래 판정문이 '5:5' 라고 말했다.
+  if(n<4||n%2||n>10)return{error:'짝수 4~10명을 선택해야 팀을 나눌 수 있습니다.'};
   const half=n/2,useRoles=(half===5);
   const sm={}; (DATA.synergy||[]).forEach(s=>sm[[s.na,s.nb].sort().join('|')]=s.synergy);
   const synB=ids=>{let t=0;const nm=ids.map(d=>DATA.ratings[d].name);
@@ -2342,10 +2356,12 @@ function runBalance(){
   if(res.error){note.textContent=`${chosen.length}명 선택`;
     out.innerHTML=`<p class="stack neg">${res.error}</p>`; return;}
   const pa=Math.round(res.pA*100), gap=Math.abs(pa-50);
+  // 팀 크기를 결과에서 읽는다 — '5:5' 를 박아 두면 4:4·3:3 에서도 5:5 라고 말한다
+  const sz=res.teamA.length+':'+res.teamB.length;
   // 숫자만 던지지 않고 한 줄로 해석해 준다 — 이게 '간단명료'의 핵심이다.
   // 정보 최대화가 골랐으면 그 이유를 한 줄로 — '왜 이 나눔이냐'에 답한다
-  const why=res.infoPick?`<p class="note-sm muted">5:5 에 가까운 나눔 ${res.nCand}개 중, 아직 순서가 불확실한 사람들을 서로 반대편에 두는 나눔입니다 — 공정성은 같고 한 판이 더 많이 가립니다.</p>`:'';
-  const verdict=gap<=3?['거의 완벽한 5:5','good']
+  const why=res.infoPick?`<p class="note-sm muted">반반에 가까운 나눔 ${res.nCand}개 중, 아직 순서가 불확실한 사람들을 서로 반대편에 두는 나눔입니다 — 공정성은 같고 한 판이 더 많이 가립니다.</p>`:'';
+  const verdict=gap<=3?[`거의 완벽한 ${sz}`,'good']
     :gap<=8?['약간 기울었지만 괜찮습니다','']
     :['많이 기울었습니다. 멤버를 바꿔 보세요','bad'];
   note.textContent=`${chosen.length}명 선택`;
@@ -3007,7 +3023,8 @@ function renderMathRest(){
       을 <b>라인 안에서</b> 표준화한 뒤 팀 안 상대값으로 (${K.contrib_lo}~${K.contrib_hi} 로 자름)</p>
     <p class="muted">라인 안에서 표준화하는 이유는, 라인마다 킬 관여·딜 비중의 수준이 달라
       그냥 비교하면 라인을 재게 되기 때문입니다. 티어 계산에 쓰는 기여도와 같은 값입니다.
-      한 경기에 MVP는 정확히 한 명이라 MVP 총합 = 경기 수입니다.</p>
+      한 경기에 MVP는 정확히 한 명입니다. 다만 표에는 판수 문턱을 넘은 멤버만 실리므로
+      <b>표의 합계는 경기 수보다 작을 수 있습니다</b> — 빠진 횟수는 표 아래에 적어 둡니다.</p>
 
     <h3>시너지 (경험적 베이즈)</h3>
     <p class="fml">시너지 = ( 같이 이긴 판 − 같이 한 판 × 기대승률 ) ÷ ( 같이 한 판 + κ )</p>
@@ -3081,7 +3098,13 @@ function attachTableFilters(root){
       getComputedStyle(tb.parentElement).overflowX)) ? tb.parentElement : tb;
     anchor.parentElement.insertBefore(box, anchor);
 
-    const key = (anchor.closest('[id]') || {}).id || name;
+    // ⚠️ 키에 **지금 보고 있는 대상**을 섞는다. 컨테이너 id 만 쓰면 사람을 바꿔도 같은
+    //    키라, 앞사람에게 걸어 둔 이름 거르기가 다음 사람 화면에 그대로 남는다 —
+    //    표는 1행인데 바로 밑 합계 문구는 29명분을 말하는 상태가 됐다(실측).
+    //    랭킹표처럼 사람과 무관한 표는 scope 가 없어 예전 동작(지표를 바꿔도 유지)을 지킨다.
+    const sc = anchor.closest('[data-tfscope]');
+    const key = ((anchor.closest('[id]') || {}).id || name)
+              + (sc && sc.dataset.tfscope ? '|' + sc.dataset.tfscope : '');
     const inp = box.querySelector('input'), hit = box.querySelector('.tfhit');
     const apply = (say) => {
       const q = inp.value.trim().toLowerCase();
@@ -3299,8 +3322,10 @@ function renderCp(){
   const FULL=C.tier_points||100;
   // ── 보기 버튼: 통합 / 라인별 / 라인 하나 ──
   // 🔴 라인별을 서브탭에 숨겼더니 "왜 안 보이지?" 제보가 왔다. 첫 화면에 둔다.
+  // 버튼 숫자는 **그 라인을 실제로 뛴 사람 수** = 표에 들어갈 행 수여야 한다.
+  // 배치 미완을 빼고 세면 표와 안 맞고, 순위 탭의 같은 버튼과도 달라진다(8 vs 10).
   const cnt={};
-  rows.filter(r=>r.placed).forEach(r=>LANE_SEQ.forEach(l=>{
+  rows.forEach(r=>LANE_SEQ.forEach(l=>{
     if(((r.lanes||{})[l]||{}).games>0) cnt[l]=(cnt[l]||0)+1;}));
   $('#cpLanePick').innerHTML=
     [['ALL','라인별'],['','통합']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
@@ -3354,7 +3379,12 @@ function renderCpLanes(rows){
   const laneRows=[];
   rows.forEach(r=>{
     if(!r.placed){
-      laneRows.push({_masked:1,name:r.name,games:r.games,_ord:r._ord});
+      // ⚠️ 라인 하나를 골랐으면 **그 라인을 뛴 사람만** 넣는다. 예전엔 라인 필터보다
+      //    앞에서 무조건 넣어서, 탑 화면에 탑을 한 판도 안 뛴 사람이 섞였다
+      //    (실측: 배치 미완 10명 중 8명). 버튼 숫자와 표 행 수도 그래서 어긋났다(8 vs 18).
+      if(cpView==='ALL' || (((r.lanes||{})[cpView]||{}).games||0)>0){
+        laneRows.push({_masked:1,name:r.name,games:r.games,_ord:r._ord});
+      }
       return;
     }
     LANE_SEQ.forEach(l=>{
@@ -3594,7 +3624,11 @@ const LOAD_FAIL='전적 데이터를 받지 못했습니다. 연결을 확인하
 async function loadGuild(gid){
   if(!safeId(gid)){ showLoadError('잘못된 데이터 식별자입니다.'); return; }
   try{
-    const r=await fetch(`data/${encodeURIComponent(gid)}.json?t=`+Date.now());
+    // ⚠️ `?t=`+Date.now() 를 붙이면 **URL 이 매번 달라져** 조건부 요청(If-None-Match)이
+    //    아예 안 나간다 — 바뀐 게 없어도 매번 전량을 다시 받는다(실측 143KB vs 304 면 300B).
+    //    `cache:'no-cache'` 는 캐시를 쓰되 **항상 재검증**한다: 최신 보장은 그대로고
+    //    안 바뀌었으면 304 로 끝난다.
+    const r=await fetch(`data/${encodeURIComponent(gid)}.json`,{cache:'no-cache'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     const raw=await r.json();
     GID=gid;
@@ -3765,7 +3799,7 @@ $('#refresh').addEventListener('click',()=>$('#guildSel').value&&loadGuild($('#g
 
 (async function init(){
   try{
-    const res=await fetch('data/guilds.json?t='+Date.now());
+    const res=await fetch('data/guilds.json',{cache:'no-cache'});
     if(!res.ok){ showLoadError('아직 데이터가 없습니다. 첫 내전이 기록되면 표시됩니다.'); return; }
     const idx=sanitize(await res.json()).filter(g=>safeId(g.id));
     if(!idx.length){ showLoadError('아직 데이터가 없습니다. 첫 내전이 기록되면 표시됩니다.'); return; }
