@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-OzFRnjv8BtiSOox6JPLmPLk7iULLDeDXkPB7WEmC/3M='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-KAoz/r4KtYcdyu+3hvJIM4mafXb/XO3UdqeV0U/HqbQ='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -689,22 +689,23 @@
   <!-- 소환사명 검색 — 치면 밑에 맞는 이름이 바 형태로 뜨고, 누르면 그 멤버의 플레이어 화면으로 간다(요청 2026-09-03). -->
   <div class="mebar" id="mebar">
     <label for="meQ" class="sronly">소환사명 검색</label>
-    <input type="search" id="meQ" placeholder="소환사명 검색" autocomplete="off" aria-controls="meHits" aria-expanded="false">
+    <input type="search" id="meQ" placeholder="소환사명 검색" autocomplete="off"
+           role="combobox" aria-autocomplete="list" aria-controls="meHits" aria-expanded="false">
     <div id="meHits" class="mehits" role="listbox" aria-label="검색 결과" hidden></div>
   </div>
   <nav class="tabs" id="tabs" role="tablist" aria-label="화면 선택">
-    <div class="tab on" role="tab" data-t="tier"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 티어</div>
-    <div class="tab" role="tab" data-t="board"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg> 순위</div>
-    <div class="tab" role="tab" data-t="records"><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 기록</div>
-    <div class="tab" role="tab" data-t="syn"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 시너지</div>
-    <div class="tab" role="tab" data-t="champ"><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언</div>
-    <div class="tab" role="tab" data-t="matches"><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 경기</div>
-    <div class="tab" role="tab" data-t="player"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg> 플레이어</div>
-    <div class="tab" role="tab" data-t="balance"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 밸런스</div>
+    <div class="tab on" role="tab" id="tab-tier" aria-controls="tier" data-t="tier"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 티어</div>
+    <div class="tab" role="tab" id="tab-board" aria-controls="board" data-t="board"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg> 순위</div>
+    <div class="tab" role="tab" id="tab-records" aria-controls="records" data-t="records"><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 기록</div>
+    <div class="tab" role="tab" id="tab-syn" aria-controls="syn" data-t="syn"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 시너지</div>
+    <div class="tab" role="tab" id="tab-champ" aria-controls="champ" data-t="champ"><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언</div>
+    <div class="tab" role="tab" id="tab-matches" aria-controls="matches" data-t="matches"><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 경기</div>
+    <div class="tab" role="tab" id="tab-player" aria-controls="player" data-t="player"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg> 플레이어</div>
+    <div class="tab" role="tab" id="tab-balance" aria-controls="balance" data-t="balance"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 밸런스</div>
   </nav>
   <main id="views">
 
-  <section id="tier" class="view" data-subtabs>
+  <section id="tier" class="view" role="tabpanel" aria-labelledby="tab-tier" data-subtabs>
     <div class="card" data-sub="사다리" data-ico="trophy"><h2><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 내전 티어<span class="qmark" tabindex="0" role="button" data-tip-key="CP" aria-label="CP 설명">?</span><span class="qmark" tabindex="0" role="button" data-tip-key="라인티어" aria-label="라인별 티어 설명">?</span></h2>
       <p class="muted" id="cpIntro"></p>
       <div class="tierlegend" id="cpLegend"></div>
@@ -724,7 +725,7 @@
     </div>
   </section>
 
-  <section id="board" class="view hidden" data-subtabs>
+  <section id="board" class="view hidden" role="tabpanel" aria-labelledby="tab-board" data-subtabs>
     <div data-sub="승률" data-ico="trending-up" class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg> 승률 리더보드</h2>
         <div class="lnpicks" id="boardLanes" role="group" aria-label="라인 선택"></div>
         <div id="boardT"></div><div id="boardNote"></div>
@@ -757,7 +758,7 @@
     <div class="card" data-sub="지표 설명" data-ico="book-open"><h2><svg class="ic" aria-hidden="true"><use href="#i-book-open"/></svg> 지표 설명</h2><div id="mathRest"></div></div>
   </section>
 
-  <section id="records" class="view hidden" data-subtabs>
+  <section id="records" class="view hidden" role="tabpanel" aria-labelledby="tab-records" data-subtabs>
     <div class="card" data-sub="명예의 전당" data-ico="award"><h2><svg class="ic" aria-hidden="true"><use href="#i-award"/></svg> 명예의 전당</h2><div id="recCards"></div></div>
     <div class="grid2" data-sub="MVP · 펜타" data-ico="crown">
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-crown"/></svg> MVP 랭킹<span class="qmark" tabindex="0" role="button" data-tip-key="MVP" aria-label="MVP 설명">?</span></h2><div id="mvpT"></div></div>
@@ -773,7 +774,7 @@
     </div>
   </section>
 
-  <section id="syn" class="view hidden" data-subtabs>
+  <section id="syn" class="view hidden" role="tabpanel" aria-labelledby="tab-syn" data-subtabs>
     <div class="card" data-sub="듀오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 듀오 시너지<span class="qmark" tabindex="0" role="button" data-tip-key="시너지" aria-label="시너지 설명">?</span></h2>
       <div id="synT"></div></div>
     <div class="card" data-sub="트리오" data-ico="users"><h2><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> 트리오 시너지</h2><div id="trioT"></div></div>
@@ -796,7 +797,7 @@
     </div>
   </section>
 
-  <section id="champ" class="view hidden" data-subtabs>
+  <section id="champ" class="view hidden" role="tabpanel" aria-labelledby="tab-champ" data-subtabs>
     <div class="card" data-sub="메타" data-ico="sparkles"><h2><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> 챔피언 메타</h2>
       <div class="row"><span class="muted">라인</span><span id="champLaneBtns"></span></div>
       <div id="champT"></div></div>
@@ -810,7 +811,7 @@
     </div>
   </section>
 
-  <section id="matches" class="view hidden" data-subtabs>
+  <section id="matches" class="view hidden" role="tabpanel" aria-labelledby="tab-matches" data-subtabs>
     <div data-sub="최근 경기" data-ico="scroll" class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg> 최근 경기</h2><div id="matchT"></div></div>
     <div data-sub="진영" data-ico="circle-dot">
       <div class="card"><h2><svg class="ic" aria-hidden="true"><use href="#i-circle-dot"/></svg> 진영별 성적<span class="qmark" tabindex="0" role="button" data-tip-key="진영" aria-label="진영 설명">?</span></h2>
@@ -824,7 +825,7 @@
     </div>
   </section>
 
-  <section id="player" class="view hidden" data-subtabs>
+  <section id="player" class="view hidden" role="tabpanel" aria-labelledby="tab-player" data-subtabs>
     <div data-sub="개인" data-ico="user" class="card">
         <div class="row"><span>플레이어</span><select id="playerSel"></select><span class="muted" id="playerHit"></span></div>
         <div id="playerBody"></div></div>
@@ -833,7 +834,7 @@
         <div id="cmpBody"></div></div>
   </section>
 
-  <section id="balance" class="view hidden" data-subtabs>
+  <section id="balance" class="view hidden" role="tabpanel" aria-labelledby="tab-balance" data-subtabs>
     <div data-sub="팀 나누기" data-ico="scale" class="card">
         <h2><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> 팀 밸런스<span class="qmark" tabindex="0" role="button" data-tip-key="밸런스" aria-label="밸런스 설명">?</span></h2>
         <p class="muted" id="balNote">오늘 참여할 멤버를 선택하세요. 짝수 4~10명이 되면 팀이 자동으로 구성됩니다.</p>
@@ -1596,7 +1597,8 @@ function heatmap(pts){
     return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" `+
       `fill="${early?TOK.bad:TOK.good}" opacity=".5"/>`;
   }).join('');
-  return `<svg viewBox="0 0 ${W} ${W}" style="width:100%;max-width:300px;background:var(--ink);border-radius:10px">`+
+  return `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="죽은 위치 분포 — 점 ${pts.length}개, 붉은 점은 15분 이전" `+
+    `style="width:100%;max-width:300px;background:var(--ink);border-radius:10px">`+
     `<line x1="0" y1="${W}" x2="${W}" y2="0" stroke="${TOK.grid}"/>`+
     `<line x1="0" y1="${W*0.72}" x2="${W*0.28}" y2="${W}" stroke="${TOK.grid}"/>`+
     `<line x1="${W*0.72}" y1="0" x2="${W}" y2="${W*0.28}" stroke="${TOK.grid}"/>`+
@@ -2496,7 +2498,7 @@ function kdaTimeline(p,dur){
       <span><i style="background:var(--good)"></i>킬 ${cnt('K')}</span>
       <span><i style="background:var(--bad)"></i>데스 ${cnt('D')}</span>
       <span><i style="background:var(--dim)"></i>어시 ${cnt('A')}</span></div>
-    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="킬 데스 어시 타임라인">
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(p.name||'멤버')} 킬 데스 어시 타임라인 — 킬 ${cnt('K')} 데스 ${cnt('D')} 어시 ${cnt('A')}">
       ${grid}
       <line x1="${L}" y1="${base}" x2="${W-R}" y2="${base}" stroke="${TOK.line}"/>
       ${dots}
@@ -2842,8 +2844,19 @@ function statHead(p,ratingName){
   const tot=ax.reduce((t,a)=>t+a.score,0), full=ax.length*MAX;
   const best=ax.slice().sort((x,y)=>y.score-x.score).slice(0,2);
   const lane=((DATA.ratings||{})[ratingName]||{}).main_lane;
-  return `<div class="stathead"><span class="pill">${p.record?p.record.games:'?'}판</span>`+
-    (lane?`<span class="pill">${laneKo(lane)}</span>`:'')+
+  // ⚠️ 판수는 **지금 그린 축의 표본**이어야 한다. p.record.games 는 총 판수라
+  //    미드 1판짜리 육각형에 "29판" 이 붙었다 — 표본이 29배로 부풀어 보이고,
+  //    실제 판수는 툴팁에만 있어 폰(hover 없음)에서는 닿을 방법이 없었다.
+  //    축 객체가 이미 그 라인의 판수를 싣고 있다(profile_lane[LANE][i].games).
+  const gN=(ax[0]&&ax[0].games!=null)?ax[0].games:(p.record?p.record.games:null);
+  return `<div class="stathead">`+
+    // 라인과 판수를 한 알약에 묶는다. 따로 두었더니 라인 알약은 **주 라인**을,
+    // 옆 알약은 **고른 라인**을 말해서 같은 줄에서 "정글" 과 "미드 13명 중" 이
+    // 동시에 주장됐다 — 어느 라인의 육각형인지 화면만 보고 판정이 안 됐다.
+    (curAxisLane
+      ? `<span class="pill">${laneKo(curAxisLane)} ${gN==null?'?':gN}판</span>`
+      : `<span class="pill">${gN==null?'?':gN}판</span>`
+        + (lane?`<span class="pill">주 라인 ${laneKo(lane)}</span>`:''))+
     `<span class="pill">특기 ${best.map(b=>`${b.label} ${fmtAx(b.score)}`).join(' · ')}</span>`+
     `<span class="pill acc">합계 ${tot.toFixed(2)} / ${full}</span>`+
     (ax[0]&&ax[0].n?`<span class="pill">${curAxisLane?`${laneKo(curAxisLane)} ${ax[0].n}명 중`:`방 ${ax[0].n}명 중`}</span>`:'')+
@@ -3468,7 +3481,7 @@ function renderSearch(){
     if(!inp.value.trim()){ box.hidden=true; box.innerHTML=''; inp.setAttribute('aria-expanded','false'); return; }
     box.innerHTML=hits.length?hits.map(id=>`<button type="button" class="mehit" role="option" data-id="${id}">${esc(C[id].name)}`+
       `<span class="m">${C[id].placed?esc(C[id].tier):'배치 중'} · ${C[id].games}판</span></button>`).join('')
-      :'<span class="none">검색 결과가 없습니다</span>';
+      :'<span class="none" role="option" aria-disabled="true">검색 결과가 없습니다</span>';
     box.hidden=false; inp.setAttribute('aria-expanded','true');
   };
   inp.oninput=draw;
@@ -3628,13 +3641,32 @@ function buildSubtabs(root){
       btn.className='subtab'+(i?'':' on'); btn.type='button';
       btn.innerHTML=(pane.dataset.ico?ico(pane.dataset.ico)+' ':'')+esc(pane.dataset.sub);
       btn.setAttribute('role','tab'); btn.setAttribute('aria-selected',!i);
+      // 주 탭에서 지킨 규약을 서브탭에서도 지킨다. 예전엔 여기만 빠져서
+      // (1) 화살표로 안 옮겨지고 (2) 버튼 전부가 탭 순서에 남아, 본문에 닿기까지
+      // Tab 을 서브탭 개수만큼 더 눌러야 했다 — 주 탭에서 이미 고쳤던 문제다.
+      btn.id='st-'+sec.id+'-'+i;
+      if(!pane.id) pane.id='stp-'+sec.id+'-'+i;
+      btn.setAttribute('aria-controls',pane.id);
+      btn.tabIndex=i?-1:0;
+      pane.setAttribute('role','tabpanel');
+      pane.setAttribute('aria-labelledby',btn.id);
       btn.addEventListener('click',()=>{
         bar.querySelectorAll('.subtab').forEach((b,j)=>{
           const on=(j===i); b.classList.toggle('on',on); b.setAttribute('aria-selected',on);
+          b.tabIndex=on?0:-1;
         });
         panes.forEach((x,j)=>x.classList.toggle('hidden',j!==i));
         // 전환하면 섹션 머리로 — 아래쪽에서 눌렀는데 화면이 그대로면 안 바뀐 줄 안다
         sec.scrollIntoView({behavior:SCROLL_MODE,block:'start'});
+      });
+      btn.addEventListener('keydown',e=>{
+        const K={ArrowRight:1,ArrowLeft:-1}, all=[...bar.querySelectorAll('.subtab')];
+        let n=null;
+        if(e.key in K) n=all[(i+K[e.key]+all.length)%all.length];
+        else if(e.key==='Home') n=all[0];
+        else if(e.key==='End') n=all[all.length-1];
+        if(!n) return;
+        e.preventDefault(); n.click(); n.focus();
       });
       bar.appendChild(btn);
       if(i) pane.classList.add('hidden');
