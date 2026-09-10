@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-e/OmcwXdUvCwg4ggnodNE/rKzSC8DsZx+UbFtoVdLh4='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-kO5DCyj3+XAkm+2ZWNTwEnKUAouTwbh4TOBWkIdYi9E='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -1607,19 +1607,80 @@ function renderFun(){
     {k:'winrate',h:mLabel('winrate'),num:1,fmt:pct,cls:r=>'num '+wrClass(r.winrate,r.games)},
   ],'taken',-1);
 
-  $('#funHeat').innerHTML=heatmap(F.death_positions||[]);
+  mountHeatmap($('#funHeat'), F.death_positions);
 }
+
+// 히트맵은 **볼 때** 채운다. 좌표가 별도 파일이라 여기서 바로 받으면, 이 화면을 켜기만
+// 하고 데스 서브탭은 열지 않은 사람까지 78.8KB 를 받는다.
+// 옛 페이로드(좌표가 안에 들어 있는 것)도 그대로 그린다 — 그러면 받을 것이 없다.
+function mountHeatmap(box, inline){
+  if(!box) return;
+  // ⚠️ 이 함수는 한 번만 불리지 않는다. '새로고침' 을 누르면 renderAll → renderFun 을
+  //    다시 타는데 서브탭 바는 다시 만들지 않으므로(buildSubtabs 가 있으면 건너뛴다),
+  //    걸어 둔 리스너와 관찰자가 누를 때마다 하나씩 쌓인다. 앞의 것을 먼저 끊는다.
+  if(box._heatStop) box._heatStop.abort();
+  const stop=new AbortController(); box._heatStop=stop;
+  if(inline && inline.length){ box.innerHTML=heatmap({points:inline}); return; }
+  box.innerHTML='';                    // 아직 받지 않았다 — '불러오는 중' 은 fill 이 적는다
+  let done=false;
+  const fill=async()=>{
+    if(done) return; done=true;
+    box.innerHTML='<p class="muted">데스 좌표를 불러오는 중…</p>';
+    try{
+      const d=await loadDeaths();
+      box.innerHTML=heatmap(d);
+      // ⚠️ 알리지 않으면 **화면을 안 보는 사람에게는 아무 일도 안 일어난 것**이다.
+      //    이 저장소의 다른 비동기 자리는 전부 알린다(경기 상세 펼침·로드 실패).
+      //    히트맵만 빠져 있었다 — 특히 실패는 '다시 시도' 버튼이 생긴 줄도 모른다.
+      announce(`데스 히트맵 표시 · 최근 ${d.games||0}경기 · 데스 ${(d.points||[]).length.toLocaleString('ko-KR')}건`);
+    }
+    catch(e){
+      done=false;                      // 실패는 다시 시도할 수 있어야 한다
+      box.innerHTML='<p class="muted">데스 좌표를 불러오지 못했습니다. '+
+        '<button type="button" class="morebtn" id="heatRetry">다시 시도</button></p>';
+      const b=box.querySelector('#heatRetry'); if(b) b.onclick=fill;
+      announce('데스 좌표를 불러오지 못했습니다. 다시 시도 단추를 눌러 주세요.');
+    }
+  };
+  // ⚠️ 신호를 **둘** 둔다. IntersectionObserver 만 걸면 창 높이가 0 인 상황
+  //    (창이 접힌 채로 열림·미리보기·일부 임베드)에서 영영 안 채워지고, 화면에는
+  //    '불러오는 중' 만 남는다 — 실측으로 그 상태를 만들어 확인했다.
+  //    ① 눈에 들어올 때(스크롤) ② 이 카드가 든 서브탭이 켜질 때.
+  const shown=()=>box.offsetParent!==null || box.getClientRects().length>0;
+  const sec=box.closest('section[data-subtabs]');
+  const bar=sec&&sec.querySelector(':scope > .subtabs');
+  if(bar) bar.addEventListener('click',()=>{ if(shown()) fill(); },{signal:stop.signal});
+  if(!('IntersectionObserver' in window)){ fill(); return; }   // 구형은 그냥 받는다
+  // rootMargin 을 크게 잡아 스크롤이 닿기 전에 받아 둔다 — 도착했을 때 이미 그려져 있게.
+  const io=new IntersectionObserver(es=>{
+    if(es.some(e=>e.isIntersecting)){ io.disconnect(); fill(); }
+  },{rootMargin:'600px'});
+  io.observe(box);
+  // 끝내 안 보인 채 다시 그리게 되면 관찰자도 같이 끊는다 — 안 그러면 화면마다 남는다.
+  stop.signal.addEventListener('abort',()=>io.disconnect());
+}
+
 // 소환사의 협곡 좌표계는 0~14870, y축이 위로 자란다(SVG는 아래로) → 뒤집어 그린다
-function heatmap(pts){
+function heatmap(d){
+  const pts=(d&&d.points)||[];
   if(!pts.length) return '<p class="muted">아직 표시할 데이터가 없습니다.</p>';
   const S=14870, W=260;
+  // 점이 많아질수록 작고 옅게. 1,833개를 예전 크기(r 2.6·불투명도 .5)로 찍으면 칠하는
+  // 넓이가 판의 42%라 분포가 아니라 얼룩이 된다 — 판이 쌓일수록 더 나빠진다.
+  const r=pts.length>1200?1.8:pts.length>600?2.2:2.6;
+  const op=pts.length>1200?.34:pts.length>600?.42:.5;
   const dots=pts.map(p=>{
     const x=(p.x/S)*W, y=W-(p.y/S)*W;
     const early=p.m<15;
-    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" `+
-      `fill="${early?TOK.bad:TOK.good}" opacity=".5"/>`;
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" `+
+      `fill="${early?TOK.bad:TOK.good}" opacity="${op}"/>`;
   }).join('');
-  return `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="죽은 위치 분포 — 점 ${pts.length}개, 붉은 점은 15분 이전" `+
+  // 표본이 무엇인지 사실대로 적는다. 예전엔 '최근 경기' 라고만 적었는데 몇 판인지
+  // 어디에도 없었고, 정렬 결함 탓에 실제로는 '최근' 도 아니었다(21분 이후만 나왔다).
+  const g=d&&d.games?`최근 ${d.games}경기 · 데스 ${pts.length.toLocaleString('ko-KR')}건`:
+    `데스 ${pts.length.toLocaleString('ko-KR')}건`;
+  const cut=d&&d.capped?` (전체 ${(d.total||0).toLocaleString('ko-KR')}건 중 최근 ${pts.length.toLocaleString('ko-KR')}건)`:'';
+  return `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="죽은 위치 분포 — ${g}, 붉은 점은 15분 이전" `+
     `style="width:100%;max-width:300px;background:var(--ink);border-radius:10px">`+
     `<line x1="0" y1="${W}" x2="${W}" y2="0" stroke="${TOK.grid}"/>`+
     `<line x1="0" y1="${W*0.72}" x2="${W*0.28}" y2="${W}" stroke="${TOK.grid}"/>`+
@@ -1627,7 +1688,8 @@ function heatmap(pts){
     dots+`</svg>`+
     `<p class="muted" style="font-size:11px;margin-top:6px">`+
     `<i class="dot" style="background:var(--bad)"></i>15분 이전 &nbsp; <i class="dot" style="background:var(--good)"></i>15분 이후 `+
-    `· 좌하단이 블루 진영입니다.</p>`;
+    `· 좌하단이 블루 진영입니다.</p>`+
+    `<p class="muted" style="font-size:11px">${g}${cut}</p>`;
 }
 
 const MATCH_PAGE=50;   // 한 번에 그리는 경기 수 — 판이 쌓여도 첫 화면 DOM 이 선형으로 늘지 않게
@@ -3598,7 +3660,7 @@ function renderAll(){
   renderKpis(); renderSearch(); renderMath(); buildSubtabs();
   // 화면은 켤 때 그린다 — 전부 미리 그리면 DOM 11,271노드(시너지 4,020·챔피언 2,004)가
   // 아무도 안 보는 채로 쌓인다(실측). 데이터를 다시 받으면 전부 무효화하고 보는 화면만 다시.
-  RENDERED.clear(); FUN_DONE=false;
+  RENDERED.clear(); FUN_DONE=false; DCACHE=null;   // 데이터를 다시 받으면 좌표도 다시
   ensureView((($('#tabs .tab.on')||{}).dataset||{}).t||'tier');
   // ⚠️ Riot 고지는 **여기** 있어야 한다. 정적 HTML 에만 두면 이 줄이 덮어써서 사라진다.
   //    Riot 은 서드파티 앱에 '공식 관여가 아니다'라는 표기를 요구한다.
@@ -3616,6 +3678,20 @@ function renderAll(){
 
 let GID='';                     // 상세 파일 경로에 쓴다
 const MDCACHE={};               // 한 번 받은 경기 상세는 다시 안 받는다
+let DCACHE=null;                // 한 번 받은 데스 좌표는 다시 안 받는다
+
+// 데스 좌표도 경기 상세와 같이 별도 파일이다. 좌표 1,833개가 78.8KB(gzip 15.3KB)인데,
+// 첫 화면에 실으면 히트맵을 한 번도 안 여는 사람까지 매번 받는다(예전엔 600개 25.8KB 를
+// 그렇게 받고 있었다). 히트맵이 **눈에 들어올 때** 받으므로 상한을 2,000까지 올렸다.
+async function loadDeaths(){
+  if(DCACHE) return DCACHE;
+  const r=await fetch(`data/${encodeURIComponent(GID)}/deaths.json`,{cache:'no-cache'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  // 실패는 캐시하지 않는다 — 넣어 두면 두 번째 시도부터 fetch 없이 같은 실패를 돌려주고
+  // 화면의 "다시 눌러 주세요" 가 거짓말이 된다(경기 상세에서 겪은 것과 같은 함정).
+  DCACHE=sanitize(await r.json());
+  return DCACHE;
+}
 
 // 로드 실패는 원문('TypeError: Failed to fetch')이 아니라 **문제와 복구**를 보여 준다.
 // 새로고침(🔄)·서버 전환도 같은 길을 타므로 여기서 한 번에 처리한다.
