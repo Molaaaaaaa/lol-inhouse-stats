@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-kO5DCyj3+XAkm+2ZWNTwEnKUAouTwbh4TOBWkIdYi9E='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-P1rXOWNDnW84PjwZ80W6GPHx3NOnBSbw8Dd9xY6DJ7c='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -619,6 +619,11 @@
   /* 보조 열(다음까지·MMR·라인 편차·신뢰성·킬관여·DPM)은 폰에서 감춘다 — 카드형 행 8줄 → 5줄 */
   @media(max-width:640px){ th.lo,td.lo{display:none!important} }
   #cpIntro{font-size:12.5px;margin:0 0 8px}
+/* 배치 미완 줄은 따로 아래에 모은다(사용자 결정 2026-09-10). 옅게 칠하고, 무리가
+   시작되는 자리에 선을 그어 "여기부터는 표본이 부족한 줄" 이라는 게 보이게 한다.
+   인접 형제 선택자라 :has() 없이도 무리의 첫 줄에만 붙는다. */
+tbody tr.unp>td{opacity:.66}
+tbody tr:not(.unp)+tr.unp>td{border-top:2px solid var(--line2)}
 </style>
 </head>
 <body>
@@ -921,7 +926,9 @@ function announce(msg){
   const el=$('#sr'); if(!el) return;
   el.textContent=''; setTimeout(()=>{el.textContent=msg;},50);
 }
-function renderTable(el, rows, cols, sortKey, sortDir){
+// rowCls: 행 단위 클래스를 붙이는 훅(옵트인). 열 단위 `cls` 로는 td 하나만 칠할 수
+// 있어서 "이 무리는 따로 놓인 것" 이라는 걸 보여 줄 수 없다. 안 주면 예전과 똑같다.
+function renderTable(el, rows, cols, sortKey, sortDir, rowCls){
   if(!rows || !rows.length){ el.innerHTML='<p class="muted">아직 표시할 데이터가 없습니다.</p>'; return; }
   // 바 컬럼 최대값
   const maxes={};
@@ -951,7 +958,8 @@ function renderTable(el, rows, cols, sortKey, sortDir){
     ` aria-sort="${c.k===sortKey?(sortDir<0?'descending':'ascending'):'none'}">`+
     `${c.h}${c.hlp?help(c.hlp):''}${c.k===sortKey?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
   data.forEach((r,i)=>{
-    h+='<tr>'+cols.map(c=>{
+    const rc=rowCls?(rowCls(r)||''):'';
+    h+=`<tr${rc?` class="${rc}"`:''}>`+cols.map(c=>{
       let v=r[c.k];
       let disp=c.fmt?c.fmt(v,r,i):(v==null?'':v);
       if(c.img && r[c.img]) disp=champImg(r[c.img])+disp;
@@ -969,7 +977,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
   //    (안 하면 랭킹 지표를 바꾸는 순간 거르기 칸이 사라진다 — 실측).
   labelTables(); labelTips(el); attachTableFilters(el); foldLongTables(el);
   el.querySelectorAll('th.sortable').forEach(th=>th.onclick=()=>{
-    const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd);
+    const k=th.dataset.k, nd=(k===sortKey)?-sortDir:-1; renderTable(el,rows,cols,k,nd,rowCls);
       labelTables();
       // 정렬은 눈으로는 표가 다시 그려지는 게 보이지만, 소리로는 아무 일도 안 일어난다
       announce(`${th.textContent.replace(/[?？▼▲]/g,'').trim()} 기준 `+
@@ -3452,7 +3460,8 @@ function renderCpLanes(rows){
       //    앞에서 무조건 넣어서, 탑 화면에 탑을 한 판도 안 뛴 사람이 섞였다
       //    (실측: 배치 미완 10명 중 8명). 버튼 숫자와 표 행 수도 그래서 어긋났다(8 vs 18).
       if(cpView==='ALL' || (((r.lanes||{})[cpView]||{}).games||0)>0){
-        laneRows.push({_masked:1,name:r.name,games:r.games,_ord:r._ord});
+        // 아무 숫자도 못 보여 주는 줄이라 맨 아래. _ord 밴드는 아래 설명 참고.
+        laneRows.push({_masked:1,name:r.name,games:r.games,_ord:(r.cp||0)-300000,_un:3});
       }
       return;
     }
@@ -3461,10 +3470,16 @@ function renderCpLanes(rows){
       const played=(c.games||0)>0;
       if(!played&&!cpLaneEst) return;            // 미출전 라인은 토글 켰을 때만
       if(cpView!=='ALL'&&l!==cpView) return;
+      // ⚠️ 배치 미완을 CP 순서에 그대로 끼우면 **표 맨 윗줄이 4판짜리**가 된다
+      //    (실측: 용기사 서폿 4판 1093 이 본인 탑 22판 1092 보다 1점 높아 1위였다.
+      //     그 1점은 표준오차 ±29 안이다). 통합 표는 이미 같은 방식으로 내린다.
+      //    _ord 밴드: 라인 배치 완료 → 배치 중 → 미출전 추정 → 통합 배치 미완.
+      //    **기본 정렬 전용**이다 — 헤더를 눌러 다른 열로 정렬하는 건 그대로 된다.
+      const un=c.placed?0:(played?1:2);
       laneRows.push({name:r.name,lane:l,_laneKo:laneKo(l),games:c.games||0,
         tier:c.tier,points:c.points,cp:c.cp,mmr:c.mmr,placed:true,
-        _lanePlaced:!!c.placed,_est:!played,_main:l===r.main_lane,
-        _ord:c.cp});
+        _lanePlaced:!!c.placed,_est:!played,_main:l===r.main_lane,_un:un,
+        _ord:c.cp-un*100000});
     });
   });
   const FULL2=C.tier_points||100;
@@ -3489,10 +3504,12 @@ function renderCpLanes(rows){
       if(r._est) return '<span class="muted">0</span>';
       return r._lanePlaced?String(v)
         :`${v} <span class="xs muted">배치 ${v}/${C.lane_prior_k||5}</span>`;}},
-  ],'_ord',-1);
+  ],'_ord',-1, r=>r._un?'unp':'');
   $('#cpNote').innerHTML=
     `여러 라인을 뛴 멤버는 <b>라인마다 한 줄</b>씩 표시됩니다. `+
     `해당 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 완료된 것으로 봅니다(그 전에는 배치 n/${C.lane_prior_k}). `+
+    `<b>배치가 끝나지 않은 줄은 선 아래에 따로 모읍니다.</b> 표본이 적으면 값이 크게 흔들려 `+
+    `위쪽에 섞이면 순서가 실력을 말하는 것처럼 보이기 때문입니다(열 머리를 누르면 그 열 기준으로 다시 정렬됩니다). `+
     // ⚠️ 사전값은 **통합 CP** 기준이다. 주 라인에도 자기 편차가 있어서 '주 라인 대비'
     //    격차는 사람마다 다르다(실측 88건: 10~40, 중앙 30). '주 라인보다 30 낮게' 라고
     //    적으면 화면의 숫자와 안 맞는다.
