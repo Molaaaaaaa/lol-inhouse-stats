@@ -8,7 +8,7 @@
      아니다 — script-src 는 아래 <meta> 의 sha256 해시 하나뿐이다.
      ⚠️ 인라인 스크립트를 한 글자라도 고치면 `python -m scripts.inhouse_csp_hash --write`
         로 해시를 다시 계산해야 한다. 안 하면 배포 페이지가 통째로 빈 화면이 된다. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-fJriiZbFQkN63NbEW+3I7w5dXLOHbmFfxVCVVEy/2oc='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-e/OmcwXdUvCwg4ggnodNE/rKzSC8DsZx+UbFtoVdLh4='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- 지금은 Cloudflare Workers 다. 헤더로만 걸 수 있는 것(X-Frame-Options·
      frame-ancestors·nosniff·X-Robots-Tag)은 같은 폴더의 `_headers` 가 붙인다
      — [assets] 가 존재하는 파일을 엣지에서 바로 응답해 worker.js 를 안 타기 때문에,
@@ -1001,7 +1001,7 @@ const HELP={
   길이:'경기 시간을 25분·35분 기준으로 나누어 구간별 승률을 표시합니다.\n짧은 경기에 강하면 라인전형, 긴 경기에 강하면 후반 캐리형입니다.\n괄호 안은 해당 구간의 판수입니다.',
   역전:'15분 팀 골드 차가 2500 이상 벌어진 판만 집계합니다.\n역전승률 = 열세에서 이긴 비율.\n리드 실패율 = 우세에서 진 비율. 접전은 양쪽 모두 제외합니다.',
   죽음:'퍼블 헌납률 = 경기의 첫 데스가 본인이었던 비율.\n첫 데스 = 경기마다 처음 죽은 시각의 평균.\n헌납 현상금 = 본인의 데스로 상대가 획득한 골드의 판당 평균.',
-  로밍:'0~15분 동안 자기 라인(정글은 정글 구역)을 벗어나 있던 시간 비율입니다.\n베이스에 있던 시간은 제외합니다. 사망 후 베이스에 있던 시간을 로밍으로 세면 자주 죽는 멤버가 1위가 되기 때문입니다.',
+  로밍:'0~15분 동안 자기 자리를 벗어나 있던 시간 비율입니다.\n자기 자리는 탑/봇은 그 라인, 미드는 라인과 가운데 강, 정글은 정글 4구역입니다.\n베이스에 있던 시간은 제외합니다. 사망 후 베이스에 있던 시간을 로밍으로 세면 자주 죽는 멤버가 1위가 되기 때문입니다.',
   한타:'20초 안에 킬 3개 이상이 발생한 구간을 한타로 봅니다.\n그 구간에서 킬·데스·어시스트 중 하나라도 있으면 참여로 집계합니다.\n킬 관여(KP)와 달리 라인전 관여는 포함되지 않습니다.',
   히트맵:'최근 경기에서 멤버들이 죽은 위치입니다.\n왼쪽 아래가 블루 진영, 오른쪽 위가 레드 진영입니다.',
 };
@@ -2892,7 +2892,14 @@ function statHead(p,ratingName){
         + (lane?`<span class="pill">주 라인 ${laneKo(lane)}</span>`:''))+
     `<span class="pill">특기 ${best.map(b=>`${b.label} ${fmtAx(b.score)}`).join(' · ')}</span>`+
     `<span class="pill acc">합계 ${tot.toFixed(2)} / ${full}</span>`+
-    (ax[0]&&ax[0].n?`<span class="pill">${curAxisLane?`${laneKo(curAxisLane)} ${ax[0].n}명 중`:`방 ${ax[0].n}명 중`}</span>`:'')+
+    // ⚠️ 축마다 분모가 다를 수 있다. 첫 축 하나만 보고 단정하면 다른 축의 순위를
+    //    틀린 모집단과 견주게 된다 — 실측(통합 보기): 라인전은 26명 중인데 나머지
+    //    다섯 축은 20명 중이고, 머리말은 20 만 말했다. 다르면 범위로 적는다.
+    (()=>{const ns=[...new Set(ax.map(a=>a.n).filter(n=>n!=null))].sort((x,y)=>x-y);
+      if(!ns.length) return '';
+      const who=curAxisLane?laneKo(curAxisLane):'방';
+      const txt=ns.length===1?`${ns[0]}명 중`:`${ns[0]}~${ns[ns.length-1]}명 중`;
+      return `<span class="pill">${who} ${txt}</span>`;})()+
     (()=>{const mv=ax.filter(a=>a.delta!=null)
             .sort((x,y)=>Math.abs(y.delta)-Math.abs(x.delta))[0];
       return mv?`<span class="pill">지난 내전 대비 ${mv.label} `+
@@ -3424,7 +3431,10 @@ function renderCpLanes(rows){
   $('#cpNote').innerHTML=
     `여러 라인을 뛴 멤버는 <b>라인마다 한 줄</b>씩 표시됩니다. `+
     `해당 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 완료된 것으로 봅니다(그 전에는 배치 n/${C.lane_prior_k}). `+
-    `'미출전 라인 추정치 표시'를 켜면 미출전 라인을 주 라인보다 ${Math.abs(C.off_lane_prior||30)} CP 낮게 추정한 값이 회색으로 표시됩니다.`;
+    // ⚠️ 사전값은 **통합 CP** 기준이다. 주 라인에도 자기 편차가 있어서 '주 라인 대비'
+    //    격차는 사람마다 다르다(실측 88건: 10~40, 중앙 30). '주 라인보다 30 낮게' 라고
+    //    적으면 화면의 숫자와 안 맞는다.
+    `'미출전 라인 추정치 표시'를 켜면 미출전 라인을 통합 CP 보다 ${Math.abs(C.off_lane_prior||30)} CP 낮게 추정한 값이 회색으로 표시됩니다. 주 라인과의 격차는 그 사람의 라인 편차에 따라 달라집니다.`;
 
   // 클릭한 행 강조 유지 — 호버는 떼면 사라져서 26명 표에서 자기 줄을 놓친다.
   // 컨테이너 위임이라 정렬로 표가 다시 그려져도 리스너는 산다(강조만 리셋된다).
