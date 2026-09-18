@@ -226,7 +226,7 @@ export interface MatchDetailPlayer {
   dmg: number; dmg_taken: number; dmg_turret: number; vision: number;
   items: number[]; spells: number[]; perks: number[];
   extra: Record<string, number | boolean>;
-  build: { item: number; minute: number }[];
+  build: { item: number; minute: number; sold?: boolean }[];   // sold: 되판 아이템(실데이터에 있음)
   kda_events: { s: number; t: 'K' | 'D' | 'A'; vs: string }[];
 }
 export interface MatchDetailTeam {
