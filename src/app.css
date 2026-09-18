@@ -1,65 +1,115 @@
 /*
  * 전역 스타일 — 토큰·브라우저 표면·기본 요소만. 컴포넌트 스타일은 각 .svelte 안에.
  *
+ * 시각 세계: **내전 장부** (폰 다크 모드 스프레드시트). 어두운 시트 위 1px 격자선, 고정된
+ * 머리행·이름열, 행 번호 홈통, 조건부 서식 셀 채움, 무채색 글자, 선택 셀 테두리 한 색,
+ * 아래쪽 시트 탭. 색 전략은 Restrained — 중립 + 선택색 하나. 의미색(승·패·티어)은 글자가
+ * 아니라 **셀 채움·가장자리**에만 쓴다(글자는 무채색).
+ *
  * ⚠️ 색은 여기 :root 토큰에서만 온다(검사가 :root 밖 hex 를 잡는다).
- *    토큰 값은 Phase 1 방향 라운드 결과로 교체된다 — 지금 값은 옛 사이트의 것을 그대로 옮긴 임시본.
  */
 :root {
-  /* 표면 — 어두운 순서: ink(우물: 입력·차트 바닥) < bg < panel0 < panel < panel2 */
-  --ink: #0c121a; --bg: #0a0e14; --panel0: #0e141d; --panel: #121821; --panel2: #1a2332;
-  --line: #243044; --line2: #3d4d66; --grid: #1d2735;
-  --txt: #e8eef6; --dim: #8a98ad; --dim2: #728499;
-  --acc: #0bc5d4; --acc-deep: #0a93a8; --on-acc: #04121a; --acc2: #c8aa6e;
-  /* 의미색 — 승·블루 / 패·레드 / 중립 / 위험 / 상승 / 경고 */
-  --good: #3aa0ee; --bad: #e8833a; --mid: #9aa6b2; --danger: #e5484d; --up: #4cc38a; --warn: #e8b34a;
-  /* 라인색 — 탑·정글은 승/패 색을 같이 쓴다 */
-  --lane-bot: #9b7ede; --lane-sup: #5ec8b0;
-  /* 티어색 — 1티어부터 */
-  --t1: #e8c46a; --t2: #7b8fe8; --t3: #4aa88a; --t4: #c4865a; --t5: #9a918a;
-  /* 떠 있는 층(콤보박스 목록·툴팁)에만 쓰는 그림자 — 카드에는 쓰지 않는다 */
-  --shadow: 0 4px 18px rgba(0, 0, 0, .35);
+  /* 시트 표면 — 어두운 순서: ink(우물: 입력·차트 바닥) < sheet < gutter < raised */
+  --ink: #101317;
+  --sheet: #171a1f;
+  --gutter: #1e2229;
+  --raised: #262b33;
+  --grid: #2a2f37;
+  --grid-strong: #3a414b;
+  /* 글자 — 무채색만 */
+  --txt: #dfe4ea;
+  --dim: #9aa3ad;
+  --dim2: #808a96;   /* 가장 옅은 글자 — sheet·gutter 위 4.5:1 이상(실측 4.98·4.55) */
+  /* 선택 — 액센트 하나. 선택 셀 테두리·활성 시트 탭·초점에만 */
+  --sel: #8ab4f8;
+  --on-sel: #0b1220;
+  /* 의미색 — 셀 채움·띠에만 (Never Color Alone: 글자 '승/패'·티어 이름을 항상 같이 둔다) */
+  --win: #6fcf97;
+  --loss: #f28b6b;
+  --warn: #f2c94c;
+  --danger: #ef6b6b;
+  --up: #6fcf97;
+  /* 라인 띠 */
+  --lane-top: #e0a86b;
+  --lane-jg: #8fd18f;
+  --lane-mid: #8ab4f8;
+  --lane-bot: #c39be8;
+  --lane-sup: #7fd6c7;
+  /* 티어 띠 — 1티어부터 */
+  --t1: #e8c46a;
+  --t2: #7b8fe8;
+  --t3: #4aa88a;
+  --t4: #c4865a;
+  --t5: #9a918a;
+  /* 떠 있는 층(자동완성 목록·툴팁)에만 쓰는 그림자 — 시트·카드에는 쓰지 않는다 */
+  --shadow: 0 6px 20px rgba(0, 0, 0, .45);
 
-  /* 서체·간격 — 고정 rem 스케일(도구형 UI: 유동 크기 금지) */
-  --font: 'Segoe UI', Roboto, 'Malgun Gothic', sans-serif;
-  --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
-  --fs-body: 14px; --fs-sm: 12.5px; --fs-label: 12px; --fs-title: 15px; --fs-head: 19px; --fs-metric: 25px;
-  --sp-1: 4px; --sp-2: 7px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
-  --r-ctl: 8px; --r-row: 11px; --r-card: 14px; --r-pill: 999px;
-  --wrap: 1180px;
+  /* 서체 — 한 계열, 고정 rem 스케일(비율 1.125). 표 숫자는 tabular */
+  --font: 'Segoe UI', Roboto, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: ui-monospace, 'Cascadia Mono', Consolas, 'D2Coding', monospace;
+  --fs-xs: 0.75rem;    /* 12px 바닥 — 표 머리·코드 판 */
+  --fs-sm: 0.8125rem;  /* 13px 보조 */
+  --fs-md: 0.875rem;   /* 14px 본문·셀 */
+  --fs-lg: 1rem;       /* 16px 제목 */
+  --fs-xl: 1.125rem;   /* 18px 화면 제목 */
+  --fs-num: 1.25rem;   /* 20px 큰 숫자 */
+  --lh: 1.5;
+  /* 간격 — 4 단위 */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px;
+  /* 셀·행 — 스프레드시트는 모서리가 없다. 칩만 살짝 */
+  --row-h: 36px;
+  --r-chip: 4px;
+  --r-tab: 6px;
+  --wrap: 1100px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-/* 브라우저가 그리는 표면도 팔레트를 따른다 — 초점 고리·선택 영역·캐럿·스크롤바·네이티브 select 목록 */
+/* 브라우저가 그리는 표면도 시트를 따른다 — 초점 고리·선택 영역·캐럿·스크롤바·네이티브 select 목록 */
 :root {
   color-scheme: dark;
-  accent-color: var(--acc);
-  caret-color: var(--acc);
-  scrollbar-color: var(--line2) var(--bg);
+  accent-color: var(--sel);
+  caret-color: var(--sel);
+  scrollbar-color: var(--grid-strong) var(--sheet);
 }
-:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
-::selection { background: color-mix(in srgb, var(--acc) 35%, transparent); color: var(--txt); }
+:focus-visible { outline: 2px solid var(--sel); outline-offset: -2px; }
+::selection { background: color-mix(in srgb, var(--sel) 35%, transparent); color: var(--txt); }
 ::placeholder { color: var(--dim); opacity: 1; }
 
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
-  background-color: var(--bg);
+  background-color: var(--sheet);
   color: var(--txt);
   font-family: var(--font);
-  font-size: var(--fs-body);
-  line-height: 1.55;
+  font-size: var(--fs-md);
+  line-height: var(--lh);
   min-height: 100vh;
   font-variant-numeric: tabular-nums;
 }
+h1, h2, h3 { margin: 0; font-weight: 650; line-height: 1.3; text-wrap: balance; }
+h1 { font-size: var(--fs-xl); }
+h2 { font-size: var(--fs-lg); }
+h3 { font-size: var(--fs-md); }
+p { margin: 0; }
+a { color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
 
-/* 폰 입력 확대 방지(16px) · 터치 표적 44px */
+/* 셀 안 글자·값 — 공용 유틸 (컴포넌트 밖에서도 같은 뜻) */
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.muted { color: var(--dim); }
+.faint { color: var(--dim2); }
+.code { font-family: var(--mono); font-size: var(--fs-xs); color: var(--dim); letter-spacing: .02em; }
+
+/* 폰 입력 확대 방지(16px) · 터치 표적 44px — 시트 행도 손가락 높이로 */
 @media (pointer: coarse) {
+  :root { --row-h: 44px; }
   input, select, textarea { font-size: 16px; }
-  button, [role='button'], [role='tab'], a.btn { min-height: 44px; }
+  button, [role='button'], [role='tab'], .navlink { min-height: 44px; }
 }
 
-/* 움직임 줄이기: 이동·회전만 끈다. 색 전환(.1~.15s)은 상태가 바뀌었다는 정보라 둔다 —
+/* 움직임 줄이기: 이동만 끈다. 색 전환(.1~.15s)은 상태가 바뀌었다는 정보라 둔다 —
    전역 .001ms 강제는 그 정보까지 지운다(옛 사이트에서 되돌린 것). */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

@@ -1,0 +1,1 @@
+.partners.svelte-ldycya{gap:var(--sp-3);display:grid}.pair.svelte-ldycya{gap:var(--sp-4);grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;display:grid}.note.svelte-ldycya{font-size:var(--fs-sm);color:var(--dim);text-wrap:pretty;margin:0}@media (max-width:640px){.pair.svelte-ldycya{gap:var(--sp-3);grid-template-columns:1fr}}
