@@ -1,6 +1,8 @@
 # Cloudflare Workers — 정적 사이트
 #
-# 정적 파일(index.html, data/*.json, riot.txt)은 [assets]가 서빙한다. worker.js 는 헤더만 붙인다.
+# 정적 파일은 [assets] 가 **dist/** 에서 서빙한다. worker.js 는 헤더만 붙인다.
+#   dist/ 는 `npm run build` 산출물이고 **커밋한다** — Cloudflare 는 빌드하지 않는다
+#   (publish.deploy() 가 로컬에서 빌드 → 관문이 dist 를 검사 → push). 2026-09-18 Svelte/Vite 전환.
 #   대시보드 Build command 는 비우고, Deploy command 는 `npx wrangler deploy`.
 #   (피드백 창구와 FEEDBACK_WEBHOOK 시크릿은 2026-09-03 제거.)
 #
@@ -11,7 +13,7 @@ main = "worker.js"
 compatibility_date = "2026-07-01"
 
 [assets]
-directory = "."
+directory = "./dist"
 binding = "ASSETS"
 # 없는 경로는 404 (SPA가 아니므로 index.html로 되돌리지 않는다)
 not_found_handling = "none"

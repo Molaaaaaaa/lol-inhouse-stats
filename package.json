@@ -1,0 +1,29 @@
+{
+  "name": "lol-inhouse-stats",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "내전 해체 분석기 — 정적 사이트. 빌드 산출물 dist/ 를 커밋하고 Cloudflare Workers 가 그대로 서빙한다.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "check": "svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+    "sync-data": "node scripts/sync-data.mjs"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "7.3.0",
+    "@testing-library/svelte": "5.4.2",
+    "@types/node": "^24.13.5",
+    "jsdom": "30.1.0",
+    "svelte": "5.57.0",
+    "svelte-check": "4.7.6",
+    "typescript": "5.9.3",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

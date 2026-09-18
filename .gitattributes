@@ -5,3 +5,5 @@
 #              ("cp949 codec can't encode ... fatal: unable to read files to diff")
 #   --no-ensure-ascii : 없으면 한글이 \ub9d0 처럼 escape 돼 보인다
 *.json diff=json
+# 빌드 산출물 — 리뷰 대상이 아니다. 소스는 src/ 를 본다.
+dist/** -diff linguist-generated
