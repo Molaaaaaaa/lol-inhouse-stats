@@ -43,6 +43,8 @@
   let failed = $state<Record<string, boolean>>({});
   let details = $state.raw<Record<string, MatchDetail>>({});
 
+  // 받는 동안 disabled 로 만들지 않는다 — disabled 가 되는 순간 초점이 body 로 빠져(실측) 펼친 뒤
+  // Tab 이 처음부터 다시 시작된다. 중복 누름은 loading 가드가 막는다.
   async function toggle(r: MatchRow) {
     const slug = r.slug;
     if (open[slug]) {
@@ -101,7 +103,7 @@
             <div class="act">
               {#if r.hasDetail}
                 <button type="button" class="ctl" aria-expanded={on} aria-controls={panelId(r.slug)}
-                        aria-label="{r.time} 경기 상세" disabled={!!loading[r.slug]} onclick={() => toggle(r)}>
+                        aria-label="{r.time} 경기 상세" aria-busy={loading[r.slug] ? true : undefined} onclick={() => toggle(r)}>
                   <Icon name="chevron-down" class={on ? 'car up' : 'car'} /><span>상세</span>
                 </button>
                 <a class="lnk" href={matchHref(r.slug)} aria-label="{r.time} 경기 상세 주소"><Icon name="link" /></a>
@@ -180,8 +182,9 @@
   }
   .team {
     display: flex;
+    flex-wrap: wrap;          /* 다섯 칸이 한 줄에 안 들면 줄을 바꾼다 — 이름을 5px 로 짓누르지 않는다(실측 800px) */
     align-items: center;
-    gap: var(--sp-1);
+    gap: var(--sp-1) var(--sp-2);
     min-width: 0;
     padding: var(--sp-1) var(--sp-2);
   }
@@ -200,8 +203,9 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    flex: 1 1 0;
+    flex: 0 1 auto;
     min-width: 0;
+    max-width: 11em;          /* 긴 이름은 여기서 줄임표, 전체는 툴팁 */
     padding-left: var(--sp-1);
     border-left: 3px solid transparent;
     font-size: var(--fs-sm);

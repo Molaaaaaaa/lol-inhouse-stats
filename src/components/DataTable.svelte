@@ -121,7 +121,9 @@
   }
 
   // ── 선택 ──
-  const selectable = $derived(!!rowKey);
+  // 행이 '누를 수 있는 것' 이려면 누른 뒤 일어나는 일(onselect)이 있어야 한다 — rowKey 만 있고 반응이 없는 표는
+  // Tab 순서에 들어가 '눌렀는데 아무것도 없는' 행이 된다(실측: 멤버 화면 표 3개).
+  const selectable = $derived(!!rowKey && !!onselect);
   function keyOf(r: T): string | undefined { return rowKey ? rowKey(r) : undefined; }
   function pick(r: T) {
     const k = keyOf(r);
