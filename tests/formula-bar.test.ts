@@ -48,6 +48,19 @@ describe('FormulaBar', () => {
     expect(body.querySelector('.txt')?.classList.contains('clamp')).toBe(true);
     // 두 줄에 들어가면 버튼이 아니다(누를 것이 없다)
     expect(bar.querySelector('button')).toBeNull();
+    // ' · ' 로 나뉜 조각은 저마다 nowrap span — 숫자와 단위('6판'·'MMR 1185')가 줄 끝에서 갈라지지 않는다
+    expect([...body.querySelectorAll('.nb')].map((s) => s.textContent)).toEqual(['=티어(CP 1135) → 2티어 85점', 'MMR 1185', '6판']);
+  });
+
+  it("' · ' 가 없는 글은 조각 하나, 빈 조각도 그대로 둔다(글자를 잃지 않는다)", async () => {
+    render(FormulaBar);
+    setFx('=배치(2/5판) → 티어 산정 전');
+    await flush();
+    const bar = screen.getByRole('status', { name: '수식 줄' });
+    expect([...bar.querySelectorAll('.nb')].map((s) => s.textContent)).toEqual(['=배치(2/5판) → 티어 산정 전']);
+    setFx('a ·  · b');
+    await flush();
+    expect(bar.querySelector('.txt')?.textContent).toBe('a ·  · b');
   });
 
   it('두 줄을 넘으면 줄이 버튼이 되어 탭하면 펼친다(aria-expanded) · 글이 바뀌면 다시 접힌다', async () => {

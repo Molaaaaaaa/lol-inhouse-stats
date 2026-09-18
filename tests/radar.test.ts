@@ -91,13 +91,18 @@ describe('LaneBar — 라인 분포 막대(멤버 요약이 도넛 대신 쓴다
     expect(segs.map((s) => [...s.classList].find((c) => ['top', 'jg', 'mid', 'bot', 'sup'].includes(c)))).toEqual(['bot', 'jg', 'mid']);
     expect(segs.map((s) => s.style.getPropertyValue('--w'))).toEqual(['19', '7', '3']);
     expect(container.querySelector('svg')).toBeNull();
+    // 막대 아래 한 줄 범례 — 좁아서 글자가 숨은 조각(컨테이너 쿼리 3.5em 미만)도 여기서 읽힌다
+    expect(container.querySelector('.lg')?.textContent).toBe('원딜 19 · 정글 7 · 미드 3');
+    expect(container.querySelector('.lg')?.getAttribute('aria-hidden')).toBe('true');
   });
   it('0판 라인은 조각이 없다 · 출전 기록이 없으면 한 문장', () => {
     const { container } = render(LaneBar, { dist: [{ lane: 'TOP', games: 3, pct: 1 }, { lane: 'MIDDLE', games: 0, pct: 0 }] });
     expect(container.querySelectorAll('.seg')).toHaveLength(1);
     expect(container.querySelector('.th')?.textContent).toBe('3판');
+    expect(container.querySelector('.lg')?.textContent).toBe('탑 3');
     const { container: e } = render(LaneBar, { dist: [] });
     expect(e.querySelector('.lanebar')).toBeNull();
+    expect(e.querySelector('.lg')).toBeNull();
     expect(e.textContent).toContain('아직 출전 기록이 없습니다.');
   });
 });

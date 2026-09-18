@@ -7,11 +7,16 @@
    * 말줄임은 없다: 글이 길면 두 줄까지 줄바꿈하고, 두 줄에도 안 들어가면 줄 자체가 버튼이 되어
    * 탭하면 다 펼친다(aria-expanded). 넘침은 접힌 상태에서만 잰다(scrollHeight > clientHeight) —
    * 글이 바뀌면 다시 접고 다시 잰다. title 에 기대지 않는다(폰에는 hover 가 없다).
+   * 줄바꿈 자리는 ' · ' 사이뿐이다: setFx 문자열을 ' · ' 로 나눠 조각마다 nowrap span 을 만든다 —
+   * '55판'·'MMR 1185' 같은 숫자와 단위가 줄 끝에서 갈라지지 않는다(word-break: keep-all 도 함께).
    */
   import { tick } from 'svelte';
   import { fx } from '$lib/fx.svelte';
 
   const HINT = '행을 선택하면 계산 근거가 여기에 보입니다.';
+  const SEP = ' · ';
+  /** ' · ' 로 나눈 조각 — 조각 안에서는 줄이 바뀌지 않는다 */
+  const parts = $derived(fx.text.split(SEP));
 
   let wrap = $state<HTMLElement | undefined>();
   /** 접힌 두 줄에 다 안 들어간다 */
@@ -48,9 +53,9 @@
       <span class="body hint">{HINT}</span>
     {:else if over || open}
       <!-- 줄바꿈·접기는 안쪽 span 에 — button 자체의 line-clamp 는 브라우저가 무시한다 -->
-      <button type="button" class="body" aria-expanded={open} onclick={toggle}><span class="txt" class:clamp={!open}>{fx.text}</span></button>
+      <button type="button" class="body" aria-expanded={open} onclick={toggle}><span class="txt" class:clamp={!open}>{#each parts as p, i (i)}{#if i}{SEP}{/if}<span class="nb">{p}</span>{/each}</span></button>
     {:else}
-      <span class="body"><span class="txt clamp">{fx.text}</span></span>
+      <span class="body"><span class="txt clamp">{#each parts as p, i (i)}{#if i}{SEP}{/if}<span class="nb">{p}</span>{/each}</span></span>
     {/if}
   </div>
 </div>
@@ -101,8 +106,11 @@
   .txt {
     display: block;
     white-space: normal;
+    word-break: keep-all;
     overflow-wrap: anywhere;
   }
+  /* 조각(' · ' 사이)은 한 덩어리 — 숫자·단위·라인 이름이 갈라지지 않는다 */
+  .nb { white-space: nowrap; }
   /* 접힘: 두 줄까지. 넘치면 줄이 버튼이 되어 탭하면 펼친다 */
   .clamp {
     display: -webkit-box;

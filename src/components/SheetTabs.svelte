@@ -67,13 +67,14 @@
     border-top: 1px solid var(--grid-strong);
     padding: 0 var(--sp-4) env(safe-area-inset-bottom, 0px);
   }
+  /* 탭 하나: 내용 폭·왼쪽 정렬(≥641px). 오른쪽에 남는 자리는 빈 홈통 띠다 — 스프레드시트 시트 탭 그대로 */
   .tab {
-    flex: 1 1 0;
-    min-width: 0;
+    flex: 0 0 auto;
+    min-width: 4.5rem;
     max-width: 10rem;
     min-height: var(--row-h);
     margin-top: -1px;
-    padding: 0 var(--sp-2);
+    padding: 0 var(--sp-4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,10 +99,12 @@
   }
   .tab.on + .tab, .tab:has(+ .tab.on) { border-left-color: var(--grid-strong); }
 
-  /* 폰: 여섯이 화면 폭을 나눠 갖는다(엄지 자리, 44px) */
+  /* 폰: 여섯이 화면 폭을 균등하게 나눠 갖는다(엄지 자리, 44px) */
   @media (max-width: 640px) {
     .nav { padding-left: 0; padding-right: 0; }
     .tab {
+      flex: 1 1 0;
+      min-width: 0;
       max-width: none;
       min-height: 44px;
       border-radius: 0;

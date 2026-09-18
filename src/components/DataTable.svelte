@@ -498,13 +498,18 @@
   .more:active { background: var(--grid-strong); }
 
   /* 폰: 보조 열 숨김(정렬 기준 열은 .lo 를 받지 않는다) · 셀을 촘촘하게 · 홈통 2.5ch ·
-     고정 이름열은 긴 이름(실데이터 11자)이 화면을 다 먹지 않게 상한 + 말줄임 */
+     고정 이름열은 긴 이름(실데이터 11자)이 화면을 다 먹지 않게 7em 상한, 그 안에서 두 줄로 줄바꿈
+     (말줄임이 아니라 이름 전부가 보인다 — 행이 늘어도 된다).
+     표 폭을 max-content 로 두는 이유: width:100% 인 채로 이름 셀만 줄바꿈을 허용하면 자동 표 배치가
+     남는 폭을 그 열에서 빼앗아 55px·세 줄로 눌린다(실측). max-content 면 상한 7em 을 그대로 받는다. */
   @media (max-width: 640px) {
     .lo { display: none; }
     .sheet { --rn-w: 26px; }
+    table { width: max-content; min-width: 100%; }
     th, td { padding: 0 var(--sp-1) 0 6px; }
     .rn { padding: 0 var(--sp-1); }
-    td.c0, th.c0 { max-width: 7em; overflow: hidden; text-overflow: ellipsis; }
+    th.c0 { max-width: 7em; overflow: hidden; text-overflow: ellipsis; }
+    td.c0 { max-width: 7em; white-space: normal; overflow-wrap: anywhere; }
   }
   /* 손가락 기기: 보이는 상자는 그대로 두고 투명 select 만 위아래로 펴 44px 표적을 만든다(물음표와 같은 방식) */
   @media (pointer: coarse) {
