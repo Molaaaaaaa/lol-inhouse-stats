@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    CSP: 인라인 스크립트 금지(script-src 'self'). Vite 가 만든 dist/index.html 에는
+    <script type="module" src> 와 <link> 만 있어야 하고, 관문(inhouse/gate.build_blockers)이
+    그것을 확인한다. style-src 'unsafe-inline' 은 막대 너비·툴팁 위치가 style 속성이라 남긴다.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://ddragon.leagueoflegends.com data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <!-- 멤버 닉네임은 실명급 식별자다 — 색인 금지(robots.txt·_headers 와 셋이 한 벌) -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="dark">
+  <title>내전 해체 분석기</title>
+  <link rel="icon" href="data:,">
+  <script type="module" crossorigin src="/assets/index-ChMNLZGV.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-1jRGwvED.css">
+</head>
+<body>
+  <noscript>이 페이지는 JavaScript 가 필요합니다.</noscript>
+  <div id="app"></div>
+</body>
+</html>

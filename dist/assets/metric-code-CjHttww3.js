@@ -1,0 +1,1 @@
+var e=/\b[A-Z]{2,5}\d{0,2}\b/g,t=/대회 지표[^A-Za-z]{0,6}([A-Z]{2,5}\d{0,2})\b/,n=/^[A-Z]{2}$/;function r(r){let i=r??``,a=t.exec(i);if(a)return a[1];for(let t of i.matchAll(e))if(!n.test(t[0]))return t[0];return``}export{r as t};
