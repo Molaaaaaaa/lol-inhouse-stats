@@ -3,7 +3,7 @@
    * 시트 탭 — 최상위 내비(NAV 6개)를 스프레드시트 하단 시트 탭 모양으로.
    * 화면 간 이동이므로 tablist 가 아니라 <nav> 안의 링크(a href)다. 활성 탭은 aria-current="page".
    * 초점은 roving tabindex: 활성(또는 마지막으로 초점을 받은) 탭 하나만 Tab 순서에 있고,
-   * ←→·Home/End 로 옮긴다. ≤640px 에서는 화면 아래 고정(엄지 자리), 그 위에서는 수식 줄 아래 정적.
+   * ←→·Home/End 로 옮긴다. 모든 폭에서 화면 아래 고정 — 시트 탭은 시트 밑에 있다(폰에서는 엄지 자리).
    */
   import { NAV } from '$lib/nav';
   import { router } from '$lib/router.svelte';
@@ -54,20 +54,25 @@
 </nav>
 
 <style>
-  /* 탭 띠: 홈통 바탕. 데스크톱은 아래쪽(시트와 맞닿는 곳)에 굵은 격자선, 활성 탭이 그 선을 덮어 시트와 이어진다. */
+  /* 탭 띠: 시트 아래, 화면 하단 고정(모든 폭 — 스프레드시트의 시트 탭은 시트 밑에 있다). 홈통 바탕,
+     시트와 맞닿는 위쪽에 굵은 격자선. 활성 탭은 시트 바탕 + 위쪽 2px --sel 선이 그 격자선을 덮어
+     시트와 이어진다. 본문·바닥글은 App 이 padding-bottom 으로 이만큼 비운다. */
   .nav {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 20;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap;   /* 탭이 flex:1 1 0·min-width:0 이라 실제로는 늘 한 줄이다(가로 스크롤 없음) */
     background: var(--gutter);
-    border-bottom: 1px solid var(--grid-strong);
-    padding: 0 var(--sp-4);
+    border-top: 1px solid var(--grid-strong);
+    padding: 0 var(--sp-4) env(safe-area-inset-bottom, 0px);
   }
   .tab {
     flex: 1 1 0;
     min-width: 0;
     max-width: 10rem;
     min-height: var(--row-h);
-    margin-bottom: -1px;
+    margin-top: -1px;
     padding: 0 var(--sp-2);
     display: flex;
     align-items: center;
@@ -79,8 +84,7 @@
     text-decoration: none;
     font-size: var(--fs-sm);
     border-top: 2px solid transparent;
-    border-bottom: 1px solid transparent;
-    border-radius: var(--r-tab) var(--r-tab) 0 0;
+    border-radius: 0 0 var(--r-tab) var(--r-tab);
     transition: background-color .15s ease-out, color .15s ease-out;
   }
   .tab + .tab { border-left: 1px solid var(--grid); }
@@ -91,28 +95,17 @@
     color: var(--txt);
     font-weight: 650;
     border-top-color: var(--sel);
-    border-bottom-color: var(--sheet);
   }
   .tab.on + .tab, .tab:has(+ .tab.on) { border-left-color: var(--grid-strong); }
 
-  /* 폰: 화면 아래 고정. 시트와 맞닿는 곳이 위쪽이므로 굵은 선을 위에, 활성 탭의 --sel 선이 그 위를 덮는다. */
+  /* 폰: 여섯이 화면 폭을 나눠 갖는다(엄지 자리, 44px) */
   @media (max-width: 640px) {
-    .nav {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      z-index: 20;
-      padding: 0 0 env(safe-area-inset-bottom, 0px);
-      border-bottom: 0;
-      border-top: 1px solid var(--grid-strong);
-    }
+    .nav { padding-left: 0; padding-right: 0; }
     .tab {
       max-width: none;
       min-height: 44px;
-      margin: -1px 0 0;
-      border-bottom: 0;
       border-radius: 0;
       padding: 0 var(--sp-1);
     }
-    .tab.on { border-bottom: 0; }
   }
 </style>

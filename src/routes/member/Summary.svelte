@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 멤버 · 요약 — 이름 있는 범위 넷: 라인 분포(도넛) · 라인별 MMR 표 · 능력치(육각형 + 축 표 + 솔랭 기준선) ·
+   * 멤버 · 요약 — 이름 있는 범위 넷: 라인 분포(한 행짜리 누적 막대) · 라인별 MMR 표 · 능력치(육각형 + 축 표 + 솔랭 기준선) ·
    * 챔피언 표. 표는 전부 DataTable, 차트는 삽입된 차트(charts/*). 문턱·눈금·컷은 payload 에서만 읽는다.
    *
    * 능력치 라인: profile_lane 의 라인이 둘 이상일 때만 선택 줄을 낸다. 기본은 주 라인(옛 curAxisLane 규칙).
@@ -15,7 +15,7 @@
   import { axisLaneFor, axisLanes, axisRows, laneCls, laneRows, wrCls, type LaneRow } from '$lib/member';
   import DataTable from '$components/DataTable.svelte';
   import QMark from '$components/Tooltip.svelte';
-  import Donut from '$components/charts/Donut.svelte';
+  import LaneBar from '$components/charts/LaneBar.svelte';
   import Radar from '$components/charts/Radar.svelte';
   import AxisBars from '$components/charts/AxisBars.svelte';
 
@@ -97,7 +97,7 @@
   <div class="two">
     <div class="range">
       <div class="cap">라인 분포</div>
-      <Donut dist={p.role_dist ?? []} />
+      <LaneBar dist={p.role_dist ?? []} />
     </div>
     <DataTable rows={lanes} cols={laneCols} caption="라인별 MMR" sortKey="games" rowKey={(r) => String(r.lane)} />
   </div>
@@ -131,10 +131,8 @@
 
 <style>
   .summary { display: grid; gap: var(--sp-5); }
+  /* 라인 분포 막대는 격자 한 행 — 라인별 MMR 표 위에 같은 폭으로 놓인다(옆에 두던 도넛 자리) */
   .two { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
-  @media (min-width: 900px) {
-    .two { grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr); }
-  }
   .range { min-width: 0; }
   .cap {
     display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);

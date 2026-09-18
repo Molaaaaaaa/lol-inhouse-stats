@@ -4,8 +4,9 @@ import Synergy from '../src/routes/Synergy.svelte';
 import { app } from '../src/lib/data/store.svelte';
 import { router } from '../src/lib/router.svelte';
 import { clearFx, fx } from '../src/lib/fx.svelte';
+import { media } from '../src/lib/media.svelte';
 import {
-  duoRows, fxDuo, fxTrio, heatMatrix, heatNames, heatSign, heatT, heatText, heatTip, synCls, trioRows,
+  duoRows, fxDuo, fxHeat, fxTrio, heatMatrix, heatNames, heatSign, heatT, heatText, heatTip, shortNames, synCls, trioRows,
 } from '../src/lib/synergy';
 import type { GuildPayload, SynergyRow, TrioRow } from '../src/lib/data/types';
 
@@ -131,6 +132,21 @@ describe('synergy.ts — 순수 함수', () => {
       expect(heatTip(c, 5)).toBe('도야짬뽕누룽지탕 ＋ 우체국집배원\n시너지 +0.070 · 함께 14판 · 승률 71%');
       expect(heatTip({ a: 'A', b: 'B', games: 2, winrate: 0, synergy: null }, 5)).toBe('A ＋ B\n함께 2판 · 5판 미만이라 표시하지 않습니다');
     });
+    it('shortNames: 앞 2자(공백 제외), 겹치면 겹치는 것끼리 3자·4자…, 짧은 이름은 그대로', () => {
+      expect(shortNames(['도야짬뽕누룽지탕', '우체국집배원', 'Lotze', '용기사'])).toEqual(['도야', '우체', 'Lo', '용기']);
+      // 실데이터: '주 녁'·'주 암' 은 공백을 빼고 '주녁'·'주암' — 겹치지 않는다
+      expect(shortNames(['주 녁', '주 암', '외 걸'])).toEqual(['주녁', '주암', '외걸']);
+      // 겹치면 그 둘만 늘어난다
+      expect(shortNames(['가람', '가람이', '나래'])).toEqual(['가람', '가람이', '나래']);
+      expect(shortNames(['우체국집배원', '우체국장', '우리', '우체국집배원2'])).toEqual(['우체국집배원', '우체국장', '우리', '우체국집배원2']);
+      expect(shortNames(['김철수', '김철호', '김영희'])).toEqual(['김철수', '김철호', '김영']);
+      expect(shortNames([])).toEqual([]);
+    });
+    it('fxHeat: 폰 수식 줄 — 전체 이름 둘 + 시너지·판수·승률', () => {
+      const m = heatMatrix(SYN, null, 5);
+      const c = m.cells[m.names.indexOf('도야짬뽕누룽지탕')]![m.names.indexOf('우체국집배원')]!;
+      expect(fxHeat(c)).toBe('=시너지(도야짬뽕누룽지탕 ＋ 우체국집배원) +0.070 · 함께 14판 · 승률 71%');
+    });
   });
 });
 
@@ -243,6 +259,20 @@ describe('Synergy 화면', () => {
     expect(fx.text).toBe('=시너지 71% − 기대 47% = +0.245 → 14판 보정 +0.070');
     await fireEvent.click(cell);
     expect(location.hash).toBe('#/m/' + encodeURIComponent('도야짬뽕누룽지탕'));
+  });
+
+  it('히트맵 탭 · 폰: 칸 선택 → 수식 줄에 전체 이름 둘과 값(머리는 약칭)', async () => {
+    media.phone = true;
+    try {
+      render(Synergy, { sub: 'heat', params: {} });
+      const grid = screen.getByRole('grid', { name: '시너지 히트맵' });
+      expect([...grid.querySelectorAll('thead th.col .nm')].map((e) => e.textContent)).toEqual(['도야', '외걸', '용기', '우체', 'Lo']);   // 사전순(ko): 로마자는 뒤
+      const cell = grid.querySelector<HTMLElement>('td[data-i="0"][data-j="3"]')!;
+      await fireEvent.click(cell);
+      expect(fx.text).toBe('=시너지(도야짬뽕누룽지탕 ＋ 우체국집배원) +0.070 · 함께 14판 · 승률 71%');
+    } finally {
+      media.phone = false;
+    }
   });
 
   it('payload 가 없으면 스켈레톤', () => {

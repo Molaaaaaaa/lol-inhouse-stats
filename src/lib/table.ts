@@ -36,6 +36,20 @@ export interface Col<T> {
   sortable?: boolean;
   /** 코드 판(GD10·CSM…) — 지표 설명에 실제로 들어 있을 때만 호출부가 준다 */
   code?: string;
+  /**
+   * 머리 안 드롭다운(스프레드시트의 열 필터) — 값을 고르면 호출부가 rows 를 바꾼다.
+   * 정렬 클릭과는 별개다: 드롭다운 위의 click·keydown 은 머리로 올라가지 않는다.
+   */
+  pick?: ColPick;
+}
+
+/** 머리 드롭다운 스펙. `value` 가 options 의 `v` 와 같은 것이 지금 고른 값(''=전체가 관례). */
+export interface ColPick {
+  value: string;
+  options: readonly { v: string; label: string }[];
+  onchange: (v: string) => void;
+  /** 드롭다운의 접근 가능한 이름 — '라인 선택' 같은 명사구 */
+  label: string;
 }
 
 /** 긴 표 접기 문턱 — 이보다 많으면 FOLD_SHOW 줄만 보이고 '더 보기' */

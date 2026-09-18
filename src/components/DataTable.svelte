@@ -13,6 +13,9 @@
    *   .sheet 이 가로 스크롤 래퍼인데, 스크롤 컨테이너 안에서는 sticky top 이 문서 스크롤을 못 따라온다.
    *   그래서 표가 래퍼 안에 다 들어가면(ResizeObserver 로 잰다) overflow 를 풀어 머리가 붙게 하고,
    *   넘칠 때만 가로 스크롤로 돌린다 — 문서는 어느 쪽이든 넘치지 않는다.
+   *   넘칠 때는 잘림 힌트(오른쪽 경계 2px 선 + 캡션 줄 '열 n개 더 →'), 스크롤 끝에서는 사라진다.
+   * - 머리 드롭다운(Col.pick): 열 필터. 보이는 층은 고른 값(전체면 열 이름)+화살표, 조작은 그 위에 겹친
+   *   네이티브 select. select 위의 click·keydown 은 머리(정렬)로 올라가지 않는다.
    * - 선택: rowKey 가 있으면 행이 tabindex=0·aria-selected, 클릭·Enter → onselect.
    * - 조건부 서식은 cls 로 호출부가 클래스만 준다: win·loss(18% 채움)·t1~t5(16%)·pend(점선)·lane-*(왼쪽 띠).
    * - 셀 안 부품은 이웃 컴포넌트를 그대로 쓴다: 초상 ChampImg · 코드 판 CodePlate · 물음표 QMark(툴팁) ·
@@ -135,20 +138,46 @@
     pick(r);
   }
 
-  // ── 넘침 측정 ── 표가 래퍼에 들어가면 overflow 를 풀어 sticky top 이 문서 스크롤을 따라오게 한다
+  // ── 넘침 측정 ── 표가 래퍼에 들어가면 overflow 를 풀어 sticky top 이 문서 스크롤을 따라오게 한다.
+  //    넘칠 때는 잘림 힌트: 오른쪽 가장자리(마지막으로 보이는 열의 경계)에 2px 선 + 캡션 줄 오른쪽에
+  //    '열 n개 더 →'. n 은 오른쪽 경계 너머로 잘린 머리 칸 수(숨긴 .lo 열은 너비 0 이라 세지 않는다).
+  //    스크롤이 끝에 닿으면 둘 다 사라진다.
   let sheetEl = $state<HTMLDivElement | undefined>();
   let tableEl = $state<HTMLTableElement | undefined>();
   let fit = $state(false);
+  let cut = $state(0);
+  let tableH = $state(0);
+  function measure() {
+    const s = sheetEl, t = tableEl;
+    if (!s || !t) { cut = 0; return; }
+    fit = t.offsetWidth <= s.clientWidth;
+    tableH = t.offsetHeight;
+    if (fit) { cut = 0; return; }
+    const edge = s.scrollLeft + s.clientWidth + 1;
+    let n = 0;
+    for (const th of t.querySelectorAll<HTMLElement>('thead th')) {
+      if (th.offsetWidth > 0 && th.offsetLeft + th.offsetWidth > edge) n++;
+    }
+    cut = n;
+  }
   $effect(() => {
     const s = sheetEl, t = tableEl;
     if (!s || !t || typeof ResizeObserver === 'undefined') return;
-    const measure = () => { fit = t.offsetWidth <= s.clientWidth; };
     const ro = new ResizeObserver(measure);
     ro.observe(s);
     ro.observe(t);
     measure();
     return () => ro.disconnect();
   });
+
+  // ── 머리 드롭다운 ── 정렬 클릭·키와 섞이지 않게 select 위의 이벤트는 머리로 올리지 않는다
+  function onPick(e: Event & { currentTarget: HTMLSelectElement }, c: Col<T>) {
+    e.stopPropagation();
+    c.pick?.onchange(e.currentTarget.value);
+  }
+  const stop = (e: Event) => e.stopPropagation();
+  const pickLabel = (c: Col<T>): string =>
+    c.pick?.options.find((o) => o.v === c.pick?.value && o.v !== '')?.label ?? c.h;
 
   const hideLo = (c: Col<T>) => !!c.lo && c.k !== sort.k;
   function ariaSort(c: Col<T>): 'ascending' | 'descending' | 'none' | undefined {
@@ -158,8 +187,8 @@
   }
 </script>
 
-<div class={['sheet', fit && 'fit', !rowNumbers && 'norn', compact && 'compact']} bind:this={sheetEl}>
-  <div class="cap">{caption}</div>
+<div class={['sheet', fit && 'fit', !rowNumbers && 'norn', compact && 'compact']} bind:this={sheetEl} onscroll={measure}>
+  <div class="cap"><span>{caption}</span>{#if cut > 0}<span class="cut" aria-hidden="true">열 {cut}개 더 →</span>{/if}</div>
 
   {#if rows.length === 0}
     <EmptyState text="아직 표시할 데이터가 없습니다." />
@@ -173,18 +202,31 @@
       </div>
     {/if}
 
+    {#if cut > 0}<div class="edge" aria-hidden="true" style:--tbl-h="{tableH}px"></div>{/if}
     <table aria-label={caption} bind:this={tableEl}>
       <thead>
         <tr>
           {#if rowNumbers}<th class="rn" aria-hidden="true"></th>{/if}
           {#each cols as c, j (c.k)}
             <th scope="col"
-                class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', sortable(c) && 'sortable', sort.k === c.k && 'on']}
+                class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', sortable(c) && 'sortable', sort.k === c.k && 'on', c.pick && 'haspick']}
                 tabindex={sortable(c) ? 0 : undefined}
                 aria-sort={ariaSort(c)}
                 onclick={sortable(c) ? () => sortBy(c) : undefined}
                 onkeydown={sortable(c) ? (e) => onHeadKey(e, c) : undefined}>
-              <span class="h">{c.h}</span>
+              <span class={['h', c.pick && 'sr-only']}>{c.h}</span>
+              {#if c.pick}
+                <!-- 보이는 층은 고른 값(전체면 열 이름)+화살표, 실제 조작은 그 위에 겹친 네이티브 select -->
+                <span class="pk" class:picked={c.pick.value !== ''}>
+                  <span class="pkv" aria-hidden="true">{pickLabel(c)}<Icon name="chevron-down" class="pkic" /></span>
+                  <select class="pks" aria-label={c.pick.label} value={c.pick.value}
+                          onchange={(e) => onPick(e, c)} onclick={stop} onkeydown={stop}>
+                    {#each c.pick.options as o (o.v)}
+                      <option value={o.v}>{o.label}</option>
+                    {/each}
+                  </select>
+                </span>
+              {/if}
               {#if c.code}<CodePlate code={c.code} />{/if}
               {#if sort.k === c.k}<Icon name="chevron-down" class={sort.d === 1 ? 'sortic up' : 'sortic'} />{/if}
               {#if c.hlp}<QMark key={c.hlp} payload={app.data} label="{c.h} 설명" />{/if}
@@ -234,14 +276,38 @@
   .sheet.norn { --rn-w: 0px; }
   .sheet.compact { --rh: calc(var(--row-h) * .8); }
 
-  /* 캡션 행 — 이름 있는 범위. 가로 스크롤에 끌려가지 않는다 */
+  /* 캡션 행 — 이름 있는 범위. 가로 스크롤에 끌려가지 않는다(보이는 폭만큼이라 오른쪽 끝이 곧 잘린 자리) */
   .cap {
     position: sticky;
     left: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-3);
     font-size: var(--fs-xs);
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
+  }
+  .cut { flex: none; color: var(--dim2); font-variant-numeric: tabular-nums; }
+
+  /* 잘림 힌트 선 — 보이는 폭의 오른쪽 가장자리(마지막으로 보이는 열의 경계)에 2px, 표 높이만큼.
+     sticky 블록은 보이는 폭을 차지하므로 그 ::after 의 right:0 이 늘 화면 오른쪽 끝이다 */
+  .edge {
+    --tbl-h: 0px;   /* 표 높이 — 인라인 style:--tbl-h 가 덮어쓴다(막대의 --bar 와 같은 방식) */
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    height: 0;
+    pointer-events: none;
+  }
+  .edge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: var(--tbl-h);
+    background: var(--grid-strong);
   }
 
   /* 거르기 칸 — 표 위의 셀 하나 */
@@ -310,6 +376,41 @@
   th :global(.sortic) { margin-left: var(--sp-1); color: var(--dim); }
   th :global(.sortic.up) { transform: rotate(180deg); }
   th.on :global(.sortic) { color: var(--txt); }
+
+  /* 머리 드롭다운 — 셀 모양 상자(홈통 바탕·1px 격자선). 보이는 층(.pkv)은 고른 값 + 화살표,
+     네이티브 select 는 투명하게 그 위를 덮어 탭·키보드·보조기술은 select 그대로 쓴다 */
+  .pk {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 3px;
+    background: var(--gutter);
+    border: 1px solid var(--grid);
+    color: var(--dim);
+    font-weight: 500;
+    vertical-align: middle;
+    transition: background-color .12s, border-color .12s, color .12s;
+  }
+  th.on .pk, .pk.picked { color: var(--txt); }
+  .pk.picked { border-color: var(--grid-strong); }
+  .pk:hover { background: var(--raised); color: var(--txt); }
+  .pk:has(.pks:focus-visible) { outline: 2px solid var(--sel); outline-offset: -2px; }
+  .pk:has(.pks:active) { background: var(--grid-strong); }
+  .pkv { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; pointer-events: none; }
+  .pk :global(.pkic) { width: 10px; height: 10px; flex: none; }
+  .pks {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .pks:disabled { cursor: default; }
 
   /* 행 번호 홈통 · 첫 열 sticky left */
   .rn {
@@ -396,11 +497,20 @@
   .more:hover { background: var(--raised); color: var(--txt); }
   .more:active { background: var(--grid-strong); }
 
-  /* 폰: 보조 열 숨김(정렬 기준 열은 .lo 를 받지 않는다) */
+  /* 폰: 보조 열 숨김(정렬 기준 열은 .lo 를 받지 않는다) · 셀을 촘촘하게 · 홈통 2.5ch ·
+     고정 이름열은 긴 이름(실데이터 11자)이 화면을 다 먹지 않게 상한 + 말줄임 */
   @media (max-width: 640px) {
     .lo { display: none; }
+    .sheet { --rn-w: 26px; }
+    th, td { padding: 0 var(--sp-1) 0 6px; }
+    .rn { padding: 0 var(--sp-1); }
+    td.c0, th.c0 { max-width: 7em; overflow: hidden; text-overflow: ellipsis; }
+  }
+  /* 손가락 기기: 보이는 상자는 그대로 두고 투명 select 만 위아래로 펴 44px 표적을 만든다(물음표와 같은 방식) */
+  @media (pointer: coarse) {
+    .pks { top: -9px; bottom: -9px; height: auto; }   /* 26px 안쪽 + 18 = 44 */
   }
   @media (prefers-reduced-motion: reduce) {
-    th, td, tbody tr, .more, .tfi { transition: none; }
+    th, td, tbody tr, .more, .tfi, .pk { transition: none; }
   }
 </style>

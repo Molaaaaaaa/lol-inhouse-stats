@@ -2,11 +2,13 @@
   /**
    * 시너지 · 히트맵 — 멤버 × 멤버 격자(SynergyHeatmap). 칸 선택 → 수식 줄에 그 듀오의 근거,
    * 같은 칸 다시 선택 → 행 멤버 화면. 문턱은 payload 의 min_games(칸이 비는 기준).
+   * 폰(≤640px)에서는 머리가 약칭이라 수식 줄에 전체 이름 둘과 값을 적는다(fxHeat).
    */
   import type { GuildPayload } from '$lib/data/types';
   import { setFx } from '$lib/fx.svelte';
+  import { media } from '$lib/media.svelte';
   import { memberHref, router } from '$lib/router.svelte';
-  import { fxDuo, type HeatCell } from '$lib/synergy';
+  import { fxDuo, fxHeat, type HeatCell } from '$lib/synergy';
   import SynergyHeatmap from '$components/charts/SynergyHeatmap.svelte';
 
   interface Props { data: GuildPayload; minGames: number }
@@ -17,7 +19,9 @@
   function onselect(c: HeatCell) {
     if (selected === c.key) { router.go(memberHref(c.a)); return; }
     selected = c.key;
-    setFx(fxDuo({ winrate: c.winrate, expected: c.expected, lift: c.lift, synergy: c.synergy ?? 0, games: c.games }));
+    setFx(media.phone
+      ? fxHeat(c)
+      : fxDuo({ winrate: c.winrate, expected: c.expected, lift: c.lift, synergy: c.synergy ?? 0, games: c.games }));
   }
 </script>
 

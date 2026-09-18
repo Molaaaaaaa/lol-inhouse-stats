@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render } from '@testing-library/svelte';
 import SynergyHeatmap from '../src/components/charts/SynergyHeatmap.svelte';
 import { heatMatrix } from '../src/lib/synergy';
+import { media } from '../src/lib/media.svelte';
 import type { SynergyRow } from '../src/lib/data/types';
 
 const SYN: SynergyRow[] = [
@@ -147,6 +148,49 @@ describe('SynergyHeatmap', () => {
     expect(document.activeElement).toBe(td(container, 2, 1));   // 다솜 self(2) 를 건너뛴다
     await fireEvent.keyDown(td(container, 2, 1), { key: 'ArrowLeft' });
     expect(document.activeElement).toBe(td(container, 2, 0));
+  });
+
+  it('폰(≤640px): 머리는 2자 약칭(겹치면 3자) + aria-label 전체 이름, 약칭 표는 이름과 다른 것만 · 그 위 폭은 전체 이름', () => {
+    const syn: SynergyRow[] = [
+      ...SYN,
+      { na: '가람이', nb: '나래', games: 9, winrate: 0.5, expected: 0.5, lift: 0, synergy: 0.01 },
+    ];
+    media.phone = true;
+    try {
+      const { container } = render(SynergyHeatmap, { synergy: syn, minGames: 0 });
+      const cols = [...grid(container).querySelectorAll('thead th.col')];
+      // 사전순: 가람 · 가람이 · 나래 · 다솜 · 라온 → 가람/가람이 가 겹쳐 '가람'·'가람이'
+      expect(cols.map((h) => h.querySelector('.nm')?.textContent)).toEqual(['가람', '가람이', '나래', '다솜', '라온']);
+      expect(cols.map((h) => h.getAttribute('aria-label'))).toEqual(['가람', '가람이', '나래', '다솜', '라온']);
+      expect(cols.every((h) => h.classList.contains('ab'))).toBe(true);
+      // 약칭이 이름과 같으면 표에 없다 → 여기서는 전부 같아 약칭 표가 없다
+      expect(container.querySelector('.abbr')).toBeNull();
+      // 첫 열은 전체 이름 그대로
+      expect([...grid(container).querySelectorAll('tbody th.row .nm')].map((e) => e.textContent)).toEqual(['가람', '가람이', '나래', '다솜', '라온']);
+    } finally {
+      media.phone = false;
+    }
+  });
+
+  it('폰: 긴 이름은 약칭 표에 "약칭 이름" 으로 한 줄', () => {
+    const syn: SynergyRow[] = [
+      { na: '도야짬뽕누룽지탕', nb: '우체국집배원', games: 14, winrate: 0.7, expected: 0.5, lift: 0.2, synergy: 0.05 },
+      { na: '우체국집배원', nb: '외 걸', games: 6, winrate: 0.5, expected: 0.5, lift: 0, synergy: 0 },
+    ];
+    media.phone = true;
+    try {
+      const { container } = render(SynergyHeatmap, { synergy: syn, minGames: 0 });
+      expect([...grid(container).querySelectorAll('thead th.col .nm')].map((e) => e.textContent)).toEqual(['도야', '외걸', '우체']);
+      const abbr = container.querySelector('.abbr')!.textContent!.replace(/\s+/g, ' ').trim();
+      expect(abbr).toBe('약칭 도야 도야짬뽕누룽지탕 · 외걸 외 걸 · 우체 우체국집배원');
+    } finally {
+      media.phone = false;
+    }
+    // 데스크톱: 전체 이름, 약칭 표 없음
+    const { container: d } = render(SynergyHeatmap, { synergy: syn, minGames: 0 });
+    expect([...grid(d).querySelectorAll('thead th.col .nm')].map((e) => e.textContent)).toEqual(['도야짬뽕누룽지탕', '외 걸', '우체국집배원']);
+    expect(grid(d).querySelector('thead th.col')?.hasAttribute('aria-label')).toBe(false);
+    expect(d.querySelector('.abbr')).toBeNull();
   });
 
   it('둘 미만이면 빈 상태 문장', () => {

@@ -1,8 +1,9 @@
 <script lang="ts">
   /**
    * 앱 셸 — 내전 장부(스프레드시트) 세계의 뼈대. 위에서부터:
-   * 헤더 한 줄(제목·서버 선택·새로고침·메타) → 소환사명 검색 셀 → 수식 줄 → 시트 탭(≥641px 정적,
-   * ≤640px 화면 아래 고정) → 본문(.wrap) → Riot 고지. 새 버전 배너는 맨 위, 안내 음성은 #sr.
+   * 헤더 한 줄(제목·서버 선택·새로고침·메타) → 소환사명 검색 셀 → 수식 줄 → 본문(.wrap) → Riot 고지,
+   * 그리고 시트 탭은 모든 폭에서 화면 아래 고정(시트 밑 — DOM 순서는 본문 앞이라 Tab 순서가 위→아래다).
+   * 새 버전 배너는 맨 위, 안내 음성은 #sr.
    *
    * 화면(섹션)이 바뀔 때만 청크를 받고, 그때 수식 줄을 비운다(지난 화면의 근거가 남지 않게).
    */
@@ -127,7 +128,13 @@
     padding: var(--sp-2) var(--sp-3); border: 1px solid var(--grid-strong); border-radius: var(--r-chip);
   }
 
-  .shell { min-height: 100vh; display: flex; flex-direction: column; }
+  /* 시트 탭이 화면 아래 고정이라 본문·고지가 그 밑으로 안 들어가게 자리를 비운다(탭 높이 + 위 격자선) */
+  .shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: calc(var(--row-h) + 1px + env(safe-area-inset-bottom, 0px));
+  }
 
   /* 헤더 한 줄 — 제목은 파일 이름, 나머지는 도구. 홈통 바탕, 아래 격자선 */
   .top {
@@ -185,7 +192,7 @@
     .ctl { min-height: 44px; }
   }
 
-  /* 폰: 시트 탭이 화면 아래 고정이라 본문·고지가 그 밑으로 안 들어가게 자리를 비운다 */
+  /* 폰: 탭이 44px 이라 그만큼(+ 위 격자선) 비운다 */
   @media (max-width: 640px) {
     .shell { padding-bottom: calc(45px + env(safe-area-inset-bottom, 0px)); }
     .top { padding-left: var(--sp-3); padding-right: var(--sp-3); }

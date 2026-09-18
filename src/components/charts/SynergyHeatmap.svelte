@@ -12,9 +12,12 @@
    * - 키보드: 값 있는 칸 하나만 tabindex 0(roving). ←→↑↓ 로 같은 행·열의 다음 값 칸, Home/End 로
    *   행의 양 끝, Enter/Space 로 선택. 선택 칸은 2px --sel 안쪽 선 + aria-selected, 그 행·열 머리가 밝아진다.
    * - 툴팁·설명은 $lib/tip 액션(초점·hover·탭) — 칸마다 aria-describedby 로 자기 문구에 연결된다.
+   * - 폰(≤640px): 머리행은 세로쓰기 대신 **2자 약칭**(겹치면 3자, shortNames) 을 가로로, 보조기술에는
+   *   aria-label 로 전체 이름. 약칭 → 전체 이름 표는 범례 아래 한 줄. 그 위 폭은 세로쓰기 그대로.
    */
   import { tip } from '$lib/tip';
-  import { heatMatrix, heatSign, heatT, heatText, heatTip, type HeatCell } from '$lib/synergy';
+  import { media } from '$lib/media.svelte';
+  import { heatMatrix, heatSign, heatT, heatText, heatTip, shortNames, type HeatCell } from '$lib/synergy';
   import type { SynergyRow } from '$lib/data/types';
   import EmptyState from '$components/EmptyState.svelte';
 
@@ -30,6 +33,10 @@
 
   const m = $derived(heatMatrix(synergy, null, minGames));
   const n = $derived(m.names.length);
+  const phone = $derived(media.phone);
+  const short = $derived(phone ? shortNames(m.names) : m.names);
+  /** 약칭 표 — 이름과 다른 것만 */
+  const abbr = $derived(phone ? m.names.map((nm, i) => ({ s: short[i]!, nm })).filter((x) => x.s !== x.nm) : []);
   const shownCount = $derived(m.cells.reduce((t, row) => t + row.filter((c) => c?.synergy != null).length, 0) / 2);
 
   let table = $state<HTMLTableElement | undefined>();
@@ -104,7 +111,9 @@
           <tr>
             <th scope="col" class="corner"><span class="sr-only">멤버</span></th>
             {#each m.names as name, j (name)}
-              <th scope="col" class={['col', headOn(j) && 'on']}><span class="nm">{name}</span></th>
+              <th scope="col" class={['col', phone && 'ab', headOn(j) && 'on']} aria-label={phone ? name : undefined}>
+                <span class="nm">{short[j]}</span>
+              </th>
             {/each}
           </tr>
         </thead>
@@ -145,6 +154,12 @@
       <span class="sep" aria-hidden="true">·</span>
       {n}명 · {shownCount}조합
     </p>
+    {#if abbr.length}
+      <p class="abbr">
+        <span class="k">약칭</span>
+        {#each abbr as x, i (x.nm)}{#if i}{' · '}{/if}<span class="pair"><span class="s">{x.s}</span> {x.nm}</span>{/each}
+      </p>
+    {/if}
   {/if}
 </div>
 
@@ -200,6 +215,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: var(--row-h);
+  }
+  /* 폰: 약칭을 가로로 — 칸 폭(행 높이)에 2~3자가 든다 */
+  th.col.ab { height: var(--row-h); padding: 0; text-align: center; vertical-align: middle; }
+  th.col.ab .nm {
+    display: block;
+    writing-mode: horizontal-tb;
+    max-height: none;
+    max-width: var(--row-h);
+    line-height: var(--row-h);
+    letter-spacing: -.02em;
   }
   .corner {
     position: sticky;
@@ -273,6 +298,18 @@
   .sw.pos { background: color-mix(in srgb, var(--win) 45%, transparent); }
   .sw.neg { background: color-mix(in srgb, var(--loss) 45%, transparent); }
   .sep { margin: 0 var(--sp-1); }
+
+  /* 약칭 표 — 범례 아래 한 줄(줄바꿈은 된다). 약칭은 머리와 같은 크기·색 */
+  .abbr {
+    margin: 0;
+    padding-top: var(--sp-1);
+    font-size: var(--fs-xs);
+    color: var(--dim);
+    text-wrap: pretty;
+  }
+  .abbr .k { margin-right: var(--sp-2); color: var(--dim2); }
+  .abbr .pair { white-space: nowrap; }
+  .abbr .s { color: var(--txt); }
 
   @media (prefers-reduced-motion: reduce) {
     th, .hc { transition: none; }

@@ -265,3 +265,95 @@ describe('DataTable — 셀 서식', () => {
     }
   });
 });
+
+describe('DataTable — 머리 드롭다운(Col.pick)', () => {
+  const pickCols = (value: string, onchange: (v: string) => void): Col<Row>[] => [
+    { k: 'name', h: '멤버' },
+    { k: 'games', h: '판수', num: true, pick: { value, label: '판수 선택', onchange, options: [{ v: '', label: '전체' }, { v: 'lo', label: '5판 미만' }, { v: 'hi', label: '5판 이상' }] } },
+  ];
+  it('th 안에 네이티브 select(접근 가능한 이름·옵션) · 보이는 층은 전체면 열 이름, 고르면 그 라벨 · 열 이름은 sr-only', () => {
+    const onchange = vi.fn();
+    const { container, getByRole } = render(DataTable, { rows: ROWS, cols: pickCols('', onchange), caption: 't' });
+    const sel = getByRole('combobox', { name: '판수 선택' }) as HTMLSelectElement;
+    expect(sel.closest('th')).toBe(th(container, '판수'));
+    expect([...sel.options].map((o) => [o.value, o.textContent])).toEqual([['', '전체'], ['lo', '5판 미만'], ['hi', '5판 이상']]);
+    expect(sel.value).toBe('');
+    expect(th(container, '판수').querySelector('.pkv')?.textContent).toBe('판수');
+    expect(th(container, '판수').querySelector('.h')?.classList.contains('sr-only')).toBe(true);
+    expect(th(container, '멤버').querySelector('.h')?.classList.contains('sr-only')).toBe(false);
+  });
+  it('고르면 onchange(v) · select 위의 click·keydown 은 머리 정렬로 올라가지 않는다', async () => {
+    const onchange = vi.fn();
+    const { container, getByRole } = render(DataTable, { rows: ROWS, cols: pickCols('', onchange), caption: 't' });
+    const sel = getByRole('combobox', { name: '판수 선택' }) as HTMLSelectElement;
+    await fireEvent.change(sel, { target: { value: 'hi' } });
+    expect(onchange).toHaveBeenCalledWith('hi');
+    await fireEvent.click(sel);
+    await fireEvent.keyDown(sel, { key: 'Enter' });
+    await fireEvent.keyDown(sel, { key: ' ' });
+    expect(th(container, '판수').getAttribute('aria-sort')).toBe('none');
+    expect(firstCol(container)).toEqual(['앙앙맹', 'Faker', '맹구']);
+    // 머리 자체를 누르면 정렬은 그대로 된다
+    await fireEvent.click(th(container, '판수'));
+    expect(th(container, '판수').getAttribute('aria-sort')).toBe('descending');
+  });
+  it('고른 값이 있으면 보이는 층에 그 라벨 + picked', () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: pickCols('hi', () => {}), caption: 't' });
+    expect(th(container, '판수').querySelector('.pkv')?.textContent).toBe('5판 이상');
+    expect(th(container, '판수').querySelector('.pk')?.classList.contains('picked')).toBe(true);
+  });
+});
+
+describe('DataTable — 잘림 힌트', () => {
+  /** jsdom 은 배치를 안 한다 — 머리 칸 100px 씩, 래퍼는 250px 보이는 폭으로 흉내 낸다 */
+  function fakeWidths() {
+    const KEYS = ['offsetWidth', 'offsetLeft', 'offsetHeight', 'clientWidth'] as const;
+    const saved = KEYS.map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, get(this: HTMLElement) {
+      if (this.tagName === 'TH') return 100;
+      if (this.tagName === 'TABLE') return this.querySelectorAll('thead th').length * 100;
+      return 0;
+    } });
+    Object.defineProperty(HTMLElement.prototype, 'offsetLeft', { configurable: true, get(this: HTMLElement) {
+      return this.tagName === 'TH' ? (this as HTMLTableCellElement).cellIndex * 100 : 0;
+    } });
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, get(this: HTMLElement) { return this.tagName === 'TABLE' ? 300 : 0; } });
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, get(this: HTMLElement) { return this.classList.contains('sheet') ? 250 : 0; } });
+    return () => {
+      for (const [k, d] of saved) {
+        if (d) Object.defineProperty(HTMLElement.prototype, k, d);
+        else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
+      }
+    };
+  }
+  it('표가 래퍼보다 넓으면 캡션 오른쪽에 "열 n개 더 →" + 가장자리 선, 끝까지 스크롤하면 사라진다', async () => {
+    const restore = fakeWidths();
+    try {
+      const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: '리더보드' });
+      const sheet = container.querySelector('.sheet') as HTMLElement;
+      // 머리 5칸(홈통+4) = 500px, 보이는 폭 250px → 오른쪽 경계를 넘는 칸: 3번째(200~300)부터 셋
+      expect(sheet.classList.contains('fit')).toBe(false);
+      expect(container.querySelector('.cut')?.textContent).toBe('열 3개 더 →');
+      expect(container.querySelector('.cut')?.getAttribute('aria-hidden')).toBe('true');
+      expect((container.querySelector('.edge') as HTMLElement).style.getPropertyValue('--tbl-h')).toBe('300px');
+      expect(container.querySelector('.cap')?.textContent).toBe('리더보드열 3개 더 →');
+      // 100px 스크롤(보이는 폭 100~350) → 마지막 두 칸(300~500)이 아직 잘린다
+      sheet.scrollLeft = 100;
+      await fireEvent.scroll(sheet);
+      expect(container.querySelector('.cut')?.textContent).toBe('열 2개 더 →');
+      // 끝까지 → 힌트 없음
+      sheet.scrollLeft = 250;
+      await fireEvent.scroll(sheet);
+      expect(container.querySelector('.cut')).toBeNull();
+      expect(container.querySelector('.edge')).toBeNull();
+    } finally {
+      restore();
+    }
+  });
+  it('표가 래퍼에 들어가면(.fit) 힌트가 없다', () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: 't' });
+    expect(container.querySelector('.sheet')?.classList.contains('fit')).toBe(true);
+    expect(container.querySelector('.cut')).toBeNull();
+    expect(container.querySelector('.edge')).toBeNull();
+  });
+});

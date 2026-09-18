@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render } from '@testing-library/svelte';
 import Radar from '../src/components/charts/Radar.svelte';
 import Donut from '../src/components/charts/Donut.svelte';
+import LaneBar from '../src/components/charts/LaneBar.svelte';
 import AxisBars from '../src/components/charts/AxisBars.svelte';
 import { META, PAYLOAD, PROFILE } from './fixtures/member-payload';
 
@@ -74,6 +75,30 @@ describe('Donut', () => {
     const { container } = render(Donut, { dist: [] });
     expect(container.querySelector('svg')).toBeNull();
     expect(container.textContent).toContain('아직 출전 기록이 없습니다.');
+  });
+});
+
+describe('LaneBar — 라인 분포 막대(멤버 요약이 도넛 대신 쓴다)', () => {
+  it('행 머리 셀에 전체 판수, 조각은 라인 띠 class + 판수 비례(--w) + "라인 n" 글자, aria-label 에 전부', () => {
+    const dist = PAYLOAD.players.p1!.role_dist;
+    const { container } = render(LaneBar, { dist });
+    const bar = container.querySelector('.lanebar')!;
+    expect(bar.getAttribute('role')).toBe('img');
+    expect(bar.getAttribute('aria-label')).toBe('라인 분포: 전체 29판 · 원딜 19판, 정글 7판, 미드 3판');
+    expect(bar.querySelector('.th')?.textContent).toBe('29판');
+    const segs = [...bar.querySelectorAll('.seg')] as HTMLElement[];
+    expect(segs.map((s) => s.textContent?.trim())).toEqual(['원딜 19', '정글 7', '미드 3']);
+    expect(segs.map((s) => [...s.classList].find((c) => ['top', 'jg', 'mid', 'bot', 'sup'].includes(c)))).toEqual(['bot', 'jg', 'mid']);
+    expect(segs.map((s) => s.style.getPropertyValue('--w'))).toEqual(['19', '7', '3']);
+    expect(container.querySelector('svg')).toBeNull();
+  });
+  it('0판 라인은 조각이 없다 · 출전 기록이 없으면 한 문장', () => {
+    const { container } = render(LaneBar, { dist: [{ lane: 'TOP', games: 3, pct: 1 }, { lane: 'MIDDLE', games: 0, pct: 0 }] });
+    expect(container.querySelectorAll('.seg')).toHaveLength(1);
+    expect(container.querySelector('.th')?.textContent).toBe('3판');
+    const { container: e } = render(LaneBar, { dist: [] });
+    expect(e.querySelector('.lanebar')).toBeNull();
+    expect(e.textContent).toContain('아직 출전 기록이 없습니다.');
   });
 });
 

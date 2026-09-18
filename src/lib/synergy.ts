@@ -148,3 +148,27 @@ export function heatTip(c: Pick<HeatCell, 'a' | 'b' | 'games' | 'winrate' | 'syn
   if (c.synergy == null) return `${head}\n함께 ${c.games}판 · ${minGames}판 미만이라 표시하지 않습니다`;
   return `${head}\n시너지 ${sgn(c.synergy)} · 함께 ${c.games}판 · 승률 ${pct(c.winrate)}`;
 }
+
+/**
+ * 폰 히트맵 머리의 약칭 — 이름 앞 2자(공백은 세지 않는다: '주 녁'·'주 암' 은 '주녁'·'주암'). 겹치면
+ * 겹치는 것끼리 한 자씩 더 늘려 서로 달라질 때까지(3자, 4자…). 이름이 그 길이보다 짧으면 이름 그대로.
+ * 이름이 서로 다르므로 반드시 끝난다. 약칭이 이름과 같은 사람은 약칭 표에 적을 필요가 없다.
+ */
+export function shortNames(names: readonly string[]): string[] {
+  const compact = names.map((n) => n.replace(/\s+/g, ''));
+  const out = compact.map((n) => n.slice(0, 2));
+  for (let len = 3; ; len++) {
+    const seen = new Map<string, number>();
+    for (const s of out) seen.set(s, (seen.get(s) ?? 0) + 1);
+    let grew = false;
+    out.forEach((s, i) => {
+      if ((seen.get(s) ?? 0) > 1 && compact[i]!.length >= len) { out[i] = compact[i]!.slice(0, len); grew = true; }
+    });
+    if (!grew) return out;
+  }
+}
+
+/** 폰에서 칸을 골랐을 때의 수식 줄 — 머리가 약칭이라 전체 이름 둘을 값과 같이 적는다. */
+export function fxHeat(c: Pick<HeatCell, 'a' | 'b' | 'games' | 'winrate' | 'synergy'>): string {
+  return `=시너지(${c.a}${JOIN}${c.b}) ${sgn(c.synergy ?? 0)} · 함께 ${c.games}판 · 승률 ${pct(c.winrate)}`;
+}
