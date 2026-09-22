@@ -91,7 +91,7 @@
   }
   .col { display: grid; gap: var(--sp-2); min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;

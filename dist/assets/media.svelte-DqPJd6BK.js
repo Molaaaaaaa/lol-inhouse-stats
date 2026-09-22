@@ -1,1 +1,0 @@
-import{et as e}from"./index-ChMNLZGV.js";var t=`(max-width: 640px)`,n=e({phone:!1});if(typeof window<`u`&&typeof window.matchMedia==`function`){let e=window.matchMedia(t),r=()=>{n.phone=!!e.matches};r(),e.addEventListener?.(`change`,r),window.addEventListener(`resize`,r,{passive:!0})}export{n as t};

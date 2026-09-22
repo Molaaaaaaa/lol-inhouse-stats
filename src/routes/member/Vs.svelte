@@ -39,7 +39,8 @@
 
 <div class="vs">
   {#key key}
-    <DataTable {rows} {cols} caption="상대별 전적" sortKey="withGames" rowKey={(r) => r.key} onselect={open} />
+    <!-- rows2: 390px 에서 413px(실측) — 폰은 2줄 장부 행 -->
+    <DataTable {rows} {cols} caption="상대별 전적" sortKey="withGames" rowKey={(r) => r.key} onselect={open} rows2 />
   {/key}
   {#if rows.length}
     <p class="note">

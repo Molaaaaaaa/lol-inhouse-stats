@@ -44,11 +44,13 @@
   /* 떠 있는 층(자동완성 목록·툴팁)에만 쓰는 그림자 — 시트·카드에는 쓰지 않는다 */
   --shadow: 0 6px 20px rgba(0, 0, 0, .45);
 
-  /* 서체 — 한 계열, 고정 rem 스케일(비율 1.125). 표 숫자는 tabular */
+  /* 서체 — 한 계열, 고정 rem 스케일(비율 1.125). 표 숫자는 tabular.
+     굵기는 400·700 두 단계뿐 — Malgun Gothic(윈도)·Noto CJK(안드로이드)는 한글 500·600·650 을 400 또는 700 으로
+     그린다(실측: 400=500, 600=650=700). 중간 굵기를 쓰면 기기마다 다른 위계가 나온다. */
   --font: 'Segoe UI', Roboto, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
   --mono: ui-monospace, 'Cascadia Mono', Consolas, 'D2Coding', monospace;
-  --fs-xs: 0.75rem;    /* 12px 바닥 — 표 머리·코드 판 */
-  --fs-sm: 0.8125rem;  /* 13px 보조 */
+  --fs-tick: 0.75rem;  /* 12px — 차트 눈금·축 글자(SVG)에만. 화면 글자는 여기 아래로 안 내려간다 */
+  --fs-sm: 0.8125rem;  /* 13px 바닥 — 표 머리·행 번호·캡션·코드 판·보조 */
   --fs-md: 0.875rem;   /* 14px 본문·셀 */
   --fs-lg: 1rem;       /* 16px 제목 */
   --fs-xl: 1.125rem;   /* 18px 화면 제목 */
@@ -87,7 +89,7 @@ body {
   min-height: 100vh;
   font-variant-numeric: tabular-nums;
 }
-h1, h2, h3 { margin: 0; font-weight: 650; line-height: 1.3; text-wrap: balance; }
+h1, h2, h3 { margin: 0; font-weight: 700; line-height: 1.3; text-wrap: balance; }
 h1 { font-size: var(--fs-xl); }
 h2 { font-size: var(--fs-lg); }
 h3 { font-size: var(--fs-md); }
@@ -100,7 +102,7 @@ button { cursor: pointer; }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
 .muted { color: var(--dim); }
 .faint { color: var(--dim2); }
-.code { font-family: var(--mono); font-size: var(--fs-xs); color: var(--dim); letter-spacing: .02em; }
+.code { font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); letter-spacing: .02em; }
 
 /* 폰 입력 확대 방지(16px) · 터치 표적 44px — 시트 행도 손가락 높이로 */
 @media (pointer: coarse) {

@@ -68,7 +68,7 @@
 <style>
   .hourbars { width: 100%; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -79,6 +79,6 @@
   .grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
   .axis { stroke: var(--grid-strong); stroke-width: 1; shape-rendering: crispEdges; }
   .bar { fill: var(--sel); }
-  .v { fill: var(--txt); font-size: var(--fs-xs); }
-  .t { fill: var(--dim); font-size: var(--fs-xs); }
+  .v { fill: var(--txt); font-size: var(--fs-tick); }
+  .t { fill: var(--dim); font-size: var(--fs-tick); }
 </style>

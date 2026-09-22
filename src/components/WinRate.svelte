@@ -31,7 +31,10 @@
     font-variant-numeric: tabular-nums;
     line-height: 1.6;
   }
-  .wr-h { background: color-mix(in srgb, var(--win) 18%, transparent); }
+  /* 채움 + ▲▼ 기호 + 높은 쪽 굵게 — 색 한 겹이 아니라 세 겹(옛 사이트 규칙). 글자색은 무채색 그대로 */
+  .wr-h { background: color-mix(in srgb, var(--win) 18%, transparent); font-weight: 700; }
   .wr-l { background: color-mix(in srgb, var(--loss) 18%, transparent); }
+  .wr-h::after { content: ' ▲'; font-size: .72em; }
+  .wr-l::after { content: ' ▼'; font-size: .72em; }
   .wr-dim { color: var(--dim); }
 </style>

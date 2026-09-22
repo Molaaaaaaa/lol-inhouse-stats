@@ -1,5 +1,5 @@
 import '@testing-library/svelte/vitest';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, within } from '@testing-library/svelte';
 import { tipOpenFor } from '../src/lib/tip';
 import { helpText } from '../src/lib/help';
@@ -7,6 +7,7 @@ import type { Component, ComponentProps } from 'svelte';
 import Generic from '../src/components/DataTable.svelte';
 import type { Col } from '../src/lib/table';
 import { app } from '../src/lib/data/store.svelte';
+import { media } from '../src/lib/media.svelte';
 import type { GuildPayload } from '../src/lib/data/types';
 
 interface Row { id: string; name: string; games: number; wr: number; deaths: number | null; champ?: string; win?: boolean }
@@ -123,6 +124,15 @@ describe('DataTable — 정렬', () => {
     await rerender({ rows: ROWS, cols: COLS, caption: 't', sortKey: 'deaths', sortDir: 1 });
     expect(firstCol(container)).toEqual(['Faker', '앙앙맹', '맹구']);
     expect(th(container, '데스').getAttribute('aria-sort')).toBe('ascending');
+  });
+  it('사용자가 머리를 눌러 정렬하면 래퍼에 .usersort — 홈통 번호가 순위가 아닌 순간(호출부 서식용). sortKey 가 바뀌면 사라진다', async () => {
+    const { container, rerender } = render(DataTable, { rows: ROWS, cols: COLS, caption: 't' });
+    const sheet = container.querySelector('.sheet')!;
+    expect(sheet.classList.contains('usersort')).toBe(false);
+    await fireEvent.click(th(container, '승률'));
+    expect(sheet.classList.contains('usersort')).toBe(true);
+    await rerender({ rows: ROWS, cols: COLS, caption: 't', sortKey: 'games' });
+    expect(sheet.classList.contains('usersort')).toBe(false);
   });
 });
 
@@ -355,5 +365,100 @@ describe('DataTable — 잘림 힌트', () => {
     expect(container.querySelector('.sheet')?.classList.contains('fit')).toBe(true);
     expect(container.querySelector('.cut')).toBeNull();
     expect(container.querySelector('.edge')).toBeNull();
+  });
+});
+
+describe('DataTable — 2줄 장부 행(rows2)', () => {
+  afterEach(() => { media.phone = false; });
+  const pickCols: Col<Row>[] = [
+    { k: 'name', h: '멤버' },
+    { k: 'games', h: '판수', num: true, lo: true, code: 'GP', hlp: 'MMR',
+      pick: { value: '', label: '판수 선택', onchange: () => {}, options: [{ v: '', label: '전체' }, { v: 'hi', label: '5판 이상' }] } },
+    { k: 'wr', h: '승률', num: true, bar: true, fmt: (v) => `${Math.round(Number(v) * 100)}%` },
+  ];
+  it('폰이면 .sheet.rows2 · 셀마다 data-label · 머리는 남되(scope=col) 초점·정렬·드롭다운·물음표·코드 판이 없다', () => {
+    media.phone = true;
+    const { container } = render(DataTable, { rows: ROWS, cols: pickCols, caption: 't', rows2: true, sortKey: 'wr' });
+    const sheet = container.querySelector('.sheet')!;
+    expect(sheet.classList.contains('rows2')).toBe(true);
+    expect(sheet.classList.contains('fit')).toBe(true);
+    const heads = [...container.querySelectorAll('thead th[scope="col"]')];
+    expect(heads.map((h) => h.querySelector('.h')?.textContent)).toEqual(['멤버', '판수', '승률']);
+    expect(heads.every((h) => !h.hasAttribute('tabindex') && !h.hasAttribute('aria-sort') && !h.classList.contains('sortable'))).toBe(true);
+    expect(container.querySelector('thead select')).toBeNull();
+    expect(container.querySelector('thead .qmark')).toBeNull();
+    expect(container.querySelector('thead .code.plate')).toBeNull();
+    expect(container.querySelector('thead .sortic')).toBeNull();
+    expect(heads[1]!.querySelector('.h')?.classList.contains('sr-only')).toBe(false);
+    // 셀: data-label = 머리 글자, 서식(lo·bar·num·c0)은 그대로
+    const tds = [...container.querySelectorAll('tbody tr:first-child td:not(.rn)')];
+    expect(tds.map((td) => td.getAttribute('data-label'))).toEqual(['멤버', '판수', '승률']);
+    expect(tds[0]!.classList.contains('c0')).toBe(true);
+    expect(tds[1]!.classList.contains('lo')).toBe(true);
+    expect(tds[2]!.classList.contains('bar')).toBe(true);
+    // 호출부 sortKey 는 그대로 적용된다(승률 내림차순)
+    expect(firstCol(container)).toEqual(['Faker', '앙앙맹', '맹구']);
+  });
+  it('폰이라도 rows2 를 안 주면 보통 표 · rows2 여도 폰이 아니면 보통 표(정렬 된다)', async () => {
+    media.phone = true;
+    const plain = render(DataTable, { rows: ROWS, cols: COLS, caption: 'a' });
+    expect(plain.container.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
+    expect(th(plain.container, '판수').getAttribute('tabindex')).toBe('0');
+    media.phone = false;
+    const wide = render(DataTable, { rows: ROWS, cols: COLS, caption: 'b', rows2: true });
+    expect(wide.container.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
+    expect(th(wide.container, '승률').getAttribute('aria-sort')).toBe('none');
+    await fireEvent.click(th(wide.container, '승률'));
+    expect(firstCol(wide.container)).toEqual(['Faker', '앙앙맹', '맹구']);
+    expect(th(wide.container, '승률').getAttribute('aria-sort')).toBe('descending');
+  });
+  it('폰으로 바뀌면(media.phone) 같은 인스턴스가 2줄 행으로 — 선택·접기·거르기는 그대로', async () => {
+    const onselect = vi.fn();
+    const { container } = render(DataTable, { rows: many(25), cols: COLS, caption: 't', rows2: true, rowKey: (r: Row) => r.id, onselect });
+    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
+    media.phone = true;
+    await fireEvent.click(container.querySelector('tbody tr')!);   // 이벤트 대기가 반응을 흘려보낸다
+    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(true);
+    expect(onselect).toHaveBeenCalledTimes(1);
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(10);
+    expect(container.querySelector('.more')?.textContent).toBe('더 보기 (15)');
+    expect(container.querySelector('input.tfi')).not.toBeNull();
+    expect(container.querySelector('thead th[tabindex]')).toBeNull();
+  });
+  it('데스크톱에서 머리로 정렬한 채 폰이 되면 사용자 정렬은 무시된다(.usersort 없음·기본 순서) — 되돌릴 조작이 없다', async () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: 't', rows2: true });
+    await fireEvent.click(th(container, '승률'));
+    expect(firstCol(container)).toEqual(['Faker', '앙앙맹', '맹구']);
+    expect(container.querySelector('.sheet')?.classList.contains('usersort')).toBe(true);
+    media.phone = true;
+    await fireEvent.click(container.querySelector('.cap')!);
+    expect(container.querySelector('.sheet')?.classList.contains('usersort')).toBe(false);
+    expect(firstCol(container)).toEqual(['앙앙맹', 'Faker', '맹구']);
+  });
+  it('짧은 라벨 hs 가 data-label 이 된다 · 빈 값 셀은 .blank · 데이터 셀 4개면 --r2-cols 2, 아니면 3', () => {
+    media.phone = true;
+    const cols4: Col<Row>[] = [
+      { k: 'name', h: '멤버' },
+      { k: 'games', h: '함께 판', hs: '판', num: true },
+      { k: 'wr', h: '승률', num: true },
+      { k: 'deaths', h: '데스', num: true, fmt: (v) => (v == null ? '' : String(v)) },
+      { k: 'champ', h: '챔피언', fmt: (v) => (v == null ? '' : String(v)) },
+    ];
+    const { container } = render(DataTable, { rows: ROWS, cols: cols4, caption: 't', rows2: true });
+    const sheet = container.querySelector<HTMLElement>('.sheet')!;
+    expect(sheet.style.getPropertyValue('--r2-cols')).toBe('2');
+    const first = [...container.querySelectorAll('tbody tr:first-child td:not(.rn)')];
+    expect(first.map((td) => td.getAttribute('data-label'))).toEqual(['멤버', '판', '승률', '데스', '챔피언']);
+    expect(first[4]!.classList.contains('blank')).toBe(true);    // champ 없음 → 라벨만 남는 칸을 그리지 않는다
+    expect(first[3]!.classList.contains('blank')).toBe(false);
+    const third = [...container.querySelectorAll('tbody tr:nth-child(3) td:not(.rn)')];
+    expect(third[3]!.classList.contains('blank')).toBe(true);    // deaths null → ''
+    const three = render(DataTable, { rows: ROWS, cols: COLS, caption: 'u', rows2: true });
+    expect(three.container.querySelector<HTMLElement>('.sheet')!.style.getPropertyValue('--r2-cols')).toBe('3');
+  });
+  it('폰이 아니면 빈 셀에 .blank 가 없고 --r2-cols 도 없다', () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: 't', rows2: true });
+    expect(container.querySelector('td.blank')).toBeNull();
+    expect(container.querySelector<HTMLElement>('.sheet')!.style.getPropertyValue('--r2-cols')).toBe('');
   });
 });

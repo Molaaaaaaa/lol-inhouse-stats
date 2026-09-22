@@ -22,9 +22,9 @@
 
   const cols = $derived<Col<DuoRow>[]>([
     { k: 'pair', h: '듀오' },
-    { k: 'games', h: '함께 판', num: true },
-    { k: 'winrate', h: '함께 승률', num: true, fmt: (v) => pct(v as number), cls: (r) => wrCls(r.winrate, r.games, minGames) },
-    { k: 'expected', h: '기대 승률', num: true, fmt: (v) => pct(v as number) },
+    { k: 'games', h: '함께 판', hs: '판', num: true },
+    { k: 'winrate', h: '함께 승률', hs: '승률', num: true, fmt: (v) => pct(v as number), cls: (r) => wrCls(r.winrate, r.games, minGames) },
+    { k: 'expected', h: '기대 승률', hs: '기대', num: true, fmt: (v) => pct(v as number) },
     { k: 'synergy', h: '시너지', num: true, hlp: '시너지', fmt: (v) => sgn(v as number), cls: (r) => synCls(r.synergy) },
     { k: 'lift', h: '리프트', num: true, lo: true, fmt: (v) => sgn(v as number) },
   ]);
@@ -37,7 +37,8 @@
 </script>
 
 <div class="duo">
-  <DataTable {rows} {cols} caption="듀오 시너지" sortKey="synergy" rowKey={(r) => r.key}
+  <!-- rows2: 390px 에서 407px(실측) — 폰은 2줄 장부 행 -->
+  <DataTable {rows} {cols} caption="듀오 시너지" sortKey="synergy" rowKey={(r) => r.key} rows2
              selectedKey={selected ?? undefined} {onselect} />
   <p class="note">
     리프트 = 함께 승률 − 기대 승률. 시너지는 리프트를 함께 뛴 판수로 0 쪽에 보정한 값이라 판수가 적을수록 작습니다.

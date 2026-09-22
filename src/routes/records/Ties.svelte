@@ -70,7 +70,8 @@
 
 <div class="ties">
   <div class="pair">
-    <DataTable rows={co} cols={coCols} caption="동반 사망" sortKey="per_game"
+    <!-- rows2: 390px 에서 377px(실측) — 폰은 2줄 장부 행. 어시스트 흐름은 366px 에 든다 -->
+    <DataTable rows={co} cols={coCols} caption="동반 사망" sortKey="per_game" rows2
                rowKey={(r) => `co:${r.a}|${r.b}`} selectedKey={sel ?? undefined}
                onselect={(r, k) => pick(k, coFx(r), compareHref(r.a, r.b))} />
     <DataTable rows={flow} cols={flowCols} caption="어시스트 흐름" sortKey="assists"

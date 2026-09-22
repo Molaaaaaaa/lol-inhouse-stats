@@ -135,7 +135,7 @@
 <style>
   .list { --rn-w: 36px; display: grid; gap: 0; min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -168,7 +168,7 @@
     align-items: center;
     justify-content: flex-end;
     padding: 0 var(--sp-1);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--dim2);
     background: var(--gutter);
     border-right: 1px solid var(--grid-strong);
@@ -217,7 +217,7 @@
   .pl.bot { border-left-color: var(--lane-bot); }
   .pl.sup { border-left-color: var(--lane-sup); }
   .pn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .vs { padding: 0 var(--sp-1); font-size: var(--fs-xs); color: var(--dim2); }
+  .vs { padding: 0 var(--sp-1); font-size: var(--fs-sm); color: var(--dim2); }
   .act {
     display: inline-flex;
     align-items: center;
@@ -226,7 +226,7 @@
     border-left: 1px solid var(--grid);
     align-self: stretch;
   }
-  .nodet { font-size: var(--fs-xs); white-space: nowrap; }
+  .nodet { font-size: var(--fs-sm); white-space: nowrap; }
 
   /* 셀 모양 버튼 — 헤더의 .ctl 과 같은 어휘 */
   .ctl {

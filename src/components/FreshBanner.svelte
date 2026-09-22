@@ -32,7 +32,7 @@
     color: var(--on-sel);
     border: 1px solid var(--sel);
     border-radius: var(--r-chip);
-    font-weight: 650;
+    font-weight: 700;
     transition: background-color .15s ease-out;
   }
   .act:hover { background: color-mix(in srgb, var(--sel) 88%, var(--txt)); }

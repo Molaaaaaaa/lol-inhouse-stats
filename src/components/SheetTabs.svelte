@@ -94,7 +94,7 @@
   .tab.on {
     background: var(--sheet);
     color: var(--txt);
-    font-weight: 650;
+    font-weight: 700;
     border-top-color: var(--sel);
   }
   .tab.on + .tab, .tab:has(+ .tab.on) { border-left-color: var(--grid-strong); }

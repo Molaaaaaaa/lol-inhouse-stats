@@ -63,7 +63,7 @@
     white-space: nowrap;
     vertical-align: baseline;
   }
-  .tierbadge { font-weight: 600; }
+  .tierbadge { font-weight: 700; }
   /* 조건부 서식 — 셀 채움만 옅게, 글자는 무채색 그대로 */
   .t1 { background: color-mix(in srgb, var(--t1) 16%, transparent); }
   .t2 { background: color-mix(in srgb, var(--t2) 16%, transparent); }

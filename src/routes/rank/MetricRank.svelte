@@ -251,7 +251,7 @@
 
   /* 선택 지표의 뜻 — 라벨(굵게) · 코드 판 · 방향 판 — 설명 */
   .desc { max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
-  .desc .lbl { color: var(--txt); font-weight: 600; }
+  .desc .lbl { color: var(--txt); font-weight: 700; }
   .desc .dash { margin-left: var(--sp-1); }
   .dir {
     display: inline-block;
@@ -260,14 +260,14 @@
     border: 1px solid var(--grid);
     border-radius: var(--r-chip);
     background: var(--gutter);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     line-height: 1.4;
     vertical-align: middle;
     white-space: nowrap;
   }
 
   /* 메달 — 순위 셀 왼쪽 띠(사다리와 같은 모양) */
-  .sheet :global(td.medal) { font-weight: 650; color: var(--txt); }
+  .sheet :global(td.medal) { font-weight: 700; color: var(--txt); }
   .sheet :global(td.m1) { border-left: 3px solid var(--t1); }
   .sheet :global(td.m2) { border-left: 3px solid var(--dim2); }
   .sheet :global(td.m3) { border-left: 3px solid var(--t4); }

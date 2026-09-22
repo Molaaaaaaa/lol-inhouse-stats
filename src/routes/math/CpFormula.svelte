@@ -146,8 +146,8 @@ gap = ((MMR − CP) ÷ {C.cp_gap_div}) 을 ±{C.cp_gap_cap} 로 자름
   .cap {
     margin: 0;
     padding-top: var(--sp-3);
-    font-size: var(--fs-xs);
-    font-weight: 600;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     line-height: var(--lh);
     color: var(--dim);
     text-wrap: balance;

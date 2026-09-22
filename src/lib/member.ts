@@ -31,11 +31,11 @@ export function laneCls(lane: string | null | undefined): string {
   const b = laneBand(lane);
   return b ? `lane-${b}` : '';
 }
-/** 승률 셀 — 높음 'win'·낮음 'loss' 채움, 문턱 미만·중간은 채움 없음. */
+/** 승률 셀 — 높음 'win wr-h'·낮음 'loss wr-l'(채움 + DataTable 의 ▲▼), 문턱 미만·중간은 채움 없음. */
 export function wrCls(w: number | null | undefined, n: number | null | undefined, minGames: number): string {
   if (w == null) return '';
   const c = wrClass(w, n, minGames);
-  return c === 'wr-h' ? 'win' : c === 'wr-l' ? 'loss' : '';
+  return c === 'wr-h' ? 'win wr-h' : c === 'wr-l' ? 'loss wr-l' : '';
 }
 
 // ── 머리 전적 셀 ───────────────────────────────────────────────────────

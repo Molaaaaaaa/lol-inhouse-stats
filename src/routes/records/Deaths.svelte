@@ -61,14 +61,15 @@
 </script>
 
 <div class="deaths">
-  <DataTable rows={comeback} cols={cbCols} caption="역전 · 리드 실패" sortKey="throw_rate"
+  <!-- rows2: 390px 에서 417px · 409px(실측) — 폰은 2줄 장부 행 -->
+  <DataTable rows={comeback} cols={cbCols} caption="역전 · 리드 실패" sortKey="throw_rate" rows2
              rowKey={(r) => `cb:${r.name}`} selectedKey={sel ?? undefined}
              onselect={(r, k) => pick(k, cbFx(r), memberHref(r.name))} />
   <p class="note">15분 골드 차 2,500 이상만 열세·우세로 봅니다. 행을 선택하면 계산 근거가 수식 줄에 보이고, 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.</p>
 
   <!-- 데스 표와 데스 위치를 나란히 — 표가 남는 폭을 갖고 차트는 제 폭(최대 320px)만 -->
   <div class="pair">
-    <DataTable rows={deaths} cols={dCols} caption="첫 데스 · 헌납" sortKey="bounty_given"
+    <DataTable rows={deaths} cols={dCols} caption="첫 데스 · 헌납" sortKey="bounty_given" rows2
                rowKey={(r) => `d:${r.name}`} selectedKey={sel ?? undefined}
                onselect={(r, k) => pick(k, dFx(r), memberHref(r.name))} />
     <DeathHeatmap {load} {entered} />

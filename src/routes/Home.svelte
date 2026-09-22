@@ -9,9 +9,11 @@
    * 링크를 넣지 못했다(DataTable 계약). 소환사명 검색 셀도 같은 곳으로 간다.
    * 행 만들기(정렬 밴드·순위·메달·문턱)는 $lib/ladder 의 순수 함수 — 여기서는 열과 서식만.
    *
-   * 폰(≤640px): '순위' 열을 숨긴다 — 기본 정렬이 순위라 행 번호 홈통이 곧 순위다(상위 3 은 홈통 숫자
-   * 굵게). 그래서 폰에서는 sortKey 를 주지 않는다(들어온 순서 = 순위 순서, 순위 열은 lo 로 숨는다).
-   * 라인 셀은 띠 + 짧은 글자만(' · 주' 생략), 라인 MMR 머리는 'MMR'(물음표가 라인 MMR 임을 설명한다).
+   * 폰(≤640px): '순위' 열이 아예 없다 — 기본 정렬이 순위라 행 번호 홈통이 곧 순위다(상위 3 은 홈통 숫자
+   * 굵게). 그래서 폰에서는 sortKey 를 주지 않는다(들어온 순서 = 순위 순서). 사다리는 390px 에서 넘치는 표라
+   * (실측 427px > 366px) 2줄 장부 행(DataTable rows2)으로 그린다 — 머리행이 보이지 않으므로 라인 선택은
+   * 표 밖 .views 줄의 네이티브 select 로(문안·옵션은 lanePick 그대로). 라인 셀은 띠 + 짧은 글자만(' · 주'
+   * 생략), 라인 MMR 머리는 'MMR'(데스크톱은 물음표가 라인 MMR 임을 설명한다).
    */
   import { app } from '$lib/data/store.svelte';
   import { href, memberHref, router } from '$lib/router.svelte';
@@ -64,11 +66,12 @@
   const numOrDash = (v: unknown) => (v == null ? DASH : String(v));
   const tierIdx = (name: string) => cpTiers(data).findIndex((t) => t.name === name) + 1;
   // 승률 채움: WinRate 셀과 같은 규칙(높음 --win · 낮음 --loss · 문턱 미만은 옅은 글자)
-  const WR: Readonly<Record<string, string>> = { 'wr-h': 'win', 'wr-l': 'loss', 'wr-dim': 'wr-dim', 'wr-m': '' };
+  const WR: Readonly<Record<string, string>> = { 'wr-h': 'win wr-h', 'wr-l': 'loss wr-l', 'wr-dim': 'wr-dim', 'wr-m': '' };
   const wrCls = (r: LadderRow) =>
     r.winrate == null ? '' : WR[wrClass(r.winrate, r.games, mode === 'one' ? app.minGames : app.minGamesLane)] ?? '';
 
-  /** 표 머리 '라인' 열의 드롭다운 — 전체 + 라인 다섯(그 라인 표의 행 수). 라인별 보기에서만 */
+  /** 라인 드롭다운 — 전체 + 라인 다섯(그 라인 표의 행 수). 라인별 보기에서만.
+   *  데스크톱은 표 머리 '라인' 열(Col.pick), 폰은 .views 줄의 select(머리행이 보이지 않는다) — 스펙은 하나 */
   const lanePick = $derived.by((): ColPick => ({
     value: lane,
     label: '라인 선택',
@@ -84,15 +87,18 @@
     const meta = data?.metric_meta;
     const out: Col<LadderRow>[] = [
       { k: 'name', h: '멤버' },
-      { k: 'rank', h: '순위', num: true, nullLast: true, lo: true, fmt: numOrDash, cls: (r) => r.medal?.cls ?? '' },
-      { k: 'laneOrd', h: one ? '주 라인' : '라인', nullLast: true, pick: one ? undefined : lanePick,
+    ];
+    // 폰에서는 순위 열이 없다 — 홈통이 순위다(2줄 행에서 '순위: n' 셀이 홈통 숫자와 겹친다)
+    if (!phone) out.push({ k: 'rank', h: '순위', num: true, nullLast: true, fmt: numOrDash, cls: (r) => r.medal?.cls ?? '' });
+    out.push(
+      { k: 'laneOrd', h: one ? '주 라인' : '라인', nullLast: true, pick: one || phone ? undefined : lanePick,
         fmt: (_v, r) => laneKo(r.lane) + (!one && !phone && r.main ? ' · 주' : ''), cls: (r) => laneCls(r.lane) },
       { k: 'tierIdx', h: '티어', nullLast: true,
         fmt: (_v, r) => (r.placed ? r.tier : `배치 ${r.games}/${need}`),
         cls: (r) => (r.placed ? `t${tierIdx(r.tier)}` : 'pend') },
       { k: 'cp', h: 'CP', num: true, nullLast: true, hlp: 'CP', fmt: numOrDash },
       { k: 'points', h: '점수', num: true, bar: true, nullLast: true, lo: true, fmt: numOrDash },
-    ];
+    );
     if (one) out.push({ k: 'toNext', h: '승급까지', num: true, nullLast: true, lo: true, fmt: numOrDash });
     out.push(
       { k: 'mmr', h: one || phone ? 'MMR' : '라인 MMR', num: true, nullLast: true, lo: one, hlp: one ? 'MMR' : '라인MMR',
@@ -105,7 +111,7 @@
     return out;
   });
   const LOWER = ['rank', 'laneOrd', 'tierIdx'];
-  /** 폰에서는 순위 열이 숨으므로 정렬 기준을 두지 않는다 — ladder 가 준 순서가 곧 순위다 */
+  /** 폰에서는 순위 열이 없으므로 정렬 기준을 두지 않는다 — ladder 가 준 순서가 곧 순위다 */
   const sortKey = $derived(phone ? undefined : 'rank');
   /** 행 클래스 — 선 아래 밴드(unp) + 상위 3(medal m1~m3: 홈통 숫자 굵게) */
   const rowClass = (r: LadderRow) => [r.unp && 'unp', r.medal?.cls].filter(Boolean).join(' ');
@@ -147,22 +153,33 @@
   <section class="home" aria-labelledby="home-h">
     <h2 id="home-h" class="sr-only">사다리</h2>
     <p class="meta">
-      <span>평균 {durKo(data.summary.avg_duration_sec)}</span>
-      · <time datetime={data.timestamp} title={stampFull(data.timestamp)}>갱신 {stampShort(data.timestamp)}</time>
+      <span>평균 <b class="v">{durKo(data.summary.avg_duration_sec)}</b></span>
+      · <time datetime={data.timestamp} title={stampFull(data.timestamp)}>갱신 <b class="v">{stampShort(data.timestamp)}</b></time>
     </p>
 
     <div class="views" role="group" aria-label="사다리 보기">
       <button type="button" class="vb" aria-pressed={mode === 'all'} onclick={() => setMode('all')}>라인별</button>
       <button type="button" class="vb" aria-pressed={mode === 'one'} onclick={() => setMode('one')}>통합</button>
+      {#if mode !== 'one' && phone}
+        <!-- 폰: 표 머리가 보이지 않으므로 라인 선택은 여기(같은 lanePick 스펙) -->
+        <select class="vb" aria-label={lanePick.label} value={lanePick.value}
+                onchange={(e) => lanePick.onchange(e.currentTarget.value)}>
+          {#each lanePick.options as o (o.v)}
+            <option value={o.v}>{o.label}</option>
+          {/each}
+        </select>
+      {/if}
     </div>
 
     <div class="ladder">
       <!-- 보기(라인별·통합)가 바뀌면 표를 새로 만든다. 라인 드롭다운은 표 안에 있으므로 라인이 바뀔 때는
-           그대로 두어 초점이 드롭다운에 남는다(rows 가 바뀌면 접기는 저절로 초기화된다) -->
+           그대로 두어 초점이 드롭다운에 남는다(rows 가 바뀌면 접기는 저절로 초기화된다).
+           rows2: 폰에서 2줄 장부 행 — 라인별 사다리는 390px 에서 넘치는 표다(실측 427px). 통합은 366px 에 들어가
+           보통 격자 그대로(5셀이라 3열 격자에 빈 칸이 남기도 한다) -->
       {#key mode}
         <DataTable {rows} {cols} {caption} {sortKey} sortDir={1} lowerBetterKeys={LOWER}
                    rowKey={(r) => r.key} selectedKey={selected ?? undefined} {onselect}
-                   {rowClass} filter={false} />
+                   {rowClass} filter={false} rows2={mode !== 'one'} />
       {/key}
     </div>
 
@@ -180,6 +197,7 @@
   /* 한 줄 메타 — 무채색, 큰 숫자 타일 없음 */
   .meta { color: var(--dim); font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
   .meta time { color: var(--dim); }
+  .meta .v { color: var(--txt); font-weight: 700; }
 
   /* 보기 버튼 — 셀 모양의 작은 버튼 둘. 눌린 것은 선택색 테두리 */
   .views { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
@@ -195,6 +213,7 @@
     white-space: nowrap;
     transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out;
   }
+  select.vb { color: var(--txt); }
   .vb:hover { background: var(--raised); color: var(--txt); }
   .vb:active { background: var(--gutter); }
   .vb:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
@@ -202,14 +221,20 @@
 
   /* 사다리 — 표 안 조건부 서식은 DataTable 의 클래스(t1~t5·pend·lane-*·win·loss). 여기 것만 덧댄다 */
   .ladder :global(tr.unp td:not(.rn)) { color: var(--dim); }
-  /* 배치 미완 밴드 앞 구분선 — 마지막 배치 완료 행의 아래 선을 굵게 */
-  .ladder :global(tr:not(.unp):has(+ tr.unp) td) { border-bottom: 2px solid var(--grid-strong); }
-  .ladder :global(td.medal) { font-weight: 650; color: var(--txt); }
+  /* 배치 미완 밴드 앞 구분선 — 마지막 배치 완료 행의 아래 선을 굵게(2줄 행에서는 행 자체의 아래 선) */
+  .ladder :global(.sheet:not(.rows2) tr:not(.unp):has(+ tr.unp) td) { border-bottom: 2px solid var(--grid-strong); }
+  .ladder :global(.sheet.rows2 tr:not(.unp):has(+ tr.unp)) { border-bottom: 2px solid var(--grid-strong); }
+  .ladder :global(td.medal) { font-weight: 700; color: var(--txt); }
   .ladder :global(td.m1) { border-left: 3px solid var(--t1); }
   .ladder :global(td.m2) { border-left: 3px solid var(--dim2); }
   .ladder :global(td.m3) { border-left: 3px solid var(--t4); }
   /* 상위 3 은 행 번호 홈통도 굵게 — 폰에서 순위 열이 숨어도 홈통이 순위를 말한다 */
-  .ladder :global(tr.medal td.rn) { font-weight: 650; color: var(--txt); }
+  .ladder :global(tr.medal td.rn) { font-weight: 700; color: var(--txt); }
+  /* 폰에서는 홈통이 유일한 순위 표시다 — 4위 이하도 순위답게(--txt 700). 단 사용자가 머리를 눌러 정렬한 뒤(.usersort)
+     홈통은 1..n 순번이지 순위가 아니고, 선 아래 배치 미완 행(.unp)도 순위가 아니므로 둘 다 뺀다 */
+  @media (max-width: 640px) {
+    .ladder :global(.sheet:not(.usersort) tr:not(.unp) td.rn) { font-weight: 700; color: var(--txt); }
+  }
   .ladder :global(td.wr-dim) { color: var(--dim); }
 
   .note { max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
@@ -219,6 +244,7 @@
 
   @media (pointer: coarse) {
     .vb { min-height: 44px; }
+    select.vb { font-size: 16px; }   /* iOS 는 16px 미만 select 에 초점이 가면 화면을 확대한다(app.css 규칙을 .vb 가 덮어썼다) */
   }
   @media (prefers-reduced-motion: reduce) {
     .vb { transition: none; }

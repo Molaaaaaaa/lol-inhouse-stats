@@ -165,8 +165,8 @@ describe('trendRows — 경향', () => {
   it('셀 서식 — 승률(판), 문턱 미만은 wr-dim, 판 0 은 빈 문자열, 차이 %p', () => {
     expect(wrWithGames(0.75, 8)).toBe('75% (8)');
     expect(wrWithGames(null, 0)).toBe('-');
-    expect(wrCellCls(0.75, 8, 5)).toBe('win');
-    expect(wrCellCls(0.2, 8, 5)).toBe('loss');
+    expect(wrCellCls(0.75, 8, 5)).toBe('win wr-h');   // 채움(win) + ▲(wr-h) — DataTable 이 승률 셀에만 기호를 붙인다
+    expect(wrCellCls(0.2, 8, 5)).toBe('loss wr-l');
     expect(wrCellCls(0.5, 8, 5)).toBe('');
     expect(wrCellCls(1, 1, 5)).toBe('wr-dim');
     expect(wrCellCls(null, 0, 5)).toBe('');

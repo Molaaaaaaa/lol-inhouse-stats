@@ -258,7 +258,8 @@
     {#if dots.length}
       <div class="kills">
         <KillMap {dots} selected={killSel} />
-        <DataTable rows={dots} cols={killCols} caption="킬 기록 · {dots.length}킬" sortKey="m" sortDir={1} lowerBetterKeys={['m']}
+        <!-- rows2: 390px 에서 375px(실측) — 폰은 2줄 장부 행 -->
+        <DataTable rows={dots} cols={killCols} caption="킬 기록 · {dots.length}킬" sortKey="m" sortDir={1} lowerBetterKeys={['m']} rows2
                    rowKey={(r) => String(r.i)} selectedKey={killSel >= 0 ? String(killSel) : undefined} onselect={pickKill} filter={false} />
       </div>
     {/if}
@@ -273,11 +274,12 @@
   .cap {
     position: sticky;
     left: 0;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
   }
+  .cap .muted { font-weight: 400; }   /* 캡션 뒤 설명 구절은 보통 굵기 */
   table {
     width: 100%;
     border-collapse: separate;
@@ -302,8 +304,8 @@
     z-index: 2;
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
   }
@@ -316,7 +318,7 @@
     max-width: var(--rn-w);
     padding: 0 var(--sp-1);
     text-align: right;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--dim2);
     background: var(--gutter);
     border-right: 1px solid var(--grid-strong);
@@ -424,13 +426,13 @@
     background: var(--sheet);
   }
   .bitem .slot { width: 24px; height: 24px; margin: 0; }
-  .bitem i { font-style: normal; font-size: var(--fs-xs); color: var(--dim2); font-variant-numeric: tabular-nums; }
+  .bitem i { font-style: normal; font-size: var(--fs-sm); color: var(--dim2); font-variant-numeric: tabular-nums; }
   .bitem.sold .slot { opacity: .4; }
   .bitem .x {
     position: absolute;
     top: 2px;
     right: 3px;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     font-weight: 700;
     color: var(--txt);
     line-height: 1;
@@ -448,7 +450,7 @@
     padding: 0 var(--sp-2);
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     line-height: 1.8;
     border-bottom: 1px solid var(--grid);
     white-space: nowrap;

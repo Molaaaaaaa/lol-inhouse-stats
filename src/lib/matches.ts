@@ -452,7 +452,8 @@ export function wrWithGames(wr: number | null | undefined, games: number): strin
 export function wrCellCls(wr: number | null | undefined, games: number, minGames: number): string {
   if (wr == null || games <= 0) return '';
   const c = wrClass(wr, games, minGames);
-  return c === 'wr-h' ? 'win' : c === 'wr-l' ? 'loss' : c === 'wr-dim' ? 'wr-dim' : '';
+  // 'wr-h'/'wr-l' 를 같이 내보내 DataTable 이 승률 셀에만 ▲▼ 를 붙인다(win/loss 채움은 결과 셀도 쓴다)
+  return c === 'wr-h' ? 'win wr-h' : c === 'wr-l' ? 'loss wr-l' : c === 'wr-dim' ? 'wr-dim' : '';
 }
 
 /** 진영 차이 "+33%p"(블루 우세) · "−20%p"(레드 우세) */

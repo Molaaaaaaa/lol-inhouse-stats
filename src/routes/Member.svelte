@@ -269,7 +269,7 @@
     padding: 0 var(--sp-2);
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     line-height: 1.8;
     border-bottom: 1px solid var(--grid);
     white-space: nowrap;
@@ -277,6 +277,7 @@
   .cell dd {
     margin: 0;
     padding: var(--sp-1) var(--sp-2);
+    font-weight: 700;   /* 값은 굵게, 라벨(dt)은 보통 — 크기는 14px 그대로(큰 숫자 띠는 거절된 장치) */
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }

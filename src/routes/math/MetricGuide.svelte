@@ -48,7 +48,8 @@
 
 <section class="guide" aria-labelledby="mg-h">
   <h2 id="mg-h" class="sr-only">지표 설명</h2>
-  <DataTable {rows} {cols} caption="지표 {rows.length}개 · 발행 순서" fold={false} />
+  <!-- rows2: 390px 에서 629px(실측, 설명 열) — 폰은 2줄 장부 행, 설명 셀은 한 줄 전부(아래 스타일) -->
+  <DataTable {rows} {cols} caption="지표 {rows.length}개 · 발행 순서" fold={false} rows2 />
 </section>
 
 <style>
@@ -63,9 +64,12 @@
     text-wrap: pretty;
   }
   /* 여러 줄 설명 옆의 이름·코드는 첫 줄에 맞춘다 */
-  .guide :global(tbody td) { vertical-align: top; padding-top: var(--sp-2); }
+  .guide :global(.sheet:not(.rows2) tbody td) { vertical-align: top; padding-top: var(--sp-2); }
   /* 폰: 보조 열(구분·집계·방향)이 숨고 설명 열이 남은 폭을 다 쓴다 — 표가 옆으로 새지 않게 */
   @media (max-width: 640px) {
     .guide :global(td.wrap) { min-width: 0; }
   }
+  /* 2줄 장부 행(폰): 설명 셀은 격자 한 줄 전부, 라벨 뒤에 문장이 이어 흐른다(값을 오른쪽에 미는 셀이 아니다) */
+  .guide :global(.sheet.rows2 td.wrap) { grid-column: 1 / -1; display: block; max-width: none; padding-top: var(--sp-1); }
+  .guide :global(.sheet.rows2 td.wrap::before) { margin-right: var(--sp-2); }
 </style>

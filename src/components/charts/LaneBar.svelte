@@ -57,7 +57,7 @@
     background: var(--gutter);
     color: var(--txt);
     font-size: var(--fs-sm);
-    font-weight: 650;
+    font-weight: 700;
     border-right: 1px solid var(--grid-strong);
     white-space: nowrap;
   }
@@ -88,6 +88,6 @@
   .bot { box-shadow: inset 3px 0 0 var(--lane-bot); background: color-mix(in srgb, var(--lane-bot) 30%, transparent); }
   .sup { box-shadow: inset 3px 0 0 var(--lane-sup); background: color-mix(in srgb, var(--lane-sup) 30%, transparent); }
   /* 범례 — 막대 아래 한 줄, 좁아서 글자가 숨은 조각도 여기서 읽힌다 */
-  .lg { margin: 0; padding-top: var(--sp-1); font-size: var(--fs-xs); color: var(--dim); font-variant-numeric: tabular-nums; }
+  .lg { margin: 0; padding-top: var(--sp-1); font-size: var(--fs-sm); color: var(--dim); font-variant-numeric: tabular-nums; }
   .empty { margin: 0; padding: var(--sp-3); border: 1px solid var(--grid); color: var(--dim); }
 </style>

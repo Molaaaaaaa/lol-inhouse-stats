@@ -61,7 +61,7 @@
 <style>
   /* --bar 는 셀마다 인라인(style:--bar)으로 들어온다 — 기본 0% 면 막대가 없다 */
   .axbars { --bar: 0%; width: 100%; }
-  .cap { font-size: var(--fs-xs); color: var(--dim); padding: var(--sp-2) 0 var(--sp-1); white-space: nowrap; }
+  .cap { font-size: var(--fs-sm); font-weight: 700; color: var(--dim); padding: var(--sp-2) 0 var(--sp-1); white-space: nowrap; }
   .empty { margin: 0; padding: var(--sp-3); border: 1px solid var(--grid); color: var(--dim); }
   table {
     width: 100%;
@@ -82,8 +82,8 @@
   thead th {
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
   }

@@ -54,7 +54,7 @@
 <style>
   .dmg { width: 100%; min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -87,8 +87,8 @@
   thead th {
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
   }

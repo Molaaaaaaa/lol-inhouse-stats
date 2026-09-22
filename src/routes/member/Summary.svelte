@@ -12,6 +12,7 @@
   import { laneKo } from '$lib/lanes';
   import { mLabel } from '$lib/metrics';
   import { baselinePanel, NO_BASELINE } from '$lib/baseline';
+  import { media } from '$lib/media.svelte';
   import { axisLaneFor, axisLanes, axisRows, laneCls, laneRows, wrCls, type LaneRow } from '$lib/member';
   import DataTable from '$components/DataTable.svelte';
   import QMark from '$components/Tooltip.svelte';
@@ -74,13 +75,20 @@
     }
     return out;
   });
-  const bCols: Col<BRow>[] = [
-    { k: 'axis', h: '축' },
-    { k: 'metric', h: '지표' },
-    { k: 'value', h: '내전 값', num: true, sortable: false },
-    { k: 'top', h: '솔랭 기준', hlp: '기준선', fmt: (_v, r) => r.pos, cls: (r) => r.cls, nullLast: true },
-    { k: 'games', h: '판', num: true, lo: true, fmt: (v) => (v == null ? '' : String(v)) },
-  ];
+  // 폰(2줄 장부 행)에서는 지표 이름이 행의 닻(굵은 첫 줄)이고 축은 라벨 셀 — 데스크톱은 축으로 묶인 격자 그대로.
+  // 기준 없는 행은 지표 셀이 문장이라 cls 'note'(한 줄 전부·보통 굵기), 값·기준 셀은 비어서 rows2 가 그리지 않는다.
+  const bCols = $derived.by((): Col<BRow>[] => {
+    const phone = media.phone;
+    const axis: Col<BRow> = { k: 'axis', h: '축' };
+    const metric: Col<BRow> = { k: 'metric', h: '지표', cls: (r) => (r.metric === NO_BASELINE ? 'note' : '') };
+    return [
+      ...(phone ? [metric, axis] : [axis, metric]),
+      { k: 'value', h: '내전 값', hs: '내전', num: true, sortable: false },
+      // 폰 라벨 '기준' + 값 '상위 46%' 가 한 칸(≈100px)에 든다 — '솔랭 기준' + '솔랭 상위 46%' 는 두 줄로 꺾였다(실측)
+      { k: 'top', h: '솔랭 기준', hs: '기준', hlp: '기준선', fmt: (_v, r) => (phone ? r.pos.replace(/^솔랭 /, '') : r.pos), cls: (r) => r.cls, nullLast: true },
+      { k: 'games', h: '판', num: true, lo: true, fmt: (v) => (v == null ? '' : String(v)) },
+    ];
+  });
 
   // ── 챔피언 ──
   const champs = $derived(p.champions ?? []);
@@ -121,7 +129,8 @@
       <AxisBars {axes} {scale} {minGames} {meta} caption="능력치 축" />
     </div>
     {#if panel}
-      <DataTable rows={bRows} cols={bCols} caption="솔랭 기준선 · {laneKo(panel.lane)} · {panel.sample}"
+      <!-- rows2: 390px 에서 452px(실측) — 폰은 2줄 장부 행 -->
+      <DataTable rows={bRows} cols={bCols} caption="솔랭 기준선 · {laneKo(panel.lane)} · {panel.sample}" rows2
                  rowKey={(r) => r.id} lowerBetterKeys={['top']} fold={false} filter={false} />
     {/if}
   </div>
@@ -136,9 +145,10 @@
   .range { min-width: 0; }
   .cap {
     display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
-    font-size: var(--fs-xs); color: var(--dim);
+    font-size: var(--fs-sm); font-weight: 700; color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
   }
+  .cap button { font-weight: 400; }   /* 캡션은 굵지만 그 안의 라인 선택 버튼은 보통 굵기 */
   .note { font-size: var(--fs-sm); color: var(--dim); padding-bottom: var(--sp-2); }
 
   /* 라인 선택 — 셀 한 줄. 누른 것은 시트 바탕 + 아래 2px 선택선(시트 탭과 같은 어휘) */

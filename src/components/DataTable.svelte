@@ -20,9 +20,14 @@
    * - 조건부 서식은 cls 로 호출부가 클래스만 준다: win·loss(18% 채움)·t1~t5(16%)·pend(점선)·lane-*(왼쪽 띠).
    * - 셀 안 부품은 이웃 컴포넌트를 그대로 쓴다: 초상 ChampImg · 코드 판 CodePlate · 물음표 QMark(툴팁) ·
    *   빈 상태 EmptyState — 같은 부품이 화면마다 같은 모양이어야 한다.
+   * - 2줄 장부 행(rows2): 호출부가 `rows2` 를 주고 폰(media.phone, ≤640px)일 때만 켜진다 — 390px 에서 넘치는
+   *   표만(실측) 호출부가 켠다. 행이 3열 격자가 되어 1줄 이름(굵게), 그 아래 '라벨: 값' 셀 셋씩. 라벨은 td 의
+   *   data-label 을 ::before 가 읽는다. 머리행은 보조기술에만 남기고(clip) 정렬·드롭다운·물음표·코드 판은
+   *   그리지 않는다(보이지 않는 초점 0). 홈통은 왼쪽에 absolute 로 행 높이 전부. 가로 스크롤 0.
    */
   import { app } from '$lib/data/store.svelte';
   import { announce } from '$lib/a11y';
+  import { media } from '$lib/media.svelte';
   import { norm } from '$lib/search';
   import Icon from '$components/Icon.svelte';
   import ChampImg from '$components/ChampImg.svelte';
@@ -55,24 +60,33 @@
     compact?: boolean;
     /** 여기 든 열은 처음 누르면 오름차순, 막대 없음 */
     lowerBetterKeys?: readonly string[];
+    /** 폰에서 2줄 장부 행 — 390px 에서 넘치는 표만 켠다(실측). 활성 = rows2 && media.phone */
+    rows2?: boolean;
   }
   let {
     rows, cols, caption, sortKey, sortDir, rowKey, selectedKey, onselect, rowClass,
-    filter, fold, rowNumbers = true, compact = false, lowerBetterKeys = [],
+    filter, fold, rowNumbers = true, compact = false, lowerBetterKeys = [], rows2 = false,
   }: Props = $props();
 
   const uid = $props.id();
 
+  /** 2줄 장부 행 활성 — DOM 도 달라지므로(머리 조작 없음·data-label) CSS 만으로는 못 한다 */
+  const r2 = $derived(rows2 && media.phone);
+
   // ── 정렬 ── 사용자가 누른 정렬은 그때의 sortKey 아래에서만 유효하다
   let user = $state<{ under: string | undefined; k: string; d: SortDir } | null>(null);
+  /** 사용자가 머리를 눌러 정렬한 상태 — 래퍼에 .usersort 로 나간다(홈통 번호가 순위가 아닌 순간).
+      rows2 활성 중에는 무시한다: 데스크톱에서 정렬한 채 폰으로 돌리면 되돌릴 조작이 없는 정렬이 남는다(실측) */
+  const userSorted = $derived(user !== null && user.under === sortKey && !r2);
   const sort = $derived.by((): { k: string | null; d: SortDir } => {
-    if (user && user.under === sortKey) return { k: user.k, d: user.d };
+    if (userSorted && user) return { k: user.k, d: user.d };
     return { k: sortKey ?? null, d: sortDir ?? defaultDir(sortKey, lowerBetterKeys) };
   });
   const sortCol = $derived(cols.find((c) => c.k === sort.k));
   const sorted = $derived(sortRows(rows, sort.k, sort.d, sortCol?.nullLast ?? false));
 
-  const sortable = (c: Col<T>) => c.sortable !== false;
+  /** 머리로 정렬할 수 있는가 — rows2 활성 중에는 없다(옛 카드 모드와 같다. 머리가 보이지 않는다) */
+  const sortable = (c: Col<T>) => c.sortable !== false && !r2;
   function sortBy(c: Col<T>) {
     if (!sortable(c)) return;
     const n = nextSort(sort, c.k, lowerBetterKeys);
@@ -142,6 +156,7 @@
   //    넘칠 때는 잘림 힌트: 오른쪽 가장자리(마지막으로 보이는 열의 경계)에 2px 선 + 캡션 줄 오른쪽에
   //    '열 n개 더 →'. n 은 오른쪽 경계 너머로 잘린 머리 칸 수(숨긴 .lo 열은 너비 0 이라 세지 않는다).
   //    스크롤이 끝에 닿으면 둘 다 사라진다.
+  const FIT_SLACK = 2;
   let sheetEl = $state<HTMLDivElement | undefined>();
   let tableEl = $state<HTMLTableElement | undefined>();
   let fit = $state(false);
@@ -150,10 +165,12 @@
   function measure() {
     const s = sheetEl, t = tableEl;
     if (!s || !t) { cut = 0; return; }
-    fit = t.offsetWidth <= s.clientWidth;
+    // 2px 이하 넘침은 맞는 것으로 본다 — 360px 에서 열 min-content 합이 336.56 → 337 로 1px 넘쳐 sticky 머리를
+    // 잃고 '열 1개 더 →' 가 거짓으로 떴다(실측). overflow visible 이면 그 1px 은 본문 여백에 들어가 문서는 안 넘친다
+    fit = t.offsetWidth - s.clientWidth <= FIT_SLACK;
     tableH = t.offsetHeight;
     if (fit) { cut = 0; return; }
-    const edge = s.scrollLeft + s.clientWidth + 1;
+    const edge = s.scrollLeft + s.clientWidth + 1 + FIT_SLACK;
     let n = 0;
     for (const th of t.querySelectorAll<HTMLElement>('thead th')) {
       if (th.offsetWidth > 0 && th.offsetLeft + th.offsetWidth > edge) n++;
@@ -180,6 +197,10 @@
     c.pick?.options.find((o) => o.v === c.pick?.value && o.v !== '')?.label ?? c.h;
 
   const hideLo = (c: Col<T>) => !!c.lo && c.k !== sort.k;
+  /** rows2 격자 열 수 — 이름 셀 뒤 데이터 셀이 4개면 2열(2×2 로 빈 칸이 없다), 그 외 3열 */
+  const r2cols = $derived(cols.filter((c) => !hideLo(c)).length - 1 === 4 ? 2 : 3);
+  /** rows2 에서 값이 빈 셀은 그리지 않는다(라벨만 남은 칸이 된다 — 지표 안내 '코드' 60/68행 실측) */
+  const blank = (c: Col<T>, r: T, i: number) => r2 && !c.img && cellText(c, r, i) === '';
   function ariaSort(c: Col<T>): 'ascending' | 'descending' | 'none' | undefined {
     if (!sortable(c)) return undefined;
     if (sort.k !== c.k) return 'none';
@@ -187,7 +208,8 @@
   }
 </script>
 
-<div class={['sheet', fit && 'fit', !rowNumbers && 'norn', compact && 'compact']} bind:this={sheetEl} onscroll={measure}>
+<div class={['sheet', fit && 'fit', !rowNumbers && 'norn', compact && 'compact', userSorted && 'usersort', r2 && 'rows2']}
+     style:--r2-cols={r2 ? r2cols : undefined} bind:this={sheetEl} onscroll={measure}>
   <div class="cap"><span>{caption}</span>{#if cut > 0}<span class="cut" aria-hidden="true">열 {cut}개 더 →</span>{/if}</div>
 
   {#if rows.length === 0}
@@ -208,14 +230,15 @@
         <tr>
           {#if rowNumbers}<th class="rn" aria-hidden="true"></th>{/if}
           {#each cols as c, j (c.k)}
+            <!-- rows2 활성: 머리는 보조기술에만 남는다(clip) — 초점·정렬·드롭다운·물음표·코드 판 없음 -->
             <th scope="col"
-                class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', sortable(c) && 'sortable', sort.k === c.k && 'on', c.pick && 'haspick']}
+                class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', sortable(c) && 'sortable', sort.k === c.k && 'on', c.pick && !r2 && 'haspick']}
                 tabindex={sortable(c) ? 0 : undefined}
                 aria-sort={ariaSort(c)}
                 onclick={sortable(c) ? () => sortBy(c) : undefined}
                 onkeydown={sortable(c) ? (e) => onHeadKey(e, c) : undefined}>
-              <span class={['h', c.pick && 'sr-only']}>{c.h}</span>
-              {#if c.pick}
+              <span class={['h', c.pick && !r2 && 'sr-only']}>{c.h}</span>
+              {#if !r2 && c.pick}
                 <!-- 보이는 층은 고른 값(전체면 열 이름)+화살표, 실제 조작은 그 위에 겹친 네이티브 select -->
                 <span class="pk" class:picked={c.pick.value !== ''}>
                   <span class="pkv" aria-hidden="true">{pickLabel(c)}<Icon name="chevron-down" class="pkic" /></span>
@@ -227,9 +250,9 @@
                   </select>
                 </span>
               {/if}
-              {#if c.code}<CodePlate code={c.code} />{/if}
-              {#if sort.k === c.k}<Icon name="chevron-down" class={sort.d === 1 ? 'sortic up' : 'sortic'} />{/if}
-              {#if c.hlp}<QMark key={c.hlp} payload={app.data} label="{c.h} 설명" />{/if}
+              {#if !r2 && c.code}<CodePlate code={c.code} />{/if}
+              {#if !r2 && sort.k === c.k}<Icon name="chevron-down" class={sort.d === 1 ? 'sortic up' : 'sortic'} />{/if}
+              {#if !r2 && c.hlp}<QMark key={c.hlp} payload={app.data} label="{c.h} 설명" />{/if}
             </th>
           {/each}
         </tr>
@@ -246,9 +269,15 @@
             {#if rowNumbers}<td class="rn" aria-hidden="true">{i + 1}</td>{/if}
             {#each cols as c, j (c.k)}
               {@const bar = barFor(c, r)}
-              <td class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', bar !== undefined && 'bar', c.cls?.(r)]} style:--bar={bar}>
+              <td class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', bar !== undefined && 'bar', blank(c, r, i) && 'blank', c.cls?.(r)]} style:--bar={bar}
+                  data-label={c.hs ?? c.h}>
                 {#if c.img}<ChampImg name={c.img(r)} patch={app.data?.patch} />{/if}
-                {cellText(c, r, i)}
+                {#if r2}
+                  <!-- 값을 한 요소로: 라벨 옆에 안 들면 값 전체가 다음 줄로 가고 ▲▼ 도 값에 붙어 간다 -->
+                  <span class="v">{cellText(c, r, i)}</span>
+                {:else}
+                  {cellText(c, r, i)}
+                {/if}
               </td>
             {/each}
           </tr>
@@ -283,12 +312,13 @@
     display: flex;
     justify-content: space-between;
     gap: var(--sp-3);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
+    font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
   }
-  .cut { flex: none; color: var(--dim2); font-variant-numeric: tabular-nums; }
+  .cut { flex: none; font-weight: 400; color: var(--dim); font-variant-numeric: tabular-nums; }
 
   /* 잘림 힌트 선 — 보이는 폭의 오른쪽 가장자리(마지막으로 보이는 열의 경계)에 2px, 표 높이만큼.
      sticky 블록은 보이는 폭을 차지하므로 그 ::after 의 right:0 이 늘 화면 오른쪽 끝이다 */
@@ -363,8 +393,9 @@
     z-index: 2;
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0;
     border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
     user-select: none;
@@ -388,7 +419,7 @@
     background: var(--gutter);
     border: 1px solid var(--grid);
     color: var(--dim);
-    font-weight: 500;
+    font-weight: 700;
     vertical-align: middle;
     transition: background-color .12s, border-color .12s, color .12s;
   }
@@ -422,8 +453,8 @@
     max-width: var(--rn-w);
     padding: 0 var(--sp-1);
     text-align: right;
-    font-size: var(--fs-xs);
-    color: var(--dim2);
+    font-size: var(--fs-sm);
+    color: var(--dim);
     background: var(--gutter);
     border-right: 1px solid var(--grid-strong);
   }
@@ -435,6 +466,7 @@
     background: var(--sheet);
     border-right: 1px solid var(--grid-strong);
   }
+  td.c0 { font-weight: 700; }
   thead .c0 { z-index: 3; background: var(--gutter); }
 
   /* 행 hover · 선택 · 초점 — hover 는 채움, 선택은 2px 안쪽 선, 초점은 선 + 채움(셋이 서로 구분된다) */
@@ -443,13 +475,13 @@
   tbody tr:hover td.c0, tbody tr:focus-visible td.c0 { background: var(--raised); }
   tbody tr[tabindex] { cursor: pointer; }
   tbody tr:focus-visible { outline: none; }
-  tr.sel td:not(.rn), tbody tr:focus-visible td:not(.rn) {
+  .sheet:not(.rows2) tr.sel td:not(.rn), .sheet:not(.rows2) tbody tr:focus-visible td:not(.rn) {
     box-shadow: inset 0 2px 0 var(--sel), inset 0 -2px 0 var(--sel);
   }
-  tr.sel td.c0, tbody tr:focus-visible td.c0 {
+  .sheet:not(.rows2) tr.sel td.c0, .sheet:not(.rows2) tbody tr:focus-visible td.c0 {
     box-shadow: inset 2px 0 0 var(--sel), inset 0 2px 0 var(--sel), inset 0 -2px 0 var(--sel);
   }
-  tr.sel td:last-child, tbody tr:focus-visible td:last-child {
+  .sheet:not(.rows2) tr.sel td:last-child, .sheet:not(.rows2) tbody tr:focus-visible td:last-child {
     box-shadow: inset -2px 0 0 var(--sel), inset 0 2px 0 var(--sel), inset 0 -2px 0 var(--sel);
   }
 
@@ -462,17 +494,23 @@
   /* 조건부 서식 — 호출부가 cls 로 준 클래스. 색은 채움·띠에만, 글자는 무채색 그대로 */
   td.win { background: color-mix(in srgb, var(--win) 18%, transparent); }
   td.loss { background: color-mix(in srgb, var(--loss) 18%, transparent); }
+  /* 승률 셀(wr-h·wr-l 은 승률 열에서만 온다): 채움에 더해 ▲▼ 기호 — 초록/주황 18% 채움은 색각 이상에서 같은 색이다
+     (실측 ΔE 3.8). 글자색은 무채색 그대로, 높은 쪽만 굵게(옛 사이트 규칙) */
+  td.wr-h { font-weight: 700; }
+  td.wr-h::after { content: ' ▲'; font-size: .72em; }
+  td.wr-l::after { content: ' ▼'; font-size: .72em; }
   td.t1 { background: color-mix(in srgb, var(--t1) 16%, transparent); }
   td.t2 { background: color-mix(in srgb, var(--t2) 16%, transparent); }
   td.t3 { background: color-mix(in srgb, var(--t3) 16%, transparent); }
   td.t4 { background: color-mix(in srgb, var(--t4) 16%, transparent); }
   td.t5 { background: color-mix(in srgb, var(--t5) 16%, transparent); }
   td.pend { box-shadow: inset 0 0 0 1px transparent; outline: 1px dashed var(--grid-strong); outline-offset: -3px; color: var(--dim); }
-  td.lane-top { box-shadow: inset 3px 0 0 var(--lane-top); }
-  td.lane-jg { box-shadow: inset 3px 0 0 var(--lane-jg); }
-  td.lane-mid { box-shadow: inset 3px 0 0 var(--lane-mid); }
-  td.lane-bot { box-shadow: inset 3px 0 0 var(--lane-bot); }
-  td.lane-sup { box-shadow: inset 3px 0 0 var(--lane-sup); }
+  /* 라인 띠 — border-left 다(box-shadow 가 아니라): 선택 행의 안쪽 선(box-shadow)이 띠를 덮어 지우던 결함 */
+  td.lane-top { border-left: 3px solid var(--lane-top); }
+  td.lane-jg { border-left: 3px solid var(--lane-jg); }
+  td.lane-mid { border-left: 3px solid var(--lane-mid); }
+  td.lane-bot { border-left: 3px solid var(--lane-bot); }
+  td.lane-sup { border-left: 3px solid var(--lane-sup); }
 
   /* 초상(ChampImg)은 글자 앞에 한 칸 */
   td :global(.champ) { margin-right: var(--sp-1); }
@@ -504,16 +542,107 @@
      남는 폭을 그 열에서 빼앗아 55px·세 줄로 눌린다(실측). max-content 면 상한 7em 을 그대로 받는다. */
   @media (max-width: 640px) {
     .lo { display: none; }
-    .sheet { --rn-w: 26px; }
+    .sheet { --rn-w: 28px; }
     table { width: max-content; min-width: 100%; }
     th, td { padding: 0 var(--sp-1) 0 6px; }
     .rn { padding: 0 var(--sp-1); }
     th.c0 { max-width: 7em; overflow: hidden; text-overflow: ellipsis; }
     td.c0 { max-width: 7em; white-space: normal; overflow-wrap: anywhere; }
   }
+  /* 2줄 장부 행(.rows2 — 호출부 prop + 폰에서만): 표·tbody 는 블록, 행은 3열 격자(홈통은 격자 열이 아니라
+     왼쪽 absolute — 격자 열로 두면 4번째 셀부터 홈통 칸에 떨어진다), 이름 셀은 한 줄 전부, 나머지는
+     '라벨: 값'(라벨은 data-label 을 ::before 가 읽고 margin auto 로 값을 오른쪽에 민다 — ▲▼ ::after 도 값 옆에
+     붙는다). 머리행은 보조기술에만 남긴다(display:none 이면 th scope=col 연결이 끊긴다). 선택·초점은 행의
+     ::after 한 겹(absolute 홈통 위에 그려진다). 채움(막대·티어·승패)·점선·초상은 셀 규칙 그대로 산다. */
+  .sheet.rows2 { overflow: visible; }
+  .sheet.rows2 table, .sheet.rows2 tbody { display: block; width: 100%; min-width: 0; }
+  .sheet.rows2 thead {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .sheet.rows2 tbody { border-top: 1px solid var(--grid-strong); }
+  .sheet.rows2 tbody tr {
+    display: grid;
+    grid-template-columns: repeat(var(--r2-cols, 3), minmax(0, 1fr));
+    position: relative;
+    padding-left: var(--rn-w);
+    border-left: 1px solid var(--grid);
+    border-bottom: 1px solid var(--grid-strong);
+  }
+  .sheet.rows2.norn tbody tr { padding-left: 0; }
+  .sheet.rows2 td {
+    display: flex;
+    flex-wrap: wrap;             /* 라벨+값이 한 줄에 안 들면 값이 다음 줄 오른쪽으로(낱말이 잘리기 전에) */
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--sp-1);
+    height: auto;
+    min-height: 32px;
+    max-width: none;
+    padding: 0 6px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    position: static;
+    border-top: 0;
+    border-bottom: 1px solid var(--grid);
+    border-right: 1px solid var(--grid);
+  }
+  .sheet.rows2 td:first-child { border-left: 0; }
+  .sheet.rows2 td.lo, .sheet.rows2 td.blank { display: none; }
+  .sheet.rows2 td.rn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    justify-content: flex-end;
+    background: var(--gutter);
+    border-bottom: 0;
+    border-right: 1px solid var(--grid-strong);
+  }
+  .sheet.rows2 td.c0 {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    font-weight: 700;
+    background: var(--sheet);
+    border-right: 0;
+  }
+  .sheet.rows2 td:not(.c0):not(.rn)::before {
+    content: attr(data-label);
+    content: attr(data-label) / '';   /* 보이는 라벨만 — 보조기술은 thead 의 머리(scope=col)를 이미 읽는다(둘이면 두 번 읽힌다) */
+    flex: none;
+    margin-right: auto;
+    font-size: var(--fs-sm);
+    font-weight: 400;
+    color: var(--dim);
+  }
+  /* 설명 셀(호출부 cls 'note'): 한 줄 전부, 보통 굵기·옅은 글자 — '솔랭 기준 없음 — 내전 전용 지표' 같은 문장.
+     c0 규칙 뒤에 두어 첫 열이어도 굵지 않다 */
+  .sheet.rows2 td.note { grid-column: 1 / -1; justify-content: flex-start; font-weight: 400; color: var(--dim); }
+  .sheet.rows2 td.note::before { content: none; }
+  .sheet.rows2 td :global(.champ) { margin-right: 0; }
+  .sheet.rows2 .v { min-width: 0; text-align: right; }
+  .sheet.rows2 td.c0 .v { text-align: left; }
+  /* ▲▼ 는 값 요소 안에 — td 의 ::after 면 별개 flex 항목이라 혼자 다음 줄로 떨어진다 */
+  .sheet.rows2 td.wr-h::after, .sheet.rows2 td.wr-l::after { content: none; }
+  .sheet.rows2 td.wr-h .v::after { content: ' ▲'; font-size: .72em; }
+  .sheet.rows2 td.wr-l .v::after { content: ' ▼'; font-size: .72em; }
+  .sheet.rows2 tbody tr:hover td.c0, .sheet.rows2 tbody tr:focus-visible td.c0 { background: var(--raised); }
+  .sheet.rows2 tr.sel::after, .sheet.rows2 tbody tr:focus-visible::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;   /* 홈통 td.rn 의 z-index 1 위에 — 아니면 선택 선의 왼쪽 2px 가 홈통 아래 숨는다(실측) */
+    box-shadow: inset 0 0 0 2px var(--sel);
+    pointer-events: none;
+  }
+  /* 태블릿(641~820px): 머리 13px/700 으로 순위판 13열이 800px 에서 41px 넘쳤다 — 셀 좌우 여백 8→6px 로 흡수 */
+  @media (min-width: 641px) and (max-width: 820px) {
+    th, td { padding: 0 6px; }
+  }
   /* 손가락 기기: 보이는 상자는 그대로 두고 투명 select 만 위아래로 펴 44px 표적을 만든다(물음표와 같은 방식) */
   @media (pointer: coarse) {
     .pks { top: -9px; bottom: -9px; height: auto; }   /* 26px 안쪽 + 18 = 44 */
+    /* rows2 셀은 탭 표적이 아니다(행 전체가 표적) — 32px 그대로 두어 첫 화면에 5행이 든다 */
   }
   @media (prefers-reduced-motion: reduce) {
     th, td, tbody tr, .more, .tfi, .pk { transition: none; }

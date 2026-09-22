@@ -71,7 +71,6 @@
     background: none;
     color: var(--dim);
     font-size: var(--fs-md);
-    font-weight: 500;
     white-space: nowrap;
     transition: color .15s, border-color .15s, background-color .15s;
   }

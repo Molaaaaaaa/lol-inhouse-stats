@@ -145,7 +145,7 @@
   .cap {
     display: flex;
     align-items: center;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 0;
     white-space: nowrap;

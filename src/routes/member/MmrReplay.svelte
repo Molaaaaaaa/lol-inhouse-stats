@@ -122,6 +122,6 @@
   .note { font-size: var(--fs-sm); }
   .warn { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); color: var(--txt); }
   /* 합계 행 — 굵게, 홈통 바탕. 경고 행 — 위험 채움(글자는 무채색) */
-  .grid :global(tr.total td) { font-weight: 650; background: var(--gutter); }
+  .grid :global(tr.total td) { font-weight: 700; background: var(--gutter); }
   .grid :global(tr.warn td) { background: color-mix(in srgb, var(--danger) 18%, transparent); }
 </style>

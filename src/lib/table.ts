@@ -16,6 +16,8 @@ export type SortDir = 1 | -1;
 export interface Col<T> {
   k: string;
   h: string;
+  /** 폰 2줄 장부 행(rows2)의 셀 라벨 — 머리 h 가 길어 값과 한 줄에 안 들 때('함께 승률'→'승률'). 없으면 h */
+  hs?: string;
   /** 숫자 열 — 오른쪽 정렬·tabular-nums. 거르기 대상에서 뺀다 */
   num?: boolean;
   /** 데이터 막대 — 셀 바탕 그라디언트, 열 최대값 기준. 낮을수록 좋은 열은 무시 */

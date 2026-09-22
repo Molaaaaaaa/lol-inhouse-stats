@@ -46,8 +46,8 @@ describe('member.ts — 라인별 표', () => {
     expect(laneCls('TOP')).toBe('lane-top');
     expect(laneCls('UTILITY')).toBe('lane-sup');
     expect(laneCls('??')).toBe('');
-    expect(wrCls(0.7, 10, 5)).toBe('win');
-    expect(wrCls(0.3, 10, 5)).toBe('loss');
+    expect(wrCls(0.7, 10, 5)).toBe('win wr-h');   // 채움 + ▲ 기호 클래스
+    expect(wrCls(0.3, 10, 5)).toBe('loss wr-l');
     expect(wrCls(0.3, 2, 5)).toBe('');    // 문턱 미만은 색으로 단정하지 않는다
     expect(wrCls(0.5, 10, 5)).toBe('');
   });

@@ -64,7 +64,8 @@
   </div>
 
   <div class="range">
-    <DataTable rows={t.duration} cols={durCols} caption="경기 길이별 승률" sortKey="games" />
+    <!-- rows2: 390px 에서 409px(실측) — 폰은 2줄 장부 행 -->
+    <DataTable rows={t.duration} cols={durCols} caption="경기 길이별 승률" sortKey="games" rows2 />
     <p class="note">경기 시간을 25분 · 35분 기준으로 나눈 구간별 승률입니다. 괄호 안은 그 구간의 판수이며 {need}판 미만은 옅게 표시합니다.</p>
   </div>
 </div>

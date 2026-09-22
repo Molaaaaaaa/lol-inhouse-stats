@@ -32,6 +32,7 @@
   .qmark {
     position: relative;
     display: inline-flex;
+    font-weight: 400;   /* 캡션·머리(700) 안에 있어도 물음표는 늘 같은 굵기 */
     align-items: center;
     justify-content: center;
     width: 16px;
@@ -43,7 +44,7 @@
     border-radius: 50%;
     background: none;
     color: var(--dim);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     line-height: 1;
     vertical-align: middle;
     cursor: help;

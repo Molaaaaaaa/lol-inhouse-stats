@@ -145,7 +145,7 @@
     background: var(--gutter);
     border-bottom: 1px solid var(--grid);
   }
-  .title { font-size: var(--fs-lg); font-weight: 650; white-space: nowrap; }
+  .title { font-size: var(--fs-xl); font-weight: 700; white-space: nowrap; }
   .title a { text-decoration: none; }
   .title a:hover { text-decoration: underline; text-underline-offset: .2em; }
   .meta {
@@ -185,7 +185,7 @@
   .head .c { background: var(--grid-strong); }
   .c1 { flex: 3 1 0; } .c2 { flex: 1 1 0; } .c3 { flex: 1 1 0; } .c4 { flex: 2 1 0; }
 
-  .foot { padding: var(--sp-4); border-top: 1px solid var(--grid); color: var(--dim2); font-size: var(--fs-xs); }
+  .foot { padding: var(--sp-4); border-top: 1px solid var(--grid); color: var(--dim2); font-size: var(--fs-sm); }
   .foot p { max-width: 75ch; }
 
   @media (pointer: coarse) {

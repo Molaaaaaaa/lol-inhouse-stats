@@ -75,7 +75,8 @@
 <div class="hall">
   <DataTable rows={server} cols={serverCols} caption="경기 기록" filter={false} fold={false} />
 
-  <DataTable rows={hall} cols={hallCols} caption="개인 기록" filter={false} fold={false}
+  <!-- rows2: 390px 에서 444px(실측) — 폰은 2줄 장부 행 -->
+  <DataTable rows={hall} cols={hallCols} caption="개인 기록" filter={false} fold={false} rows2
              rowKey={hallKey} selectedKey={sel ?? undefined}
              onselect={(r, k) => pick(k, hallFx(r), memberHref(r.name))} />
   <p class="note">
@@ -114,7 +115,7 @@
   }
   .col { display: grid; gap: var(--sp-2); min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;

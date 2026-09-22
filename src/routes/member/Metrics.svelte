@@ -168,7 +168,7 @@
   .cap {
     position: sticky;
     left: 0;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -194,8 +194,8 @@
   thead th {
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
   }
@@ -208,7 +208,7 @@
     max-width: var(--rn-w);
     padding: 0 var(--sp-1);
     text-align: right;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--dim2);
     background: var(--gutter);
     border-right: 1px solid var(--grid-strong);

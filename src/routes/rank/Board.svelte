@@ -167,7 +167,7 @@
   .vb .n { font-variant-numeric: tabular-nums; }
 
   /* 메달 — 순위 셀 왼쪽 띠(사다리와 같은 모양). 승·패 채움은 DataTable 의 win/loss */
-  .sheet :global(td.medal) { font-weight: 650; color: var(--txt); }
+  .sheet :global(td.medal) { font-weight: 700; color: var(--txt); }
   .sheet :global(td.m1) { border-left: 3px solid var(--t1); }
   .sheet :global(td.m2) { border-left: 3px solid var(--dim2); }
   .sheet :global(td.m3) { border-left: 3px solid var(--t4); }

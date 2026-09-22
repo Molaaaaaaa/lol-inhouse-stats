@@ -119,7 +119,7 @@
 <style>
   .gold { width: 100%; min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -143,7 +143,7 @@
   .grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
   .grid.v { stroke-dasharray: 2 4; }
   .axis { stroke: var(--grid-strong); stroke-width: 1; shape-rendering: crispEdges; }
-  .tk { fill: var(--dim2); font-size: var(--fs-xs); }
+  .tk { fill: var(--dim2); font-size: var(--fs-tick); }
   .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; stroke: var(--dim); }
   .line.win { stroke: var(--win); }
   .line.loss { stroke: var(--loss); }

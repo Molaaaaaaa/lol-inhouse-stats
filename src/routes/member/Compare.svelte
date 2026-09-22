@@ -140,7 +140,7 @@
   .tags, .rec { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
   .rec { font-size: var(--fs-sm); }
   .score { text-align: center; font-size: var(--fs-sm); white-space: nowrap; }
-  .vs { font-size: var(--fs-num); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .vs { font-size: var(--fs-num); font-weight: 700; font-variant-numeric: tabular-nums; }
   .links { display: flex; gap: var(--sp-3); font-size: var(--fs-sm); }
   .links a { color: var(--dim); text-underline-offset: .2em; }
   .links a:hover { color: var(--txt); background: var(--raised); }

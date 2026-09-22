@@ -61,7 +61,9 @@
 </div>
 
 <style>
-  /* 격자 한 줄: 홈통 바탕, 위아래 1px 격자선. 글자는 --mono(계산식) */
+  /* 격자 한 줄: 홈통 바탕, 위아래 1px 격자선. 글자는 본문 서체 14px — mono 스택에는 한글이 없어 한 줄에
+     GulimChe+Cascadia(폰: Noto+Droid Sans Mono)가 섞이고 '→'·' · ' 가 등폭 칸에 눌렸다(실측). 숫자 정렬은
+     body 의 tabular-nums 로 유지된다. 수식 줄임은 'fx' 글리프(mono italic)가 말한다 */
   .fxbar {
     display: flex;
     align-items: stretch;
@@ -70,14 +72,14 @@
     padding: 0 var(--sp-4);
     background: var(--gutter);
     border-bottom: 1px solid var(--grid);
-    font-family: var(--mono);
-    font-size: var(--fs-sm);
+    font-size: var(--fs-md);
   }
   .glyph {
     flex: none;
     display: flex;
     align-items: center;
     color: var(--dim);
+    font-family: var(--mono);
     font-style: italic;
     /* 글리프 뒤 세로 격자선 — 행 번호 홈통과 같은 문법. 두 줄이 되면 같이 늘어난다 */
     padding-right: var(--sp-3);

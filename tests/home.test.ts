@@ -114,17 +114,40 @@ describe('Home — 첫 화면', () => {
     expect(rankTh.getAttribute('aria-sort')).toBe('ascending');
   });
 
-  it('폰(≤640px): 순위 열은 숨고(lo) 정렬 기준이 없다 — 홈통이 곧 순위 · 라인 셀은 짧은 글자만 · 라인 MMR 머리는 MMR', () => {
+  it('폰(≤640px): 순위 열이 없고 정렬 기준도 없다 — 홈통이 곧 순위 · 2줄 장부 행(rows2) · 라인 셀은 짧은 글자만 · 라인 MMR 머리는 MMR', () => {
     media.phone = true;
-    render(Home, { sub: '', params: {} });
+    const { container } = render(Home, { sub: '', params: {} });
     const rows = bodyRows();
     expect(rows.map(nameOf)).toEqual(['Faker', '앙앙맹', '맹구', '앙앙맹']);   // 순서는 그대로 순위 순
-    const rankTh = [...table().querySelectorAll('thead th')].find((h) => h.querySelector('.h')?.textContent === '순위')!;
-    expect(rankTh.classList.contains('lo')).toBe(true);
-    expect([...table().querySelectorAll('thead th[aria-sort]')].every((h) => h.getAttribute('aria-sort') === 'none')).toBe(true);
-    expect(cellTexts(rows[1]!)).toEqual(['앙앙맹', '2', '탑', '2티어', '1135', '35', '1185', '6', '100%']);
-    expect(heads()).toEqual(['멤버', '순위', '라인', '티어', 'CP', '점수', 'MMR', '판', '승률']);
+    expect(heads()).toEqual(['멤버', '라인', '티어', 'CP', '점수', 'MMR', '판', '승률']);
+    // 사다리는 390px 에서 넘치는 표 — 2줄 장부 행. 머리는 보조기술에만 남고 초점·정렬이 없다
+    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(true);
+    expect(table().querySelectorAll('thead th[tabindex], thead th[aria-sort]')).toHaveLength(0);
+    expect(cellTexts(rows[1]!)).toEqual(['앙앙맹', '탑', '2티어', '1135', '35', '1185', '6', '100%']);
+    expect(rows[1]!.querySelector('td.lane-top')?.getAttribute('data-label')).toBe('라인');
     expect(rows[0]!.classList.contains('m1')).toBe(true);
+    // 라인 선택은 표 머리가 아니라 .views 줄의 네이티브 select(전체 + 라인 다섯, 판수 표기 그대로)
+    expect(table().querySelector('thead select')).toBeNull();
+    const sel = lanePick();
+    expect(sel.closest('.views')).not.toBeNull();
+    expect(sel.classList.contains('vb')).toBe(true);
+    expect([...sel.options].map((o) => o.textContent)).toEqual(['전체', '탑 1', '정글 1', '미드 2', '원딜 0', '서폿 0']);
+  });
+
+  it('폰: .views 의 라인 select 로 고르면 그 라인 사다리 · 통합에서는 select 가 없다', async () => {
+    media.phone = true;
+    render(Home, { sub: '', params: {} });
+    await fireEvent.change(lanePick(), { target: { value: 'MIDDLE' } });
+    expect(table().getAttribute('aria-label')).toBe('사다리 · 미드');
+    expect(bodyRows().map(nameOf)).toEqual(['Faker', '앙앙맹']);
+    expect(lanePick().value).toBe('MIDDLE');
+    await fireEvent.change(lanePick(), { target: { value: '' } });
+    expect(bodyRows()).toHaveLength(4);
+    await fireEvent.click(screen.getByRole('button', { name: '통합' }));
+    expect(screen.queryByRole('combobox', { name: '라인 선택' })).toBeNull();
+    expect(heads()).toEqual(['멤버', '주 라인', '티어', 'CP', '점수', '승급까지', 'MMR', '판', '승률']);
+    // 통합은 390px 에 들어가는 표라 보통 격자 그대로(rows2 는 라인별만)
+    expect(document.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
   });
 
   it('통합으로 전환: 사람당 한 줄, 배치 미완은 맨 아래·티어 글자 없음·CP/MMR 비움, 라인 버튼 숫자 = 그 라인 행 수', async () => {
@@ -150,8 +173,10 @@ describe('Home — 첫 화면', () => {
   });
 
   it('라인 하나: 표 머리 라인 드롭다운(전체 + 라인 다섯, 숫자 = 그 라인 행 수) → 그 라인을 뛴 사람만', async () => {
-    render(Home, { sub: '', params: {} });
+    const { container } = render(Home, { sub: '', params: {} });
     const sel = lanePick();
+    expect(container.querySelector('.views select')).toBeNull();   // 데스크톱: 드롭다운은 표 머리에만
+    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
     expect([...sel.options].map((o) => o.textContent)).toEqual(['전체', '탑 1', '정글 1', '미드 2', '원딜 0', '서폿 0']);
     expect(sel.value).toBe('');
     // 보이는 층은 열 이름(전체일 때) — 드롭다운이 머리 이름을 대신한다

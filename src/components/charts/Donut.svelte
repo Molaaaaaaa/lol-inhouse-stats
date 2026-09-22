@@ -83,7 +83,7 @@
   path.bot { fill: var(--lane-bot); } circle.bot { stroke: var(--lane-bot); }
   path.sup { fill: var(--lane-sup); } circle.sup { stroke: var(--lane-sup); }
   path.none { fill: var(--grid-strong); } circle.none { stroke: var(--grid-strong); }
-  .tot { fill: var(--txt); font-size: var(--fs-num); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .tot { fill: var(--txt); font-size: var(--fs-num); font-weight: 700; font-variant-numeric: tabular-nums; }
 
   .legend { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--sp-1); }
   .legend li {

@@ -69,7 +69,7 @@
 <style>
   .kdatl { width: 100%; min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -91,7 +91,7 @@
   .bg { fill: var(--ink); }
   .grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
   .row { stroke: var(--grid); stroke-width: 1; stroke-dasharray: 1 3; }
-  .tk { fill: var(--dim2); font-size: var(--fs-xs); }
+  .tk { fill: var(--dim2); font-size: var(--fs-tick); }
   .mark { stroke: var(--ink); stroke-width: 1; }
   .mark.k { fill: var(--win); }
   .mark.d { fill: var(--loss); }

@@ -83,8 +83,8 @@
     stroke-linejoin: round;
   }
   .dot { fill: var(--sel); }
-  .lbl { font-size: var(--fs-xs); fill: var(--dim); }
+  .lbl { font-size: var(--fs-tick); fill: var(--dim); }
   .lbl.thin { fill: var(--dim2); }
-  .val { font-size: var(--fs-xs); font-weight: 650; fill: var(--txt); font-variant-numeric: tabular-nums; }
+  .val { font-size: var(--fs-tick); font-weight: 700; fill: var(--txt); font-variant-numeric: tabular-nums; }
   .empty { padding: var(--sp-3); border: 1px solid var(--grid); color: var(--dim); }
 </style>

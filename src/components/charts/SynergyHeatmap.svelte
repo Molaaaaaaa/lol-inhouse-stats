@@ -167,7 +167,7 @@
   /* min-width 0: 격자 항목(그리드 안)의 기본 min-width:auto 는 내용(격자 950px)만큼 늘어나 문서를 넘치게 한다 */
   .heat { width: 100%; min-width: 0; }
   .cap {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm); font-weight: 700;
     color: var(--dim);
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
@@ -196,8 +196,8 @@
   thead th {
     background: var(--gutter);
     color: var(--dim);
-    font-size: var(--fs-xs);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     vertical-align: bottom;
     transition: background-color .12s, color .12s;
   }
@@ -242,7 +242,7 @@
     padding: 0 var(--sp-2);
     text-align: left;
     font-size: var(--fs-sm);
-    font-weight: 500;
+    font-weight: 700;
     color: var(--txt);
     background: var(--sheet);
     border-right: 1px solid var(--grid-strong);
@@ -264,7 +264,7 @@
     max-width: var(--row-h);
     height: var(--row-h);
     text-align: center;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--txt);
     transition: box-shadow .12s;
   }
@@ -303,7 +303,7 @@
   .abbr {
     margin: 0;
     padding-top: var(--sp-1);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--dim);
     text-wrap: pretty;
   }
