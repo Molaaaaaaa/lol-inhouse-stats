@@ -296,6 +296,7 @@
   .sheet {
     --rn-w: 36px;
     --rh: var(--row-h);
+    --r2-cols: 3;   /* 2줄 장부 행의 격자 열 수 — 기본값. 인라인 style:--r2-cols 가 덮어쓴다(--bar 와 같은 방식) */
     position: relative;
     overflow-x: auto;
     background: var(--sheet);
@@ -563,7 +564,7 @@
   .sheet.rows2 tbody { border-top: 1px solid var(--grid-strong); }
   .sheet.rows2 tbody tr {
     display: grid;
-    grid-template-columns: repeat(var(--r2-cols, 3), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--r2-cols), minmax(0, 1fr));
     position: relative;
     padding-left: var(--rn-w);
     border-left: 1px solid var(--grid);
