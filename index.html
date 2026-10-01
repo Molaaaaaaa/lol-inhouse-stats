@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-vqFspnwQfB6SPUPjfpzrHzoWTzno+8ktxY3kL4UgUN0='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-Io3eahZB4joVcp+XQvfuUxVoJEn6BRz2rwDo0e8x3Ko='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -736,7 +736,10 @@
       <option>숫자가 이상함</option><option>버그</option>
       <option>이런 걸 보고 싶다</option><option>기타</option>
     </select></label>
+    <label>비밀번호<input id="fbPin" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4"
+      autocomplete="off" placeholder="숫자 4자리"></label>
   </div>
+  <p class="muted" style="font-size:11px;margin:-4px 0 10px">비밀번호를 적어 두면 내가 쓴 글을 나중에 지울 수 있습니다. 안 적으면 관리자만 지웁니다.</p>
   <label style="display:block">내용
     <textarea id="fbBody" maxlength="2000"
       placeholder="예) 내 승률이 이상합니다. 부캐로 한 판이 안 합쳐진 것 같아요."></textarea></label>
@@ -3305,10 +3308,12 @@ function fillFeedbackWho(){
       const r=await fetch('/api/feedback',{method:'POST',
         headers:{'content-type':'application/json'},
         body:JSON.stringify({who:who.value,kind:kind.value,body:t,
+                             pin:(($('#fbPin')||{}).value||'').trim(),
                              page:(DATA&&DATA.name)||''})});
       let j=null; try{ j=await r.json(); }catch(e){}
       if(j&&j.ok){ msg.className='fbmsg ok'; msg.textContent='고맙습니다. 잘 받았습니다.';
-        body.value=''; cnt.textContent='0 / 2000'; }
+        body.value=''; cnt.textContent='0 / 2000';
+        const pinBox=$('#fbPin'); if(pinBox) pinBox.value=''; }
       else { msg.className='fbmsg err';
         msg.textContent=(j&&j.error)||'전송에 실패했습니다.'; showAlt('대신'); }
     }catch(e){
@@ -3343,6 +3348,18 @@ async function fbAct(method, id, done){
   if(!(j&&j.ok)){ $('#fbListMsg').textContent=(j&&j.error)||'바꾸지 못했습니다.'; $('#fbListMsg').style.display=''; return false; }
   return true;
 }
+async function fbDel(id, pin){
+  // pin 이 null 이면 관리자 암호로, 아니면 글 비밀번호로 지운다
+  let j=null;
+  try{
+    const r = await fetch('/api/feedback',{method:'DELETE',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify(pin===null?{id,pw:fbPw()}:{id,pin})});
+    try{ j=await r.json(); }catch(e){}
+  }catch(e){ j=null; }
+  if(!(j&&j.ok)){ const m=$('#fbListMsg'); m.textContent=(j&&j.error)||'지우지 못했습니다.'; m.style.display=''; return false; }
+  return true;
+}
 function fbItem(it, admin){
   const box=document.createElement('div');
   box.className='fbitem'+(it.done?' done':'');
@@ -3352,15 +3369,22 @@ function fbItem(it, admin){
   const at=document.createElement('span'); at.textContent=fbWhen(it.at);
   meta.append(nm,kd,at);
   if(it.done){ const ok=document.createElement('span'); ok.className='fbdone'; ok.textContent='✓ 완료'; meta.append(ok); }
+  const acts=document.createElement('div'); acts.className='acts';
   if(admin){
-    const acts=document.createElement('div'); acts.className='acts';
     const b1=document.createElement('button'); b1.type='button'; b1.textContent=it.done?'되돌리기':'완료';
     b1.onclick=async()=>{ b1.disabled=true; if(await fbAct('PATCH',it.id,!it.done)) loadFeedback(); else b1.disabled=false; };
     const b2=document.createElement('button'); b2.type='button'; b2.textContent='삭제';
     b2.onclick=async()=>{ if(!confirm('이 글을 지울까요?')) return; b2.disabled=true;
-      if(await fbAct('DELETE',it.id)) loadFeedback(); else b2.disabled=false; };
-    acts.append(b1,b2); meta.append(acts);
+      if(await fbDel(it.id,null)) loadFeedback(); else b2.disabled=false; };
+    acts.append(b1,b2);
+  } else if(it.haspin){
+    // 쓴 사람이 자기 글을 지운다 — 글마다 정한 4자리로
+    const b=document.createElement('button'); b.type='button'; b.textContent='지우기';
+    b.onclick=async()=>{ const pin=prompt('이 글의 비밀번호 4자리'); if(pin===null) return;
+      b.disabled=true; if(await fbDel(it.id,pin.trim())) loadFeedback(); else b.disabled=false; };
+    acts.append(b);
   }
+  if(acts.children.length) meta.append(acts);
   const tx=document.createElement('div'); tx.className='tx'; tx.textContent=it.body||'';
   box.append(meta,tx);
   return box;
