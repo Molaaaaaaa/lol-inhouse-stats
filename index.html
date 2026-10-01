@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-padl8Al722QXphzrNovVgp8YrECPVRO+hRoNmoaznS0='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-vqFspnwQfB6SPUPjfpzrHzoWTzno+8ktxY3kL4UgUN0='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -233,6 +233,18 @@
   /* 피드백 창구 — 친구들 대부분 GitHub 계정이 없어 사이트에서 바로 받는다 */
   .fbsec{max-width:1180px;margin:0 auto;padding:20px 22px 8px;border-top:1px solid var(--line)}
   .fbsec.view{padding:0;border-top:0}            /* 탭 화면일 때는 구분선 없이 탭 바 바로 아래 */
+  /* 남긴 글 — 댓글 줄. 완료한 것은 흐리게 + ✓ */
+  .fblisthead{display:flex;align-items:center;gap:10px;margin:22px 0 8px;border-top:1px solid var(--line);padding-top:16px}
+  .fblisthead h2{font-size:16px;margin:0}
+  .fbitem{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--panel)}
+  .fbitem.done{opacity:.55}
+  .fbitem .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin-bottom:6px}
+  .fbitem .meta .nm{color:var(--txt);font-weight:650}
+  .fbitem .kd{border:1px solid var(--line2);border-radius:999px;padding:1px 8px;font-size:11px}
+  .fbitem .tx{white-space:pre-wrap;word-break:break-word;font-size:13px}
+  .fbitem .acts{margin-left:auto;display:flex;gap:6px}
+  .fbitem .acts button{padding:3px 10px;font-size:12px;border-radius:8px}
+  .fbdone{color:var(--up);font-weight:650}
   .fbsec h2{font-size:16px;margin:0 0 6px}
   .fbsec .lead{color:var(--dim);font-size:13px;margin:0 0 12px}
   .fbrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px}
@@ -734,6 +746,15 @@
     <span class="muted" id="fbCount" style="margin-left:auto;font-size:11px">0 / 2000</span>
   </div>
   <p class="muted" id="fbAlt" style="display:none;font-size:12px;margin-top:8px"></p>
+
+  <!-- 남긴 글 — 댓글처럼 쌓인다. 완료 표시·삭제는 관리자 암호를 넣었을 때만 보인다. -->
+  <div class="fblisthead">
+    <h2>남긴 글</h2>
+    <span class="muted" id="fbListCount"></span>
+    <button id="fbAdminBtn" class="mini" type="button">관리자</button>
+  </div>
+  <p class="muted" id="fbListMsg">불러오는 중...</p>
+  <div id="fbList"></div>
 </section>
   </main>
 <footer id="foot"></footer>
@@ -3295,6 +3316,82 @@ function fillFeedbackWho(){
       showAlt('대신');
     }
     send.disabled=false;
+    if(typeof loadFeedback==='function') loadFeedback();   // 방금 쓴 글이 아래 목록에 바로 보이게
+  };
+})();
+
+// ---------- 남긴 글(댓글 목록) ----------
+// 공개 목록이다. 워커가 R2 에서 읽어 주고, 식별자(라이엇 태그·디스코드 ID·PUUID)는 거기서 가린다.
+// 완료 표시·삭제는 관리자 암호(워커 시크릿 FB_ADMIN)를 넣었을 때만 보인다 —
+// 암호는 이 브라우저에만 저장하고(localStorage) 목록 요청에는 쓰지 않는다.
+const FB_PW_KEY='fbAdminPw';
+const fbPw = () => { try{ return localStorage.getItem(FB_PW_KEY)||''; }catch(e){ return ''; } };
+function fbWhen(iso){
+  const d = new Date(iso); if(isNaN(d)) return '';
+  return d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+async function fbAct(method, id, done){
+  // 암호는 **본문**으로 보낸다. 헤더 값에는 ISO-8859-1 밖 글자를 못 넣어서
+  // 한글 암호를 헤더에 담으면 fetch 가 그 자리에서 예외를 던진다(실측).
+  let j=null;
+  try{
+    const r = await fetch('/api/feedback',{method,
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({id,done,pw:fbPw()})});
+    try{ j=await r.json(); }catch(e){}
+  }catch(e){ j=null; }
+  if(!(j&&j.ok)){ $('#fbListMsg').textContent=(j&&j.error)||'바꾸지 못했습니다.'; $('#fbListMsg').style.display=''; return false; }
+  return true;
+}
+function fbItem(it, admin){
+  const box=document.createElement('div');
+  box.className='fbitem'+(it.done?' done':'');
+  const meta=document.createElement('div'); meta.className='meta';
+  const nm=document.createElement('span'); nm.className='nm'; nm.textContent=it.who||'익명';
+  const kd=document.createElement('span'); kd.className='kd'; kd.textContent=it.kind||'기타';
+  const at=document.createElement('span'); at.textContent=fbWhen(it.at);
+  meta.append(nm,kd,at);
+  if(it.done){ const ok=document.createElement('span'); ok.className='fbdone'; ok.textContent='✓ 완료'; meta.append(ok); }
+  if(admin){
+    const acts=document.createElement('div'); acts.className='acts';
+    const b1=document.createElement('button'); b1.type='button'; b1.textContent=it.done?'되돌리기':'완료';
+    b1.onclick=async()=>{ b1.disabled=true; if(await fbAct('PATCH',it.id,!it.done)) loadFeedback(); else b1.disabled=false; };
+    const b2=document.createElement('button'); b2.type='button'; b2.textContent='삭제';
+    b2.onclick=async()=>{ if(!confirm('이 글을 지울까요?')) return; b2.disabled=true;
+      if(await fbAct('DELETE',it.id)) loadFeedback(); else b2.disabled=false; };
+    acts.append(b1,b2); meta.append(acts);
+  }
+  const tx=document.createElement('div'); tx.className='tx'; tx.textContent=it.body||'';
+  box.append(meta,tx);
+  return box;
+}
+async function loadFeedback(){
+  const wrap=$('#fbList'), msg=$('#fbListMsg'), cnt=$('#fbListCount');
+  if(!wrap) return;
+  msg.textContent='불러오는 중...'; msg.style.display='';
+  let j=null;
+  try{ j=await (await fetch('/api/feedback',{cache:'no-store'})).json(); }catch(e){}
+  wrap.textContent='';
+  if(!j){ msg.textContent='목록을 불러오지 못했습니다.'; cnt.textContent=''; return; }
+  if(j.off){ msg.textContent='접수 창구가 아직 연결되지 않았습니다.'; cnt.textContent=''; return; }
+  const items=j.items||[];
+  if(!items.length){ msg.textContent='아직 남긴 글이 없습니다.'; cnt.textContent=''; return; }
+  const admin=!!fbPw();
+  items.forEach(it=>wrap.appendChild(fbItem(it,admin)));
+  const left=items.filter(x=>!x.done).length;
+  cnt.textContent=`${items.length}건 · 처리 전 ${left}건`;
+  msg.style.display='none';
+}
+(function(){
+  const btn=$('#fbAdminBtn'); if(!btn) return;
+  const paint=()=>{ btn.textContent=fbPw()?'관리자 해제':'관리자'; };
+  paint();
+  btn.onclick=()=>{
+    try{
+      if(fbPw()){ localStorage.removeItem(FB_PW_KEY); }
+      else { const v=prompt('관리자 암호'); if(v===null) return; localStorage.setItem(FB_PW_KEY,v.trim()); }
+    }catch(e){}
+    paint(); loadFeedback();
   };
 })();
 
@@ -3380,6 +3477,7 @@ function activateTab(t){
     const rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     view.scrollIntoView({behavior: rm?'auto':'smooth', block:'start'});
     const box=$('#fbBody'); if(box) setTimeout(()=>{ try{ box.focus({preventScroll:true}); }catch(e){ box.focus(); } }, 350);
+    if(typeof loadFeedback==='function') loadFeedback();
   }
 }
 $('#tabs').addEventListener('click',e=>activateTab(e.target.closest('.tab')));

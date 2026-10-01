@@ -1,21 +1,24 @@
 /**
  * 내전 해체 분석기 — Cloudflare Worker
  *
- *  · POST /api/feedback  → **R2 에 파일 하나로 쓴다** (`feedback/<시각>-<난수>.json`)
- *  · 그 외 모든 경로     → 정적 파일(env.ASSETS)
+ *  · POST   /api/feedback  → R2 에 파일 하나로 쓴다 (`feedback/<시각>-<난수>.json`)
+ *  · GET    /api/feedback  → 최근 목록(공개). 화면이 댓글처럼 보여 준다
+ *  · PATCH  /api/feedback  → 완료 표시 토글 (관리자만)
+ *  · DELETE /api/feedback  → 삭제 (관리자만)
+ *  · 그 외 모든 경로        → 정적 파일(env.ASSETS)
  *
- * 받는 사람은 관리자 한 명이다. 중계(디스코드·메일·이슈)는 쓰지 않는다 —
- * 관리자가 자기 PC 에서 `python -m scripts.inhouse_feedback` 로 끌어와 읽는다.
- * 사이트에도 발행 JSON 에도 피드백은 남지 않는다.
- *
- * 바인딩 (wrangler.toml `[[r2_buckets]]`):
- *   FB = R2 버킷. 없으면 503 을 돌려주고 화면은 안내로 물러난다(아무 데도 안 쌓인다).
+ * 바인딩·시크릿 (wrangler.toml / `npx wrangler secret put`):
+ *   FB       = R2 버킷(필수). 없으면 503, 화면은 안내로 물러난다.
+ *   FB_ADMIN = 관리자 암호(선택). 없으면 완료·삭제는 사이트에서 막히고, 관리자는 자기 PC 에서
+ *              `python -m scripts.inhouse_feedback --done/--rm` 으로 한다.
  *
  * 원칙
- *  · 이 버킷은 분석 산출물의 **유일한 원격 사본**이다 → 여기서는 `feedback/` 접두사로
- *    **put 만** 한다. list·get·delete 를 부르지 않는다(버그가 나도 남의 파일을 못 건드린다).
- *  · 남의 저장소를 아무 내용으로나 채우지 못하게 길이·빈도를 막는다.
+ *  · 이 버킷은 분석 산출물의 **유일한 원격 사본**이다 → `feedback/` 접두사 밖은 절대 건드리지 않는다.
+ *    키는 받은 그대로 쓰지 않고 `^[0-9A-Za-z._-]+\.json$` 만 통과시킨다(경로 탈출 금지).
  *  · 저장하는 것은 사람이 적은 내용뿐이다 — IP·UA 는 저장하지 않는다(연타 차단에만 쓴다).
+ *  · **공개 목록에는 식별자를 내보내지 않는다.** 누가 본문에 라이엇 태그·디스코드 ID·PUUID 를
+ *    적어도 GET 응답에서 가린다(발행물 관문이 보는 경로가 아니므로 여기서 직접 막는다).
+ *    R2 원본은 그대로라 관리자는 PC 에서 전문을 본다.
  */
 
 const MAX_BODY = 2000;
@@ -23,6 +26,8 @@ const MAX_WHO = 40;
 const THROTTLE_SEC = 20;
 const KINDS = ["버그", "숫자가 이상함", "이런 걸 보고 싶다", "기타"];
 const PREFIX = "feedback/";
+const LIST_MAX = 100;
+const ID_OK = /^[0-9A-Za-z._-]+\.json$/;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -43,19 +48,42 @@ function clean(s, max) {
     .slice(0, max);
 }
 
-async function feedback(request, env) {
+/** 공개 목록용 가리기 — 라이엇 태그(#KR1)·디스코드 ID(17~20자리)·PUUID(긴 토큰). */
+function maskIds(s) {
+  return String(s || "")
+    .replace(/#[A-Za-z0-9]{2,5}\b/g, "#…")
+    .replace(/\b\d{17,20}\b/g, "[숫자]")
+    .replace(/\b[0-9A-Za-z_-]{70,}\b/g, "[식별자]");
+}
+
+/** 관리자 요청 본문 읽기. 암호는 **본문**으로 받는다 — 헤더 값은 ISO-8859-1 만 담을 수 있어
+ *  한글 암호를 쓰면 브라우저의 fetch 가 요청도 못 만들고 예외를 던진다(실측 2026-10-01). */
+async function readAdmin(request, env) {
+  let d = {};
+  try {
+    d = await request.json();
+  } catch (e) {
+    return { bad: json({ error: "요청을 읽지 못했습니다." }, 400) };
+  }
+  if (String(d.pw || "") !== String(env.FB_ADMIN)) {
+    return { bad: json({ error: "관리자 암호가 맞지 않습니다." }, 403) };
+  }
+  const id = String(d.id || "");
+  if (!ID_OK.test(id)) return { bad: json({ error: "어느 것인지 알 수 없습니다." }, 400) };
+  return { id, done: d.done !== false };
+}
+
+async function post(request, env) {
   const bucket = env.FB;
   if (!bucket) {
     return json({ error: "아직 접수 창구가 연결되지 않았습니다.", fallback: "github" }, 503);
   }
-
   let data;
   try {
     data = await request.json();
   } catch (e) {
     return json({ error: "요청을 읽지 못했습니다." }, 400);
   }
-
   const body = clean(data.body, MAX_BODY);
   const who = clean(data.who, MAX_WHO) || "익명";
   const kind = KINDS.includes(data.kind) ? data.kind : "기타";
@@ -74,20 +102,76 @@ async function feedback(request, env) {
   }
 
   const at = new Date().toISOString();
-  // 키는 시각 순으로 정렬된다 — 관리자 쪽에서 받은 순서대로 읽는다
-  const key = `${PREFIX}${at.replace(/[:.]/g, "-")}-${crypto.randomUUID().slice(0, 8)}.json`;
+  // 키는 시각 순으로 정렬된다 — 목록도 관리자 쪽도 받은 순서대로 읽는다
+  const id = `${at.replace(/[:.]/g, "-")}-${crypto.randomUUID().slice(0, 8)}.json`;
   try {
-    await bucket.put(key, JSON.stringify({ at, who, kind, body, page }), {
+    await bucket.put(PREFIX + id, JSON.stringify({ at, who, kind, body, page, done: false }), {
       httpMetadata: { contentType: "application/json; charset=utf-8" },
     });
   } catch (e) {
     return json({ error: "보관에 실패했습니다. 잠시 뒤 다시 시도해주세요." }, 502);
   }
-
   await cache.put(
     lock,
     new Response("1", { headers: { "cache-control": `max-age=${THROTTLE_SEC}` } })
   );
+  return json({ ok: true, id });
+}
+
+async function list(env) {
+  const bucket = env.FB;
+  if (!bucket) return json({ items: [], off: true });
+  const got = await bucket.list({ prefix: PREFIX, limit: 1000 });
+  const keys = got.objects.map((o) => o.key).sort().reverse().slice(0, LIST_MAX);
+  const items = [];
+  for (const key of keys) {
+    const obj = await bucket.get(key);
+    if (!obj) continue;
+    let r;
+    try {
+      r = JSON.parse(await obj.text());
+    } catch (e) {
+      continue;                       // 읽을 수 없는 한 건이 목록 전체를 막지 않게
+    }
+    items.push({
+      id: key.slice(PREFIX.length),
+      at: r.at || "",
+      who: maskIds(r.who || "익명"),
+      kind: r.kind || "기타",
+      body: maskIds(r.body || ""),
+      done: !!r.done,
+    });
+  }
+  return json({ items });
+}
+
+async function setDone(request, env) {
+  const bucket = env.FB;
+  if (!bucket) return json({ error: "보관함이 연결되지 않았습니다." }, 503);
+  const d = await readAdmin(request, env);
+  if (d.bad) return d.bad;
+  const obj = await bucket.get(PREFIX + d.id);
+  if (!obj) return json({ error: "이미 지워졌습니다." }, 404);
+  let r;
+  try {
+    r = JSON.parse(await obj.text());
+  } catch (e) {
+    return json({ error: "내용을 읽지 못했습니다." }, 500);
+  }
+  r.done = d.done;
+  r.done_at = d.done ? new Date().toISOString() : "";
+  await bucket.put(PREFIX + d.id, JSON.stringify(r), {
+    httpMetadata: { contentType: "application/json; charset=utf-8" },
+  });
+  return json({ ok: true, done: r.done });
+}
+
+async function remove(request, env) {
+  const bucket = env.FB;
+  if (!bucket) return json({ error: "보관함이 연결되지 않았습니다." }, 503);
+  const d = await readAdmin(request, env);
+  if (d.bad) return d.bad;
+  await bucket.delete(PREFIX + d.id);
   return json({ ok: true });
 }
 
@@ -95,9 +179,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/feedback") {
-      if (request.method === "POST") return feedback(request, env);
-      // 읽기는 사이트에서 안 한다 — 관리자가 R2 에서 직접 가져간다.
-      return json({ error: "POST 로 보내주세요." }, 405);
+      if (request.method === "GET") return list(env);
+      if (request.method === "POST") return post(request, env);
+      if (request.method === "PATCH" || request.method === "DELETE") {
+        if (!env.FB_ADMIN) {
+          return json({ error: "관리자 기능이 꺼져 있습니다." }, 503);
+        }
+        return request.method === "PATCH" ? setDone(request, env) : remove(request, env);
+      }
+      return json({ error: "지원하지 않는 방식입니다." }, 405);
     }
     // 나머지는 전부 정적 파일.
     // ⚠️ 실제 배포에서 이 경로는 거의 타지 않는다 — [assets] 가 존재하는 파일을 엣지에서
