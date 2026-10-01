@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-Io3eahZB4joVcp+XQvfuUxVoJEn6BRz2rwDo0e8x3Ko='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-gZEDjoR21Gr50kgxh4XwDrjfnLXGGilZV79FqYR/sDI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -754,7 +754,6 @@
   <div class="fblisthead">
     <h2>남긴 글</h2>
     <span class="muted" id="fbListCount"></span>
-    <button id="fbAdminBtn" class="mini" type="button">관리자</button>
   </div>
   <p class="muted" id="fbListMsg">불러오는 중...</p>
   <div id="fbList"></div>
@@ -3327,40 +3326,27 @@ function fillFeedbackWho(){
 
 // ---------- 남긴 글(댓글 목록) ----------
 // 공개 목록이다. 워커가 R2 에서 읽어 주고, 식별자(라이엇 태그·디스코드 ID·PUUID)는 거기서 가린다.
-// 완료 표시·삭제는 관리자 암호(워커 시크릿 FB_ADMIN)를 넣었을 때만 보인다 —
-// 암호는 이 브라우저에만 저장하고(localStorage) 목록 요청에는 쓰지 않는다.
-const FB_PW_KEY='fbAdminPw';
-const fbPw = () => { try{ return localStorage.getItem(FB_PW_KEY)||''; }catch(e){ return ''; } };
+// 사이트에서 할 수 있는 것은 **쓰기와 자기 글 지우기(글 비밀번호 4자리)** 뿐이다 —
+// 관리자 암호는 두지 않는다(2026-10-01 사용자 결정). 완료 ✓ 표시·남의 글 정리는 관리자가 자기 PC 에서
+// `python -m scripts.inhouse_feedback --done/--rm` 으로 한다. 그래서 사이트에 지킬 비밀이 없다.
 function fbWhen(iso){
   const d = new Date(iso); if(isNaN(d)) return '';
   return d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
 }
-async function fbAct(method, id, done){
-  // 암호는 **본문**으로 보낸다. 헤더 값에는 ISO-8859-1 밖 글자를 못 넣어서
-  // 한글 암호를 헤더에 담으면 fetch 가 그 자리에서 예외를 던진다(실측).
-  let j=null;
-  try{
-    const r = await fetch('/api/feedback',{method,
-      headers:{'content-type':'application/json'},
-      body:JSON.stringify({id,done,pw:fbPw()})});
-    try{ j=await r.json(); }catch(e){}
-  }catch(e){ j=null; }
-  if(!(j&&j.ok)){ $('#fbListMsg').textContent=(j&&j.error)||'바꾸지 못했습니다.'; $('#fbListMsg').style.display=''; return false; }
-  return true;
-}
 async function fbDel(id, pin){
-  // pin 이 null 이면 관리자 암호로, 아니면 글 비밀번호로 지운다
+  // 글 비밀번호 4자리로만 지운다. 번호는 **본문**으로 보낸다 — 헤더 값에는 ISO-8859-1 밖 글자를
+  // 못 넣어서 나중에 글자 섞인 번호를 받게 되면 헤더 방식은 그 자리에서 예외가 난다(실측).
   let j=null;
   try{
     const r = await fetch('/api/feedback',{method:'DELETE',
       headers:{'content-type':'application/json'},
-      body:JSON.stringify(pin===null?{id,pw:fbPw()}:{id,pin})});
+      body:JSON.stringify({id,pin})});
     try{ j=await r.json(); }catch(e){}
   }catch(e){ j=null; }
   if(!(j&&j.ok)){ const m=$('#fbListMsg'); m.textContent=(j&&j.error)||'지우지 못했습니다.'; m.style.display=''; return false; }
   return true;
 }
-function fbItem(it, admin){
+function fbItem(it){
   const box=document.createElement('div');
   box.className='fbitem'+(it.done?' done':'');
   const meta=document.createElement('div'); meta.className='meta';
@@ -3369,22 +3355,14 @@ function fbItem(it, admin){
   const at=document.createElement('span'); at.textContent=fbWhen(it.at);
   meta.append(nm,kd,at);
   if(it.done){ const ok=document.createElement('span'); ok.className='fbdone'; ok.textContent='✓ 완료'; meta.append(ok); }
-  const acts=document.createElement('div'); acts.className='acts';
-  if(admin){
-    const b1=document.createElement('button'); b1.type='button'; b1.textContent=it.done?'되돌리기':'완료';
-    b1.onclick=async()=>{ b1.disabled=true; if(await fbAct('PATCH',it.id,!it.done)) loadFeedback(); else b1.disabled=false; };
-    const b2=document.createElement('button'); b2.type='button'; b2.textContent='삭제';
-    b2.onclick=async()=>{ if(!confirm('이 글을 지울까요?')) return; b2.disabled=true;
-      if(await fbDel(it.id,null)) loadFeedback(); else b2.disabled=false; };
-    acts.append(b1,b2);
-  } else if(it.haspin){
+  if(it.haspin){
     // 쓴 사람이 자기 글을 지운다 — 글마다 정한 4자리로
+    const acts=document.createElement('div'); acts.className='acts';
     const b=document.createElement('button'); b.type='button'; b.textContent='지우기';
     b.onclick=async()=>{ const pin=prompt('이 글의 비밀번호 4자리'); if(pin===null) return;
       b.disabled=true; if(await fbDel(it.id,pin.trim())) loadFeedback(); else b.disabled=false; };
-    acts.append(b);
+    acts.append(b); meta.append(acts);
   }
-  if(acts.children.length) meta.append(acts);
   const tx=document.createElement('div'); tx.className='tx'; tx.textContent=it.body||'';
   box.append(meta,tx);
   return box;
@@ -3400,24 +3378,11 @@ async function loadFeedback(){
   if(j.off){ msg.textContent='접수 창구가 아직 연결되지 않았습니다.'; cnt.textContent=''; return; }
   const items=j.items||[];
   if(!items.length){ msg.textContent='아직 남긴 글이 없습니다.'; cnt.textContent=''; return; }
-  const admin=!!fbPw();
-  items.forEach(it=>wrap.appendChild(fbItem(it,admin)));
+  items.forEach(it=>wrap.appendChild(fbItem(it)));
   const left=items.filter(x=>!x.done).length;
   cnt.textContent=`${items.length}건 · 처리 전 ${left}건`;
   msg.style.display='none';
 }
-(function(){
-  const btn=$('#fbAdminBtn'); if(!btn) return;
-  const paint=()=>{ btn.textContent=fbPw()?'관리자 해제':'관리자'; };
-  paint();
-  btn.onclick=()=>{
-    try{
-      if(fbPw()){ localStorage.removeItem(FB_PW_KEY); }
-      else { const v=prompt('관리자 암호'); if(v===null) return; localStorage.setItem(FB_PW_KEY,v.trim()); }
-    }catch(e){}
-    paint(); loadFeedback();
-  };
-})();
 
 let GID='';                     // 상세 파일 경로에 쓴다
 const MDCACHE={};               // 한 번 받은 경기 상세는 다시 안 받는다

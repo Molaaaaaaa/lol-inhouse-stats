@@ -3,15 +3,15 @@
  *
  *  · POST   /api/feedback  → R2 에 파일 하나로 쓴다 (`feedback/<시각>-<난수>.json`)
  *  · GET    /api/feedback  → 최근 목록(공개). 화면이 댓글처럼 보여 준다
- *  · PATCH  /api/feedback  → 완료 표시 토글 (관리자만)
- *  · DELETE /api/feedback  → 삭제 (관리자 암호 **또는** 글 비밀번호 4자리)
+ *  · DELETE /api/feedback  → 쓴 사람이 자기 글을 지운다 (글 비밀번호 4자리)
  *  · 그 외 모든 경로        → 정적 파일(env.ASSETS)
  *
- * 바인딩·시크릿 (wrangler.toml / `npx wrangler secret put`):
- *   FB       = R2 버킷(필수). 없으면 503, 화면은 안내로 물러난다.
- *   FB_ADMIN = 관리자 암호(선택). 없으면 완료 표시는 사이트에서 막히고, 관리자는 자기 PC 에서
- *              `python -m scripts.inhouse_feedback --done/--rm` 으로 한다.
- *              (글 비밀번호로 **쓴 사람이 자기 글을 지우는** 길은 시크릿과 무관하게 늘 열려 있다.)
+ * **관리자 암호는 두지 않는다**(2026-10-01 사용자 결정). 완료 ✓ 표시와 남의 글 정리는 관리자가
+ * 자기 PC 에서 R2 를 직접 보고 한다(`python -m scripts.inhouse_feedback --done/--undone/--rm`).
+ * 그래서 이 워커에는 **지킬 비밀이 없다** — 시크릿도, 관리자 경로도 없다.
+ *
+ * 바인딩 (wrangler.toml):
+ *   FB = R2 버킷(필수). 없으면 503, 화면은 안내로 물러난다.
  *
  * 원칙
  *  · 이 버킷은 분석 산출물의 **유일한 원격 사본**이다 → `feedback/` 접두사 밖은 절대 건드리지 않는다.
@@ -64,23 +64,6 @@ function maskIds(s) {
     .replace(/#[A-Za-z0-9]{2,5}\b/g, "#…")
     .replace(/\b\d{17,20}\b/g, "[숫자]")
     .replace(/\b[0-9A-Za-z_-]{70,}\b/g, "[식별자]");
-}
-
-/** 관리자 요청 본문 읽기. 암호는 **본문**으로 받는다 — 헤더 값은 ISO-8859-1 만 담을 수 있어
- *  한글 암호를 쓰면 브라우저의 fetch 가 요청도 못 만들고 예외를 던진다(실측 2026-10-01). */
-async function readAdmin(request, env) {
-  let d = {};
-  try {
-    d = await request.json();
-  } catch (e) {
-    return { bad: json({ error: "요청을 읽지 못했습니다." }, 400) };
-  }
-  if (String(d.pw || "") !== String(env.FB_ADMIN)) {
-    return { bad: json({ error: "관리자 암호가 맞지 않습니다." }, 403) };
-  }
-  const id = String(d.id || "");
-  if (!ID_OK.test(id)) return { bad: json({ error: "어느 것인지 알 수 없습니다." }, 400) };
-  return { id, done: d.done !== false };
 }
 
 async function post(request, env) {
@@ -162,28 +145,7 @@ async function list(env) {
   return json({ items });
 }
 
-async function setDone(request, env) {
-  const bucket = env.FB;
-  if (!bucket) return json({ error: "보관함이 연결되지 않았습니다." }, 503);
-  const d = await readAdmin(request, env);
-  if (d.bad) return d.bad;
-  const obj = await bucket.get(PREFIX + d.id);
-  if (!obj) return json({ error: "이미 지워졌습니다." }, 404);
-  let r;
-  try {
-    r = JSON.parse(await obj.text());
-  } catch (e) {
-    return json({ error: "내용을 읽지 못했습니다." }, 500);
-  }
-  r.done = d.done;
-  r.done_at = d.done ? new Date().toISOString() : "";
-  await bucket.put(PREFIX + d.id, JSON.stringify(r), {
-    httpMetadata: { contentType: "application/json; charset=utf-8" },
-  });
-  return json({ ok: true, done: r.done });
-}
-
-/** 삭제는 둘 중 하나면 된다: 관리자 암호(FB_ADMIN) **또는** 그 글의 비밀번호 4자리. */
+/** 삭제는 그 글의 비밀번호 4자리로만 한다. 관리자는 사이트를 거치지 않고 R2 에서 바로 지운다. */
 async function remove(request, env) {
   const bucket = env.FB;
   if (!bucket) return json({ error: "보관함이 연결되지 않았습니다." }, 503);
@@ -196,35 +158,32 @@ async function remove(request, env) {
   const id = String(d.id || "");
   if (!ID_OK.test(id)) return json({ error: "어느 것인지 알 수 없습니다." }, 400);
 
-  const admin = !!env.FB_ADMIN && String(d.pw || "") === String(env.FB_ADMIN);
-  if (!admin) {
-    const obj = await bucket.get(PREFIX + id);
-    if (!obj) return json({ error: "이미 지워졌습니다." }, 404);
-    let r;
-    try {
-      r = JSON.parse(await obj.text());
-    } catch (e) {
-      return json({ error: "내용을 읽지 못했습니다." }, 500);
-    }
-    if (!r.pin_hash) {
-      return json({ error: "이 글에는 비밀번호가 없습니다 — 관리자에게 말해 주세요." }, 403);
-    }
-    // 틀린 뒤에는 잠깐 잠근다(한 번 오타는 10초 뒤 다시 하면 된다)
-    const self = new URL(request.url).origin;
-    const ip = request.headers.get("cf-connecting-ip") || "unknown";
-    const cache = caches.default;
-    const lock = new Request(`${self}/__fb-try?ip=${encodeURIComponent(ip)}`);
-    if (await cache.match(lock)) {
-      return json({ error: `잠시 뒤에 다시 해주세요(${PIN_RETRY_SEC}초).` }, 429);
-    }
-    const pin = String(d.pin || "");
-    if (!PIN_OK.test(pin) || (await pinHash(r.pin_salt || "", pin)) !== r.pin_hash) {
-      await cache.put(
-        lock,
-        new Response("1", { headers: { "cache-control": `max-age=${PIN_RETRY_SEC}` } })
-      );
-      return json({ error: "비밀번호가 맞지 않습니다." }, 403);
-    }
+  const obj = await bucket.get(PREFIX + id);
+  if (!obj) return json({ error: "이미 지워졌습니다." }, 404);
+  let r;
+  try {
+    r = JSON.parse(await obj.text());
+  } catch (e) {
+    return json({ error: "내용을 읽지 못했습니다." }, 500);
+  }
+  if (!r.pin_hash) {
+    return json({ error: "이 글에는 비밀번호가 없습니다 — 관리자에게 말해 주세요." }, 403);
+  }
+  // 틀린 뒤에는 잠깐 잠근다(한 번 오타는 10초 뒤 다시 하면 된다)
+  const self = new URL(request.url).origin;
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const cache = caches.default;
+  const lock = new Request(`${self}/__fb-try?ip=${encodeURIComponent(ip)}`);
+  if (await cache.match(lock)) {
+    return json({ error: `잠시 뒤에 다시 해주세요(${PIN_RETRY_SEC}초).` }, 429);
+  }
+  const pin = String(d.pin || "");
+  if (!PIN_OK.test(pin) || (await pinHash(r.pin_salt || "", pin)) !== r.pin_hash) {
+    await cache.put(
+      lock,
+      new Response("1", { headers: { "cache-control": `max-age=${PIN_RETRY_SEC}` } })
+    );
+    return json({ error: "비밀번호가 맞지 않습니다." }, 403);
   }
   await bucket.delete(PREFIX + id);
   return json({ ok: true });
@@ -236,11 +195,7 @@ export default {
     if (url.pathname === "/api/feedback") {
       if (request.method === "GET") return list(env);
       if (request.method === "POST") return post(request, env);
-      if (request.method === "DELETE") return remove(request, env);   // 관리자 암호 또는 글 비밀번호
-      if (request.method === "PATCH") {
-        if (!env.FB_ADMIN) return json({ error: "관리자 기능이 꺼져 있습니다." }, 503);
-        return setDone(request, env);
-      }
+      if (request.method === "DELETE") return remove(request, env);   // 글 비밀번호 4자리
       return json({ error: "지원하지 않는 방식입니다." }, 405);
     }
     // 나머지는 전부 정적 파일.
