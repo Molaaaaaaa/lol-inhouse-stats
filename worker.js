@@ -1,23 +1,28 @@
 /**
  * 내전 해체 분석기 — Cloudflare Worker
  *
- *  · POST /api/feedback  → 디스코드(또는 슬랙) 웹훅으로 전달
+ *  · POST /api/feedback  → **R2 에 파일 하나로 쓴다** (`feedback/<시각>-<난수>.json`)
  *  · 그 외 모든 경로     → 정적 파일(env.ASSETS)
  *
- * 필요한 환경변수 (Workers → Settings → Variables and Secrets):
- *   FEEDBACK_WEBHOOK = 디스코드 채널 웹훅 URL (Secret 으로)
- * 없으면 503 을 돌려주고, 화면은 GitHub Issues 안내로 물러난다.
+ * 받는 사람은 관리자 한 명이다. 중계(디스코드·메일·이슈)는 쓰지 않는다 —
+ * 관리자가 자기 PC 에서 `python -m scripts.inhouse_feedback` 로 끌어와 읽는다.
+ * 사이트에도 발행 JSON 에도 피드백은 남지 않는다.
+ *
+ * 바인딩 (wrangler.toml `[[r2_buckets]]`):
+ *   FB = R2 버킷. 없으면 503 을 돌려주고 화면은 안내로 물러난다(아무 데도 안 쌓인다).
  *
  * 원칙
- *  · 웹훅 URL 은 브라우저로 절대 내보내지 않는다.
- *  · 남의 서버로 아무 내용이나 중계하는 통로가 되지 않도록 길이·빈도를 막는다.
- *  · @everyone 같은 멘션은 디스코드 쪽에서 통째로 비활성화한다.
+ *  · 이 버킷은 분석 산출물의 **유일한 원격 사본**이다 → 여기서는 `feedback/` 접두사로
+ *    **put 만** 한다. list·get·delete 를 부르지 않는다(버그가 나도 남의 파일을 못 건드린다).
+ *  · 남의 저장소를 아무 내용으로나 채우지 못하게 길이·빈도를 막는다.
+ *  · 저장하는 것은 사람이 적은 내용뿐이다 — IP·UA 는 저장하지 않는다(연타 차단에만 쓴다).
  */
 
 const MAX_BODY = 2000;
 const MAX_WHO = 40;
 const THROTTLE_SEC = 20;
 const KINDS = ["버그", "숫자가 이상함", "이런 걸 보고 싶다", "기타"];
+const PREFIX = "feedback/";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -39,8 +44,8 @@ function clean(s, max) {
 }
 
 async function feedback(request, env) {
-  const hook = env.FEEDBACK_WEBHOOK;
-  if (!hook) {
+  const bucket = env.FB;
+  if (!bucket) {
     return json({ error: "아직 접수 창구가 연결되지 않았습니다.", fallback: "github" }, 503);
   }
 
@@ -59,7 +64,7 @@ async function feedback(request, env) {
     return json({ error: "내용을 다섯 글자 이상 적어주세요." }, 400);
   }
 
-  // 연타로 채널을 도배하지 못하게. 엣지 캐시를 짧은 자물쇠로 쓴다.
+  // 연타로 저장소를 채우지 못하게. 엣지 캐시를 짧은 자물쇠로 쓴다(IP 는 저장하지 않는다).
   const self = new URL(request.url).origin;
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const cache = caches.default;
@@ -68,27 +73,15 @@ async function feedback(request, env) {
     return json({ error: `조금만 천천히요. ${THROTTLE_SEC}초 뒤에 다시 보내주세요.` }, 429);
   }
 
-  const isSlack = /hooks\.slack\.com/.test(hook);
-  const text =
-    `**[${kind}]** ${who}` + "\n" +
-    (page ? `\`${page}\`` + "\n" : "") +
-    "```\n" + body.replace(/```/g, "'''") + "\n```";
-  const payload = isSlack
-    ? { text: text.replace(/\*\*/g, "*") }
-    : { content: text.slice(0, 1900), allowed_mentions: { parse: [] } };
-
-  let r;
+  const at = new Date().toISOString();
+  // 키는 시각 순으로 정렬된다 — 관리자 쪽에서 받은 순서대로 읽는다
+  const key = `${PREFIX}${at.replace(/[:.]/g, "-")}-${crypto.randomUUID().slice(0, 8)}.json`;
   try {
-    r = await fetch(hook, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
+    await bucket.put(key, JSON.stringify({ at, who, kind, body, page }), {
+      httpMetadata: { contentType: "application/json; charset=utf-8" },
     });
   } catch (e) {
-    return json({ error: "전달에 실패했습니다. 잠시 뒤 다시 시도해주세요." }, 502);
-  }
-  if (!r.ok) {
-    return json({ error: "전달에 실패했습니다. 잠시 뒤 다시 시도해주세요." }, 502);
+    return json({ error: "보관에 실패했습니다. 잠시 뒤 다시 시도해주세요." }, 502);
   }
 
   await cache.put(
@@ -103,6 +96,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/api/feedback") {
       if (request.method === "POST") return feedback(request, env);
+      // 읽기는 사이트에서 안 한다 — 관리자가 R2 에서 직접 가져간다.
       return json({ error: "POST 로 보내주세요." }, 405);
     }
     // 나머지는 전부 정적 파일.
