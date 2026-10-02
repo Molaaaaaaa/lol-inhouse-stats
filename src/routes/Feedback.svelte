@@ -266,10 +266,11 @@
   .go:active:not(:disabled), .act:active:not(:disabled) { background: var(--ink); }
   .go:disabled, .act:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
 
-  /* 처리 결과 — 색은 왼쪽 3px 띠로만, 뜻은 문장이 말한다 */
-  .note { padding-left: var(--sp-2); border-left: 3px solid var(--grid-strong); }
-  .note.good { border-left-color: var(--win); }
-  .note.bad { border-left-color: var(--danger); }
+  /* 처리 결과 — 조건부 서식: 색은 셀 **채움**(18%)으로만 쓰고 뜻은 문장이 말한다(색만으로 구분하지 않는다).
+     왼쪽 굵은 띠는 쓰지 않는다 — 이 세계에서 띠는 라인·티어 셀의 3px 이고, 상태 문장에 붙은 띠는 장식 callout 이다 */
+  .note { padding: var(--sp-1) var(--sp-2); border: 1px solid var(--grid); }
+  .note.good { background: color-mix(in srgb, var(--win) 18%, transparent); }
+  .note.bad { background: color-mix(in srgb, var(--danger) 18%, transparent); }
 
   .listhead { display: flex; align-items: stretch; border: 1px solid var(--grid); border-bottom: 0; }
   .listhead .cap { flex: 1 1 auto; border-bottom: 0; }
@@ -301,7 +302,7 @@
   .del { display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-3); }
   .dl { display: flex; flex-direction: column; gap: var(--sp-1); color: var(--dim); font-size: var(--fs-sm); }
   .dl input { width: 9ch; min-height: 32px; padding: var(--sp-1) var(--sp-2); border: 1px solid var(--grid-strong); border-radius: var(--r-chip); }
-  .err { flex-basis: 100%; padding-left: var(--sp-2); border-left: 3px solid var(--danger); }
+  .err { flex-basis: 100%; padding: var(--sp-1) var(--sp-2); background: color-mix(in srgb, var(--danger) 18%, transparent); }
 
   @media (pointer: coarse) {
     .go, .act, .dl input { min-height: 44px; }
