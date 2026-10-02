@@ -20,5 +20,5 @@ export const VIEWS: Record<Section, () => Promise<{ default: Component<{ sub: st
 /** 문서 제목·안내 음성에 쓰는 화면 이름 (명사) */
 export const VIEW_TITLE: Record<Section, string> = {
   home: '멤버', member: '멤버', rank: '순위', records: '기록', synergy: '시너지',
-  champions: '챔피언', matches: '경기', math: '계산식', feedback: '피드백',
+  champions: '챔피언', matches: '경기', math: '지표 안내', feedback: '피드백',
 };

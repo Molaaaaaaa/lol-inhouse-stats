@@ -267,7 +267,7 @@
   .go:disabled, .act:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
 
   /* 처리 결과 — 조건부 서식: 색은 셀 **채움**(18%)으로만 쓰고 뜻은 문장이 말한다(색만으로 구분하지 않는다).
-     왼쪽 굵은 띠는 쓰지 않는다 — 이 세계에서 띠는 라인·티어 셀의 3px 이고, 상태 문장에 붙은 띠는 장식 callout 이다 */
+     왼쪽 굵은 띠는 쓰지 않는다 — 이 세계에서 띠는 라인 셀의 3px 이고, 상태 문장에 붙은 띠는 장식 callout 이다 */
   .note { padding: var(--sp-1) var(--sp-2); border: 1px solid var(--grid); }
   .note.good { background: color-mix(in srgb, var(--win) 18%, transparent); }
   .note.bad { background: color-mix(in srgb, var(--danger) 18%, transparent); }

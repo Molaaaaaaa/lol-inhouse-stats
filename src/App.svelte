@@ -118,7 +118,7 @@
       내전 해체 분석기는 Riot Games 의 승인을 받지 않았으며 Riot Games 또는 리그 오브 레전드 제작·관리에 공식적으로 관여하는 누구의 견해나 의견도 대변하지 않습니다.
       Riot Games 및 관련 자산은 Riot Games, Inc. 의 상표 또는 등록 상표입니다.
     </p>
-    <p class="foot-link"><a href="#/feedback">피드백 남기기</a></p>
+    <p class="foot-link"><a href="#/math/metrics">지표 안내</a><a href="#/feedback">피드백 남기기</a></p>
   </footer>
 </div>
 
@@ -191,6 +191,7 @@
   .foot p { max-width: 75ch; }
   .foot-link { margin-top: var(--sp-2); }
   .foot-link a { display: inline-block; min-height: 28px; color: var(--dim); text-underline-offset: .2em; }
+  .foot-link a + a { margin-left: var(--sp-4); }
   .foot-link a:hover { color: var(--txt); text-decoration-thickness: 2px; }
 
   @media (pointer: coarse) {

@@ -1,11 +1,11 @@
 /**
- * 티어·승률·메달·최소 판수 안내 — 화면이 색과 문구를 정할 때 쓰는 순수 함수.
+ * 승률·메달·최소 판수 안내 — 화면이 색과 문구를 정할 때 쓰는 순수 함수.
  *
- * ⚠️ 티어 컷·문턱 상수는 **하나도 여기 적지 않는다.** 전부 payload(`cp_constants`·`min_games`)에서
- *    받는다. 화면과 발행 양쪽에 상수를 적으면 반드시 어긋난다(라인 최소 판수에서 겪었다).
- *    옛 코드가 DATA 전역을 읽던 자리는 전부 인자다 — 그래서 테스트가 payload 없이 돈다.
+ * ⚠️ 문턱 상수는 **하나도 여기 적지 않는다.** 전부 payload(`min_games`)에서 받는다. 화면과 발행 양쪽에
+ *    상수를 적으면 반드시 어긋난다(라인 최소 판수에서 겪었다). 옛 코드가 DATA 전역을 읽던 자리는
+ *    전부 인자다 — 그래서 테스트가 payload 없이 돈다.
  */
-import type { GuildPayload, TierCut } from '$lib/data/types';
+import type { GuildPayload } from '$lib/data/types';
 
 // ── 승률 색 ───────────────────────────────────────────────────────────
 export type WrClass = 'wr-h' | 'wr-m' | 'wr-l' | 'wr-dim';
@@ -28,35 +28,10 @@ export function wrClass(w: number, n?: number | null, minGames?: number): WrClas
   return w > WR_HIGH ? 'wr-h' : w < WR_LOW ? 'wr-l' : 'wr-m';
 }
 
-// ── 티어 ─────────────────────────────────────────────────────────────
-/** 티어 컷의 출처 — payload 전체를 넘겨도 되고, 테스트는 `cp_constants` 만 든 객체를 넘긴다. */
-export type TierSource = { cp_constants?: { tiers?: readonly TierCut[] | null } | null } | null | undefined;
-
-/** 티어 컷 목록(위에서 아래로). payload 가 없거나 컷이 없으면 빈 목록 — 티어는 어디에도 안 보인다. */
-export function cpTiers(data: TierSource): readonly TierCut[] {
-  return data?.cp_constants?.tiers ?? [];
-}
-
-/**
- * 티어 이름 → CSS 클래스(`t-1티어`). 이름 자체를 클래스로 쓰되 컷 목록으로 거른다 —
- * payload 는 sanitize 를 거치지만, 클래스명에 값을 그대로 넣는 건 따로 막는다.
- */
-export function tierCls(name: string, data: TierSource): string {
-  return cpTiers(data).some((t) => t.name === name) ? 't-' + name : '';
-}
-
-export interface TierBadgeData { label: string; cls: string }
-
-/** 배지 하나의 글자와 클래스. 렌더는 컴포넌트 몫 — 여기서는 HTML 을 만들지 않는다. */
-export function tierBadge(name: string, data: TierSource): TierBadgeData {
-  const t = tierCls(name, data);
-  return { label: name, cls: t ? `tierbadge ${t}` : 'tierbadge' };
-}
-
 // ── 메달 ─────────────────────────────────────────────────────────────
 export interface Medal { rank: 1 | 2 | 3; cls: string; label: string }
 
-/** 1·2·3위 — 색은 CSS 의 `.medal.m1~m3`(티어 금색·중립·동색 토큰). 보조기술에는 '1위' 로 읽힌다. */
+/** 1·2·3위 — 색은 CSS 의 `.medal.m1~m3`(금색·중립·동색 토큰). 보조기술에는 '1위' 로 읽힌다. */
 export const MEDAL: readonly Medal[] = ([1, 2, 3] as const).map((n) => ({
   rank: n,
   cls: `medal m${n}`,
@@ -101,7 +76,7 @@ export function minGamesNote(data: MinGamesSource, lane = false): MinGamesNote |
   text += '.';
   return {
     text,
-    tip: `순위·티어 모두 ${n}판 이상부터입니다.\n그 전에는 표본이 작아 한 판이 순위를 크게 흔듭니다.`,
+    tip: `순위는 ${n}판 이상부터입니다.\n그 전에는 표본이 작아 한 판이 순위를 크게 흔듭니다.`,
     tipLabel: '최소 판수 설명',
   };
 }

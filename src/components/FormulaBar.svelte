@@ -8,7 +8,7 @@
    * 탭하면 다 펼친다(aria-expanded). 넘침은 접힌 상태에서만 잰다(scrollHeight > clientHeight) —
    * 글이 바뀌면 다시 접고 다시 잰다. title 에 기대지 않는다(폰에는 hover 가 없다).
    * 줄바꿈 자리는 ' · ' 사이뿐이다: setFx 문자열을 ' · ' 로 나눠 조각마다 nowrap span 을 만든다 —
-   * '55판'·'MMR 1185' 같은 숫자와 단위가 줄 끝에서 갈라지지 않는다(word-break: keep-all 도 함께).
+   * '55판'·'승률 60%' 같은 숫자와 단위가 줄 끝에서 갈라지지 않는다(word-break: keep-all 도 함께).
    */
   import { tick } from 'svelte';
   import { fx } from '$lib/fx.svelte';

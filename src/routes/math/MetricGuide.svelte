@@ -47,7 +47,7 @@
 </script>
 
 <section class="guide" aria-labelledby="mg-h">
-  <h2 id="mg-h" class="sr-only">지표 설명</h2>
+  <h2 id="mg-h" class="sr-only">지표 안내</h2>
   <!-- rows2: 390px 에서 629px(실측, 설명 열) — 폰은 2줄 장부 행, 설명 셀은 한 줄 전부(아래 스타일) -->
   <DataTable {rows} {cols} caption="지표 {rows.length}개 · 발행 순서" fold={false} rows2 />
 </section>

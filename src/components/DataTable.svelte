@@ -17,7 +17,7 @@
    * - 머리 드롭다운(Col.pick): 열 필터. 보이는 층은 고른 값(전체면 열 이름)+화살표, 조작은 그 위에 겹친
    *   네이티브 select. select 위의 click·keydown 은 머리(정렬)로 올라가지 않는다.
    * - 선택: rowKey 가 있으면 행이 tabindex=0·aria-selected, 클릭·Enter → onselect.
-   * - 조건부 서식은 cls 로 호출부가 클래스만 준다: win·loss(18% 채움)·t1~t5(16%)·pend(점선)·lane-*(왼쪽 띠).
+   * - 조건부 서식은 cls 로 호출부가 클래스만 준다: win·loss(18% 채움)·lane-*(왼쪽 띠).
    * - 셀 안 부품은 이웃 컴포넌트를 그대로 쓴다: 초상 ChampImg · 코드 판 CodePlate · 물음표 QMark(툴팁) ·
    *   빈 상태 EmptyState — 같은 부품이 화면마다 같은 모양이어야 한다.
    * - 2줄 장부 행(rows2): 호출부가 `rows2` 를 주고 폰(media.phone, ≤640px)일 때만 켜진다 — 390px 에서 넘치는
@@ -490,12 +490,6 @@
   td.wr-h { font-weight: 700; }
   td.wr-h::after { content: ' ▲'; font-size: .72em; }
   td.wr-l::after { content: ' ▼'; font-size: .72em; }
-  td.t1 { background: color-mix(in srgb, var(--t1) 16%, transparent); }
-  td.t2 { background: color-mix(in srgb, var(--t2) 16%, transparent); }
-  td.t3 { background: color-mix(in srgb, var(--t3) 16%, transparent); }
-  td.t4 { background: color-mix(in srgb, var(--t4) 16%, transparent); }
-  td.t5 { background: color-mix(in srgb, var(--t5) 16%, transparent); }
-  td.pend { box-shadow: inset 0 0 0 1px transparent; outline: 1px dashed var(--grid-strong); outline-offset: -3px; color: var(--dim); }
   /* 라인 띠 — border-left 다(box-shadow 가 아니라): 선택 행의 안쪽 선(box-shadow)이 띠를 덮어 지우던 결함 */
   td.lane-top { border-left: 3px solid var(--lane-top); }
   td.lane-jg { border-left: 3px solid var(--lane-jg); }
@@ -544,7 +538,7 @@
      왼쪽 absolute — 격자 열로 두면 4번째 셀부터 홈통 칸에 떨어진다), 이름 셀은 한 줄 전부, 나머지는
      '라벨: 값'(라벨은 data-label 을 ::before 가 읽고 margin auto 로 값을 오른쪽에 민다 — ▲▼ ::after 도 값 옆에
      붙는다). 머리행은 보조기술에만 남긴다(display:none 이면 th scope=col 연결이 끊긴다). 선택·초점은 행의
-     ::after 한 겹(absolute 홈통 위에 그려진다). 채움(막대·티어·승패)·점선·초상은 셀 규칙 그대로 산다. */
+     ::after 한 겹(absolute 홈통 위에 그려진다). 채움(막대·승패)·점선·초상은 셀 규칙 그대로 산다. */
   .sheet.rows2 { overflow: visible; }
   .sheet.rows2 table, .sheet.rows2 tbody { display: block; width: 100%; min-width: 0; }
   .sheet.rows2 thead {

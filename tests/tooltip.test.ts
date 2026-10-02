@@ -76,15 +76,15 @@ describe('QMark(Tooltip.svelte) + tip 액션', () => {
     expect(tipOpenFor(btn)).toBe(false);
   });
   it('버튼 이름은 바꿀 수 있고, 층은 보조기술에 숨긴다(중복 낭독 방지)', () => {
-    const { getByRole } = render(QMark, { text: 't', label: 'CP 설명' });
-    getByRole('button', { name: 'CP 설명' });
+    const { getByRole } = render(QMark, { text: 't', label: 'MVP 설명' });
+    getByRole('button', { name: 'MVP 설명' });
     expect(box()!.getAttribute('aria-hidden')).toBe('true');
     expect(box()!.getAttribute('role')).toBe('tooltip');
   });
   it('tipText — 문자열·{text}·{key,payload} 세 꼴', () => {
     expect(tipText('a')).toBe('a');
     expect(tipText({ text: 'b' })).toBe('b');
-    expect(tipText({ key: 'MMR' })).toBe(helpText('MMR'));
+    expect(tipText({ key: 'MVP' })).toBe(helpText('MVP'));
     expect(tipText({ key: '기준선', payload: { baseline: null } })).toContain('솔랭 표본');
     expect(tipText(null)).toBe('');
   });

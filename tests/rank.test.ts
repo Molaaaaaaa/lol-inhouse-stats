@@ -32,24 +32,33 @@ describe('rank.ts — 공통', () => {
 });
 
 describe('boardRows — 승률 리더보드', () => {
-  it('통합: leaderboard 한 줄씩, 신뢰성 순위·메달, 패 = 판 − 승, 표시명(동명이인 ~순번)·멤버 키', () => {
+  it('통합: leaderboard 한 줄씩, 판수 순위, 패 = 판 − 승, 표시명(동명이인 ~순번)·멤버 키', () => {
     const rows = boardRows(RANK_PAYLOAD, 'all', 3);
-    expect(names(rows)).toEqual(['앙앙맹', 'Faker', '맹구', '앙리~2']);
-    expect(rows.map((r) => r.key)).toEqual(['p1', 'p4', 'p2', 'p5']);
+    expect(names(rows)).toEqual(['Faker', '맹구', '앙앙맹', '앙리~2']);
+    expect(rows.map((r) => r.key)).toEqual(['p4', 'p2', 'p1', 'p5']);
     expect(rows.map((r) => r.rank)).toEqual([1, 2, 3, 4]);
-    expect(rows.map((r) => r.medal?.rank ?? null)).toEqual([1, 2, 3, null]);
-    expect(rows[1]).toMatchObject({ games: 20, wins: 14, losses: 6, winrate: 0.7, ci: 0.481, kda: 5.1, kp: 0.6, dpm: 900, lane: null, cs: null, vision: null });
+    expect(rows.every((r) => !('medal' in r))).toBe(true);   // 활동량 순위에는 메달이 없다
+    expect(rows[0]).toMatchObject({ games: 20, wins: 14, losses: 6, winrate: 0.7, ci: 0.481, kda: 5.1, kp: 0.6, dpm: 900, lane: null, cs: null, vision: null });
   });
-  it('통합: 순위는 표의 정렬이 아니라 신뢰성 기준 — 서버 순서가 섞여 와도 같다', () => {
+  it('통합: 순위는 표의 정렬도 서버 순서도 아니라 판수 기준 — 서버 순서가 섞여 와도 같다', () => {
     const shuffled = { ...RANK_PAYLOAD, leaderboard: RANK_PAYLOAD.leaderboard.slice().reverse() };
-    expect(names(boardRows(shuffled, 'all', 3))).toEqual(['앙앙맹', 'Faker', '맹구', '앙리~2']);
+    expect(names(boardRows(shuffled, 'all', 3))).toEqual(['Faker', '맹구', '앙앙맹', '앙리~2']);
   });
-  it('라인별: 멤버 × 라인(라인 3판 이상), 신뢰성은 Wilson 하한으로 여기서 내고 그 순서로 순위', () => {
+  it('같은 판수는 같은 순위(경쟁 순위), 줄은 이름 오름차순 — 승률·신뢰성은 순서에 안 든다', () => {
+    const lbRow = (discord_name: string, wins: number, ci_lower: number) =>
+      ({ discord_name, games: 10, wins, winrate: wins / 10, ci_lower, kda: 3, kp: 0.5, dpm: 700 });
+    const tied = { ...RANK_PAYLOAD, leaderboard: [lbRow('하', 9, 0.6), lbRow('가', 1, 0.05), lbRow('나', 5, 0.24)] };
+    const rows = boardRows(tied, 'all', 3);
+    expect(names(rows)).toEqual(['가', '나', '하']);
+    expect(rows.map((r) => r.rank)).toEqual([1, 1, 1]);
+  });
+  it('라인별: 멤버 × 라인(라인 3판 이상), 신뢰성은 Wilson 하한으로 여기서 내되 순서는 판수', () => {
     const rows = boardRows(RANK_PAYLOAD, 'lanes', 3);
     expect(rows.map((r) => `${r.name}:${r.lane}`)).toEqual([
-      '앙앙맹:TOP', 'Faker:MIDDLE', 'Faker:TOP', '맹구:JUNGLE', '앙리~2:UTILITY', '앙앙맹:MIDDLE',
+      'Faker:MIDDLE', '맹구:JUNGLE', '앙앙맹:TOP', '앙리~2:UTILITY', 'Faker:TOP', '앙앙맹:MIDDLE',
     ]);
-    expect(rows.map((r) => r.ci)).toEqual([0.61, 0.481, 0.301, 0.254, 0.231, 0.061]);
+    expect(rows.map((r) => r.games)).toEqual([20, 12, 6, 5, 4, 3]);
+    expect(rows.map((r) => r.ci)).toEqual([0.481, 0.254, 0.61, 0.231, 0.301, 0.061]);
     expect(rows.map((r) => r.rank)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(rows.map((r) => r.key)).toContain('p1:TOP');
     // 승수는 승률 × 판 반올림, 판당 CS·시야는 라인 전적에서
@@ -298,7 +307,7 @@ describe('Rank — 지표 순위 화면', () => {
     await fireEvent.click(screen.getByRole('tab', { name: '승률' }));
     expect(location.hash).toBe('#/rank/board');
     await sync();
-    expect(screen.getByRole('table', { name: /리더보드/ })).toBeTruthy();
+    expect(screen.getByRole('table', { name: /^판수 순위 · 승률/ })).toBeTruthy();
     await fireEvent.click(screen.getByRole('tab', { name: '지표' }));
     expect(location.hash).toBe('#/rank/metric/gold_diff_10/MIDDLE');
   });

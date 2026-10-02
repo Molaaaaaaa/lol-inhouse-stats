@@ -5,7 +5,7 @@
    * 옛 사이트의 `#/synergy/ties`(맞대결)는 기록 화면으로 옮겨 갔다 — 그 주소는 기록으로 보낸다.
    *
    * 하위 화면 셋은 같은 payload 조각(synergy·trios)을 보는 작은 표라 섹션 청크에 함께 싣는다
-   * (계산식 화면과 같은 원칙). 각 하위 화면이 자기 표·선택·수식 줄을 가진다.
+   * (순위·기록 화면과 같은 원칙). 각 하위 화면이 자기 표·선택·수식 줄을 가진다.
    */
   import { app } from '$lib/data/store.svelte';
   import { href, router } from '$lib/router.svelte';
@@ -33,9 +33,15 @@
     if (sub === 'ties') router.go(href(['records', 'ties']));
   });
 
+  // 하위 화면이 바뀌면(탭·뒤로 가기·링크 모두 URL 로 온다) 지난 탭에서 고른 조합의 근거를 비운다
+  let shown = '';
+  $effect(() => {
+    if (shown && shown !== active) clearFx();
+    shown = active;
+  });
+
   function go(id: string) {
     router.go(href(['synergy', id]));
-    clearFx();   // 지난 탭에서 고른 조합의 근거가 새 표 위에 남지 않게
     announce(`${TABS.find((t) => t.id === id)?.label ?? id} 화면`);
   }
 </script>

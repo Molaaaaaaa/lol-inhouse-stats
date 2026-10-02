@@ -26,7 +26,7 @@ export interface Col<T> {
   img?: (r: T) => string | null | undefined;
   /** 셀 글자. i 는 표시 순서(정렬·거르기 뒤) */
   fmt?: (v: unknown, r: T, i: number) => string;
-  /** 셀 클래스 — 'win'·'loss'·'t1'…'t5'·'pend'·'lane-top'… 조건부 서식은 DataTable 이 그린다 */
+  /** 셀 클래스 — 'win'·'loss'·'lane-top'… 조건부 서식은 DataTable 이 그린다 */
   cls?: (r: T) => string;
   /** HELP 키 — 있으면 머리에 물음표 */
   hlp?: string;

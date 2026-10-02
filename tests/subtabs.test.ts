@@ -5,7 +5,7 @@ import Subtabs from '../src/components/Subtabs.svelte';
 const TABS = [
   { id: 'sum', label: '요약' },
   { id: 'vs', label: '상대별 전적' },
-  { id: 'mmr', label: 'MMR 검산' },
+  { id: 'rec', label: '최근 경기' },
 ];
 
 afterEach(cleanup);
@@ -51,13 +51,13 @@ describe('Subtabs', () => {
   it('클릭(Enter/Space 는 버튼이 click 으로 바꾼다)이 onchange(id) — 이미 활성인 탭은 안 부른다', async () => {
     const { tabs, onchange } = setup('sum');
     await fireEvent.click(tabs[2]!);
-    expect(onchange).toHaveBeenCalledWith('mmr');
+    expect(onchange).toHaveBeenCalledWith('rec');
     await fireEvent.click(tabs[0]!);
     expect(onchange).toHaveBeenCalledTimes(1);
   });
   it('active 가 바뀌면 aria-selected·tabindex 가 따라간다', async () => {
     const { rerender, getAllByRole } = setup('sum');
-    await rerender({ tabs: TABS, active: 'mmr', onchange: vi.fn(), prefix: 'm' });
+    await rerender({ tabs: TABS, active: 'rec', onchange: vi.fn(), prefix: 'm' });
     const tabs = getAllByRole('tab');
     expect(tabs.map((t) => t.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
     expect(tabs.map((t) => t.getAttribute('tabindex'))).toEqual(['-1', '-1', '0']);

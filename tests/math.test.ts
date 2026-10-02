@@ -2,9 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/svelte';
 import Math_ from '../src/routes/Math.svelte';
 import MetricGuide from '../src/routes/math/MetricGuide.svelte';
-import CpFormula from '../src/routes/math/CpFormula.svelte';
 import { app } from '../src/lib/data/store.svelte';
-import { router } from '../src/lib/router.svelte';
+import { parseHash, router } from '../src/lib/router.svelte';
 import type { GuildPayload } from '../src/lib/data/types';
 
 // 지표 안내는 metric_groups 순서·metric_meta·lower_better 만 읽는다
@@ -45,15 +44,7 @@ describe('MetricGuide — 지표 안내 표', () => {
   });
 });
 
-describe('CpFormula — 상수 없음', () => {
-  it('cp_constants 가 없으면 빈 상태 문장, 계산식 없음', () => {
-    const { container } = render(CpFormula, { data: null });
-    expect(container.querySelector('.cpf')).toBeNull();
-    expect(container.querySelector('.empty')?.textContent).toBe('아직 계산식을 표시할 데이터가 없습니다.');
-  });
-});
-
-describe('Math — 하위 화면', () => {
+describe('Math — 지표 안내 한 화면', () => {
   beforeEach(() => {
     cleanup();
     location.hash = '';
@@ -63,22 +54,22 @@ describe('Math — 하위 화면', () => {
   });
   afterEach(() => { router.stop(); });
 
-  it("sub 'metrics' → 지표 설명 탭·패널, 그 밖은 티어 계산식", () => {
+  it('하위 화면이 없다 — 탭 줄 없이 지표 안내 표만 그린다', () => {
     render(Math_, { sub: 'metrics', params: {} });
-    expect(screen.getByRole('tab', { name: '지표 설명', selected: true })).toBeTruthy();
-    expect(screen.getByRole('tabpanel').id).toBe('math-panel-metrics');
+    expect(screen.queryByRole('tablist')).toBeNull();
     expect(screen.getByRole('table', { name: /지표 4개/ })).toBeTruthy();
-    cleanup();
-    render(Math_, { sub: 'whatever', params: {} });
-    expect(screen.getByRole('tab', { name: '티어 계산식', selected: true })).toBeTruthy();
-    expect(screen.getByRole('tabpanel').id).toBe('math-panel-cp');
-    // 이 픽스처엔 cp_constants 가 없다 — 계산식 자리에 빈 상태 문장
-    expect(screen.getByText('아직 계산식을 표시할 데이터가 없습니다.')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '지표 안내', hidden: true })).toBeTruthy();
   });
-  it('탭을 누르면 라우트가 바뀐다(#/math/metrics)', async () => {
-    render(Math_, { sub: 'cp', params: {} });
-    screen.getByRole('tab', { name: '지표 설명' }).click();
-    await new Promise((r) => setTimeout(r, 0));
-    expect(location.hash).toBe('#/math/metrics');
+  it('#/math 의 기본은 metrics, 옛 주소 #/math/cp 도 같은 지표 안내로 떨어진다', () => {
+    expect(parseHash('#/math').sub).toBe('metrics');
+    for (const hash of ['#/math', '#/math/metrics', '#/math/cp', '#/math/whatever']) {
+      const r = parseHash(hash);
+      expect(r.section).toBe('math');
+      expect(r.unknown).toBe(false);
+      cleanup();
+      render(Math_, { sub: r.sub, params: r.params });
+      expect(screen.getByRole('table', { name: /지표 4개/ }), hash).toBeTruthy();
+      expect(document.body.textContent, hash).not.toMatch(/계산식|티어|MMR|CP/);
+    }
   });
 });

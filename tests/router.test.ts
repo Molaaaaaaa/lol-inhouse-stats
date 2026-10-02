@@ -29,7 +29,7 @@ describe('parseHash', () => {
     expect(parseHash('#/synergy/heat').sub).toBe('heat');
     expect(parseHash('#/champions').sub).toBe('meta');
     expect(parseHash('#/champions/meta/UTILITY').params.lane).toBe('UTILITY');
-    expect(parseHash('#/math').sub).toBe('cp');
+    expect(parseHash('#/math').sub).toBe('metrics');
   });
   it('경기: 목록·상세·경향', () => {
     expect(parseHash('#/matches')).toMatchObject({ section: 'matches', sub: 'list' });

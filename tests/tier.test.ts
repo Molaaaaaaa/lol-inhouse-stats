@@ -1,15 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MEDAL, cpTiers, medalAt, minGamesNote, tierBadge, tierCls, wrClass } from '../src/lib/tier';
-import type { TierCut } from '../src/lib/data/types';
-
-const TIERS: TierCut[] = [
-  { name: '1티어', cp: 1400, open_top: true },
-  { name: '2티어', cp: 1300, open_top: false },
-  { name: '3티어', cp: 1200, open_top: false },
-  { name: '4티어', cp: 1100, open_top: false },
-  { name: '5티어', cp: null, open_top: false },
-];
-const DATA = { cp_constants: { tiers: TIERS } };
+import { MEDAL, medalAt, minGamesNote, wrClass } from '../src/lib/tier';
 
 describe('wrClass', () => {
   it('문턱 0.55 / 0.45 — 경계값은 중립', () => {
@@ -30,27 +20,6 @@ describe('wrClass', () => {
   it('판수를 모르는 호출부(n 없음·null)는 예전 동작 그대로', () => {
     expect(wrClass(0, null, 5)).toBe('wr-l');
     expect(wrClass(0, undefined, 5)).toBe('wr-l');
-  });
-});
-
-describe('cpTiers · tierCls · tierBadge', () => {
-  it('컷은 payload 에서만 — 없으면 빈 목록', () => {
-    expect(cpTiers(DATA)).toBe(TIERS);
-    expect(cpTiers(null)).toEqual([]);
-    expect(cpTiers(undefined)).toEqual([]);
-    expect(cpTiers({ cp_constants: null })).toEqual([]);
-    expect(cpTiers({ cp_constants: {} })).toEqual([]);
-  });
-  it('클래스는 컷 목록에 있는 이름만 — 이름을 클래스로 그대로 넣지 않는다', () => {
-    expect(tierCls('1티어', DATA)).toBe('t-1티어');
-    expect(tierCls('5티어', DATA)).toBe('t-5티어');
-    expect(tierCls('6티어', DATA)).toBe('');
-    expect(tierCls('x y', DATA)).toBe('');
-    expect(tierCls('1티어', null)).toBe('');
-  });
-  it('배지 데이터 — 글자와 클래스만, HTML 은 만들지 않는다', () => {
-    expect(tierBadge('2티어', DATA)).toEqual({ label: '2티어', cls: 'tierbadge t-2티어' });
-    expect(tierBadge('없음', DATA)).toEqual({ label: '없음', cls: 'tierbadge' });
   });
 });
 

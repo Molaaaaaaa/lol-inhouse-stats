@@ -4,11 +4,12 @@
  * 옛 renderBoard/renderBoardLane·buildRankControls/renderRank(legacy/index.html 1154–1383)의 규칙을 옮겼다:
  * - 순위·메달은 **기본 순서 기준**으로 미리 박는다. 표를 다른 열로 정렬해도 1위는 1위다(DPM 으로 정렬하면
  *   DPM 1등이 금메달을 달던 실측). 같은 값은 같은 순위(경쟁 순위 — 공동 1위 다음은 3위, MetricCell 과 같다).
- * - 통합 리더보드는 payload 의 `leaderboard`(발행 쪽 문턱 적용, Wilson 하한 ci_lower 로 정렬)를 그대로 쓴다.
+ * - 통합 리더보드는 payload 의 `leaderboard`(발행 쪽 문턱 적용)의 행을 쓴다. 순서는 서버 순서가 아니라 여기서
+ *   판수 내림차순(같은 판수는 이름 오름차순)으로 다시 세운다 — 승률·신뢰성은 실력 대리값이라 기본 순서가 아니다.
  *   패는 서버가 안 보낸다 → 판 − 승 으로 만든다(fmt 로만 만들면 정렬이 죽는다).
  * - 라인별은 `players[*].lanes`(멤버 × 라인, 라인 판수 ≥ minGamesLane). 승수는 round(승률 × 판).
  *   신뢰성은 서버가 라인별로 안 보내므로 같은 식(Wilson 95% 하한, `inhouse/stats.py:_wilson_lower`)으로 여기서
- *   낸다 — 통합과 라인별이 같은 잣대로 줄을 서야 "승률 리더보드" 하나다. 라인 MMR 은 사다리(홈)의 몫이라 여기 없다.
+ *   낸다 — 통합과 라인별이 같은 잣대의 값을 보여야 "승률 리더보드" 하나다. 값일 뿐 기본 순서가 아니다.
  * - 지표 순위는 `rankings[key]`(라인별 지표는 행마다 lane). lane 을 주면 그 라인만, 순위도 그 안에서 다시 매긴다.
  *   낮을수록 좋은 지표는 오름차순이 1위다.
  * - 이름은 `discord_name` 이라 표시명(동명이인 `이름~순번`)으로 바꾼다. 이름이 둘 이상에게 쓰이면 가릴 수 없으므로
@@ -46,10 +47,10 @@ function nameIndex(players: Record<string, PlayerPub> | null | undefined): (name
 }
 
 /**
- * 경쟁 순위(1,1,3) 와 메달을 기본 순서대로 박는다. score 가 null 인 행은 순위 없이 맨 뒤(들어온 순서).
+ * 경쟁 순위(1,1,3) 를 기본 순서대로 박는다. score 가 null 인 행은 순위 없이 맨 뒤(들어온 순서).
  * 정렬은 안정이라 같은 점수는 들어온 순서(서버 정렬)를 지킨다.
  */
-function rankRows<T extends { rank: number | null; medal: Medal | null }>(
+function rankRows<T extends { rank: number | null }>(
   rows: T[], score: (r: T) => number | null, asc = false,
 ): T[] {
   const scored = rows.filter((r) => score(r) != null);
@@ -62,7 +63,6 @@ function rankRows<T extends { rank: number | null; medal: Medal | null }>(
     if (prev === null || s !== prev) rank = i + 1;
     prev = s;
     r.rank = rank;
-    r.medal = medalAt(rank - 1);
   });
   return scored.concat(rest);
 }
@@ -91,9 +91,8 @@ export interface BoardRow {
   lane: LaneId | null;
   /** 라인 정렬용 순번(탑 0 … 서폿 4) */
   laneOrd: number;
-  /** 기본 순서(신뢰성 내림차순)의 경쟁 순위 */
+  /** 기본 순서(판수 내림차순)의 경쟁 순위 — 같은 판수는 같은 순위 */
   rank: number | null;
-  medal: Medal | null;
   games: number;
   wins: number;
   losses: number;
@@ -113,7 +112,11 @@ function numOrNull(v: unknown): number | null {
   return typeof v === 'number' && Number.isFinite(v) ? v : null;
 }
 
-/** 통합 리더보드 — payload 의 leaderboard 한 줄씩. 신뢰성(ci_lower) 내림차순으로 순위. */
+/** 기본 순서 — 판수 내림차순, 같은 판수는 이름 오름차순, 같은 멤버의 두 라인은 라인 순서 */
+const byGames = (a: BoardRow, b: BoardRow): number =>
+  b.games - a.games || a.name.localeCompare(b.name, 'ko') || a.laneOrd - b.laneOrd;
+
+/** 통합 리더보드 — payload 의 leaderboard 한 줄씩. 판수 내림차순(같으면 이름 오름차순)으로 순위. */
 function unifiedBoard(data: BoardSource): BoardRow[] {
   const who = nameIndex(data.players);
   const rows: BoardRow[] = (data.leaderboard ?? []).map((r) => {
@@ -121,13 +124,14 @@ function unifiedBoard(data: BoardSource): BoardRow[] {
     const games = Number(r.games) || 0;
     const wins = Number(r.wins) || 0;
     return {
-      key: key || `n:${name}`, name, lane: null, laneOrd: 9, rank: null, medal: null,
+      key: key || `n:${name}`, name, lane: null, laneOrd: 9, rank: null,
       games, wins, losses: games - wins,
       winrate: Number(r.winrate) || 0, ci: Number(r.ci_lower) || 0,
       kda: numOrNull(r.kda), kp: numOrNull(r.kp), dpm: numOrNull(r.dpm), cs: null, vision: null,
     };
   });
-  return rankRows(rows, (r) => r.ci);
+  rows.sort(byGames);
+  return rankRows(rows, (r) => r.games);
 }
 
 /** 라인별 리더보드 — 멤버 × 라인(그 라인 판수 ≥ minGamesLane). lane 을 주면 그 라인만. */
@@ -143,16 +147,15 @@ function laneBoard(data: BoardSource, minGamesLane: number, lane: LaneId | null)
       const winrate = Number(L.winrate) || 0;
       const wins = Math.round(winrate * games);
       rows.push({
-        key: `${key}:${L.lane}`, name, lane: L.lane, laneOrd: laneIdx(L.lane), rank: null, medal: null,
+        key: `${key}:${L.lane}`, name, lane: L.lane, laneOrd: laneIdx(L.lane), rank: null,
         games, wins, losses: games - wins, winrate, ci: wilsonLower(wins, games),
         kda: numOrNull(L.kda), kp: numOrNull(L.kp), dpm: numOrNull(L.dpm),
         cs: numOrNull(L.cs), vision: numOrNull(L.vision),
       });
     }
   }
-  // 같은 신뢰성이면 판수 많은 쪽, 그다음 승률, 그다음 이름 — 서버의 통합 리더보드와 같은 동점 처리
-  rows.sort((a, b) => b.ci - a.ci || b.games - a.games || b.winrate - a.winrate || a.name.localeCompare(b.name, 'ko'));
-  return rankRows(rows, (r) => r.ci);
+  rows.sort(byGames);
+  return rankRows(rows, (r) => r.games);
 }
 
 /** 리더보드 행 — view 에 따라 통합·라인별·라인 하나. */
@@ -201,7 +204,9 @@ export function metricRows(data: MetricSource, key: string, lane: LaneId | '' | 
       games: Number(r.games) || 0, value: Number(r.value) || 0, rank: null, medal: null,
     });
   }
-  return rankRows(rows, (r) => r.value, lowerBetter(data.lower_better, key));
+  const ranked = rankRows(rows, (r) => r.value, lowerBetter(data.lower_better, key));
+  for (const r of ranked) r.medal = r.rank == null ? null : medalAt(r.rank - 1);
+  return ranked;
 }
 
 /** 그 지표가 라인별 행을 갖는가 — metric_meta.lane 이 우선, 없으면 행에 lane 이 있는지로. */

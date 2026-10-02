@@ -53,8 +53,8 @@ describe('synergy.ts — 순수 함수', () => {
     expect(synCls(null)).toBe('');
   });
   it('fxDuo: 리프트(그대로 뺀 값)와 판수 보정값을 나눠 적는다 — 둘을 같다고 적지 않는다', () => {
-    expect(fxDuo(SYN[0]!)).toBe('=시너지 71% − 기대 47% = +0.245 → 14판 보정 +0.070');
-    expect(fxDuo(SYN[3]!)).toBe('=시너지 31% − 기대 50% = -0.192 → 13판 보정 -0.065');
+    expect(fxDuo(SYN[0]!)).toBe('=시너지 71% − 기대 47% = +0.245 · 14판 보정 +0.070');
+    expect(fxDuo(SYN[3]!)).toBe('=시너지 31% − 기대 50% = -0.192 · 13판 보정 -0.065');
   });
   it('fxTrio: 기대 승률이 없으니 승률·판수·보정값만', () => {
     expect(fxTrio(TRIOS[0]!)).toBe('=시너지(트리오) 승률 100% · 4판 보정 = +0.039');
@@ -213,7 +213,7 @@ describe('Synergy 화면', () => {
     expect(fx.text).toBe('');
     await fireEvent.click(row);
     expect(row.getAttribute('aria-selected')).toBe('true');
-    expect(fx.text).toBe('=시너지 71% − 기대 47% = +0.245 → 14판 보정 +0.070');
+    expect(fx.text).toBe('=시너지 71% − 기대 47% = +0.245 · 14판 보정 +0.070');
     await fireEvent.keyDown(row, { key: 'Enter' });
     expect(location.hash).toBe('#/m/' + encodeURIComponent('도야짬뽕누룽지탕'));
   });
@@ -235,11 +235,19 @@ describe('Synergy 화면', () => {
   });
 
   it('탭 전환은 주소를 바꾸고 수식 줄을 비운다 · 옛 주소 ties 는 기록 화면으로', async () => {
-    render(Synergy, { sub: 'duo', params: {} });
+    const { rerender } = render(Synergy, { sub: 'duo', params: {} });
     await fireEvent.click(bodyRows(tableOf('듀오 시너지'))[0]!);
     expect(fx.text).not.toBe('');
     await fireEvent.click(tab('히트맵'));
     expect(location.hash).toBe('#/synergy/heat');
+    await rerender({ sub: 'heat', params: {} });   // 라우터가 주소를 읽어 sub 를 내려 준다
+    expect(fx.text).toBe('');
+    // 탭 버튼이 아니라 해시 이동(뒤로 가기·링크)으로 sub 가 바뀌어도 같다
+    await fireEvent.click(tab('듀오'));
+    await rerender({ sub: 'duo', params: {} });
+    await fireEvent.click(bodyRows(tableOf('듀오 시너지'))[0]!);
+    expect(fx.text).not.toBe('');
+    await rerender({ sub: 'trio', params: {} });
     expect(fx.text).toBe('');
     cleanup();
     render(Synergy, { sub: 'ties', params: {} });
@@ -256,7 +264,7 @@ describe('Synergy 화면', () => {
     const cell = grid.querySelector<HTMLElement>('td[data-i="0"][data-j="3"]')!;   // 도야짬뽕누룽지탕 × 우체국집배원
     await fireEvent.click(cell);
     expect(cell.getAttribute('aria-selected')).toBe('true');
-    expect(fx.text).toBe('=시너지 71% − 기대 47% = +0.245 → 14판 보정 +0.070');
+    expect(fx.text).toBe('=시너지 71% − 기대 47% = +0.245 · 14판 보정 +0.070');
     await fireEvent.click(cell);
     expect(location.hash).toBe('#/m/' + encodeURIComponent('도야짬뽕누룽지탕'));
   });

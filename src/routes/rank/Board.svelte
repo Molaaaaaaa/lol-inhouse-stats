@@ -1,10 +1,11 @@
 <script lang="ts">
   /**
-   * 승률 리더보드 — 보기 버튼 줄(라인별(기본) · 통합 · 라인 하나, 사다리와 같은 모양) → 격자 표 → 안내 두 줄.
+   * 판수 순위 · 승률 표 — 보기 버튼 줄(라인별(기본) · 통합 · 라인 하나) → 범위·순위 기준 한 줄 → 격자 표 → 안내.
    * 보기는 URL(`#/rank/board/:lane?` — 없음=라인별 · all=통합 · 라인 키)이 상태다.
    *
-   * 통합은 payload 의 leaderboard(발행 문턱, 신뢰성 ci_lower 순), 라인별은 players[*].lanes(라인 판수 ≥ 라인 문턱).
-   * 순위·메달은 기본 순서(신뢰성) 기준으로 $lib/rank 가 미리 박는다 — 표를 다른 열로 정렬해도 1위는 1위다.
+   * 통합은 payload 의 leaderboard(발행 문턱), 라인별은 players[*].lanes(라인 판수 ≥ 라인 문턱).
+   * 기본 순서는 판수 내림차순(같으면 이름 오름차순) — 승률·신뢰성은 값으로만 두고 기본 정렬로 쓰지 않는다.
+   * 순위는 그 기본 순서(판수) 기준으로 $lib/rank 가 미리 박는다 — 표를 다른 열로 정렬해도 순위는 그대로다. 활동량 순위라 메달(1~3위 막대)은 달지 않는다.
    * 행 선택은 수식 줄에 `=승률(6/6) → 100% · 신뢰성 61%`, 같은 행을 다시 선택하면 멤버 화면(표 셀은 글자만 — DataTable 계약).
    */
   import { app } from '$lib/data/store.svelte';
@@ -50,7 +51,7 @@
     const all = view === 'all';
     const out: Col<BoardRow>[] = [
       { k: 'name', h: '멤버' },
-      { k: 'rank', h: '순위', num: true, nullLast: true, fmt: numOrDash, cls: (r) => r.medal?.cls ?? '' },
+      { k: 'rank', h: '판수 순위', num: true, nullLast: true, fmt: numOrDash },
     ];
     if (view === 'lanes') out.push({ k: 'laneOrd', h: '라인', fmt: (_v, r) => laneKo(r.lane), cls: (r) => laneCls(r.lane) });
     out.push(
@@ -76,7 +77,7 @@
   const BAND: Readonly<Record<LaneId, string>> = { TOP: 'lane-top', JUNGLE: 'lane-jg', MIDDLE: 'lane-mid', BOTTOM: 'lane-bot', UTILITY: 'lane-sup' };
   const VIEW_LABEL: Readonly<Record<'lanes' | 'all', string>> = { lanes: '라인별', all: '통합' };
   const viewLabel = (v: BoardView) => (v === 'lanes' || v === 'all' ? VIEW_LABEL[v] : laneKo(v));
-  const caption = $derived(`승률 리더보드 · ${viewLabel(view)}`);
+  const caption = $derived(`판수 순위 · ${mLabel(data?.metric_meta, 'winrate')} · ${viewLabel(view)}`);
   const hrefOf = (v: BoardView) => (v === 'lanes' ? href(['rank', 'board']) : href(['rank', 'board', v]));
 
   function setView(v: BoardView) {
@@ -85,7 +86,7 @@
     router.go(hrefOf(v));
   }
 
-  // 표 아래 한 문장 — 이 표에 누가 몇 줄 있고, 순위가 무엇 기준인지
+  // 표 위 한 줄 — 이 표에 누가 몇 줄 있고, 순위가 무엇 기준인지
   const scopeNote = $derived.by(() => {
     const n = rows.length;
     const head = view === 'lanes'
@@ -93,7 +94,7 @@
       : view === 'all'
         ? `${n}명 · 전체 경기 기준`
         : `${laneKo(view)} ${app.minGamesLane}판 이상 출전한 ${n}명 · ${laneKo(view)} 경기만 집계`;
-    return `${head}. 순위는 신뢰성(승률의 Wilson 하한) 기준입니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.`;
+    return `${head}. 순위는 판수 기준입니다.`;
   });
 
   /** 수식 줄 — 승률의 계산 근거. 라인별 행은 어느 라인 판인지 같이 적는다 */
@@ -120,6 +121,8 @@
       {/each}
     </div>
 
+    <p class="note">{scopeNote}</p>
+
     <div class="sheet">
       {#key view}
         <DataTable {rows} {cols} {caption} sortKey="rank" sortDir={1} lowerBetterKeys={LOWER}
@@ -127,7 +130,7 @@
       {/key}
     </div>
 
-    <p class="note">{scopeNote}</p>
+    <p class="note">신뢰성(승률의 Wilson 하한)은 열 머리를 선택하면 그 값으로 정렬합니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.</p>
     {#if note}
       <p class="note">{note.text} <QMark text={note.tip} label={note.tipLabel} /></p>
     {/if}
@@ -139,7 +142,7 @@
 <style>
   .board { display: flex; flex-direction: column; gap: var(--sp-3); }
 
-  /* 보기 버튼 — 사다리(홈)와 같은 어휘: 라인 칩 모양(왼쪽 3px 띠)의 작은 버튼, 눌린 것은 선택색 테두리 */
+  /* 보기 버튼 — 라인 칩 모양(왼쪽 3px 띠)의 작은 버튼, 눌린 것은 선택색 테두리 */
   .views { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
   .vb {
     min-height: 28px;
@@ -165,12 +168,6 @@
   .vb.lane-bot { border-left-color: var(--lane-bot); }
   .vb.lane-sup { border-left-color: var(--lane-sup); }
   .vb .n { font-variant-numeric: tabular-nums; }
-
-  /* 메달 — 순위 셀 왼쪽 띠(사다리와 같은 모양). 승·패 채움은 DataTable 의 win/loss */
-  .sheet :global(td.medal) { font-weight: 700; color: var(--txt); }
-  .sheet :global(td.m1) { border-left: 3px solid var(--t1); }
-  .sheet :global(td.m2) { border-left: 3px solid var(--dim2); }
-  .sheet :global(td.m3) { border-left: 3px solid var(--t4); }
 
   .note { max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
 

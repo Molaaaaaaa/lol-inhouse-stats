@@ -55,7 +55,7 @@
       <DataTable rows={best} cols={partnerCols} caption="잘 맞는 파트너" sortKey="synergy" rowKey={partnerKey} onselect={open} />
       <DataTable rows={worst} cols={partnerCols} caption="안 맞는 파트너" sortKey="synergy" sortDir={1} rowKey={partnerKey} onselect={open} />
     </div>
-    <p class="note">시너지는 함께 이긴 비율에서 각자 실력으로 기대되는 승률을 뺀 값입니다. 행을 선택하면 그 멤버 화면으로 이동합니다.</p>
+    <p class="note">시너지는 함께 이긴 비율에서 각자 승률로 기대되는 승률을 뺀 값입니다. 행을 선택하면 그 멤버 화면으로 이동합니다.</p>
     <div class="pair">
       <DataTable rows={nemesis} cols={champCols} caption="상대하기 어려운 챔피언" />
       <DataTable rows={victim} cols={champCols} caption="상대하기 쉬운 챔피언" />

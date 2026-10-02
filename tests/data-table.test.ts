@@ -225,7 +225,7 @@ describe('DataTable — 셀 서식', () => {
   it('num 열은 .num, cls 와 rowClass 가 붙는다, code 판·물음표 버튼', () => {
     const cols: Col<Row>[] = [
       { k: 'name', h: '멤버', cls: (r) => (r.win ? 'win' : 'loss') },
-      { k: 'games', h: '판수', num: true, code: 'GP', hlp: 'MMR' },
+      { k: 'games', h: '판수', num: true, code: 'GP', hlp: 'MVP' },
     ];
     const { container, getByRole } = render(DataTable, {
       rows: ROWS, cols, caption: 't', rowClass: (r: Row) => (r.games < 5 ? 'few' : ''),
@@ -237,11 +237,11 @@ describe('DataTable — 셀 서식', () => {
     expect(container.querySelector('tbody tr:nth-child(3) td.c0')?.classList.contains('loss')).toBe(true);
     expect(th(container, '판수').querySelector('.code.plate')?.textContent).toBe('GP');
     const q = getByRole('button', { name: '판수 설명' });
-    expect(document.getElementById(q.getAttribute('aria-describedby') ?? '')?.textContent).toBe(helpText('MMR'));
+    expect(document.getElementById(q.getAttribute('aria-describedby') ?? '')?.textContent).toBe(helpText('MVP'));
     expect(th(container, '멤버').querySelector('.qmark')).toBeNull();
   });
   it('물음표 클릭·Enter 는 툴팁만 열고 정렬은 일어나지 않는다', async () => {
-    const cols: Col<Row>[] = [{ k: 'name', h: '멤버' }, { k: 'games', h: '판수', num: true, hlp: 'MMR' }];
+    const cols: Col<Row>[] = [{ k: 'name', h: '멤버' }, { k: 'games', h: '판수', num: true, hlp: 'MVP' }];
     const { container, getByRole } = render(DataTable, { rows: ROWS, cols, caption: 't' });
     const q = getByRole('button', { name: '판수 설명' });
     await fireEvent.click(q);
@@ -352,7 +352,7 @@ describe('DataTable — 2줄 장부 행(rows2)', () => {
   afterEach(() => { media.phone = false; });
   const pickCols: Col<Row>[] = [
     { k: 'name', h: '멤버' },
-    { k: 'games', h: '판수', num: true, lo: true, code: 'GP', hlp: 'MMR',
+    { k: 'games', h: '판수', num: true, lo: true, code: 'GP', hlp: 'MVP',
       pick: { value: '', label: '판수 선택', onchange: () => {}, options: [{ v: '', label: '전체' }, { v: 'hi', label: '5판 이상' }] } },
     { k: 'wr', h: '승률', num: true, bar: true, fmt: (v) => `${Math.round(Number(v) * 100)}%` },
   ];

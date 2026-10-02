@@ -200,7 +200,7 @@
 <style>
   .mr { display: flex; flex-direction: column; gap: var(--sp-3); }
 
-  /* 칩 — 사다리의 보기 버튼과 같은 어휘(작은 셀 모양, 눌린 것은 선택색 테두리 + 떠 있는 바탕). 색만으로 구분하지 않는다 */
+  /* 칩 — 순위 표의 보기 버튼과 같은 어휘(작은 셀 모양, 눌린 것은 선택색 테두리 + 떠 있는 바탕). 색만으로 구분하지 않는다 */
   .groups, .chips, .lanes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1); }
   .chip, .vb {
     min-height: 28px;
@@ -266,11 +266,11 @@
     white-space: nowrap;
   }
 
-  /* 메달 — 순위 셀 왼쪽 띠(사다리와 같은 모양) */
+  /* 메달 — 순위 셀 왼쪽 띠 */
   .sheet :global(td.medal) { font-weight: 700; color: var(--txt); }
-  .sheet :global(td.m1) { border-left: 3px solid var(--t1); }
+  .sheet :global(td.m1) { border-left: 3px solid var(--medal-1); }
   .sheet :global(td.m2) { border-left: 3px solid var(--dim2); }
-  .sheet :global(td.m3) { border-left: 3px solid var(--t4); }
+  .sheet :global(td.m3) { border-left: 3px solid var(--medal-3); }
 
   .note { max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
   .pend { display: inline-flex; align-items: center; margin-right: var(--sp-2); white-space: nowrap; }

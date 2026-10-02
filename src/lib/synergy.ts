@@ -42,11 +42,11 @@ export function synCls(v: number | null | undefined): string {
 }
 
 /**
- * 듀오 한 행의 계산 근거 — `=시너지 71% − 기대 47% = +0.245 → 14판 보정 +0.070`.
+ * 듀오 한 행의 계산 근거 — `=시너지 71% − 기대 47% = +0.245 · 14판 보정 +0.070`.
  * 앞은 리프트(그대로 뺀 값), 뒤는 판수로 0 쪽에 당긴 발행값. 둘을 같다고 적지 않는다.
  */
 export function fxDuo(r: Pick<SynergyRow, 'winrate' | 'expected' | 'lift' | 'synergy' | 'games'>): string {
-  return `=시너지 ${pct(r.winrate)} − 기대 ${pct(r.expected)} = ${sgn(r.lift)} → ${r.games}판 보정 ${sgn(r.synergy)}`;
+  return `=시너지 ${pct(r.winrate)} − 기대 ${pct(r.expected)} = ${sgn(r.lift)} · ${r.games}판 보정 ${sgn(r.synergy)}`;
 }
 
 // ── 트리오 ───────────────────────────────────────────────────────────

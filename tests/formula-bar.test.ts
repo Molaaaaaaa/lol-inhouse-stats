@@ -5,7 +5,7 @@ import FormulaBar from '../src/components/FormulaBar.svelte';
 import { fx, setFx, clearFx } from '../src/lib/fx.svelte';
 
 const HINT = '행을 선택하면 계산 근거가 여기에 보입니다.';
-const LONG = '=티어(CP 1135) → 2티어 85점 · 탑 MMR 1185 · 탑 6판 (라인 배치 3/5) · 아주 긴 계산 근거가 두 줄을 넘는 경우';
+const LONG = '=승률(6/10) → 60% · 탑 신뢰성 31% · 탑 10판 (라인 기준 3판) · 아주 긴 계산 근거가 두 줄을 넘는 경우';
 
 /** jsdom 은 배치를 안 하므로 넘침을 흉내 낸다 — 글이 길면 접힌 두 줄(40px)보다 높다 */
 function fakeLayout(over: (el: HTMLElement) => boolean) {
@@ -38,26 +38,26 @@ describe('FormulaBar', () => {
 
   it('setFx 가 바로 반영된다 · 글은 title 이 아니라 본문에, 두 줄 접힘(clamp) 으로 — 말줄임 없음', async () => {
     render(FormulaBar);
-    setFx('=티어(CP 1135) → 2티어 85점 · MMR 1185 · 6판');
+    setFx('=승률(6/10) → 60% · 신뢰성 31% · 10판');
     await flush();
     const bar = screen.getByRole('status', { name: '수식 줄' });
     expect(bar.textContent).not.toContain(HINT);
     const body = bar.querySelector('.body')!;
-    expect(body.textContent).toBe('=티어(CP 1135) → 2티어 85점 · MMR 1185 · 6판');
+    expect(body.textContent).toBe('=승률(6/10) → 60% · 신뢰성 31% · 10판');
     expect(body.getAttribute('title')).toBeNull();
     expect(body.querySelector('.txt')?.classList.contains('clamp')).toBe(true);
     // 두 줄에 들어가면 버튼이 아니다(누를 것이 없다)
     expect(bar.querySelector('button')).toBeNull();
-    // ' · ' 로 나뉜 조각은 저마다 nowrap span — 숫자와 단위('6판'·'MMR 1185')가 줄 끝에서 갈라지지 않는다
-    expect([...body.querySelectorAll('.nb')].map((s) => s.textContent)).toEqual(['=티어(CP 1135) → 2티어 85점', 'MMR 1185', '6판']);
+    // ' · ' 로 나뉜 조각은 저마다 nowrap span — 숫자와 단위('10판'·'신뢰성 31%')가 줄 끝에서 갈라지지 않는다
+    expect([...body.querySelectorAll('.nb')].map((s) => s.textContent)).toEqual(['=승률(6/10) → 60%', '신뢰성 31%', '10판']);
   });
 
   it("' · ' 가 없는 글은 조각 하나, 빈 조각도 그대로 둔다(글자를 잃지 않는다)", async () => {
     render(FormulaBar);
-    setFx('=배치(2/5판) → 티어 산정 전');
+    setFx('=승률(2/5) → 40%');
     await flush();
     const bar = screen.getByRole('status', { name: '수식 줄' });
-    expect([...bar.querySelectorAll('.nb')].map((s) => s.textContent)).toEqual(['=배치(2/5판) → 티어 산정 전']);
+    expect([...bar.querySelectorAll('.nb')].map((s) => s.textContent)).toEqual(['=승률(2/5) → 40%']);
     setFx('a ·  · b');
     await flush();
     expect(bar.querySelector('.txt')?.textContent).toBe('a ·  · b');
@@ -84,17 +84,17 @@ describe('FormulaBar', () => {
     expect(bar.querySelector('button.body')?.getAttribute('aria-expanded')).toBe('false');
     expect(bar.querySelector('.txt')?.classList.contains('clamp')).toBe(true);
     // 짧은 글로 바뀌면 버튼이 사라진다
-    setFx('=SUM(d_mmr) 1000 + 185 = 1185');
+    setFx('=승률(탑 6/6) → 100%');
     await flush();
     expect(bar.querySelector('button')).toBeNull();
-    expect(bar.querySelector('.body')?.textContent).toBe('=SUM(d_mmr) 1000 + 185 = 1185');
+    expect(bar.querySelector('.body')?.textContent).toBe('=승률(탑 6/6) → 100%');
   });
 
   it('clearFx 로 안내문으로 돌아온다 · fx.text 가 곧 상태다', async () => {
     render(FormulaBar);
-    setFx('=SUM(d_mmr) 1000 + 185 = 1185');
+    setFx('=승률(탑 6/6) → 100%');
     await tick();
-    expect(fx.text).toBe('=SUM(d_mmr) 1000 + 185 = 1185');
+    expect(fx.text).toBe('=승률(탑 6/6) → 100%');
     clearFx();
     await tick();
     expect(fx.text).toBe('');

@@ -7,12 +7,12 @@
  *   같은 라인)를 솔랭 표본 위에 놓으면 방과 무관한 눈금이 생긴다. 라인전·개인기 축은 표본에
  *   그 열이 없어 '기준 없음'으로 비운다 — 있는 척하지 않는다.
  *
- * 왜 티어 이름을 붙이지 않나 (실측)
+ * 왜 구간 이름표를 붙이지 않나 (실측)
  *   판당 딜·딜 비중·시야는 골드와 마스터의 중앙값이 거의 같다(딜은 골드가 오히려 높다).
- *   티어 이름을 붙이면 근거 없는 라벨이 된다 → 합산 표본 안의 **백분위만** 말한다.
+ *   '에메랄드급' 같은 이름표를 붙이면 근거 없는 라벨이 된다 → 합산 표본 안의 **백분위만** 말한다.
  *   payload 의 tiers·tier_med 는 투명성용이고 여기서는 읽지 않는다.
  *
- * ⚠️ 배치 규칙은 파이썬 `inhouse/baseline.py:place` 와 **같은 식**이어야 한다. 검사
+ * ⚠️ 위치(place) 계산식은 파이썬 `inhouse/baseline.py:place` 와 **같은 식**이어야 한다. 검사
  *    (`scripts/_inhouse_check.py`)가 양쪽에 같은 수치 사례를 건다. 바꾸려면 둘 다 바꾼다.
  * ⚠️ 표본 크기·패치는 글에 박지 않는다 — payload 로 찍는다. 툴팁만 옛 값이라 '약 10만'과
  *    '49,094판'이 한 화면에 같이 뜬 적이 있다(`baseSampleText` 가 단일 출처).
@@ -74,7 +74,7 @@ export function baselinePos(
   return { pos, top, label: `솔랭 상위 ${top}%`, cls: pos >= 75 ? 'good' : pos <= 25 ? 'bad' : '' };
 }
 
-/** 표본 판수 — games 는 티어별 사전({GOLD:…, MASTER:…})이라 합쳐서 쓴다. */
+/** 표본 판수 — games 는 구간별 사전({GOLD:…, MASTER:…})이라 합쳐서 쓴다. */
 export function baselineGames(b: Pick<Baseline, 'games'> | null | undefined): number {
   const g = b?.games;
   if (!g || typeof g !== 'object') return 0;

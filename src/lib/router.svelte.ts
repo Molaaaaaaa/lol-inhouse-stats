@@ -59,7 +59,7 @@ const PATTERNS: Pattern[] = [
 ];
 
 const DEFAULT_SUB: Partial<Record<Section, string>> = {
-  records: 'hall', synergy: 'duo', champions: 'meta', math: 'cp',
+  records: 'hall', synergy: 'duo', champions: 'meta', math: 'metrics',
 };
 
 function decode(s: string): string {

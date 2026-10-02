@@ -9,7 +9,6 @@
  */
 
 export type LaneId = 'TOP' | 'JUNGLE' | 'MIDDLE' | 'BOTTOM' | 'UTILITY';
-export type TierName = '1티어' | '2티어' | '3티어' | '4티어' | '5티어';
 
 // ── 색인 ──────────────────────────────────────────────────────────────
 export interface GuildIndexEntry {
@@ -32,46 +31,6 @@ export interface RankingRow { discord_name: string; games: number; value: number
 export interface RankingPending { key: string; label: string; reason: string }
 /** 멤버 화면의 지표 셀 — 순위는 경쟁순위(공동 3위 다음은 5위) */
 export interface MetricCell { value: number; games: number; lane: LaneId | null; rank: number; n: number; pct: number }
-
-// ── 사다리 (CP·MMR) ───────────────────────────────────────────────────
-export interface CpLane { mmr: number; dev: number; games: number; placed: boolean; strength: number }
-export interface CpReplayRow {
-  m: string;         // 경기 슬러그 (라이엇 매치 ID 아님)
-  ts: number; lane: LaneId; win: boolean;
-  k: number; e: number; contrib: number; adj: number;
-  avg_me: number; avg_opp: number;
-  d_mmr: number; d_cp: number; mmr: number; cp: number;
-}
-export interface CpEntry {
-  name: string; games: number; main_lane: LaneId;
-  mmr: number; cp: number; tier: TierName; points: number; to_next: number | null;
-  placed: boolean;           // 배치 5판 전이면 false — 티어는 **어디에도** 보이면 안 된다
-  lanes: Record<string, CpLane>;
-  replay: CpReplayRow[];     // 합계가 화면 MMR 과 같아야 한다 (검산 화면)
-}
-export interface TierCut { name: TierName; cp: number | null; open_top: boolean }
-export interface CpConstants {
-  placement_games: number; k_place: number; k_norm: number; k_decay_half: number | null; k_min: number;
-  mmr_base: number; cp_base: number; cp_min: number; cp_max: number; cp_size: number; e_clamp: number;
-  cp_gap_div: number; cp_gap_cap: number; cp_adj_w: number; tier_points: number; tiers: TierCut[];
-  lane_prior_k: number; off_lane_prior: number; dev_scale: number; dev_cap: number;
-  perf_w: number; lean_w: number; lean_ref: number; perf_elo_per_z: number; perf_shrink_k: number; perf_z_cap: number;
-  contrib_lo: number; contrib_hi: number; contrib_z_scale: number; lane_base_k: number;
-  contrib_weights: { kp: number; dmg_share: number; kda_n: number };
-}
-export interface RatingEntry {
-  name: string; games: number; main_lane: LaneId; playable: LaneId[];
-  mmr: number; cp: number; tier: TierName; placed: boolean; strength: number;
-  lanes: Record<string, CpLane>;
-}
-export interface RatingConstants {
-  mmr_base: number; mmr_scale: number; off_role_penalty: number; off_lane_prior_elo: number;
-  info_e_window: number; info_kernel_logit: number;
-}
-export interface CpOffLane {
-  on_games: number; off_games: number; on_winrate: number; off_winrate: number;
-  se_winrate: number; significant: boolean; constant: number; implied_mmr: number;
-}
 
 // ── 리더보드·기록·시너지 ─────────────────────────────────────────────
 export interface LeaderboardRow {
@@ -194,11 +153,6 @@ export interface GuildPayload {
   metric_meta: Record<string, MetricMeta>;
   lower_better: string[];
   profile_scale: { step: number; spread: number; room_avg: number; max: number; shrink_k: number; rings: number; delta_min: number };
-  cp: Record<string, CpEntry>;
-  cp_constants: CpConstants;
-  cp_off_lane: CpOffLane;
-  ratings: Record<string, RatingEntry>;
-  rating_constants: RatingConstants;
   records: RecordsMap;
   server_records: ServerRecords;
   mvp: MvpRow[];
