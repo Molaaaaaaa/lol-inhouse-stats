@@ -1,17 +1,14 @@
 /**
- * 멤버 화면의 파생값 — 머리 전적 셀·라인별 표·능력치 축·MMR 검산·맞대결. 전부 순수 함수다.
+ * 멤버 화면의 파생값 — 머리 전적 셀·라인별 성적 표·능력치 축·맞대결. 전부 순수 함수다.
  *
  * 전역 store 를 읽지 않는다. 컴포넌트가 payload 조각(`data`)·멤버(`p`)·키를 넘기고, 테스트는
- * 작은 픽스처를 넘긴다. 옛 renderPlayerBody·renderMathMmr·renderCompare(legacy/index.html)의
+ * 작은 픽스처를 넘긴다. 옛 renderPlayerBody·renderCompare(legacy/index.html)의
  * 계산 규칙만 옮겼고 문구 조립은 여기서, 마크업은 컴포넌트에서 한다.
  *
- * ⚠️ 배치 전(placed=false)에는 티어 이름이 **어디에도** 안 나온다 — 수식 줄 문구도 마찬가지.
  * ⚠️ h2h 키 `pA|pB` 의 순서는 발행마다 다를 수 있다(실측: `p2|p10` 과 `p17|p10` 이 같이 있다).
  *    두 방향을 다 찾고, 뒤집힌 키면 승패·챔피언을 바꿔 읽는다.
  */
-import type {
-  CpEntry, CpReplayRow, GuildPayload, H2HEntry, LaneId, PlayerPub, ProfileAxis,
-} from './data/types';
+import type { H2HEntry, LaneId, PlayerPub, ProfileAxis } from './data/types';
 import { displayName } from './data/store.svelte';
 import { pct } from './fmt';
 import { isLaneId, laneIdx } from './lanes';
@@ -72,44 +69,39 @@ export function headerStats(p: Pick<PlayerPub, 'record' | 'form'>, meta: MetricM
   return out;
 }
 
-// ── 라인별 표 ─────────────────────────────────────────────────────────
+// ── 라인별 성적 표 ───────────────────────────────────────────────────────
 
 export interface LaneRow {
   lane: LaneId | string;
   games: number;
-  mmr: number | null;
-  dev: number | null;
-  placed: boolean;
-  /** 배치 셀 글자 — 미완이면 '배치 n/3', 완료면 '완료' */
-  placement: string;
   winrate: number | null;
   kda: number | null;
   dpm: number | null;
   kp: number | null;
 }
 
-export type LaneRowsData = Pick<GuildPayload, 'cp' | 'ratings' | 'players' | 'min_games_lane'>;
-
 /**
- * 라인별 티어·MMR 표의 행 — cp[key].lanes(라인 MMR·편차·배치)에 players[key].lanes(승률·KDA·…)를
- * 붙인다. 출전 0판인 라인은 뺀다(추정치뿐이라 표에 둘 게 없다). 정렬은 판수 내림차순, 배치 미완은 뒤.
- * 티어 이름은 여기 없다 — 라인 CP 는 계약(types.ts)에 없고, 미완 라인은 어디에도 티어를 안 보인다.
+ * 라인별 성적 표의 행 — players[key].lanes 의 라인별 승률·KDA·분당 딜·킬 관여. 출전 0판인 라인은 뺀다.
+ * 정렬은 판수 내림차순(활동량), 같으면 화면 라인 순서(탑→서폿).
  */
-export function laneRows(data: LaneRowsData, key: string): LaneRow[] {
-  const lanes = data.cp?.[key]?.lanes ?? data.ratings?.[key]?.lanes ?? {};
-  const stats = new Map((data.players?.[key]?.lanes ?? []).map((s) => [s.lane as string, s]));
-  const need = data.min_games_lane || 3;
+export function laneRows(p: Pick<PlayerPub, 'lanes'> | null | undefined): LaneRow[] {
   const rows: LaneRow[] = [];
-  for (const [lane, L] of Object.entries(lanes)) {
-    if (!L || !(L.games > 0)) continue;
-    const s = stats.get(lane);
-    rows.push({
-      lane, games: L.games, mmr: L.mmr ?? null, dev: L.dev ?? null, placed: !!L.placed,
-      placement: L.placed ? '완료' : `배치 ${L.games}/${need}`,
-      winrate: s?.winrate ?? null, kda: s?.kda ?? null, dpm: s?.dpm ?? null, kp: s?.kp ?? null,
-    });
+  for (const s of p?.lanes ?? []) {
+    if (!(s.games > 0)) continue;
+    rows.push({ lane: s.lane, games: s.games, winrate: s.winrate ?? null, kda: s.kda ?? null, dpm: s.dpm ?? null, kp: s.kp ?? null });
   }
-  return rows.sort((a, b) => Number(b.placed) - Number(a.placed) || b.games - a.games || laneIdx(a.lane) - laneIdx(b.lane));
+  return rows.sort((a, b) => b.games - a.games || laneIdx(a.lane) - laneIdx(b.lane));
+}
+
+/** 주 라인 — 가장 많이 뛴 라인(role_dist). 동률이면 화면 라인 순서(탑→서폿)에서 앞선 쪽. 뛴 판이 없으면 ''. */
+export function mainLaneOf(p: Pick<PlayerPub, 'role_dist'> | null | undefined): LaneId | '' {
+  let best: LaneId | '' = '';
+  let most = 0;
+  for (const r of p?.role_dist ?? []) {
+    if (!isLaneId(r.lane) || !(r.games > 0)) continue;
+    if (r.games > most || (r.games === most && best !== '' && laneIdx(r.lane) < laneIdx(best))) { best = r.lane; most = r.games; }
+  }
+  return best;
 }
 
 // ── 능력치 축 ─────────────────────────────────────────────────────────
@@ -147,71 +139,11 @@ export function deltaText(d: number | null | undefined): string {
   return (d > 0 ? '▲' : '▼') + Math.abs(d).toFixed(2);
 }
 
-// ── MMR 검산 ──────────────────────────────────────────────────────────
-
-export interface ReplayRow extends CpReplayRow {
-  n: number;
-  res: '승' | '패';
-}
-
-/** 경기별 리플레이 행(1..n 번호와 승패 글자를 붙인다). 순서는 payload 그대로(시간순). */
-export function replayRows(cp: Pick<CpEntry, 'replay'> | null | undefined): ReplayRow[] {
-  return (cp?.replay ?? []).map((r, i) => ({ ...r, n: i + 1, res: r.win ? '승' : '패' }));
-}
-
-export interface ReplayCheck {
-  sum: number;      // Σ 델타
-  total: number;    // base + Σ
-  shown: number;    // 화면에 보이는 값(mmr 또는 cp)
-  ok: boolean;      // |total − shown| ≤ 허용 오차(행마다 소수 3자리 반올림)
-}
-
-/**
- * 합계 검산 — mmr_base + Σd_mmr 이 표시 MMR 과 같은가(cp 도 같은 식). 허용 오차는 반올림 표시
- * 0.5 에 행마다 소수 3자리 오차(0.0005)를 더한 것(옛 renderMathMmr 과 같다).
- */
-export function replayCheck(
-  cp: Pick<CpEntry, 'replay' | 'mmr' | 'cp'> | null | undefined,
-  base: number,
-  field: 'd_mmr' | 'd_cp' = 'd_mmr',
-): ReplayCheck {
-  const rows = cp?.replay ?? [];
-  const sum = rows.reduce((t, r) => t + (Number(r[field]) || 0), 0);
-  const total = base + sum;
-  const shown = Number(field === 'd_mmr' ? cp?.mmr : cp?.cp) || 0;
-  const tol = 0.5 + rows.length * 0.0005;
-  return { sum, total, shown, ok: Math.abs(total - shown) <= tol };
-}
-
-/** 부호 붙은 수 — 수식 줄용. 음수는 유니코드 마이너스(−)로, 표의 sgn(하이픈)과는 다르다. */
-function signed(x: number, digits: number): string {
-  return (x < 0 ? '−' : '+') + Math.abs(x).toFixed(digits);
-}
-
-/** 검산 표 한 행의 근거 — `=64 × ((0 − 0.467) + 0.019) = −28.70` */
-export function fxReplayRow(r: Pick<CpReplayRow, 'k' | 'win' | 'e' | 'adj' | 'd_mmr'>): string {
-  const adj = `${r.adj < 0 ? '−' : '+'} ${Math.abs(r.adj).toFixed(3)}`;
-  return `=${Math.round(r.k)} × ((${r.win ? 1 : 0} − ${r.e.toFixed(3)}) ${adj}) = ${signed(r.d_mmr, 2)}`;
-}
-
-/** 합계 행의 근거 — `=SUM(ΔMMR) 1000 + 185.35 = 1185.35 → 1185` */
-export function fxReplaySum(c: ReplayCheck, base: number, name = 'ΔMMR'): string {
-  const op = c.sum < 0 ? '−' : '+';
-  return `=SUM(${name}) ${base} ${op} ${Math.abs(c.sum).toFixed(2)} = ${c.total.toFixed(2)} → ${c.shown}`;
-}
-
 // ── 수식 줄(멤버 머리) ────────────────────────────────────────────────
 
-/**
- * 멤버 화면을 열 때 수식 줄에 두는 근거 — `=티어(CP 1135) → 2티어 85점 · MMR 1185 · 6판`.
- * 배치 전에는 티어 대신 `배치 n/5`(티어 이름은 어디에도 안 나온다).
- */
-export function fxMember(c: Pick<CpEntry, 'cp' | 'tier' | 'points' | 'mmr' | 'games' | 'placed'> | null | undefined, placementGames: number): string {
-  if (!c) return '';
-  const head = c.placed
-    ? `=티어(CP ${c.cp}) → ${c.tier} ${c.points}점`
-    : `=티어(CP ${c.cp}) → 배치 ${c.games}/${placementGames}`;
-  return `${head} · MMR ${c.mmr} · ${c.games}판`;
+/** 멤버 화면을 열 때 수식 줄에 두는 근거 — `=승률(승 13 · 패 16) → 45% · 29판`. 지표 이름은 mLabel 만 쓴다. */
+export function fxMember(r: Pick<PlayerPub['record'], 'games' | 'wins' | 'losses' | 'winrate'>, meta: MetricMetaMap | null | undefined): string {
+  return `=${mLabel(meta, 'winrate')}(승 ${r.wins} · 패 ${r.losses}) → ${pct(r.winrate)} · ${r.games}판`;
 }
 
 // ── 맞대결(h2h) ───────────────────────────────────────────────────────

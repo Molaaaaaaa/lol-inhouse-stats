@@ -1,16 +1,8 @@
 /**
  * 멤버 화면 테스트 픽스처 — 실데이터(2026-09-18)의 모양을 작게 줄인 payload 조각.
- * p1 앙앙맹(배치 완료, 라인 2개) · p2 맹구(배치 전) · p3 Faker(비교용). 검산은 3판.
+ * p1 앙앙맹(라인 3개, 주 라인 원딜) · p2 맹구(5판 미만) · p3 Faker(비교용).
  */
-import type { CpEntry, CpReplayRow, GuildPayload, PlayerPub, ProfileAxis } from '../../src/lib/data/types';
-
-const TIERS = [
-  { name: '1티어', cp: 1150, open_top: true },
-  { name: '2티어', cp: 1050, open_top: false },
-  { name: '3티어', cp: 950, open_top: false },
-  { name: '4티어', cp: 850, open_top: false },
-  { name: '5티어', cp: null, open_top: false },
-] as const;
+import type { GuildPayload, PlayerPub, ProfileAxis } from '../../src/lib/data/types';
 
 export const META = {
   winrate: { label: '승률', lane: false, fmt: 'pct', desc: '이긴 판의 비율.' },
@@ -34,26 +26,11 @@ export const PROFILE: ProfileAxis[] = [
   axis('mechanics', '개인기', 3.31, 4, 25, 29, -0.52),
 ];
 
-export const REPLAY: CpReplayRow[] = [
-  { m: 'm1', ts: 1787486329350, lane: 'MIDDLE', win: false, k: 64, e: 0.467, contrib: 1.037, adj: 0.0187, avg_me: 968.9, avg_opp: 991.7, d_mmr: -28.703, d_cp: -18.389, mmr: 971.297, cp: 981.611 },
-  { m: 'm2', ts: 1787572729350, lane: 'BOTTOM', win: true, k: 64, e: 0.5, contrib: 1.1, adj: 0.05, avg_me: 980, avg_opp: 980, d_mmr: 35.2, d_cp: 20.5, mmr: 1006.497, cp: 1002.111 },
-  { m: 'm3', ts: 1787659129350, lane: 'BOTTOM', win: true, k: 64, e: 0.55, contrib: 0.9, adj: -0.05, avg_me: 1000, avg_opp: 990, d_mmr: 25.6, d_cp: 18.0, mmr: 1032.097, cp: 1020.111 },
-];
-const SUM_MMR = REPLAY.reduce((t, r) => t + r.d_mmr, 0);
-const SUM_CP = REPLAY.reduce((t, r) => t + r.d_cp, 0);
-
-export const CP_P1: CpEntry = {
-  name: '앙앙맹', games: 29, main_lane: 'BOTTOM', mmr: Math.round(1000 + SUM_MMR), cp: Math.round(1000 + SUM_CP),
-  tier: '2티어', points: 20, to_next: 80, placed: true,
-  lanes: {
-    BOTTOM: { mmr: 1041, dev: 9, games: 19, placed: true, strength: 0.1 },
-    JUNGLE: { mmr: 1020, dev: -12, games: 7, placed: true, strength: 0.05 },
-    MIDDLE: { mmr: 1005, dev: -27, games: 2, placed: false, strength: 0 },
-    TOP: { mmr: 1002, dev: -30, games: 0, placed: false, strength: 0 },
-    UTILITY: { mmr: 1002, dev: -30, games: 0, placed: false, strength: 0 },
-  },
-  replay: REPLAY,
-};
+/**
+ * 발행 payload 에는 사다리 필드(cp·ratings)가 아직 실려 온다 — 화면은 읽지 않는다. 읽지 않음을 보이려고 일부러 남긴다
+ * (티어·MMR·CP·배치 글자가 화면에 없다는 단언이 이 필드가 있는 payload 로 돈다).
+ */
+const LADDER_P1 = { name: '앙앙맹', games: 29, main_lane: 'JUNGLE', mmr: 1032, cp: 1020, tier: '2티어', points: 20, to_next: 80, placed: true, lanes: {}, replay: [] };
 
 function player(name: string, games: number, wins: number, extra: Partial<PlayerPub> = {}): PlayerPub {
   const losses = games - wins;
@@ -76,27 +53,15 @@ export const PAYLOAD = {
   metric_meta: META, lower_better: ['deaths_per_game'],
   profile_scale: { step: 0.01, spread: 1.5, room_avg: 2.75, max: 5, shrink_k: 2, rings: 5, delta_min: 0.3 },
   cp: {
-    p1: CP_P1,
-    p2: { name: '맹구', games: 3, main_lane: 'TOP', mmr: 1010, cp: 1005, tier: '3티어', points: 55, to_next: 45, placed: false, lanes: { TOP: { mmr: 1010, dev: 0, games: 3, placed: false, strength: 0 } }, replay: [] },
-    p3: { name: 'Faker', games: 12, main_lane: 'MIDDLE', mmr: 1120, cp: 1160, tier: '1티어', points: 10, to_next: null, placed: true, lanes: { MIDDLE: { mmr: 1130, dev: 10, games: 12, placed: true, strength: 0.3 } }, replay: [] },
+    p1: LADDER_P1,
+    p2: { name: '맹구', games: 3, main_lane: 'TOP', mmr: 1010, cp: 1005, tier: '3티어', points: 55, to_next: 45, placed: false, lanes: {}, replay: [] },
+    p3: { name: 'Faker', games: 12, main_lane: 'MIDDLE', mmr: 1120, cp: 1160, tier: '1티어', points: 10, to_next: null, placed: true, lanes: {}, replay: [] },
   },
-  cp_constants: {
-    placement_games: 5, k_place: 64, k_norm: 32, k_decay_half: 20, k_min: 16,
-    mmr_base: 1000, cp_base: 1000, cp_min: 500, cp_max: 1500, cp_size: 100, e_clamp: 0.1,
-    cp_gap_div: 100, cp_gap_cap: 5, cp_adj_w: 0.5, tier_points: 100, tiers: TIERS,
-    lane_prior_k: 5, off_lane_prior: -30, dev_scale: 1, dev_cap: 60,
-    perf_w: 0.5, lean_w: 0, lean_ref: 0, perf_elo_per_z: 0, perf_shrink_k: 2, perf_z_cap: 1,
-    contrib_lo: 0.7, contrib_hi: 1.3, contrib_z_scale: 0.5, lane_base_k: 5,
-    contrib_weights: { kp: 1, dmg_share: 1, kda_n: 1 },
-  },
-  cp_off_lane: { on_games: 0, off_games: 0, on_winrate: 0, off_winrate: 0, se_winrate: 0, significant: false, constant: 0, implied_mmr: 0 },
   ratings: {
-    p1: { name: '앙앙맹', games: 29, main_lane: 'BOTTOM', playable: ['BOTTOM', 'JUNGLE'], mmr: CP_P1.mmr, cp: CP_P1.cp, tier: '2티어', placed: true, strength: 0.1,
-      lanes: { BOTTOM: CP_P1.lanes.BOTTOM, JUNGLE: CP_P1.lanes.JUNGLE, MIDDLE: CP_P1.lanes.MIDDLE } },
+    p1: { ...LADDER_P1, playable: ['BOTTOM', 'JUNGLE'], strength: 0.1 },
     p2: { name: '맹구', games: 3, main_lane: 'TOP', playable: ['TOP'], mmr: 1010, cp: 1005, tier: '3티어', placed: false, strength: 0, lanes: {} },
     p3: { name: 'Faker', games: 12, main_lane: 'MIDDLE', playable: ['MIDDLE'], mmr: 1120, cp: 1160, tier: '1티어', placed: true, strength: 0.3, lanes: {} },
   },
-  rating_constants: { mmr_base: 1000, mmr_scale: 250, off_role_penalty: 0.03, off_lane_prior_elo: -30, info_e_window: 0, info_kernel_logit: 0 },
   records: {}, server_records: { shortest: { dur: 0, ts: 0, kills: 0 }, longest: { dur: 0, ts: 0, kills: 0 }, most_kills: { dur: 0, ts: 0, kills: 0 }, avg_kills: 0 },
   mvp: [], mvp_excluded: { awards: 0, players: 0 }, synergy: [], trios: [],
   h2h: {

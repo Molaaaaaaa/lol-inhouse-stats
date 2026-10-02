@@ -2,7 +2,7 @@
   import type { Component } from 'svelte';
   import type { GuildPayload, PlayerPub } from '$lib/data/types';
 
-  /** 하위 화면이 받는 props — 요약·상대별·최근·파트너·세부 지표·검산 전부 같은 계약 */
+  /** 하위 화면이 받는 props — 요약·상대별·최근·파트너·세부 지표 전부 같은 계약 */
   export interface SubProps { key: string; p: PlayerPub; data: GuildPayload }
 
   /** 하위 화면 — id 는 탭 id, file 은 지연 import 경로. 라벨은 명사구(금지어·이모지 없음). */
@@ -12,7 +12,6 @@
     { id: 'recent', label: '최근 경기', file: './member/Recent.svelte' },
     { id: 'partners', label: '파트너 · 상대 챔피언', file: './member/Partners.svelte' },
     { id: 'metrics', label: '세부 지표', file: './member/Metrics.svelte' },
-    { id: 'mmr', label: 'MMR 검산', file: './member/MmrReplay.svelte' },
   ] as const;
   export type SubId = (typeof SUBTABS)[number]['id'];
 
@@ -20,7 +19,7 @@
   // 패턴은 리터럴이어야 해서 두 번 적는다. 파일이 없는 탭은 '준비 중' 으로 남는다(빌드는 깨지지 않는다).
   const FILES = import.meta.glob<{ default: Component<SubProps> }>([
     './member/Summary.svelte', './member/Vs.svelte', './member/Recent.svelte',
-    './member/Partners.svelte', './member/Metrics.svelte', './member/MmrReplay.svelte',
+    './member/Partners.svelte', './member/Metrics.svelte',
   ]);
 
   /** 마지막으로 보던 하위 화면 — 사람을 바꿔도 유지(모듈 변수. 세션 저장소는 쓰지 않는다). */
@@ -31,11 +30,11 @@
 <script lang="ts">
   /**
    * 멤버 화면 — 표시명(`#/m/이름`, 동명이인은 `이름~2`)으로 한 사람을 연다.
-   * 머리: 이름 · 티어 셀(배치 전엔 '배치 n/5') · 주 라인 · 전적 셀 한 줄 · 비교 칸.
-   * 그 아래 하위 화면 탭(요약 · 상대별 전적 · 최근 경기 · 파트너·상대 챔피언 · 세부 지표 · MMR 검산).
+   * 머리: 이름 · 주 라인 · 전적 셀 한 줄 · 비교 칸.
+   * 그 아래 하위 화면 탭(요약 · 상대별 전적 · 최근 경기 · 파트너·상대 챔피언 · 세부 지표).
    * `#/m/이름/vs/상대` 면 탭 대신 비교 화면.
    *
-   * 수식 줄: 화면을 열 때 `=티어(CP …) → … · MMR … · 판`. 검산 탭은 자기 근거를 스스로 쓴다.
+   * 수식 줄: 화면을 열 때 `=승률(승 3 · 패 2) → 60% · 5판`.
    * 하위 화면은 멤버가 바뀌면 {#key} 로 새로 만든다 — 표 거르기·라인 선택이 그 사람 것이어야 한다.
    */
   import { app, displayName } from '$lib/data/store.svelte';
@@ -43,9 +42,8 @@
   import { announce } from '$lib/a11y';
   import { setFx } from '$lib/fx.svelte';
   import { searchHits } from '$lib/search';
-  import { fxMember, headerStats } from '$lib/member';
+  import { fxMember, headerStats, mainLaneOf } from '$lib/member';
   import Subtabs from '$components/Subtabs.svelte';
-  import TierBadge from '$components/TierBadge.svelte';
   import LaneChip from '$components/LaneChip.svelte';
   import WinRate from '$components/WinRate.svelte';
   import EmptyState from '$components/EmptyState.svelte';
@@ -58,9 +56,7 @@
   const name = $derived(params.name ?? '');
   const found = $derived(app.player(name));
   const data = $derived(app.data);
-  const cp = $derived(found && data ? data.cp?.[found.key] : undefined);
-  const need = $derived(data?.cp_constants?.placement_games ?? 5);
-  const mainLane = $derived(cp?.main_lane ?? (found && data ? data.ratings?.[found.key]?.main_lane : undefined));
+  const mainLane = $derived(found ? mainLaneOf(found.p) : '');
   const stats = $derived(found ? headerStats(found.p, data?.metric_meta) : []);
   const isCompare = $derived(sub === 'compare' && !!params.b);
 
@@ -95,7 +91,7 @@
   $effect(() => {
     if (!found) { document.title = '멤버 · 내전 해체 분석기'; return; }
     document.title = `${name} · 내전 해체 분석기`;
-    if (isCompare || active !== 'mmr') setFx(fxMember(cp, need));
+    setFx(fxMember(found.p.record, data?.metric_meta));
     if (shownKey && shownKey !== found.key) window.scrollTo({ top: 0 });
     shownKey = found.key;
   });
@@ -161,9 +157,6 @@
     <header class="head">
       <div class="idrow">
         <h1 id="{uid}-name">{name}</h1>
-        {#if cp}
-          <TierBadge cp={cp.cp} placed={cp.placed} games={cp.games} placementGames={need} data={data} tier={cp.placed ? cp.tier : undefined} />
-        {/if}
         {#if mainLane}<LaneChip lane={mainLane} />{/if}
         {#if p.account_count > 1}
           <span class="acc muted"><Icon name="id-card" /> 계정 {p.account_count}개 합산</span>

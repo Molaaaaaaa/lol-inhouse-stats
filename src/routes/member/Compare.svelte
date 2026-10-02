@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 멤버 · 비교 — 두 멤버 a(왼쪽)·b(오른쪽). 머리를 나란히(이름·티어·주 라인·전적), 가운데 맞대결 스코어.
+   * 멤버 · 비교 — 두 멤버 a(왼쪽)·b(오른쪽). 머리를 나란히(이름·주 라인·전적), 가운데 맞대결 스코어.
    * 그 아래 전적 비교표(항목 · a · b)와 라인별 맞대결 목록(라인 · a 챔피언 · b 챔피언 · 승자).
    *
    * 'VS' 는 나란히 놓은 지표가 아니라 **적으로 만났을 때 누가 이겼나**다. 옛 화면의 반반 막대는 넣지 않는다 —
@@ -13,10 +13,9 @@
   import { mLabel } from '$lib/metrics';
   import { memberHref, compareHref } from '$lib/router.svelte';
   import { displayName } from '$lib/data/store.svelte';
-  import { h2hFor, laneCls, playerByName, type H2HLaneRow } from '$lib/member';
+  import { h2hFor, laneCls, mainLaneOf, playerByName, type H2HLaneRow } from '$lib/member';
   import DataTable from '$components/DataTable.svelte';
   import EmptyState from '$components/EmptyState.svelte';
-  import TierBadge from '$components/TierBadge.svelte';
   import LaneChip from '$components/LaneChip.svelte';
   import WinRate from '$components/WinRate.svelte';
 
@@ -35,7 +34,6 @@
   const cmpRows = $derived.by((): CmpRow[] => {
     if (!other) return [];
     const ra = p.record, rb = other.p.record;
-    const ca = data.cp?.[key], cb = data.cp?.[other.key];
     // 큰 쪽을 'win' 채움으로 — 판수는 많다고 좋은 게 아니라 채우지 않는다
     const row = (id: string, item: string, va: number | null | undefined, vb: number | null | undefined, fmt: (v: number) => string, mark = true): CmpRow => ({
       id, item,
@@ -49,7 +47,6 @@
       row('kda', mLabel(meta, 'kda'), ra.kda, rb.kda, n),
       row('kp', mLabel(meta, 'kp'), ra.kp, rb.kp, pct),
       row('dpm', mLabel(meta, 'dpm'), ra.dpm, rb.dpm, (v) => Math.round(v).toLocaleString('ko-KR')),
-      row('mmr', 'MMR', ca?.mmr, cb?.mmr, n),
     ];
   });
   const cmpCols = $derived<Col<CmpRow>[]>([
@@ -77,18 +74,12 @@
   {:else if same}
     <EmptyState text="같은 멤버입니다. 위의 비교 칸에서 다른 멤버를 찾을 수 있습니다." />
   {:else}
-    {@const ca = data.cp?.[key]}
-    {@const cb = data.cp?.[other.key]}
-    {@const need = data.cp_constants?.placement_games ?? 5}
     <div class="head">
-      {#each [{ n: aName, r: p.record, c: ca, side: 'a' }, { n: b, r: other.p.record, c: cb, side: 'b' }] as s (s.side)}
+      {#each [{ n: aName, r: p.record, lane: mainLaneOf(p), side: 'a' }, { n: b, r: other.p.record, lane: mainLaneOf(other.p), side: 'b' }] as s (s.side)}
         <div class="who" class:right={s.side === 'b'}>
           <h2><a href={memberHref(s.n)}>{s.n}</a></h2>
           <div class="tags">
-            {#if s.c}
-              <TierBadge cp={s.c.cp} placed={s.c.placed} games={s.c.games} placementGames={need} data={data} tier={s.c.placed ? s.c.tier : undefined} />
-              <LaneChip lane={s.c.main_lane} />
-            {/if}
+            {#if s.lane}<LaneChip lane={s.lane} />{/if}
           </div>
           <p class="rec">
             <span>{s.r.games}판 {s.r.wins}승 {s.r.losses}패</span>

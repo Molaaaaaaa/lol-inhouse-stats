@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 멤버 · 요약 — 이름 있는 범위 넷: 라인 분포(한 행짜리 누적 막대) · 라인별 MMR 표 · 능력치(육각형 + 축 표 + 솔랭 기준선) ·
+   * 멤버 · 요약 — 이름 있는 범위 넷: 라인 분포(한 행짜리 누적 막대) · 라인별 성적 표 · 능력치(육각형 + 축 표 + 솔랭 기준선) ·
    * 챔피언 표. 표는 전부 DataTable, 차트는 삽입된 차트(charts/*). 문턱·눈금·컷은 payload 에서만 읽는다.
    *
    * 능력치 라인: profile_lane 의 라인이 둘 이상일 때만 선택 줄을 낸다. 기본은 주 라인(옛 curAxisLane 규칙).
@@ -8,12 +8,12 @@
    */
   import type { GuildPayload, LaneId, PlayerChampion, PlayerPub } from '$lib/data/types';
   import type { Col } from '$lib/table';
-  import { pct, sgn, fmtMetric } from '$lib/fmt';
+  import { pct, fmtMetric } from '$lib/fmt';
   import { laneKo } from '$lib/lanes';
   import { mLabel } from '$lib/metrics';
   import { baselinePanel, NO_BASELINE } from '$lib/baseline';
   import { media } from '$lib/media.svelte';
-  import { axisLaneFor, axisLanes, axisRows, laneCls, laneRows, wrCls, type LaneRow } from '$lib/member';
+  import { axisLaneFor, axisLanes, axisRows, laneCls, laneRows, mainLaneOf, wrCls, type LaneRow } from '$lib/member';
   import DataTable from '$components/DataTable.svelte';
   import QMark from '$components/Tooltip.svelte';
   import LaneBar from '$components/charts/LaneBar.svelte';
@@ -21,21 +21,18 @@
   import AxisBars from '$components/charts/AxisBars.svelte';
 
   interface Props { key: string; p: PlayerPub; data: GuildPayload }
-  let { key, p, data }: Props = $props();
+  let { p, data }: Props = $props();
 
   const meta = $derived(data.metric_meta);
   const minGames = $derived(data.min_games || 5);
   const minGamesLane = $derived(data.min_games_lane || 3);
-  const mainLane = $derived(data.cp?.[key]?.main_lane ?? data.ratings?.[key]?.main_lane ?? '');
+  const mainLane = $derived(mainLaneOf(p));
 
-  // ── 라인별 MMR 표 ──
-  const lanes = $derived(laneRows(data, key));
+  // ── 라인별 성적 표 ──
+  const lanes = $derived(laneRows(p));
   const laneCols = $derived<Col<LaneRow>[]>([
     { k: 'lane', h: '라인', fmt: (v) => laneKo(String(v)), cls: (r) => laneCls(r.lane) },
     { k: 'games', h: '판', num: true },
-    { k: 'mmr', h: 'MMR', num: true, hlp: '라인MMR', fmt: (v) => (v == null ? '-' : String(v)), cls: (r) => (r.placed ? '' : 'pend') },
-    { k: 'dev', h: '편차', num: true, fmt: (v) => (v == null ? '-' : sgn(Number(v), 1)) },
-    { k: 'placement', h: '배치', sortable: false, cls: (r) => (r.placed ? '' : 'pend') },
     { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, fmt: (v) => (v == null ? '-' : pct(Number(v))), cls: (r) => wrCls(r.winrate, r.games, minGamesLane) },
     { k: 'kda', h: mLabel(meta, 'kda'), num: true, lo: true, fmt: (v) => (v == null ? '-' : String(v)) },
     { k: 'dpm', h: mLabel(meta, 'dpm'), num: true, lo: true, fmt: (v) => (v == null ? '-' : Math.round(Number(v)).toLocaleString('ko-KR')) },
@@ -56,7 +53,7 @@
 
   // ── 솔랭 기준선 ──
   interface BRow { id: string; axis: string; metric: string; value: string; top: number | null; pos: string; cls: string; games: number | null }
-  const panel = $derived(baselinePanel(data, p, key, (curLane || '') as LaneId | ''));
+  const panel = $derived(baselinePanel(data, p, mainLane, (curLane || '') as LaneId | ''));
   const bRows = $derived.by((): BRow[] => {
     if (!panel) return [];
     const out: BRow[] = [];
@@ -107,7 +104,10 @@
       <div class="cap">라인 분포</div>
       <LaneBar dist={p.role_dist ?? []} />
     </div>
-    <DataTable rows={lanes} cols={laneCols} caption="라인별 MMR" sortKey="games" rowKey={(r) => String(r.lane)} />
+    <div class="range">
+      <DataTable rows={lanes} cols={laneCols} caption="라인별 성적" sortKey="games" rowKey={(r) => String(r.lane)} />
+      <p class="note">라인별 승률은 {minGamesLane}판 이상부터 색을 입힙니다.</p>
+    </div>
   </div>
 
   <div class="range">
@@ -140,7 +140,7 @@
 
 <style>
   .summary { display: grid; gap: var(--sp-5); }
-  /* 라인 분포 막대는 격자 한 행 — 라인별 MMR 표 위에 같은 폭으로 놓인다(옆에 두던 도넛 자리) */
+  /* 라인 분포 막대는 격자 한 행 — 라인별 성적 표 위에 같은 폭으로 놓인다(옆에 두던 도넛 자리) */
   .two { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
   .range { min-width: 0; }
   .cap {

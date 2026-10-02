@@ -114,15 +114,14 @@ export const NO_BASELINE = '솔랭 기준 없음 — 내전 전용 지표';
  * 축을 만든 지표가 둘이면 셀도 둘 — 합쳐서 하나로 뭉개지 않는다.
  */
 export function baselinePanel(
-  data: Pick<GuildPayload, 'baseline' | 'ratings' | 'lower_better'>,
+  data: Pick<GuildPayload, 'baseline' | 'lower_better'>,
   player: Pick<PlayerPub, 'profile' | 'profile_lane'> | null | undefined,
-  ratingKey: string,
+  mainLane: LaneId | '',
   curLane: LaneId | '' = '',
 ): BaselinePanel | null {
   const B = data.baseline;
   if (!B || !B.metrics || !Object.keys(B.metrics).length) return null;
-  const main = data.ratings?.[ratingKey]?.main_lane ?? '';
-  const lane = curLane || main;
+  const lane = curLane || mainLane;
   if (!lane) return null;
   const prof = player?.profile_lane?.[lane] ?? player?.profile ?? [];
   if (!prof.length) return null;

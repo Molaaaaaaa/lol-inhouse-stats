@@ -5,69 +5,52 @@ import { app } from '../src/lib/data/store.svelte';
 import { router } from '../src/lib/router.svelte';
 import { clearFx, fx } from '../src/lib/fx.svelte';
 import { media } from '../src/lib/media.svelte';
-import type { CpConstants, CpEntry, CpLane, GuildPayload, LaneId, PlayerPub } from '../src/lib/data/types';
+import type { GuildPayload, LaneId, PlayerPub } from '../src/lib/data/types';
 
-// 작은 payload — 홈은 summary·timestamp·cp·cp_constants·players·metric_meta·min_games* 만 읽는다
-function lane(games: number, mmr: number): CpLane {
-  return { games, mmr, placed: games >= 5, dev: 0, strength: 0 };
+// 작은 payload — 홈은 summary·timestamp·players·metric_meta·min_games 만 읽는다.
+// 사다리 필드(cp·cp_constants)를 일부러 채워 둔다: 있어도 화면에 나오지 않는다는 것을 단언하려고.
+function player(name: string, games: number, wins: number, lane: LaneId, extra: Partial<PlayerPub> = {}): PlayerPub {
+  return {
+    name,
+    record: { games, wins, losses: games - wins, winrate: games ? wins / games : 0, ci_lower: 0, kda: 3.5, kp: 0.5, dpm: 812.4 },
+    lanes: [{ lane, games }],
+    ...extra,
+  } as unknown as PlayerPub;
 }
-function entry(name: string, cp: number, mmr: number, games: number, main: LaneId, lanes: Partial<Record<LaneId, CpLane>>): CpEntry {
-  const tier = cp >= 1150 ? '1티어' : cp >= 1050 ? '2티어' : cp >= 950 ? '3티어' : '4티어';
-  return { name, games, main_lane: main, mmr, cp, tier, points: cp % 100, to_next: 100 - (cp % 100), placed: games >= 5, lanes, replay: [] };
-}
-function player(name: string, games: number, winrate: number, lanes: { lane: LaneId; games: number; winrate: number }[]): PlayerPub {
-  return { name, record: { games, winrate, wins: Math.round(games * winrate), losses: 0 }, lanes } as unknown as PlayerPub;
-}
-const CONST = {
-  placement_games: 5, k_place: 64, k_norm: 32, k_decay_half: 20, k_min: 16,
-  mmr_base: 1000, cp_base: 1000, cp_min: 15, cp_max: 25, cp_size: 40, e_clamp: 0.375,
-  cp_gap_div: 4, cp_gap_cap: 5, cp_adj_w: 16, tier_points: 100,
-  tiers: [
-    { name: '1티어', cp: 1150, open_top: true }, { name: '2티어', cp: 1050, open_top: false },
-    { name: '3티어', cp: 950, open_top: false }, { name: '4티어', cp: 850, open_top: false },
-    { name: '5티어', cp: null, open_top: false },
-  ],
-  lane_prior_k: 5, off_lane_prior: -30, dev_scale: 200, dev_cap: 120,
-  perf_w: 0.5, lean_w: 0, lean_ref: 100, perf_elo_per_z: 0, perf_shrink_k: 2, perf_z_cap: 1,
-  contrib_lo: 0.7, contrib_hi: 1.3, contrib_z_scale: 0.15, lane_base_k: 12,
-  contrib_weights: { kp: 0.15, dmg_share: 0.4, kda_n: 0.45 },
-} satisfies CpConstants;
 
 const PAYLOAD = {
   name: '테스트 방', patch: '15.18.1', timestamp: '2026-09-17T11:31:54+00:00',
-  summary: { total_games: 57, player_count: 4, avg_winrate: 0.5, avg_duration_sec: 1686 },
+  summary: { total_games: 57, player_count: 5, avg_winrate: 0.5, avg_duration_sec: 1686 },
   min_games: 5, min_games_excluded: 1, min_games_lane: 3, min_days: 1, min_days_excluded: 0,
-  cp: {
-    p1: entry('앙앙맹', 1135, 1185, 6, 'TOP', { TOP: lane(6, 1185), MIDDLE: lane(3, 1150) }),
-    p2: entry('맹구', 980, 1010, 12, 'JUNGLE', { JUNGLE: lane(12, 1010) }),
-    p3: entry('신입', 1090, 1120, 2, 'BOTTOM', { BOTTOM: lane(2, 1120) }),
-    p4: entry('Faker', 1210, 1260, 20, 'MIDDLE', { MIDDLE: lane(20, 1260) }),
-  },
-  cp_constants: CONST,
   players: {
-    p1: player('앙앙맹', 6, 1, [{ lane: 'TOP', games: 6, winrate: 1 }, { lane: 'MIDDLE', games: 3, winrate: 0.33 }]),
-    p2: player('맹구', 12, 0.5, [{ lane: 'JUNGLE', games: 12, winrate: 0.5 }]),
-    p3: player('신입', 2, 0, [{ lane: 'BOTTOM', games: 2, winrate: 0 }]),
-    p4: player('Faker', 20, 0.7, [{ lane: 'MIDDLE', games: 20, winrate: 0.7 }]),
+    p1: player('앙앙맹', 6, 5, 'TOP', { record: { games: 6, wins: 5, losses: 1, winrate: 5 / 6, ci_lower: 0, kda: 4.67, kp: 0.484, dpm: 1296 } } as Partial<PlayerPub>),
+    p2: player('맹구', 12, 6, 'JUNGLE'),
+    p3: player('신입', 2, 0, 'BOTTOM'),
+    p4: player('Faker', 20, 14, 'MIDDLE'),
+    p5: player('하하', 12, 6, 'UTILITY'),
   },
+  cp: {
+    p1: { name: '앙앙맹', games: 6, main_lane: 'TOP', mmr: 1185, cp: 1135, tier: '2티어', points: 35, to_next: 65, placed: true, lanes: {}, replay: [] },
+  },
+  cp_constants: { placement_games: 5, tiers: [{ name: '2티어', cp: 1050, open_top: false }], lane_prior_k: 5 },
   metric_meta: {
     winrate: { label: '승률', lane: false, fmt: 'pct', desc: '' },
+    kda: { label: 'KDA', lane: false, fmt: '', desc: '' },
+    dpm: { label: '분당 딜', lane: false, fmt: '', desc: '' },
     kp: { label: '킬 관여', lane: false, fmt: 'pct', desc: '' },
-    dmg_share: { label: '딜 비중', lane: false, fmt: 'pct', desc: '' },
   },
   metric_groups: [], lower_better: [], baseline: null,
 } as unknown as GuildPayload;
 
-const TIER_WORD = /[1-5]티어/;
-const table = () => screen.getByRole('table', { name: /사다리/ });
+const LADDER_WORDS = /티어|CP|MMR|배치|점수|승급|사다리|레이팅|등급|계산식/;
+const table = () => screen.getByRole('table', { name: '멤버 · 판수 순' });
 const bodyRows = () => [...table().querySelectorAll('tbody tr')] as HTMLTableRowElement[];
 const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
 const nameOf = (tr: HTMLTableRowElement) => tr.querySelector('td.c0')?.textContent?.trim();
-const pressed = (label: RegExp) => screen.getByRole('button', { pressed: true, name: label });
 const heads = () => [...table().querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
-const lanePick = () => screen.getByRole('combobox', { name: '라인 선택' }) as HTMLSelectElement;
+const head = (label: string) => [...table().querySelectorAll('thead th')].find((h) => h.querySelector('.h')?.textContent === label) as HTMLElement;
 
-describe('Home — 첫 화면', () => {
+describe('Home — 멤버 시트', () => {
   beforeEach(() => {
     cleanup();
     location.hash = '';
@@ -88,150 +71,92 @@ describe('Home — 첫 화면', () => {
     expect(container.querySelector('time')?.getAttribute('datetime')).toBe(PAYLOAD.timestamp);
   });
 
-  it('기본은 라인별: 사람×라인(라인 3판 이상) 행, 라인 미완·배치 미완은 선 아래(unp)·순위 없음', () => {
+  it('멤버 전원이 판수 내림차순(동률은 이름 순)으로 — 판수가 정렬 기준이다', () => {
     render(Home, { sub: '', params: {} });
-    expect(pressed(/라인별/)).toBeTruthy();
-    expect(table().getAttribute('aria-label')).toBe('사다리 · 라인별');
     const rows = bodyRows();
-    // Faker 미드 · 앙앙맹 탑 · 맹구 정글 (라인 MMR 순) → 선 아래: 앙앙맹 미드(라인 3판, 배치 3/5)
-    expect(rows.map(nameOf)).toEqual(['Faker', '앙앙맹', '맹구', '앙앙맹']);
-    expect(rows.map((r) => r.classList.contains('unp'))).toEqual([false, false, false, true]);
-    // 신입(원딜 2판)은 라인 문턱 미만이라 라인별 표에 없다
-    expect(rows.map(nameOf)).not.toContain('신입');
-    // 선 아래 행: 티어·CP 는 사람 것(배치 완료), 라인 MMR 은 점선(pend), 판 칸에 '배치 3/5'
-    const mid = rows[3]!;
-    expect(cellTexts(mid)).toEqual(['앙앙맹', '—', '미드', '2티어', '1135', '35', '1150', '배치 3/5', '33%']);
-    expect(mid.querySelector('td.pend')?.textContent?.trim()).toBe('1150');
-    // 주 라인 표시 · 라인 띠 클래스 · 순위 1~3 에 메달(셀과 행 둘 다 — 행 클래스가 홈통 숫자를 굵게 한다)
-    expect(cellTexts(rows[1]!)).toEqual(['앙앙맹', '2', '탑 · 주', '2티어', '1135', '35', '1185', '6', '100%']);
-    expect(rows[1]!.querySelector('td.lane-top')).toBeTruthy();
-    expect(rows[0]!.querySelector('td.medal.m1')?.textContent?.trim()).toBe('1');
-    expect(rows[2]!.querySelector('td.medal.m3')?.textContent?.trim()).toBe('3');
-    expect(rows.map((r) => [...r.classList].filter((c) => /^m[1-3]$/.test(c)).join(''))).toEqual(['m1', 'm2', 'm3', '']);
-    // 데스크톱: 순위 열이 정렬 기준이라 보인다(lo 없음)
-    const rankTh = [...table().querySelectorAll('thead th')].find((h) => h.querySelector('.h')?.textContent === '순위')!;
-    expect(rankTh.classList.contains('lo')).toBe(false);
-    expect(rankTh.getAttribute('aria-sort')).toBe('ascending');
+    expect(rows.map(nameOf)).toEqual(['Faker', '맹구', '하하', '앙앙맹', '신입']);
+    expect(heads()).toEqual(['멤버', '주 라인', '판', '승률', 'KDA', '분당 딜', '킬 관여']);
+    expect(head('판').getAttribute('aria-sort')).toBe('descending');
+    expect(head('승률').getAttribute('aria-sort')).toBe('none');
+    // 문턱(5판) 미만 멤버도 행에 든다
+    expect(rows.map(nameOf)).toContain('신입');
   });
 
-  it('폰(≤640px): 순위 열이 없고 정렬 기준도 없다 — 홈통이 곧 순위 · 2줄 장부 행(rows2) · 라인 셀은 짧은 글자만 · 라인 MMR 머리는 MMR', () => {
-    media.phone = true;
-    const { container } = render(Home, { sub: '', params: {} });
-    const rows = bodyRows();
-    expect(rows.map(nameOf)).toEqual(['Faker', '앙앙맹', '맹구', '앙앙맹']);   // 순서는 그대로 순위 순
-    expect(heads()).toEqual(['멤버', '라인', '티어', 'CP', '점수', 'MMR', '판', '승률']);
-    // 사다리는 390px 에서 넘치는 표 — 2줄 장부 행. 머리는 보조기술에만 남고 초점·정렬이 없다
-    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(true);
-    expect(table().querySelectorAll('thead th[tabindex], thead th[aria-sort]')).toHaveLength(0);
-    expect(cellTexts(rows[1]!)).toEqual(['앙앙맹', '탑', '2티어', '1135', '35', '1185', '6', '100%']);
-    expect(rows[1]!.querySelector('td.lane-top')?.getAttribute('data-label')).toBe('라인');
-    expect(rows[0]!.classList.contains('m1')).toBe(true);
-    // 라인 선택은 표 머리가 아니라 .views 줄의 네이티브 select(전체 + 라인 다섯, 판수 표기 그대로)
-    expect(table().querySelector('thead select')).toBeNull();
-    const sel = lanePick();
-    expect(sel.closest('.views')).not.toBeNull();
-    expect(sel.classList.contains('vb')).toBe(true);
-    expect([...sel.options].map((o) => o.textContent)).toEqual(['전체', '탑 1', '정글 1', '미드 2', '원딜 0', '서폿 0']);
-  });
-
-  it('폰: .views 의 라인 select 로 고르면 그 라인 사다리 · 통합에서는 select 가 없다', async () => {
-    media.phone = true;
+  it('셀: 주 라인 띠 · 값 서식 · 승률은 높음 ▲ 채움 / 문턱 미만은 옅게(채움 없음)', () => {
     render(Home, { sub: '', params: {} });
-    await fireEvent.change(lanePick(), { target: { value: 'MIDDLE' } });
-    expect(table().getAttribute('aria-label')).toBe('사다리 · 미드');
-    expect(bodyRows().map(nameOf)).toEqual(['Faker', '앙앙맹']);
-    expect(lanePick().value).toBe('MIDDLE');
-    await fireEvent.change(lanePick(), { target: { value: '' } });
-    expect(bodyRows()).toHaveLength(4);
-    await fireEvent.click(screen.getByRole('button', { name: '통합' }));
-    expect(screen.queryByRole('combobox', { name: '라인 선택' })).toBeNull();
-    expect(heads()).toEqual(['멤버', '주 라인', '티어', 'CP', '점수', '승급까지', 'MMR', '판', '승률']);
-    // 통합은 390px 에 들어가는 표라 보통 격자 그대로(rows2 는 라인별만)
-    expect(document.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
-  });
-
-  it('통합으로 전환: 사람당 한 줄, 배치 미완은 맨 아래·티어 글자 없음·CP/MMR 비움, 라인 버튼 숫자 = 그 라인 행 수', async () => {
-    render(Home, { sub: '', params: {} });
-    await fireEvent.click(screen.getByRole('button', { name: '통합' }));
-    expect(pressed(/통합/)).toBeTruthy();
-    expect(table().getAttribute('aria-label')).toBe('사다리 · 통합');
     const rows = bodyRows();
-    expect(rows.map(nameOf)).toEqual(['Faker', '앙앙맹', '맹구', '신입']);
-    const last = rows[3]!;
-    expect(last.classList.contains('unp')).toBe(true);
-    expect(last.textContent).not.toMatch(TIER_WORD);
-    expect(cellTexts(last)).toEqual(['신입', '—', '원딜', '배치 2/5', '—', '—', '—', '—', '2', '0%']);
-    expect(last.querySelector('td.pend')?.textContent?.trim()).toBe('배치 2/5');
-    expect(last.querySelector('td.t2, td.t3, td.t1')).toBeNull();
-    // 배치 완료 행은 티어 채움 클래스 + 승급까지
-    expect(rows[1]!.querySelector('td.t2')?.textContent?.trim()).toBe('2티어');
-    expect(cellTexts(rows[1]!)).toEqual(['앙앙맹', '2', '탑', '2티어', '1135', '35', '65', '1185', '6', '100%']);
-    // 통합에는 라인 드롭다운이 없다(주 라인 열) · 보기 버튼은 둘뿐
-    expect(screen.queryByRole('combobox', { name: '라인 선택' })).toBeNull();
-    expect(screen.getAllByRole('button', { name: /라인별|통합/ })).toHaveLength(2);
-    expect(heads()).toEqual(['멤버', '순위', '주 라인', '티어', 'CP', '점수', '승급까지', 'MMR', '판', '승률']);
+    expect(cellTexts(rows[3]!)).toEqual(['앙앙맹', '탑', '6', '83%', '4.67', '1,296', '48%']);
+    expect(rows[3]!.querySelector('td.lane-top')).toBeTruthy();
+    expect(rows[3]!.querySelector('td.win.wr-h')?.textContent?.trim()).toBe('83%');
+    expect(rows[0]!.querySelector('td.lane-mid')).toBeTruthy();   // Faker 미드, 승률 70% 도 높음
+    expect(rows[1]!.querySelector('td.wr-h, td.wr-l')).toBeNull();   // 맹구 50% 는 중립
+    // 신입: 2판 0% — 문턱 미만이라 빨갛게 칠하지 않고 옅은 글자
+    const low = rows[4]!.querySelector('td.wr-dim');
+    expect(low?.textContent?.trim()).toBe('0%');
+    expect(rows[4]!.querySelector('td.loss, td.wr-l')).toBeNull();
   });
 
-  it('라인 하나: 표 머리 라인 드롭다운(전체 + 라인 다섯, 숫자 = 그 라인 행 수) → 그 라인을 뛴 사람만', async () => {
-    const { container } = render(Home, { sub: '', params: {} });
-    const sel = lanePick();
-    expect(container.querySelector('.views select')).toBeNull();   // 데스크톱: 드롭다운은 표 머리에만
-    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
-    expect([...sel.options].map((o) => o.textContent)).toEqual(['전체', '탑 1', '정글 1', '미드 2', '원딜 0', '서폿 0']);
-    expect(sel.value).toBe('');
-    // 보이는 층은 열 이름(전체일 때) — 드롭다운이 머리 이름을 대신한다
-    const th = sel.closest('th')!;
-    expect(th.querySelector('.pkv')?.textContent?.trim()).toBe('라인');
-    expect(th.querySelector('.h')?.classList.contains('sr-only')).toBe(true);
-    await fireEvent.change(sel, { target: { value: 'MIDDLE' } });
-    expect(table().getAttribute('aria-label')).toBe('사다리 · 미드');
-    expect(bodyRows().map(nameOf)).toEqual(['Faker', '앙앙맹']);
-    expect(lanePick().value).toBe('MIDDLE');
-    expect(lanePick().closest('th')!.querySelector('.pkv')?.textContent?.trim()).toBe('미드 2');
-    expect(heads()).toEqual(['멤버', '순위', '라인', '티어', 'CP', '점수', '라인 MMR', '판', '승률']);
-    // 드롭다운 클릭은 머리 정렬로 올라가지 않는다
-    await fireEvent.click(lanePick());
-    expect(lanePick().closest('th')!.getAttribute('aria-sort')).toBe('none');
-    await fireEvent.change(lanePick(), { target: { value: '' } });
-    expect(table().getAttribute('aria-label')).toBe('사다리 · 라인별');
-    expect(bodyRows()).toHaveLength(4);
+  it('머리를 누르면 그 열로 정렬한다(DataTable 기본 기능)', async () => {
+    render(Home, { sub: '', params: {} });
+    await fireEvent.click(head('승률'));
+    expect(bodyRows().map(nameOf)).toEqual(['앙앙맹', 'Faker', '맹구', '하하', '신입']);
+    expect(head('승률').getAttribute('aria-sort')).toBe('descending');
   });
 
-  it('행 선택 → 수식 줄에 계산 근거, 같은 행 다시 선택 → 멤버 화면 · 보기 전환은 수식 줄을 비운다', async () => {
+  it('행 선택 → 수식 줄에 승률 근거, 문턱 미만이면 그 사실도 · 같은 행 다시 선택 → 멤버 화면', async () => {
     render(Home, { sub: '', params: {} });
     expect(fx.text).toBe('');
-    const row = bodyRows()[1]!;   // 앙앙맹 탑
+    const row = bodyRows()[3]!;   // 앙앙맹
     await fireEvent.click(row);
-    expect(fx.text).toBe('=티어(CP 1135) → 2티어 35점 · 탑 MMR 1185 · 탑 6판');
+    expect(fx.text).toBe('=승률(승 5 · 패 1) → 83% · 6판 · 탑');
     expect(row.getAttribute('aria-selected')).toBe('true');
-    // 배치 미완 행은 티어 이름 없이 배치 진행만
-    await fireEvent.click(bodyRows()[3]!);
-    expect(fx.text).toBe('=티어(CP 1135) → 2티어 35점 · 미드 MMR 1150 · 미드 3판 (라인 배치 3/5)');
-    await fireEvent.click(screen.getByRole('button', { name: '통합' }));
-    expect(fx.text).toBe('');
-    await fireEvent.click(bodyRows()[3]!);   // 신입(배치 미완)
-    expect(fx.text).toBe('=배치(2/5판) → 티어 산정 전');
-    expect(fx.text).not.toMatch(TIER_WORD);
-    // 같은 행을 한 번 더 → 멤버 화면
-    await fireEvent.click(bodyRows()[3]!);
+    await fireEvent.click(bodyRows()[4]!);   // 신입 2판
+    expect(fx.text).toBe('=승률(승 0 · 패 2) → 0% · 2판 · 5판 미만 · 원딜');
+    expect(location.hash).toBe('');
+    await fireEvent.click(bodyRows()[4]!);
     expect(location.hash).toBe('#/m/%EC%8B%A0%EC%9E%85');
   });
 
-  it('Enter 로도 선택·이동한다 · 안내 문장(배치·문턱)과 계산식 링크가 있다(계산식 본문은 #/math/cp 에만)', async () => {
-    const { container } = render(Home, { sub: '', params: {} });
+  it('Enter 로도 선택·이동한다', async () => {
+    render(Home, { sub: '', params: {} });
     const row = bodyRows()[0]!;
     await fireEvent.keyDown(row, { key: 'Enter' });
-    expect(fx.text).toContain('=티어(CP 1210)');
+    expect(fx.text).toBe('=승률(승 14 · 패 6) → 70% · 20판 · 미드');
     await fireEvent.keyDown(row, { key: 'Enter' });
     expect(location.hash).toBe('#/m/Faker');
+  });
+
+  it('안내는 한 줄 — 문턱 미만 승률 표시와 재선택 이동만', () => {
+    const { container } = render(Home, { sub: '', params: {} });
     const notes = [...container.querySelectorAll('p.note')].map((p) => p.textContent?.replace(/\s+/g, ' ').trim());
-    expect(notes[0]).toContain('배치 5판 · 1명 배치 진행 중 · 배치 전에는 티어를 표시하지 않습니다.');
-    expect(notes[0]).toContain('라인 5판부터 라인 배치 완료');
-    expect(notes[1]).toContain('5판 이상 참여한 멤버만 집계합니다 (라인별 지표는 3판) · 1명은 판수 미달로 제외.');
-    expect(screen.getByRole('button', { name: '최소 판수 설명' })).toBeTruthy();
-    // 계산식은 홈에 없다 — 한 줄 링크만
-    expect(container.querySelector('.cpf')).toBeNull();
-    const link = screen.getByRole('link', { name: '티어 계산식 →' });
-    expect(link.getAttribute('href')).toBe('#/math/cp');
+    expect(notes).toEqual(['5판 미만은 승률을 옅게 표시합니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.']);
+  });
+
+  it('보기 전환·라인 선택·계산식 링크가 없다', () => {
+    const { container } = render(Home, { sub: '', params: {} });
+    expect(screen.queryByRole('button', { name: /라인별|통합/ })).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
+    expect(screen.queryByRole('link')).toBeNull();
+    expect(container.querySelector('.views, select')).toBeNull();
+  });
+
+  it('티어·CP·MMR·배치·점수·사다리 글자가 화면에 없다 — 표·수식 줄·안내·접근성 이름까지', async () => {
+    const { container } = render(Home, { sub: '', params: {} });
+    await fireEvent.click(bodyRows()[3]!);
+    const all = [container.textContent ?? '', fx.text, ...[...container.querySelectorAll('[aria-label],[title]')].map((e) => `${e.getAttribute('aria-label')} ${e.getAttribute('title')}`)].join(' ');
+    expect(all).not.toMatch(LADDER_WORDS);
+    expect(container.querySelector('[class*="tier"], td.pend, td.unp, tr.unp, td.medal')).toBeNull();
+    expect(container.querySelector('td[class*="t1"], td[class*="t2"], td[class*="t3"], td[class*="t4"], td[class*="t5"]')).toBeNull();
+  });
+
+  it('폰(≤640px): 보조 열(분당 딜·킬 관여)은 .lo 로 숨고 정렬 기준 열(판)은 남는다 · 순서는 그대로', () => {
+    media.phone = true;
+    const { container } = render(Home, { sub: '', params: {} });
+    expect(bodyRows().map(nameOf)).toEqual(['Faker', '맹구', '하하', '앙앙맹', '신입']);
+    const lo = [...table().querySelectorAll('thead th.lo .h')].map((h) => h.textContent);
+    expect(lo).toEqual(['분당 딜', '킬 관여']);
+    expect(head('판').classList.contains('lo')).toBe(false);
+    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(false);
+    expect(container.textContent).not.toMatch(LADDER_WORDS);
   });
 });

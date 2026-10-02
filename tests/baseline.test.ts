@@ -119,10 +119,9 @@ const PROFILE_MID: ProfileAxis[] = [
 ];
 const PROFILE_ALL: ProfileAxis[] = [axis('공격', [{ key: 'dpm', value: 900 }], 29)];
 
-function data(over: Partial<Pick<GuildPayload, 'baseline' | 'ratings' | 'lower_better'>> = {}) {
+function data(over: Partial<Pick<GuildPayload, 'baseline' | 'lower_better'>> = {}) {
   return {
     baseline: BASE,
-    ratings: { p1: { main_lane: 'MIDDLE' } } as unknown as GuildPayload['ratings'],
     lower_better: ['deaths_per_game', 'time_dead'],
     ...over,
   };
@@ -134,19 +133,19 @@ const player: Pick<PlayerPub, 'profile' | 'profile_lane'> = {
 
 describe('baselinePanel', () => {
   it('기준선이 없거나 비면 null', () => {
-    expect(baselinePanel(data({ baseline: null }), player, 'p1')).toBeNull();
-    expect(baselinePanel(data({ baseline: { ...BASE, metrics: {} } }), player, 'p1')).toBeNull();
+    expect(baselinePanel(data({ baseline: null }), player, 'MIDDLE')).toBeNull();
+    expect(baselinePanel(data({ baseline: { ...BASE, metrics: {} } }), player, 'MIDDLE')).toBeNull();
   });
   it('라인을 정할 수 없으면 null — 주 라인이 없고 고른 라인도 없을 때', () => {
-    expect(baselinePanel(data({ ratings: {} }), player, 'p1')).toBeNull();
-    expect(baselinePanel(data({ ratings: {} }), player, 'p1', 'MIDDLE')).not.toBeNull();
+    expect(baselinePanel(data(), player, '')).toBeNull();
+    expect(baselinePanel(data(), player, '', 'MIDDLE')).not.toBeNull();
   });
   it('프로필이 비면 null', () => {
-    expect(baselinePanel(data(), { profile: [], profile_lane: {} }, 'p1')).toBeNull();
-    expect(baselinePanel(data(), null, 'p1')).toBeNull();
+    expect(baselinePanel(data(), { profile: [], profile_lane: {} }, 'MIDDLE')).toBeNull();
+    expect(baselinePanel(data(), null, 'MIDDLE')).toBeNull();
   });
   it('주 라인의 라인별 프로필로 그린다 — 축을 만든 지표가 둘이면 셀도 둘, 내전 전용 지표는 빈 셀', () => {
-    const panel = baselinePanel(data(), player, 'p1');
+    const panel = baselinePanel(data(), player, 'MIDDLE');
     expect(panel).not.toBeNull();
     expect(panel!.lane).toBe('MIDDLE');
     expect(panel!.games).toBe(49094);
@@ -166,7 +165,7 @@ describe('baselinePanel', () => {
     expect(NO_BASELINE).toBe('솔랭 기준 없음 — 내전 전용 지표');
   });
   it('고른 라인이 주 라인보다 먼저 — 라인별 프로필이 없으면 통합 프로필로', () => {
-    const panel = baselinePanel(data(), player, 'p1', 'TOP');
+    const panel = baselinePanel(data(), player, 'MIDDLE', 'TOP');
     expect(panel!.lane).toBe('TOP');
     expect(panel!.rows).toHaveLength(1);
     expect(panel!.rows[0]!.games).toBe(29);
@@ -175,7 +174,7 @@ describe('baselinePanel', () => {
   });
   it('분위수가 빈 칸은 기준 없음으로 비운다(NaN 배지를 내지 않는다)', () => {
     const b: Baseline = { ...BASE, metrics: { dpm: { label: '분당 딜', lower_better: false, by_role: { MIDDLE: { n: 0, q: [], spread: 0, tier_med: {} } } } } };
-    const panel = baselinePanel(data({ baseline: b }), player, 'p1');
+    const panel = baselinePanel(data({ baseline: b }), player, 'MIDDLE');
     expect(panel!.rows[0]!.cells).toEqual([]);
   });
 });

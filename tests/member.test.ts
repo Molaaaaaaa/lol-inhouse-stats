@@ -1,16 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/svelte';
 import {
-  axisLaneFor, axisLanes, axisRows, deltaText, formText, fxMember, fxReplayRow, fxReplaySum,
-  h2hFor, headerStats, laneCls, laneRows, playerByName, replayCheck, replayRows, wrCls,
+  axisLaneFor, axisLanes, axisRows, deltaText, formText, fxMember,
+  h2hFor, headerStats, laneCls, laneRows, mainLaneOf, playerByName, wrCls,
 } from '../src/lib/member';
-import { CP_P1, META, PAYLOAD, REPLAY } from './fixtures/member-payload';
+import { META, PAYLOAD } from './fixtures/member-payload';
+import { isSubId, SUBTABS } from '../src/routes/Member.svelte';
 import { app } from '../src/lib/data/store.svelte';
 import { router } from '../src/lib/router.svelte';
 import { fx } from '../src/lib/fx.svelte';
 import Member from '../src/routes/Member.svelte';
 
-const TIER_WORD = /[1-5]티어/;
+/** 화면에 나오면 안 되는 사다리 말 — 티어(n티어)·MMR·CP·배치·점수 */
+const LADDER_WORD = /[1-5]티어|티어|MMR|CP|ΔCP|배치|승급|사다리|검산/;
 const P1 = PAYLOAD.players.p1!;
 
 describe('member.ts — 머리 전적 셀', () => {
@@ -31,16 +33,23 @@ describe('member.ts — 머리 전적 셀', () => {
   });
 });
 
-describe('member.ts — 라인별 표', () => {
-  it('laneRows: 출전 0판 라인은 빠지고, 배치 미완은 뒤로 가며 "배치 n/3" 문구·티어 없음', () => {
-    const rows = laneRows(PAYLOAD, 'p1');
+describe('member.ts — 라인별 성적 표', () => {
+  it('laneRows: 출전 0판 라인은 빠지고 판수 내림차순 · 지표만 있고 사다리 필드가 없다', () => {
+    const rows = laneRows({ lanes: [...P1.lanes, { lane: 'TOP', games: 0, winrate: 0, kda: 0, dpm: 0, kp: 0, cs: 0, vision: 0, dmg_share: 0 }] });
     expect(rows.map((r) => r.lane)).toEqual(['BOTTOM', 'JUNGLE', 'MIDDLE']);
-    expect(rows[0]).toMatchObject({ games: 19, mmr: 1041, dev: 9, placed: true, placement: '완료', winrate: 0.368, kda: 2.99 });
-    expect(rows[2]).toMatchObject({ games: 2, placed: false, placement: '배치 2/3' });
-    expect(JSON.stringify(rows)).not.toMatch(TIER_WORD);
+    expect(rows[0]).toEqual({ lane: 'BOTTOM', games: 19, winrate: 0.368, kda: 2.99, dpm: 883.1, kp: 0.554 });
+    expect(JSON.stringify(rows)).not.toMatch(/mmr|dev|placed|placement|tier/);
   });
-  it('laneRows: 모르는 키는 빈 표', () => {
-    expect(laneRows(PAYLOAD, 'p99')).toEqual([]);
+  it('laneRows: 판수가 같으면 탑→서폿 순서 · 없는 멤버는 빈 표', () => {
+    const mk = (lane: 'BOTTOM' | 'TOP') => ({ lane, games: 3, winrate: 0.5, kda: 1, dpm: 1, kp: 1, cs: 1, vision: 1, dmg_share: 1 });
+    expect(laneRows({ lanes: [mk('BOTTOM'), mk('TOP')] }).map((r) => r.lane)).toEqual(['TOP', 'BOTTOM']);
+    expect(laneRows(null)).toEqual([]);
+  });
+  it('mainLaneOf: 가장 많이 뛴 라인 · 동률은 탑→서폿에서 앞선 쪽 · 뛴 판이 없으면 빈 문자열', () => {
+    expect(mainLaneOf(P1)).toBe('BOTTOM');
+    expect(mainLaneOf({ role_dist: [{ lane: 'BOTTOM', games: 3, pct: 0.5 }, { lane: 'JUNGLE', games: 3, pct: 0.5 }] })).toBe('JUNGLE');
+    expect(mainLaneOf({ role_dist: [] })).toBe('');
+    expect(mainLaneOf(null)).toBe('');
   });
   it('laneCls·wrCls: 셀 클래스는 DataTable 이 아는 이름만', () => {
     expect(laneCls('TOP')).toBe('lane-top');
@@ -75,39 +84,11 @@ describe('member.ts — 능력치 축', () => {
   });
 });
 
-describe('member.ts — MMR 검산', () => {
-  it('replayRows: 1..n 번호와 승패 글자', () => {
-    const rows = replayRows(CP_P1);
-    expect(rows.map((r) => r.n)).toEqual([1, 2, 3]);
-    expect(rows.map((r) => r.res)).toEqual(['패', '승', '승']);
-  });
-  it('replayCheck: base + Σd_mmr 이 표시 MMR 과 맞으면 ok', () => {
-    const c = replayCheck(CP_P1, 1000);
-    expect(c.sum).toBeCloseTo(32.097, 3);
-    expect(c.total).toBeCloseTo(1032.097, 3);
-    expect(c.shown).toBe(1032);
-    expect(c.ok).toBe(true);
-    expect(replayCheck(CP_P1, 1000, 'd_cp').ok).toBe(true);
-  });
-  it('replayCheck: 표시 MMR 이 합계와 어긋나면 ok=false', () => {
-    const c = replayCheck({ ...CP_P1, mmr: 1040 }, 1000);
-    expect(c.ok).toBe(false);
-    expect(replayCheck(null, 1000)).toMatchObject({ sum: 0, total: 1000, shown: 0, ok: false });
-  });
-  it('fxReplayRow · fxReplaySum 문구', () => {
-    expect(fxReplayRow(REPLAY[0]!)).toBe('=64 × ((0 − 0.467) + 0.019) = −28.70');
-    expect(fxReplaySum(replayCheck(CP_P1, 1000), 1000)).toBe('=SUM(ΔMMR) 1000 + 32.10 = 1032.10 → 1032');
-    expect(fxReplaySum({ sum: -48.8, total: 951.2, shown: 951, ok: true }, 1000)).toBe('=SUM(ΔMMR) 1000 − 48.80 = 951.20 → 951');
-  });
-});
-
 describe('member.ts — 수식 줄·맞대결', () => {
-  it('fxMember: 배치 후에는 티어·점수, 배치 전에는 "배치 n/5" 만(티어 이름 없음)', () => {
-    expect(fxMember(CP_P1, 5)).toBe('=티어(CP 1020) → 2티어 20점 · MMR 1032 · 29판');
-    const f = fxMember(PAYLOAD.cp.p2, 5);
-    expect(f).toBe('=티어(CP 1005) → 배치 3/5 · MMR 1010 · 3판');
-    expect(f).not.toMatch(TIER_WORD);
-    expect(fxMember(null, 5)).toBe('');
+  it('fxMember: 승·패와 승률·판수만 — 사다리 말이 없다', () => {
+    const f = fxMember(P1.record, META);
+    expect(f).toBe('=승률(승 13 · 패 16) → 45% · 29판');
+    expect(f).not.toMatch(LADDER_WORD);
   });
   it('h2hFor: 키가 뒤집혀 있으면 승패·챔피언을 바꿔 읽는다', () => {
     const h = h2hFor(PAYLOAD.h2h, 'p1', 'p3');
@@ -143,29 +124,40 @@ describe('Member.svelte', () => {
     expect(screen.queryByRole('tablist')).toBeNull();
   });
 
-  it('머리: 이름·티어 셀·주 라인·전적 셀 · 하위 탭 6개 · 수식 줄', async () => {
+  it('머리: 이름 · 주 라인(뛴 판 기준) · 전적 셀 · 하위 탭 5개 · 수식 줄 — 티어·MMR·배치 없음', async () => {
     const { container } = render(Member, { sub: '', params: { name: '앙앙맹' } });
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('앙앙맹');
-    expect(container.querySelector('.tierbadge')?.textContent).toBe('2티어');
-    expect(container.querySelector('.lane')?.textContent).toBe('원딜');
+    expect(container.querySelector('.tierbadge')).toBeNull();
+    expect(container.querySelector('.lane')?.textContent).toBe('원딜');   // payload 의 cp.main_lane(정글)이 아니라 role_dist
     const dts = [...container.querySelectorAll('.cells dt')].map((d) => d.textContent);
     expect(dts).toEqual(['전적', '승률', 'KDA', '킬 관여', '분당 딜', '최근']);
     expect(container.querySelector('.cells .wr')?.textContent).toBe('45%');
     expect(screen.getByText('계정 2개 합산')).toBeTruthy();
     const tabs = screen.getAllByRole('tab');
-    expect(tabs.map((t) => t.textContent)).toEqual(['요약', '상대별 전적', '최근 경기', '파트너 · 상대 챔피언', '세부 지표', 'MMR 검산']);
-    expect(fx.text).toBe('=티어(CP 1020) → 2티어 20점 · MMR 1032 · 29판');
+    expect(tabs.map((t) => t.textContent)).toEqual(['요약', '상대별 전적', '최근 경기', '파트너 · 상대 챔피언', '세부 지표']);
+    expect(fx.text).toBe('=승률(승 13 · 패 16) → 45% · 29판');
     expect(document.title).toBe('앙앙맹 · 내전 해체 분석기');
-    // 요약 탭 청크가 오면 라인별 표가 그려진다
-    await screen.findByRole('table', { name: '라인별 MMR' });
+    // 요약 탭 청크가 오면 라인별 성적 표가 그려진다
+    const lanes = await screen.findByRole('table', { name: '라인별 성적' });
+    expect([...lanes.querySelectorAll('thead th')].map((h) => h.textContent?.trim()).filter(Boolean)).toEqual(['라인', '판', '승률', 'KDA', '분당 딜', '킬 관여']);
     expect(screen.getByRole('table', { name: '챔피언' })).toBeTruthy();
+    expect(screen.getByText('라인별 승률은 3판 이상부터 색을 입힙니다.')).toBeTruthy();
+    // payload 에는 사다리 필드가 실려 있지만 화면 어디에도 사다리 말이 없다
+    expect(container.textContent).not.toMatch(LADDER_WORD);
+    expect(fx.text).not.toMatch(LADDER_WORD);
   });
 
-  it('배치 전 멤버는 티어 이름이 어디에도 없다', () => {
+  it('5판 미만 멤버도 머리에 배치 표시가 없다', () => {
     const { container } = render(Member, { sub: '', params: { name: '맹구' } });
-    expect(container.querySelector('.placing')?.textContent).toBe('배치 3/5');
-    expect(container.querySelector('.head')?.textContent).not.toMatch(TIER_WORD);
-    expect(fx.text).not.toMatch(TIER_WORD);
+    expect(container.querySelector('.placing')).toBeNull();
+    expect(container.querySelector('.head')?.textContent).not.toMatch(LADDER_WORD);
+    expect(fx.text).toBe('=승률(승 1 · 패 2) → 33% · 3판');
+  });
+
+  it('하위 탭 목록에 MMR 검산이 없고, 옛 탭 id(mmr)는 탭으로 인정하지 않는다', () => {
+    expect(SUBTABS.map((t) => t.id)).toEqual(['summary', 'vs', 'recent', 'partners', 'metrics']);
+    expect(isSubId('mmr')).toBe(false);
+    expect(isSubId('summary')).toBe(true);
   });
 
   it('비교 칸: 버튼 → 콤보 → Enter 로 #/m/이름/vs/상대', async () => {
@@ -189,7 +181,9 @@ describe('Member.svelte', () => {
     expect(heads).toEqual(['앙앙맹', 'Faker']);
     expect(screen.getByText('1 : 3')).toBeTruthy();
     expect(screen.getByText('맞대결 4판')).toBeTruthy();
-    expect(screen.getByRole('table', { name: '전적 비교' })).toBeTruthy();
+    const cmp = screen.getByRole('table', { name: '전적 비교' });
+    expect([...cmp.querySelectorAll('tbody tr')].map((r) => r.querySelector('td')?.textContent?.trim())).toEqual(['판', '승률', 'KDA', '킬 관여', '분당 딜']);
+    expect(document.body.textContent).not.toMatch(LADDER_WORD);
     const vs = screen.getByRole('table', { name: '맞대결 · 4판' });
     const firstRow = [...vs.querySelectorAll('tbody tr')][0]!;
     expect(firstRow.textContent).toContain('제드');
