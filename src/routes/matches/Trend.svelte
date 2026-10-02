@@ -78,11 +78,11 @@
     gap: var(--sp-4);
     align-items: start;
   }
-  .range { display: grid; gap: var(--sp-2); min-width: 0; }
+  .range { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); min-width: 0; }
   .note { margin: 0; font-size: var(--fs-sm); color: var(--dim); text-wrap: pretty; }
   /* 문턱 미만 승률 셀 — DataTable 이 cls 로 받은 클래스. 채움 없이 글자만 옅게 */
   .trend :global(td.wr-dim) { color: var(--dim); }
   @media (max-width: 640px) {
-    .pair { grid-template-columns: 1fr; }
+    .pair { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

@@ -14,6 +14,7 @@ import Detail from '../src/routes/matches/Detail.svelte';
 import Trend from '../src/routes/matches/Trend.svelte';
 import Matches from '../src/routes/Matches.svelte';
 import { CHAMP_KO, DETAIL, FUN, PAYLOAD, RECENT } from './fixtures/match-payload';
+import { fakeSheetLayout } from './fake-layout';
 
 // ── 순수 함수 ──────────────────────────────────────────────────────────
 
@@ -272,6 +273,21 @@ describe('List — 최근 경기 목록', () => {
 
 describe('Detail — 경기 상세', () => {
   beforeEach(() => { cleanup(); clearFx(); });
+
+  it('팀 합계·스코어보드가 래퍼보다 넓으면 각 캡션 오른쪽에 "열 n개 더 →" + 가장자리 선(DataTable 과 같은 문법)', () => {
+    const restore = fakeSheetLayout();
+    try {
+      const { container } = render(Detail, { detail: DETAIL, data: PAYLOAD, slug: 'mnew' });
+      const sheets = [...container.querySelectorAll('.sheet')];
+      // 팀 합계: 머리 12칸 1200px / 스코어보드: 홈통 + 13칸 1400px, 보이는 폭 250px(경계 253) → 3번째 칸(200~300)부터 잘린다
+      expect(sheets[0]!.querySelector('.cap')?.textContent).toMatch(/^팀 합계 · 경기 길이 31:43열 10개 더 →$/);
+      expect(sheets[1]!.querySelector('.cap')?.textContent).toBe('스코어보드 · 블루팀 · 승열 12개 더 →');
+      expect(sheets[1]!.querySelector('.edge')).not.toBeNull();
+      expect(sheets[1]!.querySelector('.cut')?.getAttribute('aria-hidden')).toBe('true');
+    } finally {
+      restore();
+    }
+  });
 
   it('팀 합계(오브젝트·밴) · 팀별 스코어보드(라인 순, 아이템 칸, 스펠·룬 lo) · 골드 · 딜량 · 킬 지도 · 킬 기록', () => {
     const { container } = render(Detail, { detail: DETAIL, data: PAYLOAD, slug: 'mnew' });

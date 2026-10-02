@@ -14,10 +14,11 @@ export const VIEWS: Record<Section, () => Promise<{ default: Component<{ sub: st
   champions: () => import('../routes/Champions.svelte'),
   matches: () => import('../routes/Matches.svelte'),
   math: () => import('../routes/Math.svelte'),
+  feedback: () => import('../routes/Feedback.svelte'),
 };
 
 /** 문서 제목·안내 음성에 쓰는 화면 이름 (명사) */
 export const VIEW_TITLE: Record<Section, string> = {
   home: '멤버', member: '멤버', rank: '순위', records: '기록', synergy: '시너지',
-  champions: '챔피언', matches: '경기', math: '계산식',
+  champions: '챔피언', matches: '경기', math: '계산식', feedback: '피드백',
 };

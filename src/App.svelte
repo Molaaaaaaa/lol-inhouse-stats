@@ -75,6 +75,7 @@
       <Icon name="refresh-cw" />
       <span>새로고침</span>
     </button>
+    <a class="ctl btn" href="#/feedback">피드백</a>
     <p id="meta" class="meta" aria-live="polite">
       {#if loading}
         <span class="muted">데이터를 불러오는 중…</span>
@@ -117,6 +118,7 @@
       내전 해체 분석기는 Riot Games 의 승인을 받지 않았으며 Riot Games 또는 리그 오브 레전드 제작·관리에 공식적으로 관여하는 누구의 견해나 의견도 대변하지 않습니다.
       Riot Games 및 관련 자산은 Riot Games, Inc. 의 상표 또는 등록 상표입니다.
     </p>
+    <p class="foot-link"><a href="#/feedback">피드백 남기기</a></p>
   </footer>
 </div>
 
@@ -166,7 +168,7 @@
     border-radius: var(--r-chip);
     transition: background-color .15s ease-out, border-color .15s ease-out;
   }
-  .btn { display: inline-flex; align-items: center; gap: var(--sp-1); white-space: nowrap; }
+  .btn { display: inline-flex; align-items: center; gap: var(--sp-1); white-space: nowrap; text-decoration: none; }
   .ctl:hover:not(:disabled) { background: var(--raised); }
   .ctl:active:not(:disabled) { background: var(--ink); }
   .ctl:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
@@ -187,9 +189,13 @@
 
   .foot { padding: var(--sp-4); border-top: 1px solid var(--grid); color: var(--dim2); font-size: var(--fs-sm); }
   .foot p { max-width: 75ch; }
+  .foot-link { margin-top: var(--sp-2); }
+  .foot-link a { display: inline-block; min-height: 28px; color: var(--dim); text-underline-offset: .2em; }
+  .foot-link a:hover { color: var(--txt); text-decoration-thickness: 2px; }
 
   @media (pointer: coarse) {
     .ctl { min-height: 44px; }
+    .foot-link a { display: inline-flex; align-items: center; min-height: 44px; }
   }
 
   /* 폰: 탭이 44px 이라 그만큼(+ 위 격자선) 비운다 */

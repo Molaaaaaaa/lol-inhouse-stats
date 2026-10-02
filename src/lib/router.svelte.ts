@@ -6,7 +6,7 @@
  * 라우트 = 상태. 정렬·필터 같은 화면 로컬 상태는 URL 에 두지 않는다.
  */
 
-export type Section = 'home' | 'member' | 'rank' | 'records' | 'synergy' | 'champions' | 'matches' | 'math';
+export type Section = 'home' | 'member' | 'rank' | 'records' | 'synergy' | 'champions' | 'matches' | 'math' | 'feedback';
 
 export interface Route {
   section: Section;
@@ -55,6 +55,7 @@ const PATTERNS: Pattern[] = [
   compile('/matches/:slug', 'matches', 'detail'),
   compile('/matches', 'matches', 'list'),
   compile('/math/:sub?', 'math'),
+  compile('/feedback', 'feedback'),
 ];
 
 const DEFAULT_SUB: Partial<Record<Section, string>> = {

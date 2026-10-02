@@ -4,7 +4,9 @@
 #   dist/ 는 `npm run build` 산출물이고 **커밋한다** — Cloudflare 는 빌드하지 않는다
 #   (publish.deploy() 가 로컬에서 빌드 → 관문이 dist 를 검사 → push). 2026-09-18 Svelte/Vite 전환.
 #   대시보드 Build command 는 비우고, Deploy command 는 `npx wrangler deploy`.
-#   (피드백 창구와 FEEDBACK_WEBHOOK 시크릿은 2026-09-03 제거.)
+#   피드백 창구(/api/feedback → worker.js)는 2026-10-01 에 되살렸다. 받는 곳은 중계 서비스가 아니라
+#   **R2 버킷**이다 — 관리자가 자기 PC 에서 `python -m scripts.inhouse_feedback` 로 끌어와 읽는다.
+#   아래 [[r2_buckets]] 바인딩이 없으면 503 + 화면은 안내로 물러난다(아무 데도 안 쌓인다).
 #
 # ⚠️ riot.txt 는 루트(/riot.txt)로 그대로 서빙돼야 한다 — 라이엇 도메인 검증용.
 
@@ -17,3 +19,10 @@ directory = "./dist"
 binding = "ASSETS"
 # 없는 경로는 404 (SPA가 아니므로 index.html로 되돌리지 않는다)
 not_found_handling = "none"
+
+# 피드백 보관함. 이미 쓰고 있는 분석 백업 버킷(.env R2_BUCKET)을 그대로 쓴다 —
+# 새 네임스페이스·새 토큰이 없다. worker 는 이 바인딩으로 `feedback/` 접두사에 **put 만** 한다
+# (list·get·delete 를 안 부른다 — 이 버킷은 분석 산출물의 유일한 원격 사본이다).
+[[r2_buckets]]
+binding = "FB"
+bucket_name = "lol-analytics"

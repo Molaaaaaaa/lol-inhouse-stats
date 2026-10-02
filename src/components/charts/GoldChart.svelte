@@ -30,9 +30,9 @@
   const labelA = $derived(teams[0] ? teamLabel(teams[0], 0) : '블루팀');
   const labelB = $derived(teams[1] ? teamLabel(teams[1], 1) : '레드팀');
 
-  // 기하(px) — 래퍼 폭을 잰다. jsdom·초기 렌더는 0 이라 최소 폭으로
+  // 기하(px) — 래퍼 폭을 잰다. jsdom·초기 렌더는 0 이라 최소 폭으로(280 — 320px 화면의 래퍼 296px 에 든다)
   let wrapW = $state(0);
-  const W = $derived(Math.max(320, Math.floor(wrapW)));
+  const W = $derived(Math.max(280, Math.floor(wrapW)));
   const L = 48, R = 12, T = 8, GAP = 26, B = 22;
   const H1 = 120, H2 = 96;
   const H = T + H1 + GAP + H2 + B;

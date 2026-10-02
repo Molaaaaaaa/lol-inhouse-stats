@@ -1,6 +1,7 @@
 import '@testing-library/svelte/vitest';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
+import { fakeSheetLayout } from './fake-layout';
 import Metrics from '../src/routes/member/Metrics.svelte';
 import type { GuildPayload, LaneId, MetricCell, PlayerPub } from '../src/lib/data/types';
 
@@ -140,5 +141,30 @@ describe('Metrics — 라인 알약 줄', () => {
     expect(container.querySelector('table')).toBeNull();
     expect(container.querySelector('.lanes')).toBeNull();
     expect(container.querySelector('.empty')?.textContent).toContain('아직 세부 지표가 없습니다');
+  });
+});
+
+describe('Metrics — 잘림 힌트', () => {
+  it('표가 래퍼보다 넓으면 그룹 캡션 오른쪽에 "열 n개 더 →" + 가장자리 선, 끝까지 스크롤하면 사라진다', async () => {
+    const restore = fakeSheetLayout();
+    try {
+      const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
+      const sheet = container.querySelector('.sheet') as HTMLElement;
+      // '종합' 머리: 홈통 + 지표·값·판수·순위·백분위 = 6칸 600px, 보이는 폭 250px → 경계(253)를 넘는 칸: 3번째(200~300)부터 넷
+      expect(sheet.querySelector('.cap')?.textContent).toBe('종합열 4개 더 →');
+      expect(sheet.querySelector('.cut')?.getAttribute('aria-hidden')).toBe('true');
+      expect((sheet.querySelector('.edge') as HTMLElement).style.getPropertyValue('--tbl-h')).toBe('300px');
+      sheet.scrollLeft = 450;
+      await fireEvent.scroll(sheet);
+      expect(sheet.querySelector('.cut')).toBeNull();
+      expect(sheet.querySelector('.edge')).toBeNull();
+    } finally {
+      restore();
+    }
+  });
+  it('표가 래퍼에 들어가면 힌트가 없다(jsdom 은 배치가 0)', () => {
+    const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
+    expect(container.querySelector('.cut')).toBeNull();
+    expect(container.querySelector('.edge')).toBeNull();
   });
 });

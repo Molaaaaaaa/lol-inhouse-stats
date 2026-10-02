@@ -114,7 +114,7 @@
 </div>
 
 <style>
-  .replay { display: grid; gap: var(--sp-2); }
+  .replay { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); }   /* 표(nowrap)의 min-content 가 칸을 넓혀 320px 에서 문서가 넘쳤다 */
   .fml { white-space: normal; line-height: 1.6; padding: var(--sp-2) 0 0; }
   .sel { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); min-height: 1.5em; }
   .sel a { color: var(--txt); text-underline-offset: .2em; }

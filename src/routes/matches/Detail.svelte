@@ -24,6 +24,7 @@
   import DataTable from '$components/DataTable.svelte';
   import EmptyState from '$components/EmptyState.svelte';
   import Icon from '$components/Icon.svelte';
+  import SheetCaption from '$components/SheetCaption.svelte';
   import GoldChart from '$components/charts/GoldChart.svelte';
   import DmgBars from '$components/charts/DmgBars.svelte';
   import KillMap from '$components/charts/KillMap.svelte';
@@ -93,7 +94,7 @@
   {:else}
     <!-- 팀 합계 -->
     <div class="sheet">
-      <div class="cap">팀 합계 · 경기 길이 {mmss(detail.duration)}</div>
+      <SheetCaption caption="팀 합계 · 경기 길이 {mmss(detail.duration)}" />
       <table aria-label="팀 합계">
         <thead>
           <tr>
@@ -150,7 +151,7 @@
     <!-- 스코어보드 -->
     {#each boards as b (b.key)}
       <div class="sheet">
-        <div class="cap">스코어보드 · {b.label} · {b.win ? '승' : '패'}</div>
+        <SheetCaption caption="스코어보드 · {b.label} · {b.win ? '승' : '패'}" />
         <table aria-label="스코어보드 · {b.label} · {b.win ? '승' : '패'}">
           <thead>
             <tr>
@@ -470,8 +471,17 @@
   @container (max-width: 1080px) {
     .xl { display: none; }
   }
+  /* 폰: 셀 좌우 여백·홈통을 DataTable 과 같게 줄이고, 멤버 열은 7em(DataTable 이름열과 같다)에서 줄바꿈(말줄임 없음)한다 —
+     그 안에 챔피언 초상은 뺀다(옆 '챔피언' 열이 이름을 적는다). 그래야 라인·챔피언·K/D/A·KDA 가 360px 안에 든다.
+     열이 본질적으로 많고 열끼리 비교하는 표라 카드로 쪼개지 않는다 — 나머지 열은 가로 스크롤 + 잘림 힌트 */
   @media (max-width: 640px) {
     .lo { display: none; }
+    .sheet { --rn-w: 28px; }
+    table { width: max-content; min-width: 100%; }   /* 100% 인 채로 이름 셀만 줄바꿈을 허용하면 그 열이 한 글자 폭까지 눌린다(DataTable 실측) */
+    th, td { padding: 0 var(--sp-1) 0 6px; }
+    .rn { padding: 0 var(--sp-1); }
+    td.name { max-width: 7em; white-space: normal; overflow-wrap: anywhere; }
+    td.name :global(.champ) { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     th, td, .exp, .exp :global(.car) { transition: none; }

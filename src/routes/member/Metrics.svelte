@@ -7,7 +7,8 @@
    * 표는 DataTable 이 아니라 여기 격자다(AxisBars 와 같은 이유): DataTable 의 막대는 **열 최대값 기준**이라
    * 백분위 열에 쓰면 그룹에서 제일 높은 행이 늘 꽉 찬 막대가 된다 — 백분위는 0~100 이 절대 눈금이다.
    * 정렬·거르기·접기는 없다(그룹당 최대 22행, 순서는 지표 등록부의 뜻 순서). 격자 모양은 DataTable 과 같은
-   * 규칙(행 번호 홈통 · 첫 열 sticky · 1px --grid · 막대는 셀 바탕 --bar).
+   * 규칙(행 번호 홈통 · 첫 열 sticky · 1px --grid · 막대는 셀 바탕 --bar). 폰에서 넘치면 SheetCaption 이
+   * DataTable 과 같은 잘림 힌트('열 n개 더 →' + 오른쪽 2px 선)를 그린다.
    *
    * 라인이 2개 이상인 멤버는 위에 라인 알약 줄 — 기본은 통합. 통합 지표가 없으면(문턱 미만) '전체' 알약을
    * 아예 두지 않고 첫 라인이 기본이다(누를 수 있는데 빈 표만 나오는 알약을 두지 않는다).
@@ -23,6 +24,7 @@
   import { metricHref, router } from '$lib/router.svelte';
   import CodePlate from '$components/CodePlate.svelte';
   import EmptyState from '$components/EmptyState.svelte';
+  import SheetCaption from '$components/SheetCaption.svelte';
 
   interface Props { key: string; p: PlayerPub; data: GuildPayload }
   let { key, p, data }: Props = $props();
@@ -69,7 +71,7 @@
 {#snippet grid(g: MetricGroupRows)}
   {@const withLane = showLane(g)}
   <div class="sheet">
-    <div class="cap">{g.group}</div>
+    <SheetCaption caption={g.group} />
     <table aria-label={g.group}>
       <thead>
         <tr>
@@ -165,14 +167,6 @@
     overflow-x: auto;
     background: var(--sheet);
   }
-  .cap {
-    position: sticky;
-    left: 0;
-    font-size: var(--fs-sm); font-weight: 700;
-    color: var(--dim);
-    padding: var(--sp-2) 0 var(--sp-1);
-    white-space: nowrap;
-  }
   table {
     width: 100%;
     border-collapse: separate;
@@ -248,8 +242,15 @@
     color: var(--dim);
     text-wrap: pretty;
   }
+  /* 폰: 보조 열(라인) 숨김 · 셀 좌우 여백을 DataTable 과 같게 줄여 390px 에 든다(홈통 28px). 그래도 넘치면
+     SheetCaption 의 잘림 힌트 */
   @media (max-width: 640px) {
     .lo { display: none; }
+    .sheet { --rn-w: 28px; }
+    table { width: max-content; min-width: 100%; }   /* 100% 인 채로 이름 셀만 줄바꿈을 허용하면 그 열이 한 글자 폭까지 눌린다(DataTable 실측) */
+    th, td { padding: 0 var(--sp-1) 0 6px; }
+    .rn { padding: 0 var(--sp-1); }
+    td.c0 { max-width: 7em; white-space: normal; overflow-wrap: anywhere; }
   }
   @media (prefers-reduced-motion: reduce) {
     .pill, th, td { transition: none; }

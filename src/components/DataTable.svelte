@@ -29,6 +29,7 @@
   import { announce } from '$lib/a11y';
   import { media } from '$lib/media.svelte';
   import { norm } from '$lib/search';
+  import { measureSheet } from '$lib/sheet-fit';
   import Icon from '$components/Icon.svelte';
   import ChampImg from '$components/ChampImg.svelte';
   import CodePlate from '$components/CodePlate.svelte';
@@ -156,7 +157,6 @@
   //    넘칠 때는 잘림 힌트: 오른쪽 가장자리(마지막으로 보이는 열의 경계)에 2px 선 + 캡션 줄 오른쪽에
   //    '열 n개 더 →'. n 은 오른쪽 경계 너머로 잘린 머리 칸 수(숨긴 .lo 열은 너비 0 이라 세지 않는다).
   //    스크롤이 끝에 닿으면 둘 다 사라진다.
-  const FIT_SLACK = 2;
   let sheetEl = $state<HTMLDivElement | undefined>();
   let tableEl = $state<HTMLTableElement | undefined>();
   let fit = $state(false);
@@ -165,17 +165,7 @@
   function measure() {
     const s = sheetEl, t = tableEl;
     if (!s || !t) { cut = 0; return; }
-    // 2px 이하 넘침은 맞는 것으로 본다 — 360px 에서 열 min-content 합이 336.56 → 337 로 1px 넘쳐 sticky 머리를
-    // 잃고 '열 1개 더 →' 가 거짓으로 떴다(실측). overflow visible 이면 그 1px 은 본문 여백에 들어가 문서는 안 넘친다
-    fit = t.offsetWidth - s.clientWidth <= FIT_SLACK;
-    tableH = t.offsetHeight;
-    if (fit) { cut = 0; return; }
-    const edge = s.scrollLeft + s.clientWidth + 1 + FIT_SLACK;
-    let n = 0;
-    for (const th of t.querySelectorAll<HTMLElement>('thead th')) {
-      if (th.offsetWidth > 0 && th.offsetLeft + th.offsetWidth > edge) n++;
-    }
-    cut = n;
+    ({ fit, cut, tableH } = measureSheet(s, t));
   }
   $effect(() => {
     const s = sheetEl, t = tableEl;

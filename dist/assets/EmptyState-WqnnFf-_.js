@@ -1,0 +1,1 @@
+import{B as e,L as t,R as n,X as r,et as i}from"./index-Da2upy8P.js";var a=e(`<p class="empty svelte-1uba7bi"> </p>`);function o(e,o){var s=a(),c=i(s,!0);r(()=>t(c,o.text)),n(e,s)}export{o as t};
