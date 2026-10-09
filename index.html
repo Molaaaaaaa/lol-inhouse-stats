@@ -256,6 +256,11 @@
     border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:13px;
     resize:vertical}
   .fbsec textarea:focus{outline:none;border-color:var(--acc)}
+  /* 글 비밀번호 칸 — 스타일이 없어 어두운 화면에서 흰 상자로 보였다(라이브 실측 2026-10-09) */
+  .fbsec input[type=text]{width:11ch;background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    border-radius:9px;padding:8px 10px;font:inherit;font-size:14px}
+  .fbsec input[type=text]:focus{outline:none;border-color:var(--acc)}
+  @media (pointer:coarse){.fbsec input[type=text]{font-size:16px;min-height:44px}}
   .fbfoot{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap}
   .fbmsg{font-size:12px;color:var(--dim)}
   .fbmsg.ok{color:var(--good)} .fbmsg.err{color:var(--bad)}
