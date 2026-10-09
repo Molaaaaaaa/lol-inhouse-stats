@@ -191,6 +191,15 @@
               {#if delError}<p class="err" role="alert">{delError}</p>{/if}
             </form>
           {/if}
+          {#if it.reply}
+            <div class="reply">
+              <div class="rmeta">
+                <span class="rname">관리자 답변</span>
+                {#if it.reply.at}<time datetime={it.reply.at}>{dateTimeKo(it.reply.at)}</time>{/if}
+              </div>
+              <p class="rtx">{it.reply.body}</p>
+            </div>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -296,7 +305,20 @@
     color: var(--txt);
   }
   .tx { margin-top: var(--sp-2); white-space: pre-wrap; overflow-wrap: anywhere; text-wrap: pretty; }
+  /* 완료의 흐림은 글 머리(.who)와 본문(.tx)에만 건다 — 같은 줄의 관리자 답변은 그대로 읽힌다 */
   .item.done .tx, .item.done .who { color: var(--dim); }
+
+  /* 관리자 답변 — 글에 딸린 행: 들여쓰기 + 홈통 바탕 + 1px 격자선. 카드·그림자·왼쪽 띠 없음 */
+  .reply { margin: var(--sp-3) 0 0 var(--sp-4); background: var(--gutter); border: 1px solid var(--grid); }
+  .rmeta {
+    display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3);
+    padding: var(--sp-1) var(--sp-3);
+    border-bottom: 1px solid var(--grid);
+    color: var(--dim);
+    font-size: var(--fs-sm);
+  }
+  .rname { font-weight: 700; }
+  .rtx { margin: 0; padding: var(--sp-2) var(--sp-3); white-space: pre-wrap; overflow-wrap: anywhere; text-wrap: pretty; }
 
   /* 지우기 — 그 줄 안에서 열린다 */
   .del { display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-3); }

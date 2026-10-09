@@ -10,6 +10,11 @@ export type FeedbackKind = (typeof KINDS)[number];
 export const MAX_BODY = 2000;
 export const PIN_LEN = 4;
 
+export interface FeedbackReply {
+  body: string;
+  at: string;
+}
+
 export interface FeedbackItem {
   id: string;
   at: string;
@@ -19,6 +24,8 @@ export interface FeedbackItem {
   done: boolean;
   /** 글 비밀번호가 걸려 있는가 — 그 글에만 지우기가 보인다 */
   haspin: boolean;
+  /** 관리자 답변 — 없으면 null */
+  reply: FeedbackReply | null;
 }
 
 export interface FeedbackInput {
@@ -60,6 +67,17 @@ async function action(init: RequestInit, fallback: string): Promise<ActionResult
   }
 }
 
+/** 답변은 본문이 글자일 때만 인정한다 — 모양이 이상한 응답이 화면을 깨지 않게 */
+function normalizeItem(raw: unknown): FeedbackItem {
+  const x = raw as Record<string, unknown>;
+  const rp = x.reply as Record<string, unknown> | null | undefined;
+  const reply =
+    rp && typeof rp === 'object' && typeof rp.body === 'string' && rp.body
+      ? { body: rp.body, at: typeof rp.at === 'string' ? rp.at : '' }
+      : null;
+  return { ...(x as unknown as FeedbackItem), reply };
+}
+
 /** 최신순 최대 100건. 보관함이 안 이어졌으면 `off`(워커의 off 응답 또는 503). */
 export async function listFeedback(): Promise<ListResult> {
   try {
@@ -67,7 +85,7 @@ export async function listFeedback(): Promise<ListResult> {
     const j = await readJson(r);
     if (j?.off === true || r.status === 503) return { ok: false, off: true };
     if (!r.ok || !j || !Array.isArray(j.items)) return { ok: false, off: false };
-    return { ok: true, items: j.items as FeedbackItem[] };
+    return { ok: true, items: j.items.map(normalizeItem) };
   } catch {
     return { ok: false, off: false };
   }

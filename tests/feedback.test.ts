@@ -18,7 +18,7 @@ const PAYLOAD = {
 } as unknown as GuildPayload;
 
 const item = (id: string, over: Partial<FeedbackItem> = {}): FeedbackItem => ({
-  id, at: '2026-10-01T12:30:00.000Z', who: '익명', kind: '버그', body: `본문 ${id}`, done: false, haspin: false, ...over,
+  id, at: '2026-10-01T12:30:00.000Z', who: '익명', kind: '버그', body: `본문 ${id}`, done: false, haspin: false, reply: null, ...over,
 });
 
 interface Call { method: string; body: Record<string, unknown> | null }
@@ -130,6 +130,87 @@ describe('피드백 화면', () => {
       expect(row.querySelector('.who')!.textContent).toBe('<i>누구</i>');
       expect(container.querySelector('img')).toBeNull();
       expect((window as unknown as { __pwned?: number }).__pwned).toBeUndefined();
+    });
+  });
+
+  describe('관리자 답변', () => {
+    const REPLY_AT = '2026-10-02T09:05:00.000Z';
+    const reply = (body: string) => ({ body, at: REPLY_AT });
+    const replyOf = (row: HTMLElement) => row.querySelector('.reply') as HTMLElement | null;
+
+    it('답변이 있는 글은 글 아래에 이름·시각·본문 줄이 붙고, 없는 글에는 줄이 없다', async () => {
+      fakeServer({ items: [
+        item('a.json', { body: '질문입니다', reply: reply('확인했습니다.\n다음 판부터 고쳐집니다.') }),
+        item('b.json', { body: '답 없는 글' }),
+      ] });
+      render(Feedback);
+      await waitFor(() => expect(rows()).toHaveLength(2));
+      const [a, b] = rows() as [HTMLElement, HTMLElement];
+      const r = replyOf(a)!;
+      expect(r).toBeTruthy();
+      expect(within(r).getByText('관리자 답변')).toBeTruthy();
+      expect(r.querySelector('.rtx')!.textContent).toBe('확인했습니다.\n다음 판부터 고쳐집니다.');
+      const t = r.querySelector('time')!;
+      expect(t.getAttribute('datetime')).toBe(REPLY_AT);
+      expect(t.textContent).not.toBe('');
+      expect(a.querySelector('.tx')!.textContent).toBe('질문입니다');   // 글 본문은 그대로
+      expect(replyOf(b)).toBeNull();
+      expect(b.textContent).not.toContain('관리자 답변');
+    });
+
+    it('답변 본문의 HTML 은 글자로 나오고 요소가 생기지 않는다', async () => {
+      const evil = '<img src=x onerror="window.__pwned2=1"><b>굵게</b>';
+      fakeServer({ items: [item('x.json', { reply: reply(evil) })] });
+      const { container } = render(Feedback);
+      await waitFor(() => expect(rows()).toHaveLength(1));
+      const r = replyOf(rows()[0]!)!;
+      expect(r.querySelector('.rtx')!.textContent).toBe(evil);
+      expect(r.querySelector('img')).toBeNull();
+      expect(r.querySelector('b')).toBeNull();
+      expect(container.querySelector('img')).toBeNull();
+      expect((window as unknown as { __pwned2?: number }).__pwned2).toBeUndefined();
+    });
+
+    it('완료 글의 흐림(.who·.tx)은 답변에 닿지 않는다 — 완료 글자는 그대로 있다', async () => {
+      fakeServer({ items: [item('d.json', { done: true, reply: reply('처리했습니다.') })] });
+      render(Feedback);
+      await waitFor(() => expect(rows()).toHaveLength(1));
+      const row = rows()[0]!;
+      const r = replyOf(row)!;
+      expect(within(row).getByText('완료')).toBeTruthy();
+      expect(row.classList.contains('done')).toBe(true);
+      // 흐림은 `.item.done .tx`·`.item.done .who` 에만 걸린다 — 답변 줄은 그 어느 쪽에도 속하지 않는다
+      expect(r.matches('.tx, .who')).toBe(false);
+      expect(r.querySelector('.tx, .who')).toBeNull();
+      expect(r.closest('.tx, .who')).toBeNull();
+    });
+
+    it.each([
+      ['body 가 숫자', { body: 42, at: REPLY_AT }],
+      ['body 가 null', { body: null, at: REPLY_AT }],
+      ['body 가 빈 글자', { body: '', at: REPLY_AT }],
+      ['reply 가 글자', 'oops'],
+      ['reply 가 배열', ['x']],
+    ])('모양이 이상한 reply(%s)는 답변 줄 없이 글만 나온다', async (_n, bad) => {
+      fakeServer({ listJson: { items: [{ ...item('z.json', { body: '본문 z' }), reply: bad }] } });
+      render(Feedback);
+      await waitFor(() => expect(rows()).toHaveLength(1));
+      expect(replyOf(rows()[0]!)).toBeNull();
+      expect(rows()[0]!.textContent).toContain('본문 z');
+    });
+
+    it('at 이 없거나 글자가 아니면 시각 없이 이름과 본문만 나온다 · reply 키가 아예 없어도 안 깨진다', async () => {
+      const { reply: _drop, ...noReplyKey } = item('n.json', { body: '키 없는 글' });
+      fakeServer({ listJson: { items: [
+        { ...item('m.json'), reply: { body: '시각 없는 답', at: 7 } },
+        noReplyKey,
+      ] } });
+      render(Feedback);
+      await waitFor(() => expect(rows()).toHaveLength(2));
+      const r = replyOf(rows()[0]!)!;
+      expect(r.querySelector('time')).toBeNull();
+      expect(r.querySelector('.rtx')!.textContent).toBe('시각 없는 답');
+      expect(replyOf(rows()[1]!)).toBeNull();
     });
   });
 
