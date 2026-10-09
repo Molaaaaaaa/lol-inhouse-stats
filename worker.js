@@ -2,12 +2,13 @@
  * 내전 해체 분석기 — Cloudflare Worker
  *
  *  · POST   /api/feedback  → R2 에 파일 하나로 쓴다 (`feedback/<시각>-<난수>.json`)
- *  · GET    /api/feedback  → 최근 목록(공개). 화면이 댓글처럼 보여 준다
+ *  · GET    /api/feedback  → 최근 목록(공개). 화면이 댓글처럼 보여 준다. 관리자 답변(reply)이 있으면 같이 실린다
  *  · DELETE /api/feedback  → 쓴 사람이 자기 글을 지운다 (글 비밀번호 4자리)
  *  · 그 외 모든 경로        → 정적 파일(env.ASSETS)
  *
- * **관리자 암호는 두지 않는다**(2026-10-01 사용자 결정). 완료 ✓ 표시와 남의 글 정리는 관리자가
- * 자기 PC 에서 R2 를 직접 보고 한다(`python -m scripts.inhouse_feedback --done/--undone/--rm`).
+ * **관리자 암호는 두지 않는다**(2026-10-01 사용자 결정). 완료 ✓ 표시·남의 글 정리·**답변 달기**는 관리자가
+ * 자기 PC 에서 R2 를 직접 보고 한다(`python -m scripts.inhouse_feedback --done/--undone/--rm/--reply`).
+ * 답변은 그 글의 R2 객체에 `reply: {body, at}` 으로 들어가고, 이 워커는 **읽어서 내보내기만** 한다 — 답변을 쓰는 공개 경로는 없다.
  * 그래서 이 워커에는 **지킬 비밀이 없다** — 시크릿도, 관리자 경로도 없다.
  *
  * 바인딩 (wrangler.toml):
@@ -140,6 +141,10 @@ async function list(env) {
       body: maskIds(r.body || ""),
       done: !!r.done,
       haspin: !!r.pin_hash,          // 지우기 단추를 보일지 — 해시·소금은 내보내지 않는다
+      // 관리자 답변 — 본문은 공개 목록과 같은 규칙으로 식별자를 가린다
+      reply: r.reply && r.reply.body
+        ? { body: maskIds(String(r.reply.body).slice(0, MAX_BODY)), at: String(r.reply.at || "") }
+        : null,
     });
   }
   return json({ items });

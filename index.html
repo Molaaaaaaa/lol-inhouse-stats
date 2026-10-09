@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-gZEDjoR21Gr50kgxh4XwDrjfnLXGGilZV79FqYR/sDI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-uIcxr14uMz+fUgGj4UiCRSoWRO1sDj9rWBsSFPSltzk='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -237,13 +237,16 @@
   .fblisthead{display:flex;align-items:center;gap:10px;margin:22px 0 8px;border-top:1px solid var(--line);padding-top:16px}
   .fblisthead h2{font-size:16px;margin:0}
   .fbitem{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--panel)}
-  .fbitem.done{opacity:.55}
+  .fbitem.done > .meta, .fbitem.done > .tx{opacity:.55}   /* 완료한 글만 흐리게 — 안에 든 관리자 답변은 또렷하게 */
   .fbitem .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin-bottom:6px}
   .fbitem .meta .nm{color:var(--txt);font-weight:650}
   .fbitem .kd{border:1px solid var(--line2);border-radius:999px;padding:1px 8px;font-size:11px}
   .fbitem .tx{white-space:pre-wrap;word-break:break-word;font-size:13px}
   .fbitem .acts{margin-left:auto;display:flex;gap:6px}
   .fbitem .acts button{padding:3px 10px;font-size:12px;border-radius:8px}
+  /* 관리자 답변 — 글 안쪽에 들여 쓴 한 줄. 완료로 흐려진 글(.done)에서도 답변은 또렷하게 */
+  .fbreply{margin:10px 0 0 16px;padding:8px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:8px}
+  .fbreply .meta{margin-bottom:4px}
   .fbdone{color:var(--up);font-weight:650}
   .fbsec h2{font-size:16px;margin:0 0 6px}
   .fbsec .lead{color:var(--dim);font-size:13px;margin:0 0 12px}
@@ -3365,6 +3368,16 @@ function fbItem(it){
   }
   const tx=document.createElement('div'); tx.className='tx'; tx.textContent=it.body||'';
   box.append(meta,tx);
+  if(it.reply&&it.reply.body){
+    // 관리자 답변 — 글자는 textContent 로만(남이 쓴 HTML 이 해석되지 않게)
+    const rp=document.createElement('div'); rp.className='fbreply';
+    const rh=document.createElement('div'); rh.className='meta';
+    const rn=document.createElement('span'); rn.className='nm'; rn.textContent='관리자 답변';
+    const ra=document.createElement('span'); ra.textContent=fbWhen(it.reply.at);
+    rh.append(rn,ra);
+    const rt=document.createElement('div'); rt.className='tx'; rt.textContent=it.reply.body;
+    rp.append(rh,rt); box.append(rp);
+  }
   return box;
 }
 async function loadFeedback(){
