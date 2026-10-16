@@ -8,7 +8,7 @@ import { app } from '../src/lib/data/store.svelte';
 import { router } from '../src/lib/router.svelte';
 import { clearFx, fx } from '../src/lib/fx.svelte';
 import type { LazyFiles } from '../src/lib/data/loader';
-import type { GuildPayload, RecentMatch } from '../src/lib/data/types';
+import type { GuildPayload, MatchDetail, RecentMatch } from '../src/lib/data/types';
 import List from '../src/routes/matches/List.svelte';
 import Detail from '../src/routes/matches/Detail.svelte';
 import Trend from '../src/routes/matches/Trend.svelte';
@@ -82,6 +82,33 @@ describe('scoreboardRows · teamTotals', () => {
     expect(itemImgUrl('16.18.1', 0)).toBe('');
     expect(itemImgUrl('16.18.1/../x', 3078)).toBe('');
     expect(itemImgUrl(null, 3078)).toBe('');
+  });
+});
+
+// MVP 는 이긴 팀 한 명에게만 `mvp: true` 키가 있다(진 팀·나머지 선수는 키 자체가 없다)
+const MVP_RECENT: RecentMatch[] = RECENT.map((m) => (m.match_id === 'mnodet' ? m : {
+  ...m,
+  teams: m.teams.map((t) => (t.win ? { ...t, players: t.players.map((p) => (p.lane === 'MIDDLE' ? { ...p, mvp: true as const } : p)) } : t)),
+}));
+const MVP_DETAIL: MatchDetail = {
+  ...DETAIL,
+  teams: DETAIL.teams.map((t) => (t.win ? { ...t, players: t.players.map((p) => (p.name === '가' ? { ...p, mvp: true as const } : p)) } : t)),
+};
+
+describe('MVP — 파생값', () => {
+  it('matchRows: mvp:true 선수만 mvp, 툴팁 끝에 MVP. 키가 없는 기록은 전부 false', () => {
+    const rows = matchRows(MVP_RECENT, CHAMP_KO);
+    const flagged = rows.flatMap((r) => [...r.win, ...r.loss]).filter((p) => p.mvp);
+    expect(flagged.map((p) => p.name)).toEqual(['가', '블루미드']);
+    expect(flagged.map((p) => p.tip)).toEqual(['미드 · 가 · 아리 · MVP', '미드 · 블루미드 · Zoe · MVP']);
+    expect(rows[0]!.win.map((p) => p.mvp)).toEqual([false, true]);   // 라인 순: 탑 → 미드
+    expect(rows[0]!.loss.every((p) => !p.mvp)).toBe(true);
+    expect(matchRows(RECENT, CHAMP_KO).flatMap((r) => [...r.win, ...r.loss]).some((p) => p.mvp)).toBe(false);
+  });
+  it('scoreboardRows: mvp:true 인 행만 mvp', () => {
+    expect(scoreboardRows(MVP_DETAIL.teams[0], CHAMP_KO).map((r) => [r.name, r.mvp])).toEqual([['나', false], ['가', true]]);
+    expect(scoreboardRows(MVP_DETAIL.teams[1], CHAMP_KO).every((r) => !r.mvp)).toBe(true);
+    expect(scoreboardRows(DETAIL.teams[0], CHAMP_KO).every((r) => !r.mvp)).toBe(true);
   });
 });
 
@@ -364,6 +391,61 @@ describe('Detail — 경기 상세', () => {
     await fireEvent.click(first);
     expect(container.querySelectorAll('svg .dot.on')).toHaveLength(1);
     expect(first.getAttribute('aria-selected')).toBe('true');
+  });
+});
+
+describe('MVP — 화면 표시', () => {
+  beforeEach(() => { cleanup(); clearFx(); app.status = 'ready'; });
+
+  it('목록: MVP 가 있는 경기마다 정확히 한 곳, 이긴 팀 칸 안, 글자 MVP. 없는 경기·진 팀에는 없다', () => {
+    app.data = { ...PAYLOAD, recent_matches: MVP_RECENT } as GuildPayload;
+    const { container } = render(List);
+    const items = [...container.querySelectorAll('li.match')];
+    expect(items.map((li) => li.querySelectorAll('.mvp').length)).toEqual([1, 1, 0]);
+    for (const li of items.slice(0, 2)) {
+      const tag = li.querySelector('.mvp')!;
+      expect(tag.textContent).toBe('MVP');
+      expect(tag.closest('.team')?.classList.contains('win')).toBe(true);
+      expect(li.querySelectorAll('.team.loss .mvp')).toHaveLength(0);
+    }
+    // 이름 칸 안, 이름 바로 뒤 — 그 칸의 툴팁 문구에도 MVP 가 실린다
+    const pl = items[0]!.querySelector('.mvp')!.closest('.pl') as HTMLElement;
+    expect(pl.querySelector('.pn')?.textContent).toBe('가');
+    expect(document.getElementById(pl.getAttribute('aria-describedby')!)?.textContent).toBe('미드 · 가 · 아리 · MVP');
+  });
+
+  it('목록: MVP 키가 없는 기록(MVP 를 싣기 전 발행물)에는 표식이 없다', () => {
+    app.data = PAYLOAD;
+    const { container } = render(List);
+    expect(container.querySelectorAll('.mvp')).toHaveLength(0);
+  });
+
+  it('상세: MVP 행의 멤버 칸에 한 곳, 진 팀 스코어보드에는 없다. 펼침 단추 이름은 그대로', () => {
+    const { container } = render(Detail, { detail: MVP_DETAIL, data: PAYLOAD, slug: 'mnew' });
+    expect(container.querySelectorAll('.mvp')).toHaveLength(1);
+    const boards = [...container.querySelectorAll('table[aria-label^="스코어보드"]')];
+    const win = [...boards[0]!.querySelectorAll('tbody tr.sb')];
+    expect(win.map((tr) => tr.querySelectorAll('td.c0 .mvp').length)).toEqual([0, 1]);
+    expect(win[1]!.querySelector('td.c0')?.textContent?.trim()).toBe('가MVP');
+    expect(win[1]!.querySelector('td.c0 button.exp')?.getAttribute('aria-label')).toBe('가 세부 기록');
+    expect(boards[1]!.querySelectorAll('.mvp')).toHaveLength(0);
+  });
+
+  it('상세: MVP 키가 없는 상세 파일에는 표식이 없다', () => {
+    const { container } = render(Detail, { detail: DETAIL, data: PAYLOAD, slug: 'mnew' });
+    expect(container.querySelectorAll('.mvp')).toHaveLength(0);
+  });
+
+  it('목록에서 펼친 상세에도 같은 표식(경기 한 개당 MVP 한 명)', async () => {
+    mockLazy(async () => MVP_DETAIL);
+    app.data = { ...PAYLOAD, recent_matches: MVP_RECENT } as GuildPayload;
+    const { container } = render(List);
+    const li = container.querySelectorAll('li.match')[0]!;
+    await fireEvent.click(li.querySelector('button[aria-expanded]')!);
+    await waitFor(() => expect(li.querySelector('table[aria-label="팀 합계"]')).not.toBeNull());
+    // 같은 경기가 행(.row)에도 펼친 스코어보드(.det table)에도 한 곳씩
+    expect(li.querySelectorAll('.row .mvp')).toHaveLength(1);
+    expect(li.querySelectorAll('.det table .mvp')).toHaveLength(1);
   });
 });
 

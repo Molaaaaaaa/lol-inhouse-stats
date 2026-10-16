@@ -7,6 +7,7 @@
    * 스코어보드는 DataTable 이 아니라 같은 문법의 표다 — 셀에 아이템 이미지·펼침 버튼이 들어가고
    * 행 아래에 세부 행(타임라인·빌드 오더·세부 기록)이 붙어야 하는데 DataTable 셀은 글자·초상만 받는다.
    * 멤버 행의 펼침 버튼(aria-expanded)이 세부 행을 열고, 행 선택은 수식 줄에 `=KDA(k+a)/d = kda`.
+   * payload 의 `mvp: true` 선수(그 경기 MVP, 이긴 팀에 한 명)는 멤버 이름 뒤에 MVP 표식이 붙는다.
    *
    * 스크린샷 기록에는 오브젝트·밴이 아예 없다. 0 으로 그리면 '한 번도 못 먹었다' 로 읽히므로
    * payload 의 objectives_available·ban_available 이 꺼져 있으면 열 자체를 빼고 사유를 적는다.
@@ -24,6 +25,7 @@
   import DataTable from '$components/DataTable.svelte';
   import EmptyState from '$components/EmptyState.svelte';
   import Icon from '$components/Icon.svelte';
+  import MvpTag from '$components/MvpTag.svelte';
   import SheetCaption from '$components/SheetCaption.svelte';
   import GoldChart from '$components/charts/GoldChart.svelte';
   import DmgBars from '$components/charts/DmgBars.svelte';
@@ -181,7 +183,7 @@
                           aria-label="{r.name} 세부 기록" onclick={(e) => { e.stopPropagation(); toggle(r); }}>
                     <Icon name="chevron-down" class={on ? 'car up' : 'car'} />
                   </button>
-                  <ChampImg name={r.champ} {patch} />{r.name}
+                  <ChampImg name={r.champ} {patch} />{r.name}{#if r.mvp}<MvpTag />{/if}
                 </td>
                 <td class={r.laneCls}>{r.laneKo}</td>
                 <td>{r.champKo}</td>
@@ -335,6 +337,7 @@
   .rn + .c0 { left: var(--rn-w); }
   thead .c0 { z-index: 3; background: var(--gutter); }
   td :global(.champ) { margin-right: var(--sp-1); }
+  td.name :global(.mvp) { margin-left: var(--sp-1); }
 
   /* 조건부 서식 — 결과·라인 띠 */
   td.win { background: color-mix(in srgb, var(--win) 18%, transparent); }

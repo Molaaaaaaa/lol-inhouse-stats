@@ -85,7 +85,8 @@ export interface FunStats {
 }
 
 // ── 경기 목록 ────────────────────────────────────────────────────────
-export interface RecentMatchPlayer { name: string; champ: string; lane: LaneId }
+/** `mvp`: 그 경기의 MVP(이긴 팀 기여도 1위)에게만 `true` — 아닌 선수는 키 자체가 없다. 진 팀에는 없다. */
+export interface RecentMatchPlayer { name: string; champ: string; lane: LaneId; mvp?: true }
 export interface RecentMatch {
   match_id: string;  // 익명 슬러그 — 상세는 data/<gid>/m/<slug>.json
   ts: number;
@@ -176,6 +177,7 @@ export interface GuildPayload {
 // ── 경기 상세 (data/<gid>/m/<slug>.json, 펼칠 때 로드) ──────────────
 export interface MatchDetailPlayer {
   pid: number; name: string; champ: string; lane: LaneId;
+  mvp?: true;        // 경기 목록과 같은 약속 — MVP 한 명에게만 있다
   k: number; d: number; a: number; kda: number; cs: number; gold: number;
   dmg: number; dmg_taken: number; dmg_turret: number; vision: number;
   items: number[]; spells: number[]; perks: number[];

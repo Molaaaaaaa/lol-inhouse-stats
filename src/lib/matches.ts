@@ -33,8 +33,10 @@ export interface MatchPlayerCell {
   laneKo: string;
   /** 라인 띠 이름 'top'·'jg'·… (모르는 라인은 '') */
   band: string;
-  /** 툴팁 한 줄 — `탑 · 이름 · 챔피언` */
+  /** 툴팁 한 줄 — `탑 · 이름 · 챔피언`, MVP 면 ` · MVP` 가 붙는다 */
   tip: string;
+  /** 이 경기의 MVP(이긴 팀 기여도 1위) — payload 의 `mvp: true` */
+  mvp: boolean;
 }
 export interface MatchRow {
   slug: string;
@@ -53,9 +55,11 @@ function playerCell(p: RecentMatch['teams'][number]['players'][number], ko: Cham
   const champ = String(p.champ ?? '');
   const ck = champName(ko, champ);
   const lk = laneKo(p.lane);
+  const mvp = p.mvp === true;
   return {
     name, champ, champKo: ck, lane: String(p.lane ?? ''), laneKo: lk, band: laneBand(p.lane),
-    tip: [lk, name, ck].filter(Boolean).join(' · '),
+    tip: [lk, name, ck, mvp ? 'MVP' : ''].filter(Boolean).join(' · '),
+    mvp,
   };
 }
 
@@ -122,6 +126,8 @@ export interface ScoreRow {
   trinket: number | null;
   spells: string;
   perks: string;
+  /** 이 경기의 MVP(이긴 팀 기여도 1위) — payload 의 `mvp: true` */
+  mvp: boolean;
   /** 원본 — 펼침 패널(타임라인·빌드·세부 기록)이 읽는다 */
   raw: MatchDetailPlayer;
 }
@@ -145,6 +151,7 @@ export function scoreboardRows(team: Pick<MatchDetailTeam, 'team_id' | 'players'
       items: slots, trinket: trinket || null,
       spells: (p.spells ?? []).filter(Boolean).map((x) => SPELL_KO[x] ?? `주문 ${x}`).join(' · '),
       perks: (p.perks ?? []).filter(Boolean).map((x) => PERK_KO[x] ?? `룬 ${x}`).join(' · '),
+      mvp: p.mvp === true,
       raw: p,
     };
   });

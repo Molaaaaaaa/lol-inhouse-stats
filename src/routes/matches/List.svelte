@@ -2,6 +2,7 @@
   /**
    * 최근 경기 — 한 경기가 한 행: 행 번호 홈통 · 시각 · [승] 5명 · vs · [패] 5명 · '상세' 버튼 · 주소 링크.
    * 폰에서는 두 팀이 두 줄. 50경기씩 그리고 '더 보기' 로 잇는다(다시 그리지 않으므로 펼친 상세는 남는다).
+   * payload 의 `mvp: true` 선수(그 경기 MVP, 이긴 팀 한 명)는 이름 뒤에 MVP 표식이 붙는다.
    *
    * ⚠️ 줄 전체를 button 으로 만들지 않는다 — 버튼은 내용을 이름으로 눌러 담아 안에 있는 멤버 10명·
    *    챔피언이 보조기술에서 개별로 안 읽힌다(옛 결정). '상세' 버튼(aria-expanded)만 누른다.
@@ -17,6 +18,7 @@
   import ChampImg from '$components/ChampImg.svelte';
   import EmptyState from '$components/EmptyState.svelte';
   import Icon from '$components/Icon.svelte';
+  import MvpTag from '$components/MvpTag.svelte';
   import Skeleton from '$components/Skeleton.svelte';
   import Detail from './Detail.svelte';
 
@@ -75,9 +77,10 @@
   <div class={['team', win ? 'win' : 'loss']}>
     <span class="res">{win ? '승' : '패'}</span>
     {#each players as p, i (`${p.name}-${i}`)}
-      <span class={['pl', p.band]} use:tip={p.tip}>
+      <span class={['pl', p.band, p.mvp && 'has-mvp']} use:tip={p.tip}>
         <ChampImg name={p.champ} {patch} />
         <span class="pn">{p.name}</span>
+        {#if p.mvp}<MvpTag />{/if}
       </span>
     {/each}
   </div>
@@ -211,6 +214,9 @@
     font-size: var(--fs-sm);
     line-height: 1.6;
   }
+  /* MVP 표식이 든 칸은 표식 폭만큼 상한을 넓힌다 — 안 그러면 표식이 이름 칸을 깎아 긴 이름이 줄임표가 된다.
+     15em = 11em(표식 없는 칸의 상한) + 표식 바깥 폭(3.3em 안팎, 실측) + 여유 */
+  .pl.has-mvp { max-width: 15em; }
   .pl.top { border-left-color: var(--lane-top); }
   .pl.jg { border-left-color: var(--lane-jg); }
   .pl.mid { border-left-color: var(--lane-mid); }
@@ -309,7 +315,7 @@
     .team.loss { grid-area: loss; padding-bottom: var(--sp-2); }
     /* 폰: 다섯 칸이 한 줄을 나누면 이름이 한 글자만 남는다(실측 'C…') — 칸을 내용 폭으로 두고 줄을 바꾼다 */
     .team { flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); }
-    .pl { flex: 0 1 auto; max-width: 100%; }
+    .pl, .pl.has-mvp { flex: 0 1 auto; max-width: 100%; }
     .pn { max-width: 7ch; }
     .vs { display: none; }
     .det { padding-left: var(--sp-3); }
