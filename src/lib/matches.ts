@@ -1,5 +1,5 @@
 /**
- * 경기 화면의 파생값 — 최근 경기 행·스코어보드 행·골드 추이·킬 지도 점·빌드 오더·경향 표.
+ * 경기 화면의 파생값 — 최근 경기 행·스코어보드 행·팀 대결 막대·골드 추이·킬 지도 점·빌드 오더·경향 표.
  * 전부 순수 함수다. 전역 store 를 읽지 않는다 — 컴포넌트가 payload 조각을 넘기고 테스트는
  * 작은 객체를 넘긴다. 옛 renderMatches·scoreboard·goldChart·killMap·renderFun(legacy/index.html)
  * 의 계산 규칙만 옮겼고 마크업은 컴포넌트에서 한다.
@@ -14,7 +14,7 @@ import { LANE_SEQ, laneIdx, laneKo } from './lanes';
 import { laneBand, laneCls } from './member';
 import { hourRows, type HourRow } from './member-rest';
 import { mLabel, type MetricMetaMap } from './metrics';
-import { wrClass } from './tier';
+import { WR_WORD, wrStep, type WrStep } from './tier';
 
 export type ChampKo = Record<string, string> | null | undefined;
 /** 챔피언 한글 이름 — 사전에 없으면 id 그대로(숨기면 데이터 문제를 못 본다) */
@@ -112,8 +112,7 @@ export interface ScoreRow {
   champ: string;
   champKo: string;
   lane: string;
-  laneKo: string;
-  /** DataTable 문법의 라인 띠 클래스('lane-top') */
+  /** 라인 띠 클래스('lane-top') — 딜량 막대 이름 칸이 쓴다(스코어보드 라인 칸은 LaneChip) */
   laneCls: string;
   k: number; d: number; a: number;
   /** "9/4/14" */
@@ -145,7 +144,7 @@ export function scoreboardRows(team: Pick<MatchDetailTeam, 'team_id' | 'players'
     return {
       key: `${team.team_id}-${p.pid}`,
       pid: n0(p.pid), name: String(p.name ?? ''), champ: String(p.champ ?? ''), champKo: champName(ko, p.champ),
-      lane: String(p.lane ?? ''), laneKo: laneKo(p.lane), laneCls: laneCls(p.lane),
+      lane: String(p.lane ?? ''), laneCls: laneCls(p.lane),
       k: n0(p.k), d: n0(p.d), a: n0(p.a), kdaText: `${n0(p.k)}/${n0(p.d)}/${n0(p.a)}`, kda: Number(p.kda) || 0,
       cs: n0(p.cs), gold: n0(p.gold), dmg: n0(p.dmg), dmgTaken: n0(p.dmg_taken), dmgTurret: n0(p.dmg_turret), vision: n0(p.vision),
       items: slots, trinket: trinket || null,
@@ -503,12 +502,63 @@ export function wrWithGames(wr: number | null | undefined, games: number): strin
   return games > 0 && wr != null ? `${pct(wr)} (${games})` : '-';
 }
 
-/** 승률 셀 클래스 — 문턱 이상이면 win/loss 채움, 미만이면 옅은 글자(wr-dim), 판 0 이면 '' */
-export function wrCellCls(wr: number | null | undefined, games: number, minGames: number): string {
-  if (wr == null || games <= 0) return '';
-  const c = wrClass(wr, games, minGames);
-  // 'wr-h'/'wr-l' 를 같이 내보내 DataTable 이 승률 셀에만 ▲▼ 를 붙인다(win/loss 채움은 결과 셀도 쓴다)
-  return c === 'wr-h' ? 'win wr-h' : c === 'wr-l' ? 'loss wr-l' : c === 'wr-dim' ? 'wr-dim' : '';
+export interface WrCell {
+  /** 보이는 승률 '75%' */
+  pct: string;
+  games: number;
+  /** 승률 단계(Wilson 구간 기준) — 글자색 st-{단계}·기호 WR_MARK */
+  step: WrStep;
+  /** 셀 글 — 거르기·보조기술: '75% (8)' + 단계 문구(', 50%보다 높음' · ', 표본 적음'). 중립이면 문구 없음 */
+  text: string;
+}
+
+/**
+ * '승률(판수)' 셀 — 경향 표의 진영·경기 길이 칸. 색은 점추정이 아니라 승률 단계(wrStep, Wilson 구간)로 —
+ * 판수가 문턱 미만이면 'few'(옅은 글자, 색·기호 없음). 판 0 이거나 승률이 없으면 null(셀은 '-').
+ */
+export function wrCell(wr: number | null | undefined, games: number, minGames: number): WrCell | null {
+  if (wr == null || !(games > 0)) return null;
+  const step = wrStep(wr, games, minGames);
+  const word = WR_WORD[step];
+  return { pct: pct(wr), games, step, text: `${wrWithGames(wr, games)}${word ? `, ${word}` : ''}` };
+}
+
+// ── 팀 대결 막대 ──────────────────────────────────────────────────────
+
+export interface VersusRow {
+  key: 'kills' | 'gold' | 'towers' | 'dragons';
+  /** 가운데 라벨 — 팀 합계 표 머리와 같은 말 */
+  label: string;
+  /** 왼쪽(팀 0 = 블루) · 오른쪽(팀 1 = 레드) 값과 글자 */
+  a: number;
+  b: number;
+  aText: string;
+  bText: string;
+  /** 막대 길이(0~100) — 두 팀 중 큰 쪽이 100. 둘 다 0 이면 0 */
+  aPct: number;
+  bPct: number;
+}
+
+/**
+ * 팀 합계 → 대결 막대 줄(킬 · 골드, 오브젝트가 실린 발행물이면 타워 · 드래곤). 팀이 둘이 아니면 빈 배열.
+ * 막대는 가운데 축에서 바깥으로 뻗고 큰 쪽이 끝까지 간다 — 몇 배 차이인지가 길이로 보인다.
+ * 오브젝트 값이 null(스크린샷 기록)이면 그 줄은 없다 — 0 으로 그리면 '못 먹었다' 로 읽힌다.
+ */
+export function versusRows(totals: readonly TeamTotalRow[]): VersusRow[] {
+  if (totals.length !== 2) return [];
+  const [ta, tb] = totals as [TeamTotalRow, TeamTotalRow];
+  const share = (v: number, m: number) => (m > 0 ? Math.round((v / m) * 1000) / 10 : 0);
+  const out: VersusRow[] = [];
+  const add = (key: VersusRow['key'], label: string, a: number | null, b: number | null, f: (v: number) => string) => {
+    if (a == null || b == null) return;
+    const m = Math.max(a, b);
+    out.push({ key, label, a, b, aText: f(a), bText: f(b), aPct: share(a, m), bPct: share(b, m) });
+  };
+  add('kills', '킬', ta.kills, tb.kills, String);
+  add('gold', '골드', ta.gold, tb.gold, kilo);
+  add('towers', '타워', ta.towers, tb.towers, String);
+  add('dragons', '드래곤', ta.dragons, tb.dragons, String);
+  return out;
 }
 
 /** 진영 차이 "+33%p"(블루 우세) · "−20%p"(레드 우세) */

@@ -1,6 +1,7 @@
 <script lang="ts">
   /**
-   * 판수 순위 · 승률 표 — 보기 버튼 줄(라인별(기본) · 통합 · 라인 하나) → 범위·순위 기준 한 줄 → 격자 표 → 안내.
+   * 판수 순위 · 승률 표 — 보기 칩 줄(라인별(기본) · 통합 · 라인 하나, 라인 칩은 라인 점) → 범위·순위 기준 한 줄 →
+   * 카드(Panel) 안의 표 → 안내. 승률 열은 승률 게이지(승률 단계 색 + 기호 · 막대 · 'n승 n패').
    * 보기는 URL(`#/rank/board/:lane?` — 없음=라인별 · all=통합 · 라인 키)이 상태다.
    *
    * 통합은 payload 의 leaderboard(발행 문턱), 라인별은 players[*].lanes(라인 판수 ≥ 라인 문턱).
@@ -14,15 +15,16 @@
   import { clearFx, setFx } from '$lib/fx.svelte';
   import { pct } from '$lib/fmt';
   import { LANE_SEQ, laneKo } from '$lib/lanes';
-  import { minGamesNote } from '$lib/tier';
+  import { minGamesNote, wrText } from '$lib/tier';
   import { mLabel } from '$lib/metrics';
-  import { laneCls, wrCls } from '$lib/member';
   import { boardLaneCounts, boardRows, boardViewOf, type BoardRow, type BoardView } from '$lib/rank';
   import type { Col } from '$lib/table';
-  import type { LaneId } from '$lib/data/types';
   import DataTable from '$components/DataTable.svelte';
+  import LaneChip from '$components/LaneChip.svelte';
+  import Panel from '$components/Panel.svelte';
   import QMark from '$components/Tooltip.svelte';
   import Skeleton from '$components/Skeleton.svelte';
+  import WinGauge from '$components/WinGauge.svelte';
 
   let { params = {} }: { params?: Record<string, string> } = $props();
 
@@ -53,12 +55,14 @@
       { k: 'name', h: '멤버' },
       { k: 'rank', h: '판수 순위', num: true, nullLast: true, fmt: numOrDash },
     ];
-    if (view === 'lanes') out.push({ k: 'laneOrd', h: '라인', fmt: (_v, r) => laneKo(r.lane), cls: (r) => laneCls(r.lane) });
+    if (view === 'lanes') out.push({ k: 'laneOrd', h: '라인', cell: laneCell, fmt: (_v, r) => laneKo(r.lane) });
+    // 폰에서는 승도 보조 열(.lo) — 승률 게이지가 승패 몫을 막대로 보이고, 카드(Panel) 안쪽 여백만큼 좁아진 390px 에서
+    // 승률 열이 12px 잘렸다(실측). 승수는 보조기술 글·태블릿 이상에는 그대로 있다
     out.push(
       { k: 'games', h: '판', num: true },
-      { k: 'wins', h: '승', num: true },
+      { k: 'wins', h: '승', num: true, lo: true },
       { k: 'losses', h: '패', num: true, lo: true },
-      { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, fmt: pctOrDash, cls: (r) => wrCls(r.winrate, r.games, need) },
+      { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, cell: wrGauge, fmt: (_v, r) => wrText(r.winrate, r.games, need) },
       { k: 'ci', h: '신뢰성', num: true, lo: true, hlp: '신뢰성', fmt: pctOrDash },
       { k: 'kda', h: mLabel(meta, 'kda'), num: true, lo: true, fmt: numOrDash },
       { k: 'kp', h: mLabel(meta, 'kp'), num: true, lo: true, fmt: pctOrDash },
@@ -74,7 +78,6 @@
   });
   const LOWER = ['rank', 'laneOrd'];
 
-  const BAND: Readonly<Record<LaneId, string>> = { TOP: 'lane-top', JUNGLE: 'lane-jg', MIDDLE: 'lane-mid', BOTTOM: 'lane-bot', UTILITY: 'lane-sup' };
   const VIEW_LABEL: Readonly<Record<'lanes' | 'all', string>> = { lanes: '라인별', all: '통합' };
   const viewLabel = (v: BoardView) => (v === 'lanes' || v === 'all' ? VIEW_LABEL[v] : laneKo(v));
   const caption = $derived(`판수 순위 · ${mLabel(data?.metric_meta, 'winrate')} · ${viewLabel(view)}`);
@@ -109,31 +112,34 @@
   }
 </script>
 
+{#snippet wrGauge(r: BoardRow)}<WinGauge w={r.winrate} n={r.games} minGames={need} />{/snippet}
+{#snippet laneCell(r: { lane?: string | null })}<LaneChip lane={r.lane} />{/snippet}
+
 {#if data}
   <div class="board">
-    <div class="views" role="group" aria-label="리더보드 보기">
-      <button type="button" class="vb" aria-pressed={view === 'lanes'} onclick={() => setView('lanes')}>라인별</button>
-      <button type="button" class="vb" aria-pressed={view === 'all'} onclick={() => setView('all')}>통합</button>
+    <div class="chips" role="group" aria-label="리더보드 보기">
+      <button type="button" class="chip" aria-pressed={view === 'lanes'} onclick={() => setView('lanes')}>라인별</button>
+      <button type="button" class="chip" aria-pressed={view === 'all'} onclick={() => setView('all')}>통합</button>
       {#each LANE_SEQ as l (l)}
-        <button type="button" class="vb {BAND[l]}" aria-pressed={view === l} onclick={() => setView(l)}>
-          {laneKo(l)} <span class="n">{counts?.[l] ?? 0}</span>
+        <button type="button" class="chip" aria-pressed={view === l} onclick={() => setView(l)}>
+          <LaneChip lane={l} games={counts?.[l] ?? 0} />
         </button>
       {/each}
     </div>
 
     <p class="note">{scopeNote}</p>
 
-    <div class="sheet">
+    <Panel title={caption} level={3}>
       {#key view}
-        <DataTable {rows} {cols} {caption} sortKey="rank" sortDir={1} lowerBetterKeys={LOWER}
+        <DataTable {rows} {cols} {caption} captionHidden sortKey="rank" sortDir={1} lowerBetterKeys={LOWER}
                    rowKey={(r) => r.key} selectedKey={selected ?? undefined} {onselect} />
       {/key}
-    </div>
-
-    <p class="note">신뢰성(승률의 Wilson 하한)은 열 머리를 선택하면 그 값으로 정렬합니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.</p>
-    {#if note}
-      <p class="note">{note.text} <QMark text={note.tip} label={note.tipLabel} /></p>
-    {/if}
+      <p class="note in">신뢰성(승률의 Wilson 하한)은 열 머리를 선택하면 그 값으로 정렬합니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.
+        승률의 색과 ▲▼는 판수를 감안해도 50%와 차이가 날 때만 붙고, 문턱 미만은 '표본 적음'으로 적습니다.</p>
+      {#if note}
+        <p class="note in">{note.text} <QMark text={note.tip} label={note.tipLabel} /></p>
+      {/if}
+    </Panel>
   </div>
 {:else}
   <Skeleton rows={8} />
@@ -142,39 +148,6 @@
 <style>
   .board { display: flex; flex-direction: column; gap: var(--sp-3); }
 
-  /* 보기 버튼 — 라인 칩 모양(왼쪽 3px 띠)의 작은 버튼, 눌린 것은 선택색 테두리 */
-  .views { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
-  .vb {
-    min-height: 28px;
-    padding: 0 var(--sp-2);
-    background: var(--sheet);
-    color: var(--dim);
-    border: 1px solid var(--grid-strong);
-    border-left-width: 3px;
-    border-left-color: transparent;
-    border-radius: var(--r-chip);
-    font-size: var(--fs-sm);
-    line-height: 1.6;
-    white-space: nowrap;
-    transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out;
-  }
-  .vb:hover { background: var(--raised); color: var(--txt); }
-  .vb:active { background: var(--gutter); }
-  .vb:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
-  .vb[aria-pressed='true'] { background: var(--raised); color: var(--txt); border-color: var(--sel); }
-  .vb.lane-top { border-left-color: var(--lane-top); }
-  .vb.lane-jg { border-left-color: var(--lane-jg); }
-  .vb.lane-mid { border-left-color: var(--lane-mid); }
-  .vb.lane-bot { border-left-color: var(--lane-bot); }
-  .vb.lane-sup { border-left-color: var(--lane-sup); }
-  .vb .n { font-variant-numeric: tabular-nums; }
-
   .note { max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
-
-  @media (pointer: coarse) {
-    .vb { min-height: 44px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .vb { transition: none; }
-  }
+  .note.in { padding-top: var(--sp-2); }
 </style>

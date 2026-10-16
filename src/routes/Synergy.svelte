@@ -5,7 +5,7 @@
    * 옛 사이트의 `#/synergy/ties`(맞대결)는 기록 화면으로 옮겨 갔다 — 그 주소는 기록으로 보낸다.
    *
    * 하위 화면 셋은 같은 payload 조각(synergy·trios)을 보는 작은 표라 섹션 청크에 함께 싣는다
-   * (순위·기록 화면과 같은 원칙). 각 하위 화면이 자기 표·선택·수식 줄을 가진다.
+   * (순위·기록 화면과 같은 원칙). 각 하위 화면이 자기 카드(Panel)·표·선택·수식 줄을 가진다.
    */
   import { app } from '$lib/data/store.svelte';
   import { href, router } from '$lib/router.svelte';
@@ -49,7 +49,7 @@
 <section class="synergy" aria-labelledby="syn-h">
   <h2 id="syn-h" class="sr-only">시너지</h2>
   <Subtabs tabs={TABS} {active} onchange={go} label="시너지 하위 화면" prefix="syn" />
-  <div id="syn-panel-{active}" role="tabpanel" aria-labelledby="syn-tab-{active}" class="panel">
+  <div id="syn-panel-{active}" role="tabpanel" aria-labelledby="syn-tab-{active}" class="body">
     {#if !app.data}
       <Skeleton rows={8} />
     {:else if active === 'trio'}
@@ -63,6 +63,6 @@
 </section>
 
 <style>
-  .synergy { display: grid; gap: var(--sp-2); }
-  .panel { min-width: 0; }
+  .synergy { display: grid; gap: var(--sp-3); }
+  .body { min-width: 0; }
 </style>

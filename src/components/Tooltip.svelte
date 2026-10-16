@@ -50,7 +50,7 @@
     cursor: help;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    transition: color .15s, border-color .15s;
+    transition: color var(--dur-1), border-color var(--dur-1);
   }
   .qmark:hover, .qmark:focus-visible { color: var(--txt); border-color: var(--txt); }
   .qmark:active { color: var(--dim2); }

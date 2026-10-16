@@ -1,5 +1,5 @@
 /**
- * 기록 화면의 파생값 — 명예의 전당·경기 기록·역전·데스·히트맵 좌표. 전부 순수 함수다.
+ * 기록 화면의 파생값 — 명예의 전당(기록 카드)·경기 기록·역전·데스·히트맵 좌표. 전부 순수 함수다.
  *
  * 전역 store 를 읽지 않는다. 컴포넌트가 payload 조각을 넘기고, 테스트는 작은 객체를 넘긴다.
  * 옛 renderRecords·serverRecordsHTML·renderFun·heatmap(legacy/index.html)의 계산 규칙만 옮겼고
@@ -140,6 +140,25 @@ export function serverRows(sr: ServerRecords | null | undefined, totalGames: num
     when: total ? `전체 ${total}경기` : '',
   });
   return rows;
+}
+
+export interface ServerCard {
+  /** 큰 값 — 길이 기록은 'm:ss', 킬 기록은 킬 수 */
+  value: string;
+  /** 값 뒤 단위('킬') — 길이 기록은 '' */
+  unit: string;
+  /** 아래 한 줄 — 나머지 사실('22킬 · 9. 3.' · '38:44 · 9. 3.' · '전체 57경기') */
+  sub: string;
+}
+
+/**
+ * 경기 기록 행 → 기록 카드의 글. 그 기록이 무엇으로 세운 것인지가 큰 값이다 —
+ * 최단·최장 경기는 길이, 최다 킬·평균 킬은 킬 수. 나머지는 아래 줄에 빈 조각 없이 잇는다.
+ */
+export function serverCard(r: ServerRow): ServerCard {
+  const join = (...xs: string[]) => xs.filter(Boolean).join(' · ');
+  if (r.key === 'shortest' || r.key === 'longest') return { value: r.time, unit: '', sub: join(`${num(r.kills)}킬`, r.when) };
+  return { value: num(r.kills), unit: '킬', sub: join(r.time, r.when) };
 }
 
 // ── MVP ──────────────────────────────────────────────────────────────

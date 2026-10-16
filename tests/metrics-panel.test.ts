@@ -40,15 +40,16 @@ const P = {
   },
 } as unknown as PlayerPub;
 
-const caps = (el: HTMLElement) => [...el.querySelectorAll('.cap')].map((c) => c.textContent);
+// 그룹 제목 = 카드(Panel) 제목. 표 캡션 줄(SheetCaption)은 captionHidden 이라 잘림 힌트만 그린다
+const caps = (el: HTMLElement) => [...el.querySelectorAll('section.panel h2')].map((h) => h.textContent);
 const heads = (table: Element) => [...table.querySelectorAll('thead th[scope="col"]')].map((h) => h.textContent);
 const tableOf = (el: HTMLElement, caption: string) => el.querySelector(`table[aria-label="${caption}"]`)!;
-const pills = (el: HTMLElement) => [...el.querySelectorAll<HTMLButtonElement>('.pill')];
+const pills = (el: HTMLElement) => [...el.querySelectorAll<HTMLButtonElement>('button.chip')];
 
 beforeEach(() => { location.hash = ''; });
 
 describe('Metrics — 통합 보기', () => {
-  it('metric_groups 순서로 그룹마다 표 하나 · 캡션 = 그룹 이름', () => {
+  it('metric_groups 순서로 그룹마다 표 하나 · 카드 제목 = 그룹 이름', () => {
     const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
     expect(caps(container)).toEqual(['종합', '라인전', '생존']);
     expect(container.querySelectorAll('table')).toHaveLength(3);
@@ -57,16 +58,20 @@ describe('Metrics — 통합 보기', () => {
     const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
     expect(heads(tableOf(container, '종합'))).toEqual(['지표', '값', '판수', '순위', '백분위']);
     expect(heads(tableOf(container, '라인전'))).toEqual(['지표', '라인', '값', '판수', '순위', '백분위']);
-    expect([...tableOf(container, '종합').querySelectorAll('tbody td.rn')].map((td) => td.textContent)).toEqual(['1', '2']);
+    expect([...tableOf(container, '종합').querySelectorAll('tbody td.rn .rnc')].map((td) => td.textContent)).toEqual(['1', '2']);
+    // 그룹마다 카드 한 장(Panel · 제목 h2 가 section 의 이름) — 그 안에 표 하나, 캡션 줄은 글자 없이 잘림 힌트 자리만
+    const panels = [...container.querySelectorAll('section.panel')];
+    expect(panels.map((s) => s.querySelector('table')?.getAttribute('aria-label'))).toEqual(['종합', '라인전', '생존']);
+    expect(panels.every((s) => s.querySelector('.cap')?.textContent === '')).toBe(true);
   });
-  it('셀: 라벨은 metric_meta.label · 코드 판은 설명에 코드가 있을 때만 · 라인 셀은 띠 클래스 · 값 서식 · 순위 rank/n · 백분위 %', () => {
+  it('셀: 라벨은 metric_meta.label · 코드 판은 설명에 코드가 있을 때만 · 라인 셀은 라인 점 + 이름 · 값 서식 · 순위 rank/n · 백분위 %', () => {
     const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
     const rows = tableOf(container, '라인전').querySelectorAll('tbody tr');
     const cells = [...rows[0]!.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
     expect(cells).toEqual(['골드차@10GD10', '원딜', '120.5', '19', '9/29', '71%']);
     expect(rows[0]!.querySelector('td.c0 .plate')?.textContent).toBe('GD10');
     expect(rows[1]!.querySelector('td.c0 .plate')).toBeNull();     // CS@10 설명에는 코드가 없다
-    expect(rows[0]!.querySelector('td:nth-child(3)')!.classList.contains('lane-bot')).toBe(true);
+    expect(rows[0]!.querySelector('td:nth-child(3) .lane.bot')?.textContent).toBe('원딜');
     const kp = tableOf(container, '종합').querySelectorAll('tbody tr')[1]!;
     expect(kp.textContent).toContain('61%');
   });
@@ -102,13 +107,13 @@ describe('Metrics — 통합 보기', () => {
   });
 });
 
-describe('Metrics — 라인 알약 줄', () => {
+describe('Metrics — 라인 고르기 칩 줄', () => {
   it('라인이 2개 이상이면 전체 + 라인(탑→서폿 순) · 기본은 전체(aria-pressed)', () => {
     const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
     const ps = pills(container);
     expect(ps.map((b) => b.textContent)).toEqual(['전체', '정글', '원딜']);
     expect(ps.map((b) => b.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false']);
-    expect(container.querySelector('.lanes')?.getAttribute('aria-label')).toBe('라인 선택');
+    expect(container.querySelector('.chips')?.getAttribute('aria-label')).toBe('라인 선택');
   });
   it('라인을 누르면 그 라인의 지표만 · 라인 열 없음 · 문턱은 라인별 · 힌트가 바뀐다', async () => {
     const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
@@ -126,7 +131,7 @@ describe('Metrics — 라인 알약 줄', () => {
   it('라인이 하나뿐이면 알약 줄이 없다', () => {
     const p1 = { ...P, metrics_lane: { BOTTOM: P.metrics_lane!.BOTTOM } } as PlayerPub;
     const { container } = render(Metrics, { key: 'p1', p: p1, data: DATA });
-    expect(container.querySelector('.lanes')).toBeNull();
+    expect(container.querySelector('button.chip')).toBeNull();
   });
   it('통합 지표가 없으면(문턱 미만) 전체 알약이 없고 첫 라인이 기본', () => {
     const thin = { name: '새 멤버', metrics_lane: P.metrics_lane } as unknown as PlayerPub;
@@ -139,19 +144,19 @@ describe('Metrics — 라인 알약 줄', () => {
     const none = { name: '빈' } as unknown as PlayerPub;
     const { container } = render(Metrics, { key: 'p9', p: none, data: DATA });
     expect(container.querySelector('table')).toBeNull();
-    expect(container.querySelector('.lanes')).toBeNull();
+    expect(container.querySelector('button.chip')).toBeNull();
     expect(container.querySelector('.empty')?.textContent).toContain('아직 세부 지표가 없습니다');
   });
 });
 
 describe('Metrics — 잘림 힌트', () => {
-  it('표가 래퍼보다 넓으면 그룹 캡션 오른쪽에 "열 n개 더 →" + 가장자리 선, 끝까지 스크롤하면 사라진다', async () => {
+  it('표가 래퍼보다 넓으면 캡션 줄 오른쪽에 "열 n개 더 →" + 가장자리 선, 끝까지 스크롤하면 사라진다', async () => {
     const restore = fakeSheetLayout();
     try {
       const { container } = render(Metrics, { key: 'p1', p: P, data: DATA });
       const sheet = container.querySelector('.sheet') as HTMLElement;
       // '종합' 머리: 홈통 + 지표·값·판수·순위·백분위 = 6칸 600px, 보이는 폭 250px → 경계(253)를 넘는 칸: 3번째(200~300)부터 넷
-      expect(sheet.querySelector('.cap')?.textContent).toBe('종합열 4개 더 →');
+      expect(sheet.querySelector('.cap')?.textContent).toBe('열 4개 더 →');
       expect(sheet.querySelector('.cut')?.getAttribute('aria-hidden')).toBe('true');
       expect((sheet.querySelector('.edge') as HTMLElement).style.getPropertyValue('--tbl-h')).toBe('300px');
       sheet.scrollLeft = 450;

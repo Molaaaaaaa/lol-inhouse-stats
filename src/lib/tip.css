@@ -1,7 +1,7 @@
 /*
- * 툴팁 층 — tip.ts 가 body 에 하나 만드는 떠 있는 표면. 시트 위에서 그림자를 갖는 두 표면
- * (자동완성 목록·툴팁) 중 하나라 --shadow 를 쓴다. Svelte 트리 밖 싱글턴이라 .svelte 스코프에
- * 둘 수 없고, app.css 는 셸 담당이 편집 중이라 tip.ts 가 이 파일을 import 한다.
+ * 툴팁 층 — tip.ts 가 body 에 하나 만드는 떠 있는 표면. 떠 있는 두 표면(자동완성 목록·툴팁) 중 하나라
+ * --shadow 를 쓴다(반경 12px — 안쪽 판과 같은 단). Svelte 트리 밖 싱글턴이라 .svelte 스코프에 둘 수 없어
+ * tip.ts 가 이 파일을 import 한다.
  * 위치(left·top)만 tip.ts 가 style 로 준다 — 표는 가로 스크롤(overflow)이라 ::after 로 띄우면 잘린다.
  */
 .tipbox {
@@ -12,7 +12,7 @@
   background: var(--raised);
   color: var(--txt);
   border: 1px solid var(--grid-strong);
-  border-radius: var(--r-chip);
+  border-radius: var(--r-md);
   box-shadow: var(--shadow);
   font-size: var(--fs-sm);
   line-height: var(--lh);

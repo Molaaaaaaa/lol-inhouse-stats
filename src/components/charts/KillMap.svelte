@@ -1,7 +1,8 @@
 <script lang="ts">
   /**
    * 킬 지도 — 어디서 싸움이 났고 누가 죽었는지. 좌표는 0~1(맵 한 변 16000 기준), 왼쪽 아래가 블루 진영.
-   * 바닥 --ink, 격자 --grid(4등분) + 대각선(강), 점 색은 **잡은 팀의 결과**(--win · --loss), 처형은 --dim2 사각형.
+   * 바닥 --ink(둥근 우물), 격자 --grid(4등분) + 대각선(강), 점 색은 **잡은 팀의 결과**(--win · --loss), 처형은 --dim2 사각형.
+   * 색만으로 가르지 않게 모양도 다르다: 이긴 팀 채운 원 · 진 팀 속 빈 원(테두리) · 처형 사각형 — 범례가 같은 모양을 보인다.
    * 점마다 <title>(분 · 잡은 이 → 잡힌 이)로 hover 툴팁, 같은 문구가 아래 표(호출부)에도 실린다.
    * 색은 전부 class → CSS 토큰. viewBox 0~100 이고 폭은 CSS 로(정사각형).
    */
@@ -76,25 +77,27 @@
     aspect-ratio: 1;
     height: auto;
     border: 1px solid var(--grid);
+    border-radius: var(--r-md);
+    background: var(--ink);
   }
   .bg { fill: var(--ink); }
   .grid { stroke: var(--grid); stroke-width: .4; }
   .river { stroke: var(--grid-strong); stroke-width: .4; stroke-dasharray: 1.5 1.5; }
   .dot { stroke: var(--ink); stroke-width: .4; }
   .dot.win { fill: var(--win); }
-  .dot.loss { fill: var(--loss); }
+  .dot.loss { fill: var(--ink); stroke: var(--loss); stroke-width: .8; }
   .dot.exec { fill: var(--dim2); }
-  .dot.on { stroke: var(--sel); stroke-width: .8; }
+  .dot.on { stroke: var(--sel); stroke-width: .9; }
   .legend {
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-1) var(--sp-3);
-    padding: var(--sp-1) 0 0;
+    padding: var(--sp-2) 0 0;
     font-size: var(--fs-sm);
   }
-  .key { display: inline-flex; align-items: center; gap: var(--sp-1); }
+  .key { display: inline-flex; align-items: center; gap: 6px; }
   .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
   .sw.win { background: var(--win); }
-  .sw.loss { background: var(--loss); }
-  .sw.exec { background: var(--dim2); border-radius: 0; }
+  .sw.loss { border: 2px solid var(--loss); }
+  .sw.exec { background: var(--dim2); border-radius: var(--r-xs); }
 </style>

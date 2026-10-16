@@ -1,5 +1,5 @@
 /**
- * 멤버 화면의 파생값 — 머리 전적 셀·라인별 성적 표·능력치 축·맞대결. 전부 순수 함수다.
+ * 멤버 화면의 파생값 — 히어로 숫자 타일·승률 셀 글자·라인별 성적 표·능력치 축·맞대결. 전부 순수 함수다.
  *
  * 전역 store 를 읽지 않는다. 컴포넌트가 payload 조각(`data`)·멤버(`p`)·키를 넘기고, 테스트는
  * 작은 픽스처를 넘긴다. 옛 renderPlayerBody·renderCompare(legacy/index.html)의
@@ -8,12 +8,12 @@
  * ⚠️ h2h 키 `pA|pB` 의 순서는 발행마다 다를 수 있다(실측: `p2|p10` 과 `p17|p10` 이 같이 있다).
  *    두 방향을 다 찾고, 뒤집힌 키면 승패·챔피언을 바꿔 읽는다.
  */
-import type { H2HEntry, LaneId, PlayerPub, ProfileAxis } from './data/types';
+import type { H2HEntry, LaneId, MvpRow, PlayerPub, ProfileAxis } from './data/types';
 import { displayName } from './data/store.svelte';
 import { pct } from './fmt';
 import { isLaneId, laneIdx } from './lanes';
 import { mLabel, type MetricMetaMap } from './metrics';
-import { wrClass } from './tier';
+import { wrText } from './tier';
 
 // ── 셀 조건부 서식 클래스(DataTable 이 그린다) ─────────────────────────
 
@@ -23,50 +23,56 @@ const LANE_BAND = ['top', 'jg', 'mid', 'bot', 'sup'] as const;
 export function laneBand(lane: string | null | undefined): string {
   return isLaneId(lane) ? (LANE_BAND[laneIdx(lane)] ?? '') : '';
 }
-/** 라인 셀 — DataTable 의 왼쪽 3px 띠 클래스('lane-top'). 모르는 라인은 띠 없음. */
+/** 라인 띠 클래스('lane-top') — 딜량 막대(DmgBars) 이름 칸의 왼쪽 3px 띠. 표의 라인 열은 LaneChip 이다. 모르는 라인은 띠 없음. */
 export function laneCls(lane: string | null | undefined): string {
   const b = laneBand(lane);
   return b ? `lane-${b}` : '';
 }
-/** 승률 셀 — 높음 'win wr-h'·낮음 'loss wr-l'(채움 + DataTable 의 ▲▼), 문턱 미만·중간은 채움 없음. */
-export function wrCls(w: number | null | undefined, n: number | null | undefined, minGames: number): string {
+
+// ── 승률 셀 글자(셀 스니펫 열의 fmt) ───────────────────────────────────
+// 승률 열을 WinRate·WinGauge 스니펫으로 그리면 DataTable 은 스니펫을 aria-hidden 으로 감싸고 fmt 글자를 대신 읽힌다.
+// 그래서 fmt 는 그 그림이 말하는 것을 다 적는다: 퍼센트 · 단계 문구($lib/tier 의 wrText) · 승패.
+
+/** 게이지 셀 — wrText 에 'n승 n패'. 승수는 WinGauge 와 같은 반올림(승률 × 판). 값이 없으면 '' */
+export function gaugeText(w: number | null | undefined, n: number | null | undefined, minGames: number): string {
   if (w == null) return '';
-  const c = wrClass(w, n, minGames);
-  return c === 'wr-h' ? 'win wr-h' : c === 'wr-l' ? 'loss wr-l' : '';
+  const games = Math.max(0, Math.round(Number(n) || 0));
+  const wins = Math.min(games, Math.max(0, Math.round(w * games)));
+  return `${wrText(w, games, minGames)}, ${wins}승 ${games - wins}패`;
 }
 
-// ── 머리 전적 셀 ───────────────────────────────────────────────────────
+// ── 히어로 숫자 타일 ───────────────────────────────────────────────────
 
 export interface HeaderStat {
-  /** 셀 종류 — 'winrate' 는 컴포넌트가 WinRate 셀로 그린다 */
-  k: 'record' | 'winrate' | 'kda' | 'kp' | 'dpm' | 'form';
+  k: 'kda' | 'kp' | 'dpm' | 'form';
   label: string;
   text: string;
 }
 
-/** 최근 폼 — "3-2 · 2연승". 연속이 없으면 폼만, 폼도 없으면 ''. */
-export function formText(f: PlayerPub['form'] | null | undefined): string {
-  if (!f) return '';
-  const run = f.streak > 0 ? `${f.streak}연${f.dir === 'W' ? '승' : '패'}` : '';
-  return [f.form, run].filter(Boolean).join(' · ');
-}
-
 /**
- * 머리 한 줄의 전적 셀들. 지표 이름은 mLabel 만 쓴다(리터럴 라벨 금지).
- * 옛 화면은 판·승·패를 알약 하나에 붙였다 — 같은 순서로 한 셀에 둔다.
+ * 멤버 히어로의 숫자 타일 — KDA · 킬 관여 · 분당 딜 · 최근(최근 판 'w-l'). 지표 이름은 mLabel 만 쓴다(리터럴 라벨 금지).
+ * 승률·판·승·패는 히어로의 승률 게이지가, 연속('2연승')은 연승 알약이 그린다 — 여기서 겹쳐 적지 않는다.
+ * 최근 흐름이 없으면 그 타일은 없다.
  */
 export function headerStats(p: Pick<PlayerPub, 'record' | 'form'>, meta: MetricMetaMap | null | undefined): HeaderStat[] {
   const r = p.record;
   const out: HeaderStat[] = [
-    { k: 'record', label: '전적', text: `${r.games}판 ${r.wins}승 ${r.losses}패` },
-    { k: 'winrate', label: mLabel(meta, 'winrate'), text: pct(r.winrate) },
     { k: 'kda', label: mLabel(meta, 'kda'), text: r.kda == null ? '-' : String(r.kda) },
     { k: 'kp', label: mLabel(meta, 'kp'), text: pct(r.kp) },
     { k: 'dpm', label: mLabel(meta, 'dpm'), text: r.dpm == null ? '-' : Math.round(r.dpm).toLocaleString('ko-KR') },
   ];
-  const f = formText(p.form);
-  if (f) out.push({ k: 'form', label: '최근', text: f });
+  if (p.form?.form) out.push({ k: 'form', label: '최근', text: p.form.form });
   return out;
+}
+
+/**
+ * 누적 MVP 횟수 — payload `mvp` 목록(판수 문턱 이상이고 한 번 이상 뽑힌 멤버만 실린다)에서 이름으로 찾는다.
+ * 목록은 원래 이름으로 실려 동명이인을 가릴 수 없다 — 그래서 표시명(동명이인은 '이름~순번')으로 대조해,
+ * 가릴 수 없는 사람에게는 붙이지 않는다(틀린 배지보다 없는 배지가 낫다). 없으면 0.
+ */
+export function mvpCount(mvp: readonly MvpRow[] | null | undefined, p: PlayerPub): number {
+  const name = displayName(p);
+  return Number(mvp?.find((r) => r.name === name)?.mvp) || 0;
 }
 
 // ── 라인별 성적 표 ───────────────────────────────────────────────────────

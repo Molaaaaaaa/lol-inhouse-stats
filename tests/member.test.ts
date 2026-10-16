@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/svelte';
 import {
-  axisLaneFor, axisLanes, axisRows, deltaText, formText, fxMember,
-  h2hFor, headerStats, laneCls, laneRows, mainLaneOf, playerByName, wrCls,
+  axisLaneFor, axisLanes, axisRows, deltaText, fxMember, gaugeText,
+  h2hFor, headerStats, laneCls, laneRows, mainLaneOf, mvpCount, playerByName,
 } from '../src/lib/member';
 import { META, PAYLOAD } from './fixtures/member-payload';
 import { isSubId, SUBTABS } from '../src/routes/Member.svelte';
@@ -12,24 +12,41 @@ import { fx } from '../src/lib/fx.svelte';
 import Member from '../src/routes/Member.svelte';
 
 /** 화면에 나오면 안 되는 사다리 말 — 티어(n티어)·MMR·CP·배치·점수 */
-const LADDER_WORD = /[1-5]티어|티어|MMR|CP|ΔCP|배치|승급|사다리|검산/;
+const LADDER_WORD = /[1-5]티어|티어|MMR|\bCP\b|ΔCP|배치|승급|사다리|검산/;
 const P1 = PAYLOAD.players.p1!;
 
-describe('member.ts — 머리 전적 셀', () => {
-  it('headerStats: 지표 이름은 metric_meta 에서, 판·승·패 한 셀, 최근 폼', () => {
+describe('member.ts — 히어로 숫자 타일 · MVP', () => {
+  it('headerStats: KDA·킬 관여·분당 딜(이름은 metric_meta) + 최근 판 w-l — 승률·판·연속은 게이지·알약이 그린다', () => {
     const s = headerStats(P1, META);
-    expect(s.map((x) => x.k)).toEqual(['record', 'winrate', 'kda', 'kp', 'dpm', 'form']);
-    expect(s[0]!.text).toBe('29판 13승 16패');
-    expect(s[1]).toMatchObject({ label: '승률', text: '45%' });
-    expect(s[2]).toMatchObject({ label: 'KDA', text: '2.98' });
-    expect(s[3]).toMatchObject({ label: '킬 관여', text: '56%' });
-    expect(s[4]).toMatchObject({ label: '분당 딜', text: '836' });
-    expect(s[5]).toMatchObject({ label: '최근', text: '3-2 · 2연승' });
+    expect(s.map((x) => x.k)).toEqual(['kda', 'kp', 'dpm', 'form']);
+    expect(s[0]).toMatchObject({ label: 'KDA', text: '2.98' });
+    expect(s[1]).toMatchObject({ label: '킬 관여', text: '56%' });
+    expect(s[2]).toMatchObject({ label: '분당 딜', text: '836' });
+    expect(s[3]).toMatchObject({ label: '최근', text: '3-2' });
   });
-  it('formText: 연속이 없으면 폼만, 폼이 없으면 빈 문자열', () => {
-    expect(formText({ form: '2-3', dir: 'L', winrate: 0.4, streak: 0 })).toBe('2-3');
-    expect(formText({ form: '1-2', dir: 'L', winrate: 0.3, streak: 2 })).toBe('1-2 · 2연패');
-    expect(formText(null)).toBe('');
+  it('headerStats: 최근 흐름이 없으면 그 타일이 없다 · 값이 없으면 -', () => {
+    const bare = { ...P1, form: undefined, record: { ...P1.record, kda: null, dpm: null } } as unknown as typeof P1;
+    const s = headerStats(bare, META);
+    expect(s.map((x) => x.k)).toEqual(['kda', 'kp', 'dpm']);
+    expect(s[0]!.text).toBe('-');
+    expect(s[2]!.text).toBe('-');
+  });
+  it('mvpCount: 표시명으로 대조 — 목록에 없으면 0 · 동명이인(이름~순번)은 가릴 수 없어 0', () => {
+    const mvp = [{ name: '앙앙맹', games: 29, mvp: 4 }, { name: '겹침', games: 9, mvp: 2 }];
+    expect(mvpCount(mvp, P1)).toBe(4);
+    expect(mvpCount(mvp, PAYLOAD.players.p3!)).toBe(0);
+    expect(mvpCount(mvp, { ...P1, name: '겹침', tag: '1' })).toBe(0);
+    expect(mvpCount([], P1)).toBe(0);
+    expect(mvpCount(undefined, P1)).toBe(0);
+  });
+});
+
+describe('member.ts — 승률 셀 글자(그림 셀의 보조기술·거르기 글자)', () => {
+  it('gaugeText: 승률 글($lib/tier wrText) + 승패(승률 × 판을 반올림 — WinGauge 와 같은 셈)', () => {
+    expect(gaugeText(17 / 20, 20, 5)).toBe('85%, 60% 이상으로 높음, 17승 3패');
+    expect(gaugeText(0.333, 6, 5)).toBe('33%, 2승 4패');
+    expect(gaugeText(0, 2, 5)).toBe('0%, 표본 적음, 0승 2패');
+    expect(gaugeText(null, 2, 5)).toBe('');
   });
 });
 
@@ -51,14 +68,10 @@ describe('member.ts — 라인별 성적 표', () => {
     expect(mainLaneOf({ role_dist: [] })).toBe('');
     expect(mainLaneOf(null)).toBe('');
   });
-  it('laneCls·wrCls: 셀 클래스는 DataTable 이 아는 이름만', () => {
+  it('laneCls: 셀 클래스는 DataTable 이 아는 이름만', () => {
     expect(laneCls('TOP')).toBe('lane-top');
     expect(laneCls('UTILITY')).toBe('lane-sup');
     expect(laneCls('??')).toBe('');
-    expect(wrCls(0.7, 10, 5)).toBe('win wr-h');   // 채움 + ▲ 기호 클래스
-    expect(wrCls(0.3, 10, 5)).toBe('loss wr-l');
-    expect(wrCls(0.3, 2, 5)).toBe('');    // 문턱 미만은 색으로 단정하지 않는다
-    expect(wrCls(0.5, 10, 5)).toBe('');
   });
 });
 
@@ -124,14 +137,24 @@ describe('Member.svelte', () => {
     expect(screen.queryByRole('tablist')).toBeNull();
   });
 
-  it('머리: 이름 · 주 라인(뛴 판 기준) · 전적 셀 · 하위 탭 5개 · 수식 줄 — 티어·MMR·배치 없음', async () => {
+  it('히어로: 이름 · 주 라인(뛴 판 기준) · 연승 알약 · 승률 게이지 · 숫자 타일 · 하위 탭 5개 · 수식 줄 — 티어·MMR·배치 없음', async () => {
     const { container } = render(Member, { sub: '', params: { name: '앙앙맹' } });
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('앙앙맹');
+    const hero = container.querySelector('header.hero')!;
     expect(container.querySelector('.tierbadge')).toBeNull();
-    expect(container.querySelector('.lane')?.textContent).toBe('원딜');   // payload 의 cp.main_lane(정글)이 아니라 role_dist
-    const dts = [...container.querySelectorAll('.cells dt')].map((d) => d.textContent);
-    expect(dts).toEqual(['전적', '승률', 'KDA', '킬 관여', '분당 딜', '최근']);
-    expect(container.querySelector('.cells .wr')?.textContent).toBe('45%');
+    expect(hero.querySelector('.lane')?.textContent).toBe('원딜');   // payload 의 cp.main_lane(정글)이 아니라 role_dist
+    expect(hero.querySelector('.sp.win')?.textContent).toBe('2연승');
+    // 승률은 게이지 하나(링 없음) — 이름에 숫자를 다 담는다. 13/29 는 구간이 50% 를 걸쳐 단계 문구가 없다
+    const gauge = hero.querySelector('.wg.v-full')!;
+    expect(gauge.getAttribute('role')).toBe('img');
+    expect(gauge.getAttribute('aria-label')).toBe('승률 45%, 13승 16패, 29판');
+    expect(gauge.querySelector('.pc')?.textContent).toBe('45%');
+    expect(gauge.querySelector('.wl')?.textContent).toBe('13승 16패 · 29판');
+    expect(hero.querySelectorAll('[role="img"]')).toHaveLength(1);   // 승률 그림은 게이지 하나
+    const dts = [...hero.querySelectorAll('dl.stats dt')].map((d) => d.textContent);
+    expect(dts).toEqual(['KDA', '킬 관여', '분당 딜', '최근']);
+    expect([...hero.querySelectorAll('dl.stats dd')].map((d) => d.textContent)).toEqual(['2.98', '56%', '836', '3-2']);
+    expect(hero.querySelector('.mvp')).toBeNull();   // payload mvp 목록이 비어 있다
     expect(screen.getByText('계정 2개 합산')).toBeTruthy();
     const tabs = screen.getAllByRole('tab');
     expect(tabs.map((t) => t.textContent)).toEqual(['요약', '상대별 전적', '최근 경기', '파트너 · 상대 챔피언', '세부 지표']);
@@ -141,17 +164,29 @@ describe('Member.svelte', () => {
     const lanes = await screen.findByRole('table', { name: '라인별 성적' });
     expect([...lanes.querySelectorAll('thead th')].map((h) => h.textContent?.trim()).filter(Boolean)).toEqual(['라인', '판', '승률', 'KDA', '분당 딜', '킬 관여']);
     expect(screen.getByRole('table', { name: '챔피언' })).toBeTruthy();
-    expect(screen.getByText('라인별 승률은 3판 이상부터 색을 입힙니다.')).toBeTruthy();
+    expect(screen.getByText("라인별 승률은 3판 미만이면 '표본 적음'으로 적고, 색과 ▲▼는 판수를 감안해도 50%와 차이가 날 때만 붙습니다.")).toBeTruthy();
     // payload 에는 사다리 필드가 실려 있지만 화면 어디에도 사다리 말이 없다
     expect(container.textContent).not.toMatch(LADDER_WORD);
     expect(fx.text).not.toMatch(LADDER_WORD);
   });
 
-  it('5판 미만 멤버도 머리에 배치 표시가 없다', () => {
+  it('5판 미만 멤버도 머리에 배치 표시가 없다 · 게이지는 표본 적음을 말한다', () => {
     const { container } = render(Member, { sub: '', params: { name: '맹구' } });
+    const hero = container.querySelector('header.hero')!;
     expect(container.querySelector('.placing')).toBeNull();
-    expect(container.querySelector('.head')?.textContent).not.toMatch(LADDER_WORD);
+    expect(hero.textContent).not.toMatch(LADDER_WORD);
+    expect(hero.querySelector('.wg')?.getAttribute('aria-label')).toBe('승률 33%, 표본 적음, 1승 2패, 3판');
+    expect(hero.querySelector('.wg .pc')?.classList.contains('st-few')).toBe(true);
     expect(fx.text).toBe('=승률(승 1 · 패 2) → 33% · 3판');
+  });
+
+  it("MVP: payload mvp 목록에 있으면 'MVP n회' 배지 · 없으면 배지 없음", () => {
+    app.data = { ...PAYLOAD, mvp: [{ name: '앙앙맹', games: 29, mvp: 3 }] } as typeof PAYLOAD;
+    const { container } = render(Member, { sub: '', params: { name: '앙앙맹' } });
+    expect(container.querySelector('header.hero .mvp')?.textContent).toBe('MVP 3회');
+    cleanup();
+    render(Member, { sub: '', params: { name: 'Faker' } });
+    expect(document.querySelector('header.hero .mvp')).toBeNull();
   });
 
   it('하위 탭 목록에 MMR 검산이 없고, 옛 탭 id(mmr)는 탭으로 인정하지 않는다', () => {
@@ -178,7 +213,7 @@ describe('Member.svelte', () => {
     render(Member, { sub: 'compare', params: { name: '앙앙맹', b: 'Faker' } });
     expect(screen.queryByRole('tablist')).toBeNull();
     const heads = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
-    expect(heads).toEqual(['앙앙맹', 'Faker']);
+    expect(heads).toEqual(['앙앙맹', 'Faker', '전적 비교', '맞대결 · 4판']);   // 두 이름 + 카드 제목 둘
     expect(screen.getByText('1 : 3')).toBeTruthy();
     expect(screen.getByText('맞대결 4판')).toBeTruthy();
     const cmp = screen.getByRole('table', { name: '전적 비교' });

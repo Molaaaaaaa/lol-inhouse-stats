@@ -1,7 +1,8 @@
 <script lang="ts">
   /**
-   * 멤버 · 비교 — 두 멤버 a(왼쪽)·b(오른쪽). 머리를 나란히(이름·주 라인·전적), 가운데 맞대결 스코어.
-   * 그 아래 전적 비교표(항목 · a · b)와 라인별 맞대결 목록(라인 · a 챔피언 · b 챔피언 · 승자).
+   * 멤버 · 비교 — 두 멤버 a(왼쪽)·b(오른쪽). 머리 카드에 둘을 나란히(이름·주 라인·전적), 가운데 맞대결 스코어.
+   * 그 아래 카드 둘: 전적 비교표(항목 · a · b)와 라인별 맞대결 목록(라인 · a 챔피언 · b 챔피언 · 승자).
+   * 카드 제목이 표 캡션과 같은 말이라 캡션은 보조기술에만 남긴다. 라인 열은 라인 점 + 이름(LaneChip).
    *
    * 'VS' 는 나란히 놓은 지표가 아니라 **적으로 만났을 때 누가 이겼나**다. 옛 화면의 반반 막대는 넣지 않는다 —
    * 맞대결 0판에서도 50:50 으로 읽혔다(실측 전체 쌍의 37%). 숫자 한 번만.
@@ -13,10 +14,11 @@
   import { mLabel } from '$lib/metrics';
   import { memberHref, compareHref } from '$lib/router.svelte';
   import { displayName } from '$lib/data/store.svelte';
-  import { h2hFor, laneCls, mainLaneOf, playerByName, type H2HLaneRow } from '$lib/member';
+  import { h2hFor, mainLaneOf, playerByName, type H2HLaneRow } from '$lib/member';
   import DataTable from '$components/DataTable.svelte';
   import EmptyState from '$components/EmptyState.svelte';
   import LaneChip from '$components/LaneChip.svelte';
+  import Panel from '$components/Panel.svelte';
   import WinRate from '$components/WinRate.svelte';
 
   interface Props { key: string; p: PlayerPub; data: GuildPayload; b: string }
@@ -60,7 +62,7 @@
     (h?.lanes ?? []).map((L, i) => ({ ...L, id: String(i), who: L.aWin ? aName : b, same: L.sameLane ? '같은 라인' : '' })),
   );
   const vsCols = $derived<Col<VsRow>[]>([
-    { k: 'lane', h: '라인', fmt: (v) => laneKo(String(v)), cls: (r) => laneCls(r.lane) },
+    { k: 'lane', h: '라인', cell: laneCell, fmt: (v) => laneKo(String(v)) },
     { k: 'aChamp', h: `${aName} 챔피언`, img: (r) => r.aChamp, fmt: (v) => data.champ_ko?.[String(v)] ?? String(v) },
     { k: 'bChamp', h: `${b} 챔피언`, img: (r) => r.bChamp, fmt: (v) => data.champ_ko?.[String(v)] ?? String(v) },
     { k: 'same', h: '맞라인', lo: true },
@@ -68,13 +70,15 @@
   ]);
 </script>
 
+{#snippet laneCell(r: VsRow)}<LaneChip lane={r.lane} />{/snippet}
+
 <div class="compare">
   {#if !other}
     <EmptyState text="비교 대상이 없습니다. 위의 비교 칸에서 다른 멤버를 찾을 수 있습니다." />
   {:else if same}
     <EmptyState text="같은 멤버입니다. 위의 비교 칸에서 다른 멤버를 찾을 수 있습니다." />
   {:else}
-    <div class="head">
+    <div class="head card">
       {#each [{ n: aName, r: p.record, lane: mainLaneOf(p), side: 'a' }, { n: b, r: other.p.record, lane: mainLaneOf(other.p), side: 'b' }] as s (s.side)}
         <div class="who" class:right={s.side === 'b'}>
           <h2><a href={memberHref(s.n)}>{s.n}</a></h2>
@@ -102,10 +106,14 @@
       <a href={memberHref(aName)}>비교 해제</a>
     </p>
 
-    <DataTable rows={cmpRows} cols={cmpCols} caption="전적 비교" rowNumbers={false} rowKey={(r) => r.id} fold={false} filter={false} />
+    <Panel title="전적 비교">
+      <DataTable rows={cmpRows} cols={cmpCols} caption="전적 비교" captionHidden rowNumbers={false} rowKey={(r) => r.id} fold={false} filter={false} />
+    </Panel>
 
     {#if h && h.vs}
-      <DataTable rows={vsRows} cols={vsCols} caption="맞대결 · {h.vs}판" rowKey={(r) => r.id} />
+      <Panel title="맞대결 · {h.vs}판" glyph="versus">
+        <DataTable rows={vsRows} cols={vsCols} caption="맞대결 · {h.vs}판" captionHidden rowKey={(r) => r.id} />
+      </Panel>
     {:else}
       <EmptyState text="아직 맞대결 기록이 없습니다." />
     {/if}
@@ -114,13 +122,14 @@
 
 <style>
   .compare { display: grid; gap: var(--sp-4); }
+  /* 머리 카드 — 바깥 카드(20px). 가운데 스코어는 안쪽 판(우물) 위 큰 숫자 */
   .head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     gap: var(--sp-3);
-    align-items: start;
-    border: 1px solid var(--grid);
-    padding: var(--sp-3);
+    align-items: center;
+    padding: 18px;
+    border-radius: var(--r-lg);
   }
   .who { min-width: 0; display: grid; gap: var(--sp-1); }
   .who.right { text-align: right; }
@@ -130,13 +139,23 @@
   .who h2 a:hover { text-decoration: underline; text-underline-offset: .2em; }
   .tags, .rec { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
   .rec { font-size: var(--fs-sm); }
-  .score { text-align: center; font-size: var(--fs-sm); white-space: nowrap; }
+  .score {
+    display: grid;
+    gap: 2px;
+    padding: var(--sp-2) var(--sp-4);
+    text-align: center;
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+    background: var(--ink);
+    border: 1px solid var(--grid);
+    border-radius: var(--r-md);
+  }
   .vs { font-size: var(--fs-num); font-weight: 700; font-variant-numeric: tabular-nums; }
   .links { display: flex; gap: var(--sp-3); font-size: var(--fs-sm); }
-  .links a { color: var(--dim); text-underline-offset: .2em; }
+  .links a { color: var(--dim); text-underline-offset: .2em; border-radius: var(--r-xs); }
   .links a:hover { color: var(--txt); background: var(--raised); }
   @media (max-width: 640px) {
-    .head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .score { grid-column: 1 / -1; order: 3; border-top: 1px solid var(--grid); padding-top: var(--sp-2); }
+    .head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 14px 12px 12px; }
+    .score { grid-column: 1 / -1; order: 3; }
   }
 </style>

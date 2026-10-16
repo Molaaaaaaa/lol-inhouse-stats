@@ -63,6 +63,6 @@
 </section>
 
 <style>
-  .records { display: grid; gap: var(--sp-2); min-width: 0; }
+  .records { display: grid; gap: var(--sp-3); min-width: 0; }
   .panel { min-width: 0; }
 </style>

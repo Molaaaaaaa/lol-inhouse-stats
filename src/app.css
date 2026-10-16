@@ -1,84 +1,130 @@
 /*
- * 전역 스타일 — 토큰·브라우저 표면·기본 요소만. 컴포넌트 스타일은 각 .svelte 안에.
+ * 전역 스타일 — 토큰·브라우저 표면·기본 요소·공용 유틸만. 컴포넌트 스타일은 각 .svelte 안에.
  *
- * 시각 세계: **내전 장부** (폰 다크 모드 스프레드시트). 어두운 시트 위 1px 격자선, 고정된
- * 머리행·이름열, 행 번호 홈통, 조건부 서식 셀 채움, 무채색 글자, 선택 셀 테두리 한 색,
- * 아래쪽 시트 탭. 색 전략은 Restrained — 중립 + 선택색 하나. 의미색(승·패·라인)은 글자가
- * 아니라 **셀 채움·가장자리**에만 쓴다(글자는 무채색).
+ * 시각 세계: **불씨 전광판**(2026-10-16 사용자 지시로 장부 세계에서 바꿨다). 어두운 판 위에 카드가 겹겹이
+ * 뜨고(바깥 카드 20px · 안쪽 타일 12px 두 단), 카드 위쪽에 1px 하이라이트, 위가 밝은 그라디언트.
+ * 불씨색(--sel, hue 29°) 액센트는 선택·초점·활성 독·MVP 에만 빛난다. 승패는 하늘색(승)과 주홍(패)으로
+ * 읽되 색만으로 가르지 않는다 — 패 조각은 사선 무늬, 승률 글자에는 ▲▼ 기호와 글자('승'·'패'·'표본 적음')를
+ * 늘 같이 둔다.
  *
- * ⚠️ 색은 여기 :root 토큰에서만 온다(검사가 :root 밖 hex 를 잡는다).
+ * 그대로인 정책: 색은 여기 :root 토큰에서만 온다(검사가 :root 밖 hex·rgba 를 잡는다) · 그림자·글로우도
+ * 토큰으로만 · 글자에 그라디언트를 쓰지 않는다 · 웹폰트 없음 · 굵기 400·700 · 움직임 줄이기.
  */
 :root {
-  /* 시트 표면 — 어두운 순서: ink(우물: 입력·차트 바닥) < sheet < gutter < raised */
-  --ink: #101317;
-  --sheet: #171a1f;
-  --gutter: #1e2229;
-  --raised: #262b33;
-  --grid: #2a2f37;
-  --grid-strong: #3a414b;
-  /* 글자 — 무채색만 */
-  --txt: #dfe4ea;
-  --dim: #9aa3ad;
-  --dim2: #808a96;   /* 가장 옅은 글자 — sheet·gutter 위 4.5:1 이상(실측 4.98·4.55) */
-  /* 선택 — 액센트 하나. 선택 셀 테두리·활성 시트 탭·초점에만 */
-  --sel: #8ab4f8;
-  --on-sel: #0b1220;
-  /* 의미색 — 셀 채움·띠에만 (Never Color Alone: 글자 '승/패'를 항상 같이 둔다) */
-  --win: #6fcf97;
-  --loss: #f28b6b;
-  --warn: #f2c94c;
-  --danger: #ef6b6b;
-  --up: #6fcf97;
-  /* 라인 띠 */
-  --lane-top: #e0a86b;
+  /* 표면 — 깊은 순서: bg(페이지) < ink(우물: 입력·차트 바닥) < sheet(카드 면) < gutter(카드 머리·안쪽 타일)
+     < raised(호버·칩) < track(게이지 빈 트랙·눌림). 대비는 실측(txt/dim/dim2): sheet 15.41/8.28/6.07,
+     gutter 14.34/7.71/5.65, raised 12.67/6.81/4.99. dim2 는 track 위에 쓰지 않는다(4.28) */
+  --bg: #101317;
+  --ink: #0f131a;
+  --sheet: #121720;
+  --gutter: #181e29;
+  --raised: #212836;
+  --track: #2b3344;
+  --grid: #252d3b;          /* 카드 테두리·행 구분선(장식선) */
+  --grid-strong: #38425a;   /* 호버한 카드 테두리·차트 축·떠 있는 층 테두리 */
+  --ctl-edge: #6b7689;      /* 입력·버튼 테두리 — 컨트롤 식별용 비글자 3:1(sheet 3.92 · gutter 3.64 · raised 3.22) */
+  /* 글자 */
+  --txt: #e9eef5;
+  --dim: #a7b1bf;
+  --dim2: #8c97a7;          /* 가장 옅은 글자 — raised 까지 4.99:1, 틴트 위에는 쓰지 않는다 */
+  /* 액센트 — 불씨(hue 29°). 선택·초점·활성 독·MVP 에만. 글자로 쓰면 sheet 9.00 · raised 7.40:1 */
+  --sel: #ffa24a;
+  --sel-hi: #ffc27e;        /* 액센트 그라디언트의 위쪽 정지점(같은 hue 의 밝은 쪽) */
+  --on-sel: #1d1207;        /* 액센트 채움 위 글자 — sel 9.21 · sel-hi 11.62 · win 8.09:1 */
+  /* 의미색 — 승·패. 글자 대비(sheet/raised): win 7.90/6.50 · win-soft 11.25/9.25 · loss 6.39/5.25 · loss-soft 10.26/8.44.
+     승·패 조각끼리는 휘도비 1.24:1 뿐이라 패 조각에 사선 무늬, 글자에 기호를 반드시 같이 둔다 */
+  --win: #46b4ff;
+  --win-soft: #9bd3ff;
+  --loss: #ff6a5c;
+  --loss-soft: #ffb0a3;
+  --danger: var(--loss);    /* 오류 알림 — 패 색과 같은 값(문장을 항상 같이 둔다) */
+  /* 라인 점·띠 — 탑은 액센트와, 미드는 승 하늘색과 겹치지 않게 옮겼다 */
+  --lane-top: #e8c55f;
   --lane-jg: #8fd18f;
-  --lane-mid: #8ab4f8;
-  --lane-bot: #c39be8;
+  --lane-mid: #a98bff;
+  --lane-bot: #f59ac6;
   --lane-sup: #7fd6c7;
-  /* 메달 띠 — 순위 셀 왼쪽 3px(1위·3위. 2위는 --dim2) */
-  --medal-1: #e8c46a;
-  --medal-3: #c4865a;
-  /* 떠 있는 층(자동완성 목록·툴팁)에만 쓰는 그림자 — 시트·카드에는 쓰지 않는다 */
-  --shadow: 0 6px 20px rgba(0, 0, 0, .45);
 
-  /* 서체 — 한 계열, 고정 rem 스케일(비율 1.125). 표 숫자는 tabular.
+  /* 깊이 — 그림자·글로우는 이 토큰으로만 쓴다(직접 적은 rgba 금지) */
+  --shadow: 0 6px 20px rgba(0, 0, 0, .45);                                   /* 떠 있는 층(자동완성·툴팁) */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .7);  /* 카드 기본 */
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, .45), 0 18px 40px -16px rgba(0, 0, 0, .8); /* 누를 수 있는 카드의 호버 · 독 */
+  --edge-hi: inset 0 1px 0 color-mix(in srgb, var(--txt) 6%, transparent);    /* 카드 위쪽 1px 빛 */
+  /* 선택된 카드·활성 독 항목 */
+  --glow-sel: 0 0 0 1px color-mix(in srgb, var(--sel) 55%, transparent), 0 8px 28px -10px color-mix(in srgb, var(--sel) 60%, transparent);
+  /* 사건 배지(MVP) — 작은 면적용 */
+  --glow-event: 0 0 12px -3px color-mix(in srgb, var(--sel) 75%, transparent);
+  /* 3연승 이상 알약 — 승 색, 약하게 */
+  --glow-win: 0 0 12px -4px color-mix(in srgb, var(--win) 65%, transparent);
+
+  /* 그라디언트 — 면에만(글자에는 쓰지 않는다) */
+  --grad-sel: linear-gradient(180deg, var(--sel-hi), var(--sel));
+  --grad-card: linear-gradient(180deg, color-mix(in srgb, var(--gutter) 70%, var(--sheet)) 0%, var(--sheet) 120px);
+  --grad-tile: linear-gradient(180deg, var(--gutter), color-mix(in srgb, var(--gutter) 45%, var(--sheet)));
+  /* 게이지 승 조각(70% → 100%)·패 조각 사선 무늬(옅은 줄 75% — 어느 표면 위에서도 비글자 3:1 이상, raised 3.55) */
+  --grad-win: linear-gradient(90deg, color-mix(in srgb, var(--win) 70%, transparent), var(--win));
+  --hatch-loss: repeating-linear-gradient(135deg, var(--loss) 0 3px, color-mix(in srgb, var(--loss) 75%, transparent) 3px 6px);
+
+  /* 서체 — 한 계열, 고정 rem 스케일. 표 숫자는 tabular.
      굵기는 400·700 두 단계뿐 — Malgun Gothic(윈도)·Noto CJK(안드로이드)는 한글 500·600·650 을 400 또는 700 으로
      그린다(실측: 400=500, 600=650=700). 중간 굵기를 쓰면 기기마다 다른 위계가 나온다. */
   --font: 'Segoe UI', Roboto, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
   --mono: ui-monospace, 'Cascadia Mono', Consolas, 'D2Coding', monospace;
-  --fs-tick: 0.75rem;  /* 12px — 차트 눈금·축 글자(SVG)에만. 화면 글자는 여기 아래로 안 내려간다 */
-  --fs-sm: 0.8125rem;  /* 13px 바닥 — 표 머리·행 번호·캡션·코드 판·보조 */
+  --fs-tick: 0.75rem;  /* 12px — 차트 눈금·축 글자(SVG) */
+  --fs-xs: 0.75rem;    /* 12px — 배지·타일 라벨·행 번호 칩에만. 읽는 문장과 셀 값은 14px 아래로 내리지 않는다 */
+  --fs-sm: 0.8125rem;  /* 13px — 표 머리·캡션·코드 판·보조 */
   --fs-md: 0.875rem;   /* 14px 본문·셀 */
-  --fs-lg: 1rem;       /* 16px 제목 */
+  --fs-lg: 1rem;       /* 16px 카드 제목·카드 값 */
   --fs-xl: 1.125rem;   /* 18px 화면 제목 */
-  --fs-num: 1.25rem;   /* 20px 큰 숫자 */
+  --fs-num: 1.5rem;    /* 24px 요약 타일 값 */
+  --fs-hero: 1.75rem;  /* 28px 게이지 머리 승률(멤버 히어로) */
   --lh: 1.5;
   /* 간격 — 4 단위 */
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px;
-  /* 셀·행 — 스프레드시트는 모서리가 없다. 칩만 살짝 */
-  --row-h: 36px;
-  --r-chip: 4px;
-  --r-tab: 6px;
+  /* 반경 — 바깥 카드(Panel) 20 · 안쪽 타일·경기 카드 12 · 컨트롤·칩·독 항목 8 · 배지 4 · 게이지·알약 999 */
+  --r-xs: 4px;
+  --r-chip: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+  --r-dot: 2px;        /* 라인 점(6~8px) — 둥근 네모. 팀 범례 점(원)과 모양으로도 갈린다 */
+  /* 행 — 데스크톱 40px, 굵은 포인터 44px */
+  --row-h: 40px;
   --wrap: 1100px;
+  /* 움직임 — 색 전환 / 호버 들림·독 표시자 */
+  --dur-1: .12s;
+  --dur-2: .18s;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  /* 문서 스크롤에 붙는 머리(표 머리행)의 top — 고정 헤더 높이. 폰은 헤더가 고정이 아니라 0 */
+  --sticky-top: 0px;
+}
+@media (min-width: 641px) {
+  :root { --sticky-top: 57px; }   /* App 헤더 56px + 아래 선 1px */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-/* 브라우저가 그리는 표면도 시트를 따른다 — 초점 고리·선택 영역·캐럿·스크롤바·네이티브 select 목록 */
+/* 브라우저가 그리는 표면도 판을 따른다 — 초점 고리·선택 영역·캐럿·스크롤바·네이티브 select 목록 */
 :root {
   color-scheme: dark;
   accent-color: var(--sel);
   caret-color: var(--sel);
-  scrollbar-color: var(--grid-strong) var(--sheet);
+  scrollbar-color: var(--grid-strong) var(--bg);
 }
 :focus-visible { outline: 2px solid var(--sel); outline-offset: -2px; }
 ::selection { background: color-mix(in srgb, var(--sel) 35%, transparent); color: var(--txt); }
 ::placeholder { color: var(--dim); opacity: 1; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--sticky-top); }
+/* 페이지 바탕 — --bg 위에 방사 글로우 둘(왼쪽 위 불씨 9% · 오른쪽 위 하늘 7%). 문서와 같이 스크롤한다
+   (background-attachment:fixed 는 폰에서 스크롤마다 다시 그린다) */
 body {
   margin: 0;
-  background-color: var(--sheet);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 420px at 0% -10%, color-mix(in srgb, var(--sel) 9%, transparent), transparent 70%),
+    radial-gradient(700px 380px at 100% 0%, color-mix(in srgb, var(--win) 7%, transparent), transparent 70%);
+  background-repeat: no-repeat;
   color: var(--txt);
   font-family: var(--font);
   font-size: var(--fs-md);
@@ -101,15 +147,98 @@ button { cursor: pointer; }
 .faint { color: var(--dim2); }
 .code { font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); letter-spacing: .02em; }
 
-/* 폰 입력 확대 방지(16px) · 터치 표적 44px — 시트 행도 손가락 높이로 */
+/* 승률 단계 글자색 — $lib/tier 의 wrStep 결과(st-{단계}). 기호(▲·▼)와 글자는 그리는 쪽이 같이 둔다 */
+.st-up2 { color: var(--win); }
+.st-up { color: var(--win-soft); }
+.st-even { color: var(--txt); }
+.st-down { color: var(--loss-soft); }
+.st-down2 { color: var(--loss); }
+.st-few { color: var(--dim2); }
+
+/* 카드 표면 — 바깥 카드는 Panel 컴포넌트, 이것은 그 밖의 작은 카드(경기 카드·기록 카드·듀오 카드).
+   .card = 판 위에 바로 놓이는 카드, .tile = 카드 안에 놓이는 안쪽 판 */
+.card {
+  background: var(--grad-card);
+  border: 1px solid var(--grid);
+  border-radius: var(--r-md);
+  box-shadow: var(--edge-hi), var(--shadow-1);
+}
+.tile {
+  background: var(--grad-tile);
+  border: 1px solid var(--grid);
+  border-radius: var(--r-md);
+  box-shadow: var(--edge-hi);
+}
+/* 선택된 카드 — 테두리 액센트 + 글로우(한 화면에 큰 글로우는 하나) */
+.card.glow, .tile.glow {
+  border-color: color-mix(in srgb, var(--sel) 55%, var(--grid));
+  box-shadow: var(--edge-hi), var(--glow-sel);
+}
+
+/* 고르기 칩 — 화면 안의 보기·라인·분류 고르기 한 어휘(누름 단추 aria-pressed · 링크 aria-current).
+   하위 화면 탭(Subtabs, role=tab)과 다르다: 탭은 '어느 화면', 칩은 '같은 화면의 어느 범위'.
+   눌린 것 = 한 단 밝은 판 + 선택색 테두리 + 위쪽 빛 — 판이 달라 색만으로 가르지 않는다. 라인은 안에 LaneChip(점 + 이름) */
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 var(--sp-3);
+  background: var(--gutter);
+  color: var(--dim);
+  border: 1px solid var(--grid-strong);
+  border-radius: var(--r-chip);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-1), color var(--dur-1), border-color var(--dur-1);
+}
+.chip:hover { background: var(--raised); color: var(--txt); }
+.chip:active { background: var(--track); }
+.chip[aria-pressed='true'], .chip[aria-current='page'] {
+  background: var(--raised);
+  color: var(--txt);
+  border-color: var(--sel);
+  box-shadow: var(--edge-hi);
+}
+.chip:disabled { background: var(--sheet); color: var(--dim2); border-color: var(--grid); cursor: default; }
+.chip .n { color: var(--dim); font-variant-numeric: tabular-nums; }
+.chip[aria-pressed='true'] .n, .chip[aria-current='page'] .n { color: var(--txt); }
+@media (forced-colors: active) {
+  .chip[aria-pressed='true'], .chip[aria-current='page'] { border: 2px solid Highlight; }
+}
+
+/* 호버 들림 — 누를 수 있는 카드(링크·버튼)에만 단다. 그림자는 ::after 의 불투명도로 바꾼다(box-shadow 를
+   직접 움직이지 않는다) — 그래서 .lift 를 단 요소는 ::after 를 따로 쓰지 않는다.
+   마우스 기기 + 움직임 허용일 때만: 터치에서는 탭한 뒤 :hover 가 남아 카드가 들린 채로 있다 */
+.lift { position: relative; }
+.lift::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--shadow-2);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .lift { transition: transform var(--dur-2) var(--ease), border-color var(--dur-1); }
+  .lift::after { transition: opacity var(--dur-2) var(--ease); }
+  .lift:hover { transform: translateY(-2px); border-color: var(--grid-strong); }
+  .lift:hover::after { opacity: 1; }
+  .lift:active { transform: translateY(0) scale(.99); }
+}
+
+/* 폰 입력 확대 방지(16px) · 터치 표적 44px — 표 행도 손가락 높이로 */
 @media (pointer: coarse) {
   :root { --row-h: 44px; }
   input, select, textarea { font-size: 16px; }
-  button, [role='button'], [role='tab'], .navlink { min-height: 44px; }
+  button, [role='button'], [role='tab'], .navlink, .chip { min-height: 44px; }
 }
 
-/* 움직임 줄이기: 이동만 끈다. 색 전환(.1~.15s)은 상태가 바뀌었다는 정보라 둔다 —
-   전역 .001ms 강제는 그 정보까지 지운다(옛 사이트에서 되돌린 것). */
+/* 움직임 줄이기: 이동만 끈다. 색·불투명도 전환(≤.15s)은 상태가 바뀌었다는 정보라 둔다 —
+   전역 .001ms 강제는 그 정보까지 지운다(옛 사이트에서 되돌린 것). 들림은 위에서 처음부터 안 건다 */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }

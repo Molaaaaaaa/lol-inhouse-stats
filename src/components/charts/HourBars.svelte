@@ -1,10 +1,12 @@
 <script lang="ts">
   /**
-   * 시간대별 판수 — 표 아래 '삽입된 차트'. 시각마다 막대 하나, 값은 막대 위 글자, 시각은 아래 라벨.
-   * 바닥은 --ink, 눈금선은 --grid(1판 단위, 많으면 2·5·10판), 막대는 --sel. 색은 전부 CSS 클래스로
-   * (SVG 속성에 색 없음). 폭은 시각 수에 비례하고 넘치면 가로 스크롤 — 표와 같은 규칙.
+   * 시간대별 판수 — 삽입된 차트. 시각마다 막대 하나, 값은 막대 위 글자, 시각은 아래 라벨.
+   * 바닥은 --ink(둥근 우물), 눈금선은 --grid(1판 단위, 많으면 2·5·10판), 막대는 무채색(판수는 승패도 선택도
+   * 아니다 — 승 색·액센트를 쓰지 않는다), 모서리 3px. 색은 전부 CSS 클래스로(SVG 속성에 색 없음).
+   * 폭은 시각 수에 비례하고 넘치면 가로 스크롤 — 표와 같은 규칙.
    *
    * 승률은 싣지 않는다(hourRows 참고). 보조기술에는 role=img + 시각별 판수를 문장으로 읽힌다.
+   * captionHidden: 감싼 카드(Panel)의 제목이 같은 말을 이미 보일 때 캡션 줄을 보조기술에만 남긴다(DataTable 과 같은 약속).
    */
   import EmptyState from '$components/EmptyState.svelte';
   import type { HourRow } from '$lib/member-rest';
@@ -13,8 +15,10 @@
     /** hourRows() 결과 — 시각 오름차순, 판수 > 0 */
     rows: readonly HourRow[];
     caption?: string;
+    /** 캡션을 보조기술 전용으로 — 감싼 카드의 제목이 같은 말일 때 */
+    captionHidden?: boolean;
   }
-  let { rows, caption = '시간대별 판수' }: Props = $props();
+  let { rows, caption = '시간대별 판수', captionHidden = false }: Props = $props();
 
   // 기하(px). 행 높이 36 을 눈금 단위로 삼는다 — 막대 최대 높이 = 세 행 분량
   const COL = 40;
@@ -44,7 +48,7 @@
 </script>
 
 <div class="hourbars">
-  <div class="cap">{caption}</div>
+  <div class="cap" class:sr-only={captionHidden}>{caption}</div>
   {#if rows.length === 0}
     <EmptyState text="아직 시간대 기록이 없습니다." />
   {:else}
@@ -55,7 +59,7 @@
           <line class="grid" x1="0" x2={W} y1={y} y2={y} />
         {/each}
         {#each bars as b (b.hour)}
-          <rect class="bar" x={b.x} y={b.y} width={BAR} height={b.h} />
+          <rect class="bar" x={b.x} y={b.y} width={BAR} height={b.h} rx="3" />
           <text class="v" x={b.cx} y={b.y - 4} text-anchor="middle">{b.games}</text>
           <text class="t" x={b.cx} y={H - 7} text-anchor="middle">{b.label}</text>
         {/each}
@@ -73,12 +77,15 @@
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
   }
-  .scroll { overflow-x: auto; border: 1px solid var(--grid); }
+  .scroll { overflow-x: auto; border: 1px solid var(--grid); border-radius: var(--r-md); background: var(--ink); }
   svg { display: block; font-family: var(--font); font-variant-numeric: tabular-nums; }
   .bg { fill: var(--ink); }
   .grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
   .axis { stroke: var(--grid-strong); stroke-width: 1; shape-rendering: crispEdges; }
-  .bar { fill: var(--sel); }
+  .bar { fill: color-mix(in srgb, var(--dim) 70%, var(--track)); }
   .v { fill: var(--txt); font-size: var(--fs-tick); }
   .t { fill: var(--dim); font-size: var(--fs-tick); }
+  @media (forced-colors: active) {
+    .bar { fill: CanvasText; }
+  }
 </style>

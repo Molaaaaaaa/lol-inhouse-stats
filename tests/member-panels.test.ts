@@ -56,39 +56,64 @@ const DATA = {
 
 const heads = (table: Element) => [...table.querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
 const tableOf = (el: HTMLElement, caption: string) => el.querySelector(`table[aria-label="${caption}"]`)!;
-const rowCells = (tr: Element) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
+/** 셀이 읽히는 글자 — 그림 셀(스니펫)은 보조기술 전용 fmt 글자, 그 밖은 셀 글자 */
+const said = (td: Element) => (td.querySelector(':scope > .cs') ? td.querySelector(':scope > .sr-only')?.textContent : td.textContent)?.trim();
+const rowCells = (tr: Element) => [...tr.querySelectorAll('td:not(.rn)')].map(said);
+/** 카드(Panel) 제목 — 화면 안 h2 */
+const cardTitles = (el: HTMLElement) => [...el.querySelectorAll('section > .ph h2')].map((h) => h.textContent);
 
 // 초상(ChampImg)의 패치는 DataTable 이 전역 store 에서 읽는다 — 화면과 같은 조건으로
 beforeEach(() => { location.hash = ''; app.data = DATA; app.status = 'ready'; });
 
 describe('Vs — 상대별 전적', () => {
-  it('열 · 함께 판 ↓ 기본 정렬(aria-sort) · 내 기준 승패', () => {
+  it('카드 둘(자주 만난 상대 · 상대별 전적) · 열 · 함께 판 ↓ 기본 정렬(aria-sort) · 내 기준 승패', () => {
     const { container } = render(Vs, { key: 'p1', p: ME, data: DATA });
+    expect(cardTitles(container)).toEqual(['자주 만난 상대 · 맞대결 판수 순', '상대별 전적']);
     const t = tableOf(container, '상대별 전적');
     expect(heads(t)).toEqual(['상대', '함께 판', '함께 승률', '맞대결 판', '맞대결 승률', '킬', '데스']);
     const rows = t.querySelectorAll('tbody tr');
     expect(rows).toHaveLength(2);
     // 상대B: 키가 p3|p1 이라 내가 b 쪽 — 내 승 1, 상대 승 5 (뒤집어 읽는다)
     expect(rowCells(rows[0]!)).toEqual(['상대B', '8', '38%', '6', '17%', '0', '7']);
-    expect(rowCells(rows[1]!)).toEqual(['상대A', '2', '100%', '4', '75%', '5', '0']);
+    expect(rowCells(rows[1]!)).toEqual(['상대A', '2', '100%, 표본 적음', '4', '75%, 표본 적음', '5', '0']);
     expect([...t.querySelectorAll('thead th[scope="col"]')][1]!.getAttribute('aria-sort')).toBe('descending');
   });
-  it('승률 채움은 문턱(5판) 이상만 — 2판 100% 는 채우지 않는다', () => {
+  it('승률은 글자색·기호(Wilson 구간 단계) — 구간이 50% 를 걸치면 무채색, 문턱(5판) 미만은 표본 적음 · 채움 없음', () => {
     const { container } = render(Vs, { key: 'p1', p: ME, data: DATA });
     const rows = tableOf(container, '상대별 전적').querySelectorAll('tbody tr');
     const cellsB = rows[0]!.querySelectorAll('td:not(.rn)');
-    expect(cellsB[2]!.classList.contains('loss')).toBe(true);    // 함께 8판 38%
-    expect(cellsB[4]!.classList.contains('loss')).toBe(true);    // 맞대결 6판 17%
+    expect(cellsB[2]!.querySelector('.wr')?.classList.contains('st-even')).toBe(true);    // 함께 8판 38% — 구간 .14~.69
+    expect(cellsB[4]!.querySelector('.wr')?.classList.contains('st-even')).toBe(true);    // 맞대결 6판 17% — 구간 .03~.56
     const cellsA = rows[1]!.querySelectorAll('td:not(.rn)');
-    expect(cellsA[2]!.classList.contains('win')).toBe(false);    // 2판
-    expect(cellsA[4]!.classList.contains('win')).toBe(false);    // 4판
+    expect(cellsA[2]!.querySelector('.wr.st-few .few')?.textContent).toBe('표본 적음');   // 2판
+    expect(cellsA[4]!.querySelector('.wr')?.classList.contains('st-few')).toBe(true);     // 4판
+    expect(tableOf(container, '상대별 전적').querySelector('td.win, td.loss')).toBeNull();
+  });
+  it('자주 만난 상대: 맞대결 문턱(5판) 이상만, 많이 만난 순 · 이름·판수·승패·막대 · 누르면 비교 화면', () => {
+    const { container } = render(Vs, { key: 'p1', p: ME, data: DATA });
+    const items = [...container.querySelectorAll('ol.opps li')];
+    expect(items).toHaveLength(1);   // 상대A 는 맞대결 4판 — 문턱 미만이라 빠진다
+    const a = items[0]!.querySelector('a')!;
+    expect(a.getAttribute('href')).toBe(`#/m/${encodeURIComponent('나')}/vs/${encodeURIComponent('상대B')}`);
+    expect(a.querySelector('.nm')?.textContent).toBe('상대B');
+    expect(a.querySelector('.g')?.textContent).toBe('맞대결 6판');
+    expect(a.querySelector('.wl')?.textContent).toBe('1승 5패');
+    expect(a.querySelector('.bar')?.getAttribute('aria-hidden')).toBe('true');   // 숫자는 글자가 말한다
+    expect(a.querySelector('.bar .wg.v-bar')).not.toBeNull();
+    expect(a.textContent?.replace(/\s+/g, '')).toBe('상대B맞대결6판1승5패비교');   // 링크 이름 = 보이는 글자 + '비교'
+    expect(a.classList.contains('lift')).toBe(true);
+  });
+  it('자주 만난 상대: 문턱 이상인 상대가 없으면 카드 자체가 없다', () => {
+    const { container } = render(Vs, { key: 'p1', p: ME, data: { ...DATA, min_games: 10 } as GuildPayload });
+    expect(container.querySelector('ol.opps')).toBeNull();
+    expect(cardTitles(container)).toEqual(['상대별 전적']);
   });
   it('뜻풀이 한 줄(행 합계는 없다 — 한 판이 상대마다 세어진다) · 행 선택 → 그 멤버 화면', async () => {
     const { container } = render(Vs, { key: 'p1', p: ME, data: DATA });
     const notes = [...container.querySelectorAll('.note')].map((n) => n.textContent?.replace(/\s+/g, ' ').trim());
     expect(notes).toHaveLength(1);
     expect(notes[0]).toContain('함께 = 한 팀이었던 판');
-    expect(notes[0]).toContain('5판 이상부터');
+    expect(notes[0]).toContain('승률 색은 5판 이상부터');
     expect(container.textContent).not.toContain('합계');
     await fireEvent.click(tableOf(container, '상대별 전적').querySelector('tbody tr')!);
     expect(location.hash).toBe(`#/m/${encodeURIComponent('상대B')}`);
@@ -103,15 +128,16 @@ describe('Vs — 상대별 전적', () => {
 });
 
 describe('Recent — 최근 경기 · 시간대', () => {
-  it('열 머리(지표 이름은 metric_meta) · 시각 ↓ 정렬 · 챔피언 한글 · 라인 띠 · 승패 채움과 글자', () => {
+  it('열 머리(지표 이름은 metric_meta) · 시각 ↓ 정렬 · 챔피언 한글 · 라인 점 · 승패 채움과 글자', () => {
     const { container } = render(Recent, { key: 'p1', p: ME, data: DATA });
+    expect(cardTitles(container)).toEqual(['최근 경기', '시간대별 판수']);
     const t = tableOf(container, '최근 경기');
     expect(heads(t)).toEqual(['시각', '챔피언', '라인', '결과', 'KDA', '분당 딜']);
     const rows = t.querySelectorAll('tbody tr');
     expect([...rows].map((r) => rowCells(r)[1])).toEqual(['자헨', '그웬', '카이사']);   // 최신 먼저
     const first = rows[0]!.querySelectorAll('td:not(.rn)');
     expect(first[0]!.textContent).toMatch(/\d+\. \d+\./);
-    expect(first[2]!.classList.contains('lane-top')).toBe(true);
+    expect(first[2]!.querySelector('.lane.top')?.textContent).toBe('탑');
     expect(first[3]!.textContent?.trim()).toBe('패');
     expect(first[3]!.classList.contains('loss')).toBe(true);
     expect(rows[1]!.querySelectorAll('td:not(.rn)')[3]!.classList.contains('win')).toBe(true);
@@ -152,10 +178,12 @@ describe('HourBars', () => {
 });
 
 describe('Partners — 파트너 · 상대 챔피언', () => {
-  it('여섯 범위 캡션 · 잘 맞는 파트너는 시너지 ↓, 안 맞는 파트너는 ↑ · 시너지 부호', () => {
+  it('카드 여섯 장(제목 = 표 이름, 캡션은 보조기술에만) · 잘 맞는 파트너는 시너지 ↓, 안 맞는 파트너는 ↑ · 시너지 부호', () => {
     const { container } = render(Partners, { key: 'p1', p: ME, data: DATA });
-    const caps = [...container.querySelectorAll('.cap')].map((c) => c.textContent);
-    expect(caps).toEqual(['잘 맞는 파트너', '안 맞는 파트너', '상대하기 어려운 챔피언', '상대하기 쉬운 챔피언', '내가 잡은 챔피언', '나를 잡은 챔피언']);
+    const names = ['잘 맞는 파트너', '안 맞는 파트너', '상대하기 어려운 챔피언', '상대하기 쉬운 챔피언', '내가 잡은 챔피언', '나를 잡은 챔피언'];
+    expect(cardTitles(container)).toEqual(names);
+    expect([...container.querySelectorAll('.cap')].map((c) => c.textContent)).toEqual(names);
+    expect([...container.querySelectorAll('.cap > span:first-child')].every((c) => c.classList.contains('sr-only'))).toBe(true);
     const best = tableOf(container, '잘 맞는 파트너');
     expect(heads(best)).toEqual(['파트너', '함께 판', '함께 승률', '시너지']);
     expect(rowCells(best.querySelector('tbody tr')!)).toEqual(['우체국집배원', '20', '55%', '+0.043']);
@@ -168,10 +196,12 @@ describe('Partners — 파트너 · 상대 챔피언', () => {
     const { container } = render(Partners, { key: 'p1', p: ME, data: DATA });
     const nem = tableOf(container, '상대하기 어려운 챔피언');
     expect(heads(nem)).toEqual(['상대 챔피언', '맞라인 판', '승률']);
-    expect(rowCells(nem.querySelector('tbody tr')!)).toEqual(['아칼리', '1', '0%']);
+    expect(rowCells(nem.querySelector('tbody tr')!)).toEqual(['아칼리', '1', '0%, 표본 적음']);
     const vic = tableOf(container, '상대하기 쉬운 챔피언').querySelector('tbody tr')!;
-    expect(rowCells(vic)).toEqual(['이즈리얼', '6', '100%']);
-    expect(vic.querySelectorAll('td:not(.rn)')[2]!.classList.contains('win')).toBe(true);   // 6판 ≥ 5
+    expect(rowCells(vic)).toEqual(['이즈리얼', '6', '100%, 60% 이상으로 높음']);   // 6판 6승 — 구간 하한 .61
+    const wr = vic.querySelectorAll('td:not(.rn)')[2]!.querySelector('.wr')!;
+    expect(wr.classList.contains('st-up2')).toBe(true);
+    expect(wr.querySelector('.mk')?.textContent).toBe('▲▲');
     const killed = tableOf(container, '내가 잡은 챔피언');
     expect(heads(killed)).toEqual(['챔피언', '횟수']);
     expect([...killed.querySelectorAll('tbody tr')].map((r) => rowCells(r))).toEqual([['진', '15'], ['라칸', '11']]);

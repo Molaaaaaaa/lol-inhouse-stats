@@ -6,7 +6,7 @@ import { router } from '../src/lib/router.svelte';
 import { clearFx, fx } from '../src/lib/fx.svelte';
 import { media } from '../src/lib/media.svelte';
 import {
-  duoRows, fxDuo, fxHeat, fxTrio, heatMatrix, heatNames, heatSign, heatT, heatText, heatTip, shortNames, synCls, trioRows,
+  duoRows, fxDuo, fxHeat, fxTrio, heatMatrix, heatNames, heatSign, heatT, heatText, heatTip, shortNames, spotlightRows, synCls, trioRows,
 } from '../src/lib/synergy';
 import type { GuildPayload, SynergyRow, TrioRow } from '../src/lib/data/types';
 
@@ -39,6 +39,20 @@ describe('synergy.ts — 순수 함수', () => {
     expect(rows[0]!.pair).toBe('도야짬뽕누룽지탕 ＋ 우체국집배원');
     expect(rows[0]!.synergy).toBe(0.07);
     expect(duoRows(null)).toEqual([]);
+  });
+  it('spotlightRows: 문턱 이상만 · 함께 판수 내림차순(시너지 순 아님) · 같으면 글자순 · 다섯 쌍까지 · 표와 같은 키', () => {
+    const top = spotlightRows(duoRows(SYN), 5);
+    // 14판(+0.070) · 13판(-0.065) · 10판(+0.063) · 6판(0) — 4판·2판은 문턱 미만
+    expect(top.map((r) => [r.key, r.games])).toEqual([
+      ['도야짬뽕누룽지탕|우체국집배원', 14], ['외 걸|우체국집배원', 13], ['Lotze|용기사', 10], ['용기사|우체국집배원', 6],
+    ]);
+    expect(spotlightRows(duoRows(SYN), 0)).toHaveLength(5);
+    const ties: SynergyRow[] = ['다', '가', '마', '나', '바', '라'].map((n, i) => ({
+      na: n, nb: '하', games: i < 2 ? 9 : 7, winrate: 0.5, expected: 0.5, lift: 0, synergy: i / 100,
+    }));
+    // 9판 둘(다·가 → 글자순 가·다), 7판 넷 중 글자순 셋(나·라·마) — 바는 여섯째라 빠진다
+    expect(spotlightRows(duoRows(ties), 5).map((r) => r.na)).toEqual(['가', '다', '나', '라', '마']);
+    expect(spotlightRows([], 5)).toEqual([]);
   });
   it('trioRows: 키 a|b|c · 글자 A ＋ B ＋ C', () => {
     const rows = trioRows(TRIOS);
@@ -154,7 +168,11 @@ describe('synergy.ts — 순수 함수', () => {
 const tableOf = (name: string) => screen.getByRole('table', { name });
 const heads = (t: Element) => [...t.querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
 const bodyRows = (t: Element) => [...t.querySelectorAll('tbody tr')] as HTMLTableRowElement[];
-const cells = (tr: Element) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
+// 셀 글 — 스니펫 칸(승률 게이지)은 같은 칸의 보조기술 글(fmt), 그 밖은 보이는 글
+const cells = (tr: Element) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => (td.querySelector('.cs + .sr-only') ?? td).textContent?.trim());
+/** 칸의 게이지 단계 클래스(st-…) */
+const stepIn = (td: Element) => [...(td.querySelector('.cs .wg .pc')?.classList ?? [])].find((c) => c.startsWith('st-'));
+const spotCards = () => [...screen.getByRole('region', { name: '함께 판 상위 듀오' }).querySelectorAll('ol > li > button')] as HTMLButtonElement[];
 const tab = (name: string) => screen.getByRole('tab', { name });
 
 describe('Synergy 화면', () => {
@@ -175,6 +193,7 @@ describe('Synergy 화면', () => {
     expect(tab('듀오').id).toBe('syn-tab-duo');
     expect(screen.getByRole('tabpanel').id).toBe('syn-panel-duo');
     const t = tableOf('듀오 시너지');
+    expect(screen.getByRole('region', { name: '듀오 시너지' }).contains(t)).toBe(true);
     expect(heads(t)).toEqual(['듀오', '함께 판', '함께 승률', '기대 승률', '시너지', '리프트']);
     const rows = bodyRows(t);
     expect(rows).toHaveLength(6);
@@ -186,18 +205,21 @@ describe('Synergy 화면', () => {
     expect(tab('듀오').getAttribute('aria-selected')).toBe('true');
   });
 
-  it('조건부 서식: 시너지 부호 → win/loss 채움, 승률 채움은 문턱(5판) 이상만, 0 은 채움 없음', () => {
+  it('조건부 서식: 시너지 부호 → win/loss 채움, 승률은 게이지(구간 기준 단계·문턱 미만 표본 적음), 0 은 채움 없음', () => {
     render(Synergy, { sub: 'duo', params: {} });
     const rows = bodyRows(tableOf('듀오 시너지'));
     const tds = (i: number) => rows[i]!.querySelectorAll('td:not(.rn)');
     expect(tds(0)[4]!.classList.contains('win')).toBe(true);     // +0.070
-    expect(tds(0)[2]!.classList.contains('win')).toBe(true);     // 14판 71%
     expect(tds(5)[4]!.classList.contains('loss')).toBe(true);    // −0.065
-    expect(tds(5)[2]!.classList.contains('loss')).toBe(true);    // 13판 31%
-    // 4판 100% — 문턱 미만이라 승률 채움 없음, 시너지 +0.057 은 채움
+    // 승률 칸은 채움 대신 게이지 — 14판 71%·13판 31% 는 구간이 50% 를 품어 무채색(점추정으로 칠하지 않는다)
+    expect(tds(0)[2]!.className).not.toMatch(/\b(win|loss)\b/);
+    expect(stepIn(tds(0)[2]!)).toBe('st-even');
+    expect(stepIn(tds(5)[2]!)).toBe('st-even');
+    // 4판 100% — 문턱 미만이라 표본 적음, 시너지 +0.057 은 채움
     const r4 = rows.find((r) => r.textContent?.includes('말듣쓰'))!;
     const t4 = r4.querySelectorAll('td:not(.rn)');
-    expect(t4[2]!.classList.contains('win')).toBe(false);
+    expect(stepIn(t4[2]!)).toBe('st-few');
+    expect(cells(r4)[2]).toBe('100%, 표본 적음');
     expect(t4[4]!.classList.contains('win')).toBe(true);
     // 정확히 0 은 어느 쪽도 아니다
     const r0 = rows.find((r) => r.textContent?.includes('용기사 ＋ 우체국집배원'))!;
@@ -205,6 +227,40 @@ describe('Synergy 화면', () => {
     expect(t0[4]!.className).not.toMatch(/\b(win|loss)\b/);
     // 물음표(HELP 시너지)
     expect(screen.getByRole('button', { name: '시너지 설명' })).toBeTruthy();
+  });
+
+  it('듀오 카드 띠: 함께 판수 순 상위(문턱 이상) · 두 이름·승패·시너지 값 · 1위도 빛나지 않는다', () => {
+    render(Synergy, { sub: 'duo', params: {} });
+    const cards = spotCards();
+    expect(cards.map((b) => b.querySelector('.pair')?.textContent)).toEqual([
+      '도야짬뽕누룽지탕 ＋ 우체국집배원', '외 걸 ＋ 우체국집배원', 'Lotze ＋ 용기사', '용기사 ＋ 우체국집배원',
+    ]);
+    expect(cards.map((b) => b.querySelector('.wl')?.textContent)).toEqual(['10승 4패 · 14판', '4승 9패 · 13판', '8승 2패 · 10판', '3승 3패 · 6판']);
+    expect(cards.map((b) => b.querySelector('.syn')?.textContent)).toEqual(['시너지 +0.070', '시너지 -0.065', '시너지 +0.063', '시너지 0.000']);
+    // 순번은 장식(목록 순서가 말한다) · 게이지 막대도 장식(버튼 이름이 같은 숫자를 글로 읽는다)
+    expect(cards[0]!.querySelector('.no')?.getAttribute('aria-hidden')).toBe('true');
+    expect(cards[0]!.querySelector('.bar')?.getAttribute('aria-hidden')).toBe('true');
+    expect(cards[0]!.querySelector('.bar .wg.v-bar')).not.toBeNull();
+    // 아무것도 고르지 않았으면 어느 카드도 눌림·글로우가 아니다(1위 강조 없음)
+    expect(cards.map((b) => b.getAttribute('aria-pressed'))).toEqual(['false', 'false', 'false', 'false']);
+    expect(cards.some((b) => b.classList.contains('glow'))).toBe(false);
+  });
+
+  it('듀오 카드 누름 = 표 행 선택: 수식 줄 · 카드 눌림 + 글로우 · 표 행도 선택 · 다시 누르면 첫 멤버 화면', async () => {
+    render(Synergy, { sub: 'duo', params: {} });
+    const card = spotCards()[2]!;   // Lotze ＋ 용기사
+    await fireEvent.click(card);
+    expect(fx.text).toBe('=시너지 80% − 기대 52% = +0.281 · 10판 보정 +0.063');
+    expect(card.getAttribute('aria-pressed')).toBe('true');
+    expect(card.classList.contains('glow')).toBe(true);
+    const row = bodyRows(tableOf('듀오 시너지')).find((r) => r.textContent?.includes('Lotze ＋ 용기사'))!;
+    expect(row.getAttribute('aria-selected')).toBe('true');
+    // 표에서 다른 행을 고르면 카드의 눌림이 그쪽으로 옮겨 간다
+    await fireEvent.click(bodyRows(tableOf('듀오 시너지'))[0]!);
+    expect(spotCards().map((b) => b.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false', 'false']);
+    // 같은 쌍을 다시 누르면(카드로) 첫 멤버 화면
+    await fireEvent.click(spotCards()[0]!);
+    expect(location.hash).toBe('#/m/' + encodeURIComponent('도야짬뽕누룽지탕'));
   });
 
   it('행 선택 → 수식 줄에 리프트·보정값, 같은 행 다시 선택 → 첫 멤버 화면', async () => {
@@ -222,12 +278,13 @@ describe('Synergy 화면', () => {
     render(Synergy, { sub: 'trio', params: {} });
     expect(tab('트리오').getAttribute('aria-selected')).toBe('true');
     const t = tableOf('트리오 시너지');
+    expect(screen.getByRole('region', { name: '트리오 시너지' }).contains(t)).toBe(true);
     expect(heads(t)).toEqual(['트리오', '함께 판', '승률', '시너지']);
     const rows = bodyRows(t);
-    expect(cells(rows[0]!)).toEqual(['Lotze ＋ 용기사 ＋ 코 파', '4', '100%', '+0.039']);
-    expect(rows[0]!.querySelectorAll('td:not(.rn)')[2]!.classList.contains('win')).toBe(false);   // 4판 — 문턱 미만
+    expect(cells(rows[0]!)).toEqual(['Lotze ＋ 용기사 ＋ 코 파', '4', '100%, 표본 적음', '+0.039']);
+    expect(stepIn(rows[0]!.querySelectorAll('td:not(.rn)')[2]!)).toBe('st-few');    // 4판 — 문턱 미만
     expect(cells(rows[1]!)).toEqual(['외 걸 ＋ 도야짬뽕누룽지탕 ＋ 우체국집배원', '12', '67%', '+0.035']);
-    expect(rows[1]!.querySelectorAll('td:not(.rn)')[2]!.classList.contains('win')).toBe(true);
+    expect(stepIn(rows[1]!.querySelectorAll('td:not(.rn)')[2]!)).toBe('st-even');   // 12판 67% — 구간 39~86%
     await fireEvent.click(rows[1]!);
     expect(fx.text).toBe('=시너지(트리오) 승률 67% · 12판 보정 = +0.035');
     await fireEvent.click(rows[1]!);
@@ -258,6 +315,7 @@ describe('Synergy 화면', () => {
   it('히트맵 탭: 격자 · 칸 선택 → 수식 줄 · 다시 선택 → 행 멤버 화면', async () => {
     render(Synergy, { sub: 'heat', params: {} });
     const grid = screen.getByRole('grid', { name: '시너지 히트맵' });
+    expect(screen.getByRole('region', { name: '시너지 히트맵' }).contains(grid)).toBe(true);
     // 문턱 5판: 5명, 대각선 제외 값 칸은 조합 4개 × 2
     expect(grid.querySelectorAll('thead th.col')).toHaveLength(5);
     expect(grid.querySelectorAll('td[tabindex]')).toHaveLength(8);

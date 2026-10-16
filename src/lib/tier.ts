@@ -1,42 +1,75 @@
 /**
- * 승률·메달·최소 판수 안내 — 화면이 색과 문구를 정할 때 쓰는 순수 함수.
+ * 승률 단계·승률 글·메달·최소 판수 안내 — 화면이 색과 문구를 정할 때 쓰는 순수 함수.
  *
  * ⚠️ 문턱 상수는 **하나도 여기 적지 않는다.** 전부 payload(`min_games`)에서 받는다. 화면과 발행 양쪽에
  *    상수를 적으면 반드시 어긋난다(라인 최소 판수에서 겪었다). 옛 코드가 DATA 전역을 읽던 자리는
  *    전부 인자다 — 그래서 테스트가 payload 없이 돈다.
  */
 import type { GuildPayload } from '$lib/data/types';
+import { pct } from './fmt';
 
-// ── 승률 색 ───────────────────────────────────────────────────────────
-export type WrClass = 'wr-h' | 'wr-m' | 'wr-l' | 'wr-dim';
+// ── 승률 단계(구간 기준) ──────────────────────────────────────────────
+/**
+ * Wilson 95% 구간 [하한, 상한] — 발행 쪽 `inhouse/stats.py:_wilson_lower` 와 같은 식(z=1.96, 반올림 없음).
+ * payload 의 record.ci_lower 는 이 하한을 소수 3자리로 반올림한 값이다. 0판이면 [0, 1].
+ * (rank.ts 의 wilsonLower 는 같은 식에 소수 3자리 반올림 — 순위표 '신뢰성' 열의 표시값이다.)
+ */
+export function wilson(w: number, n: number, z = 1.96): [number, number] {
+  if (!(n > 0)) return [0, 1];
+  const p = Math.min(1, Math.max(0, w));
+  const z2 = z * z;
+  const c = p + z2 / (2 * n);
+  const r = z * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n));
+  const d = 1 + z2 / n;
+  return [(c - r) / d, (c + r) / d];
+}
 
-// 55% 넘으면 높음, 45% 밑이면 낮음. 그 사이는 중립 — 내전은 균형을 맞춰 짜므로 대부분 여기 온다.
-const WR_HIGH = 0.55;
-const WR_LOW = 0.45;
+/** 승률 단계 — 색(st-{단계})·기호(WR_MARK)·보조기술 문구(WR_WORD)가 이것 하나에서 나온다 */
+export type WrStep = 'up2' | 'up' | 'even' | 'down' | 'down2' | 'few';
+
+// 구간이 50% 를 벗어나야 색을 준다. 두 단 기호는 하한 60% 이상(상한 40% 이하)일 때만.
+const STEP_MID = 0.5;
+const STEP_FAR = 0.1;
 
 /**
- * 승률 → 색 클래스. n(판수)과 문턱을 주면 문턱 미만은 색으로 단정하지 않는다.
- *
- * ⚠️ 1판 0% 를 빨강 ▼ 로 칠하면 "이 사람은 짧은 판에 약하다"로 읽힌다 — 한 판인데.
- *    판수는 "(1)" 로 적히지만 **색이 그걸 무시**하고 있었다(실측 20셀).
- *    판수를 모르는 호출부는 n 없이 부른다. n 을 주면 문턱도 같이 줘야 한다(전역을 안 읽으므로).
+ * 승률 w(0~1)·판수 n → 단계. **점추정이 아니라 구간으로** 정한다 — 5판 80% 는 하한이 38% 라 무채색이다.
+ * 실데이터(문턱 5판 이상 31명): 점추정 구간으로 칠하면 22명이 색을 받지만 구간이 50% 를 벗어나는 사람은 4명.
+ * 판수가 문턱(min_games) 미만이면 'few' — 색·기호 없이 '표본 적음'.
  */
-export function wrClass(w: number): WrClass;
-export function wrClass(w: number, n: number | null | undefined, minGames: number): WrClass;
-export function wrClass(w: number, n?: number | null, minGames?: number): WrClass {
-  if (n != null && minGames != null && n < minGames) return 'wr-dim';
-  return w > WR_HIGH ? 'wr-h' : w < WR_LOW ? 'wr-l' : 'wr-m';
+export function wrStep(w: number, n: number, minGames: number): WrStep {
+  if (!(n > 0) || n < minGames) return 'few';
+  const [lo, hi] = wilson(w, n);
+  if (lo >= STEP_MID + STEP_FAR) return 'up2';
+  if (lo > STEP_MID) return 'up';
+  if (hi <= STEP_MID - STEP_FAR) return 'down2';
+  if (hi < STEP_MID) return 'down';
+  return 'even';
+}
+
+/** 단계 기호 — 색과 함께 둔다(색각 이상에서도 갈린다) */
+export const WR_MARK: Readonly<Record<WrStep, string>> = { up2: '▲▲', up: '▲', even: '', down: '▼', down2: '▼▼', few: '' };
+
+/** 보조기술 문구 — 기호(▲)는 읽히지 않게 숨기고 이것을 읽힌다. even 은 말하지 않는다 */
+export const WR_WORD: Readonly<Record<WrStep, string>> = {
+  up2: '60% 이상으로 높음', up: '50%보다 높음', even: '', down: '50%보다 낮음', down2: '40% 이하로 낮음', few: '표본 적음',
+};
+
+/**
+ * 승률 칸의 글 — '54%' · '70%, 50%보다 높음' · 문턱 미만 '100%, 표본 적음'. 값이 없으면 ''.
+ * 표 셀이 승률 게이지·승률 글자(스니펫, 보이는 층)를 그릴 때 같은 칸에 두는 글(DataTable 의 Col.fmt)이다 —
+ * 보조기술은 이 글을 읽고, 거르기·폰 2줄 행의 빈 칸 판정도 이 글을 쓴다. 단계 문구는 위 WR_WORD 하나에서 온다.
+ */
+export function wrText(w: number | null | undefined, n: number | null | undefined, minGames: number): string {
+  if (w == null) return '';
+  const word = WR_WORD[wrStep(w, Number(n) || 0, minGames)];
+  return word ? `${pct(w)}, ${word}` : pct(w);
 }
 
 // ── 메달 ─────────────────────────────────────────────────────────────
-export interface Medal { rank: 1 | 2 | 3; cls: string; label: string }
+export interface Medal { rank: 1 | 2 | 3 }
 
-/** 1·2·3위 — 색은 CSS 의 `.medal.m1~m3`(금색·중립·동색 토큰). 보조기술에는 '1위' 로 읽힌다. */
-export const MEDAL: readonly Medal[] = ([1, 2, 3] as const).map((n) => ({
-  rank: n,
-  cls: `medal m${n}`,
-  label: `${n}위`,
-}));
+/** 1·2·3위 — 지표 순위표가 숫자 칩(1위만 선택색 테두리)으로 그린다. 금·은·동 색은 쓰지 않는다. */
+export const MEDAL: readonly Medal[] = ([1, 2, 3] as const).map((n) => ({ rank: n }));
 
 /** 정렬된 표의 i 번째(0부터) 행에 붙는 메달. 4위부터는 없다. */
 export function medalAt(i: number): Medal | null {

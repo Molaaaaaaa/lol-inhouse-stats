@@ -1,8 +1,8 @@
 <script lang="ts">
   /**
    * 능력치 축 표 — 육각형 옆에서 같은 축을 정확한 값으로 다시 보여 준다. 도형은 모양을, 표는 숫자를.
-   * 격자 표 한 장: 축 · 점수(데이터 막대, 눈금 max 기준) · 순위 rank/n · 변화(▲▼, 지난 내전 대비) · 판.
-   * 막대는 별도 요소 없이 셀 바탕(--bar 너비 + --sel 22% 그라디언트, DataTable 과 같은 규칙).
+   * 카드 안 표 한 장: 축 · 점수(데이터 막대, 눈금 max 기준) · 순위 rank/n · 변화(▲▼, 지난 내전 대비) · 판.
+   * 막대는 별도 요소 없이 셀 아래쪽 3px 띠(--bar 너비 · --grad-win, DataTable 의 데이터 막대와 같은 모양).
    * 판수가 문턱 미만인 축은 글자를 옅게(--dim2) — 점수는 평균 쪽으로 보정된 값이라는 신호.
    */
   import type { GuildPayload, ProfileAxis } from '$lib/data/types';
@@ -59,10 +59,11 @@
 </div>
 
 <style>
-  /* --bar 는 셀마다 인라인(style:--bar)으로 들어온다 — 기본 0% 면 막대가 없다 */
+  /* 카드 안 표 — DataTable 과 같은 어휘: 세로 격자선 없이 행 구분선만, 머리행은 --gutter 에 위 모서리 12px.
+     --bar 는 셀마다 인라인(style:--bar)으로 들어온다 — 기본 0% 면 막대가 없다 */
   .axbars { --bar: 0%; width: 100%; }
-  .cap { font-size: var(--fs-sm); font-weight: 700; color: var(--dim); padding: var(--sp-2) 0 var(--sp-1); white-space: nowrap; }
-  .empty { margin: 0; padding: var(--sp-3); border: 1px solid var(--grid); color: var(--dim); }
+  .cap { font-size: var(--fs-sm); font-weight: 700; color: var(--dim); padding: 0 0 var(--sp-2); white-space: nowrap; }
+  .empty { margin: 0; padding: var(--sp-3); background: var(--ink); border: 1px solid var(--grid); border-radius: var(--r-md); color: var(--dim); }
   table {
     width: 100%;
     border-collapse: separate;
@@ -76,28 +77,33 @@
     white-space: nowrap;
     vertical-align: middle;
     border-bottom: 1px solid var(--grid);
-    border-right: 1px solid var(--grid);
   }
-  th:first-child, td:first-child { border-left: 1px solid var(--grid); }
+  tbody tr:last-child td { border-bottom-color: transparent; }
   thead th {
     background: var(--gutter);
     color: var(--dim);
     font-size: var(--fs-sm);
     font-weight: 700;
-    border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
   }
+  thead th:first-child { border-top-left-radius: var(--r-md); }
+  thead th:last-child { border-top-right-radius: var(--r-md); }
   .num { text-align: right; }
   .ax { width: 40%; }
-  tbody tr { transition: background-color .12s; }
-  tbody tr:hover { background: var(--raised); }
+  tbody tr { transition: background-color var(--dur-1); }
+  tbody tr:hover { background: color-mix(in srgb, var(--raised) 70%, transparent); }
   .thin td { color: var(--dim); }
   .delta { color: var(--dim); }
+  /* 점수 막대 — DataTable 의 데이터 막대와 같은 모양: 셀 아래쪽 3px 띠(눈금 max 기준 절대 너비) */
   td.bar {
-    background: linear-gradient(to right, color-mix(in srgb, var(--sel) 22%, transparent) var(--bar), transparent var(--bar));
+    background-image: var(--grad-win);
+    background-size: var(--bar) 3px;
+    background-position: left bottom 4px;
+    background-repeat: no-repeat;
   }
   @media (max-width: 640px) {
     .lo { display: none; }
+    th, td { padding: 0 var(--sp-1) 0 6px; }
   }
   @media (prefers-reduced-motion: reduce) {
     tbody tr { transition: none; }

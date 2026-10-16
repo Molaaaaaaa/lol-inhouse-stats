@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 시너지 · 히트맵 — 멤버 × 멤버 격자(SynergyHeatmap). 칸 선택 → 수식 줄에 그 듀오의 근거,
+   * 시너지 · 히트맵 — 멤버 × 멤버 격자(SynergyHeatmap)를 담은 카드. 칸 선택 → 수식 줄에 그 듀오의 근거,
    * 같은 칸 다시 선택 → 행 멤버 화면. 문턱은 payload 의 min_games(칸이 비는 기준).
    * 폰(≤640px)에서는 머리가 약칭이라 수식 줄에 전체 이름 둘과 값을 적는다(fxHeat).
    */
@@ -9,6 +9,7 @@
   import { media } from '$lib/media.svelte';
   import { memberHref, router } from '$lib/router.svelte';
   import { fxDuo, fxHeat, type HeatCell } from '$lib/synergy';
+  import Panel from '$components/Panel.svelte';
   import SynergyHeatmap from '$components/charts/SynergyHeatmap.svelte';
 
   interface Props { data: GuildPayload; minGames: number }
@@ -25,19 +26,22 @@
   }
 </script>
 
-<div class="heat">
-  <SynergyHeatmap synergy={data.synergy ?? []} {minGames} selectedKey={selected ?? undefined} {onselect} />
-  <p class="note">
-    칸의 값은 시너지(기대 승률 대비, 판수 보정)이고 색의 세기는 표의 실값 최대를 기준으로 합니다.
-    칸을 선택하면 계산 근거가 수식 줄에, 같은 칸을 다시 선택하면 행의 멤버 화면으로 이동합니다.
-  </p>
-</div>
+<Panel title="시너지 히트맵" level={3}>
+  <!-- minmax(0, …): 격자가 카드보다 넓어도 항목이 늘어나지 않게 — 스크롤은 격자 래퍼 안에서만 -->
+  <div class="heat">
+    <SynergyHeatmap synergy={data.synergy ?? []} {minGames} selectedKey={selected ?? undefined} {onselect} />
+    <p class="note">
+      칸의 값은 시너지(기대 승률 대비, 판수 보정)이고 색의 세기는 표의 실값 최대를 기준으로 합니다.
+      칸을 선택하면 계산 근거가 수식 줄에, 같은 칸을 다시 선택하면 행의 멤버 화면으로 이동합니다.
+    </p>
+  </div>
+</Panel>
 
 <style>
-  /* minmax(0, …): 격자가 열보다 넓어도 항목이 늘어나지 않게 — 스크롤은 격자 래퍼 안에서만 */
   .heat { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
   .note {
     margin: 0;
+    max-width: 75ch;
     font-size: var(--fs-sm);
     color: var(--dim);
     text-wrap: pretty;

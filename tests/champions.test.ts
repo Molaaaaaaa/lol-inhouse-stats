@@ -108,36 +108,45 @@ describe('champions — 순수 함수', () => {
 
 const tableOf = (name: RegExp | string) => screen.getByRole('table', { name });
 const bodyRows = (t: HTMLElement) => [...t.querySelectorAll('tbody tr')] as HTMLTableRowElement[];
-const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
+// 셀 글 — 스니펫 칸(승률 게이지)은 같은 칸의 보조기술 글(fmt), 그 밖은 보이는 글
+const cellText = (td: Element) => (td.querySelector('.cs + .sr-only') ?? td).textContent?.trim();
+const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map(cellText);
+/** 승률 칸 게이지의 단계 클래스(st-…) */
+const stepOf = (tr: HTMLTableRowElement) => [...(tr.querySelector('td .cs .wg .pc')?.classList ?? [])].find((c) => c.startsWith('st-'));
 const heads = (t: HTMLElement) => [...t.querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
 
 describe('Meta — 챔피언 메타 + 챔피언 폭', () => {
   beforeEach(() => { cleanup(); location.hash = ''; clearFx(); app.data = DATA; app.status = 'ready'; router.start(); });
   afterEach(() => { router.stop(); });
 
-  it('전체: 라인 링크 줄(현재 = 전체, 라인마다 챔피언 수) · 메타 표(판수순·초상·승률 채움) · 챔피언 폭 표', () => {
+  it('전체: 라인 칩 줄(현재 = 전체, 라인 점·챔피언 수) · 메타 표(판수순·초상·승률 게이지) · 챔피언 폭 표', () => {
     render(Meta, { data: DATA, lane: '', minGames: 5 });
     const nav = screen.getByRole('navigation', { name: '라인 선택' });
     const links = [...nav.querySelectorAll('a')];
     expect(links.map((a) => a.textContent?.replace(/\s+/g, ' ').trim())).toEqual(['전체', '탑 2', '정글 0', '미드 1', '원딜 1', '서폿 0']);
+    // 라인 칩은 라인 점(LaneChip) — 전체에는 점이 없다
+    expect(links.map((a) => a.querySelector('.lane')?.classList[1] ?? null)).toEqual([null, 'top', 'jg', 'mid', 'bot', 'sup']);
     expect(links.map((a) => a.getAttribute('href'))).toEqual([
       '#/champions/meta', '#/champions/meta/TOP', '#/champions/meta/JUNGLE', '#/champions/meta/MIDDLE', '#/champions/meta/BOTTOM', '#/champions/meta/UTILITY',
     ]);
     expect(links[0]!.getAttribute('aria-current')).toBe('page');
     expect(links[1]!.getAttribute('aria-current')).toBeNull();
 
+    // 표는 카드(Panel) 안 — 카드 이름 = 표 이름, 표 캡션은 보조기술에만
     const t = tableOf('챔피언 메타 · 전체');
+    expect(screen.getByRole('region', { name: '챔피언 메타 · 전체' }).contains(t)).toBe(true);
     expect(heads(t)).toEqual(['챔피언', '판', '승률', 'KDA', '분당 딜']);
     const rows = bodyRows(t);
     expect(rows.map(cellTexts)).toEqual([
       ['사일러스', '19', '32%', '2.37', '739.1'], ['크산테', '18', '44%', '2.15', '692.5'],
-      ['루시안', '16', '63%', '2.65', '995.7'], ['Zaahen', '2', '100%', '9', '1,200'],
+      ['루시안', '16', '63%', '2.65', '995.7'], ['Zaahen', '2', '100%, 표본 적음', '9', '1,200'],
     ]);
     expect(rows[0]!.querySelector('td.c0 img.champ')?.getAttribute('src')).toBe('https://ddragon.leagueoflegends.com/cdn/16.18.1/img/champion/Sylas.png');
-    // 승률 채움: 32% 는 loss, 63% 는 win, 2판 100% 는 문턱 미만이라 채움 없음
-    expect(rows[0]!.querySelector('td.loss')?.textContent?.trim()).toBe('32%');
-    expect(rows[2]!.querySelector('td.win')?.textContent?.trim()).toBe('63%');
-    expect(rows[3]!.querySelector('td.win, td.loss')).toBeNull();
+    // 승률은 게이지(보이는 층, aria-hidden) — 단계는 구간 기준: 16~19판의 32%·63% 는 구간이 50% 를 품어 무채색,
+    // 2판은 문턱 미만. 점추정으로 칠하던 채움(win·loss)은 승률 칸에 없다
+    expect(rows.map(stepOf)).toEqual(['st-even', 'st-even', 'st-even', 'st-few']);
+    expect(rows[0]!.querySelector('td .cs')?.getAttribute('aria-hidden')).toBe('true');
+    expect(t.querySelector('td.win, td.loss')).toBeNull();
     expect(rows[0]!.querySelector('td.bar')?.textContent?.trim()).toBe('19');
 
     const pool = tableOf('챔피언 폭 · 전체');
@@ -145,19 +154,50 @@ describe('Meta — 챔피언 메타 + 챔피언 폭', () => {
     expect(bodyRows(pool).map(cellTexts)).toEqual([
       ['맹구', '정글', '12', '3종', '25%'], ['앙앙맹', '탑', '6', '6종', '100%'], ['지수', '탑', '6', '4종', '67%'], ['앙앙맹', '미드', '3', '2종', '67%'],
     ]);
-    expect(bodyRows(pool)[1]!.querySelector('td.lane-top')?.textContent?.trim()).toBe('탑');
+    expect(bodyRows(pool)[1]!.querySelector('td .lane.top')?.textContent?.trim()).toBe('탑');
     expect(screen.getByRole('button', { name: '챔피언 폭 설명' })).toBeTruthy();
   });
 
-  it('라인 하나: 두 표가 그 라인만 · 라인 열이 붙는다 · 현재 링크', () => {
+  it('판수 상위 챔피언: 판수순 큰 초상(44px) 카드 — 모서리 배지는 판수(등급 글자 없음) · 승률 단계 · 승패', () => {
+    const { container } = render(Meta, { data: DATA, lane: '', minGames: 5 });
+    const top = screen.getByRole('region', { name: '판수 상위 챔피언 · 전체' });
+    const cards = [...top.querySelectorAll('ol > li')];
+    expect(cards.map((c) => c.querySelector('.nm')?.textContent)).toEqual(['사일러스', '크산테', '루시안', 'Zaahen']);
+    expect(cards.map((c) => c.querySelector('img.champ')?.getAttribute('width'))).toEqual(['44', '44', '44', '44']);
+    // 배지 = 판수(보조기술에는 '19판')
+    expect(cards.map((c) => c.querySelector('.cnt')?.textContent)).toEqual(['19판', '18판', '16판', '2판']);
+    expect(cards.map((c) => c.querySelector('.wl')?.textContent)).toEqual(['6승 13패', '8승 10패', '10승 6패', '2승 0패']);
+    expect(cards[3]!.querySelector('.wr')?.textContent).toContain('표본 적음');
+    // 막대는 같은 숫자의 장식(보조기술은 승률 글·승패 글을 읽는다)
+    expect(cards[0]!.querySelector('.bar')?.getAttribute('aria-hidden')).toBe('true');
+    // 등급(S~D)·'티어' 낱말은 어디에도 없다
+    expect(container.textContent).not.toMatch(/등급|티어/);
+    // 다섯 종까지
+    cleanup();
+    const many = { ...DATA, champion_meta: Array.from({ length: 7 }, (_, i) => ({ champion_name: `C${i}`, games: 20 - i, winrate: 0.5, kda: 2, dpm: 500 })) } as unknown as GuildPayload;
+    render(Meta, { data: many, lane: '', minGames: 5 });
+    const top7 = screen.getByRole('region', { name: '판수 상위 챔피언 · 전체' });
+    expect([...top7.querySelectorAll('.cnt')].map((b) => b.textContent)).toEqual(['20판', '19판', '18판', '17판', '16판']);
+  });
+
+  it('라인 하나: 카드·두 표가 그 라인만 · 라인 열이 붙는다 · 현재 링크 · 승률 단계', () => {
     render(Meta, { data: DATA, lane: 'TOP', minGames: 5 });
+    const top = screen.getByRole('region', { name: '판수 상위 챔피언 · 탑' });
+    expect([...top.querySelectorAll('.nm')].map((e) => e.textContent)).toEqual(['크산테', '사일러스']);
     const t = tableOf('챔피언 메타 · 탑');
     expect(heads(t)).toEqual(['챔피언', '라인', '판', '승률', 'KDA', '분당 딜']);
     expect(bodyRows(t).map(cellTexts)).toEqual([['크산테', '탑', '18', '44%', '2.15', '692.5'], ['사일러스', '탑', '5', '60%', '3.1', '700']]);
-    expect(bodyRows(t)[0]!.querySelector('td.lane-top')).toBeTruthy();
+    expect(bodyRows(t)[0]!.querySelector('td .lane.top')).toBeTruthy();
     expect(bodyRows(tableOf('챔피언 폭 · 탑')).map((r) => cellTexts(r)[0])).toEqual(['앙앙맹', '지수']);
     const nav = screen.getByRole('navigation', { name: '라인 선택' });
     expect(nav.querySelector('a[aria-current="page"]')?.textContent?.replace(/\s+/g, ' ').trim()).toBe('탑 2');
+    // 미드 사일러스 14판 21% — 구간 상한 48% 라 '50%보다 낮음'(▼)
+    cleanup();
+    render(Meta, { data: DATA, lane: 'MIDDLE', minGames: 5 });
+    const mid = bodyRows(tableOf('챔피언 메타 · 미드'))[0]!;
+    expect(cellTexts(mid)[3]).toBe('21%, 50%보다 낮음');
+    expect(stepOf(mid)).toBe('st-down');
+    expect(mid.querySelector('td .cs .mk')?.textContent).toBe('▼');
   });
 
   it('챔피언 폭 행 선택 → 수식 줄, 같은 행 다시 → 멤버 화면(Enter 도) · 메타 표는 선택 없음', async () => {
@@ -179,30 +219,32 @@ describe('Meta — 챔피언 메타 + 챔피언 폭', () => {
 describe('Matchup · Ban', () => {
   beforeEach(() => { cleanup(); app.data = DATA; app.status = 'ready'; });
 
-  it('매치업: 양쪽 초상·한글 이름·라인 띠·판수 내림차순·승률 채움', () => {
+  it('매치업: 카드 · 양쪽 초상·한글 이름·라인 띠·판수 내림차순·승률 게이지', () => {
     render(Matchup, { data: DATA });
     const t = tableOf('라인 매치업');
+    expect(screen.getByRole('region', { name: '라인 매치업' }).contains(t)).toBe(true);
     expect(heads(t)).toEqual(['챔피언', '상대 챔피언', '라인', '판', '승률']);
     const rows = bodyRows(t);
     expect(rows.map(cellTexts)).toEqual([
-      ['사일러스', '아리', '미드', '6', '33%'], ['RekSai', 'XinZhao', '정글', '4', '100%'], ['카이사', '진', '원딜', '4', '75%'],
+      ['사일러스', '아리', '미드', '6', '33%'], ['RekSai', 'XinZhao', '정글', '4', '100%, 표본 적음'], ['카이사', '진', '원딜', '4', '75%, 표본 적음'],
     ]);
     expect(rows[0]!.querySelectorAll('img.champ').length).toBe(2);
-    expect(rows[0]!.querySelector('td.lane-mid')).toBeTruthy();
-    expect(rows[0]!.querySelector('td.loss')?.textContent?.trim()).toBe('33%');
-    // 4판은 문턱(5) 미만 — 100% 라도 채움 없음
-    expect(rows[1]!.querySelector('td.win')).toBeNull();
+    expect(rows[0]!.querySelector('td .lane.mid')).toBeTruthy();
+    // 6판 33% 는 구간이 50% 를 품어 무채색, 4판은 문턱(5) 미만 — 100% 라도 색·기호 없음
+    expect(rows.map(stepOf)).toEqual(['st-even', 'st-few', 'st-few']);
+    expect(t.querySelector('td.win, td.loss')).toBeNull();
   });
 
   it('밴: 표(밴 수 내림차순·초상) / ban_available 거짓이면 빈 상태 문장', () => {
     render(Ban, { data: DATA });
+    expect(screen.getByRole('region', { name: '밴' }).contains(tableOf('밴'))).toBe(true);
     const rows = bodyRows(tableOf('밴'));
     expect(rows.map(cellTexts)).toEqual([['신참', '30'], ['아칼리', '28'], ['오로라', '24']]);
     expect(rows[1]!.querySelector('img.champ')?.getAttribute('src')).toContain('/Akali.png');
     cleanup();
     const { container } = render(Ban, { data: { ...DATA, ban_available: false } as GuildPayload });
     expect(container.querySelector('table')).toBeNull();
-    expect(container.querySelector('.empty')?.textContent).toBe('이 서버의 기록 방식에는 밴 정보가 없습니다.');
+    expect(screen.getByRole('region', { name: '밴' }).querySelector('.empty')?.textContent).toBe('이 서버의 기록 방식에는 밴 정보가 없습니다.');
   });
 });
 

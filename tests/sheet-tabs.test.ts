@@ -37,6 +37,12 @@ describe('SheetTabs', () => {
     expect(current()).toEqual(['순위']);
   });
 
+  it('독 항목은 .navlink(굵은 포인터 44px 규칙 대상) · 활성 하나만 .on', () => {
+    render(SheetTabs);
+    expect(links().every((a) => a.classList.contains('navlink'))).toBe(true);
+    expect(links().filter((a) => a.classList.contains('on')).map((a) => a.textContent)).toEqual(['멤버']);
+  });
+
   it('roving tabindex — 활성 탭만 Tab 순서에 있다', async () => {
     at('#/records/hall');
     render(SheetTabs);

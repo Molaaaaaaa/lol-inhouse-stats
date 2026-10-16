@@ -1,21 +1,21 @@
 <script lang="ts">
   /**
-   * 골드 추이 — 경기 상세의 '삽입된 차트'. 위 판은 두 팀의 골드(선 둘), 아래 판은 골드 차이(블루 − 레드)
+   * 골드 추이 — 경기 상세 블록 카드 안의 차트. 위 판은 두 팀의 골드(선 둘), 아래 판은 골드 차이(블루 − 레드)
    * 를 0선 기준 면적으로. 선 색은 팀 색이 아니라 **결과**다: 이긴 팀 --win, 진 팀 --loss(글자로 어느 팀이
-   * 어느 색인지 범례에 적는다). 격자 --grid, 0선 --grid-strong, 바닥 --ink. 색은 전부 class → CSS 토큰.
+   * 어느 색인지 범례에 적는다). 격자 --grid, 0선 --grid-strong, 바닥 --ink(둥근 우물). 색은 전부 class → CSS 토큰.
    *
    * 그라디언트 id 는 $props.id() — 경기를 둘 이상 펼치면 같은 id 가 문서에 여러 개 생기고 `url(#…)` 는
    * 처음 하나만 가리킨다(옛 파일이 난수로 피하던 문제). 폭은 래퍼 폭을 재서 글자 크기가 폰에서 안 줄어든다.
    *
-   * 팀 · 라인 선택(`timeline.lanes` 가 있을 때만): 라인을 누르면 아래 판만 그 라인 맞상대끼리의 골드 차로
+   * 팀 · 라인 선택(`timeline.lanes` 가 있을 때만, 라인 점 칩): 라인을 누르면 아래 판만 그 라인 맞상대끼리의 골드 차로
    * 바뀌고(위 판은 팀 골드 그대로), 차트 아래 줄에 같은 대상의 CS 차를 10분 · 15분 · 마지막 분으로 적는다.
    * 키가 없는 라인은 비활성. `lanes` 가 없는 옛 발행물은 선택 줄도 CS 줄도 없이 예전 그대로 그린다.
    */
   import type { LaneId, MatchDetail, MatchDetailTeam } from '$lib/data/types';
   import { LANE_SEQ, laneKo } from '$lib/lanes';
   import { axisTop, csDiffText, goldLanes, goldSeries, goldSummary, goldTick, niceStep, teamLabel } from '$lib/matches';
-  import { laneBand } from '$lib/member';
   import EmptyState from '$components/EmptyState.svelte';
+  import LaneChip from '$components/LaneChip.svelte';
 
   interface Props {
     timeline: Partial<MatchDetail['timeline']> | null | undefined;
@@ -41,9 +41,10 @@
   const labelA = $derived(teams[0] ? teamLabel(teams[0], 0) : '블루팀');
   const labelB = $derived(teams[1] ? teamLabel(teams[1], 1) : '레드팀');
 
-  // 기하(px) — 래퍼 폭을 잰다. jsdom·초기 렌더는 0 이라 최소 폭으로(280 — 320px 화면의 래퍼 296px 에 든다)
+  // 기하(px) — 래퍼 폭을 잰다(판 테두리 2px 를 뺀다). jsdom·초기 렌더는 0 이라 최소 폭으로(240 — 320px 화면에서
+  // 목록 카드 우물 · 블록 카드 안쪽 래퍼가 252px 다)
   let wrapW = $state(0);
-  const W = $derived(Math.max(280, Math.floor(wrapW)));
+  const W = $derived(Math.max(240, Math.floor(wrapW) - 2));
   const L = 48, R = 12, T = 8, GAP = 26, B = 22;
   const H1 = 120, H2 = 96;
   const H = T + H1 + GAP + H2 + B;
@@ -88,11 +89,11 @@
     <EmptyState text="아직 골드 기록이 없습니다." />
   {:else}
     {#if avail}
-      <div class="units" role="group" aria-label="골드 차이 대상">
-        <button type="button" class="vb" aria-pressed={!lane} onclick={() => { unit = 'team'; }}>팀</button>
+      <div class="chips units" role="group" aria-label="골드 차이 대상">
+        <button type="button" class="chip" aria-pressed={!lane} onclick={() => { unit = 'team'; }}>팀</button>
         {#each LANE_SEQ as l (l)}
-          <button type="button" class="vb {laneBand(l)}" aria-pressed={lane === l} disabled={!avail.includes(l)}
-                  onclick={() => { unit = l; }}>{laneKo(l)}</button>
+          <button type="button" class="chip" aria-pressed={lane === l} disabled={!avail.includes(l)}
+                  onclick={() => { unit = l; }}><LaneChip lane={l} /></button>
         {/each}
       </div>
     {/if}
@@ -101,6 +102,7 @@
       <span class="key"><i class="sw {clsB}"></i>{labelB} · {bWin ? '승' : '패'}</span>
       <span class="muted">아래 판 · {diffName} = 블루 − 레드</span>
     </div>
+    <div class="plot">
     <svg width={W} height={H} viewBox="0 0 {W} {H}" role="img" aria-label="{caption}{lane ? ` · ${diffName}` : ''}: {summary}">
       <rect class="bg" x="0" y="0" width={W} height={H} />
       <!-- 위 판: 팀 골드 -->
@@ -133,6 +135,7 @@
         <text class="tk" x={x.x.toFixed(1)} y={H - 7} text-anchor="middle">{x.label}</text>
       {/each}
     </svg>
+    </div>
     <p class="foot">{summary}</p>
     {#if csLine}<p class="foot">{csLine}</p>{/if}
   {/if}
@@ -150,47 +153,23 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-1) var(--sp-3);
-    padding: 0 0 var(--sp-1);
+    padding: 0 0 var(--sp-2);
     font-size: var(--fs-sm);
   }
-  .key { display: inline-flex; align-items: center; gap: var(--sp-1); }
+  .key { display: inline-flex; align-items: center; gap: 6px; }
 
-  /* 팀 · 라인 선택 — 데스 위치 차트의 라인 버튼과 같은 모양(왼쪽 3px 라인 띠, 눌린 것은 선택색 테두리) */
-  .units { display: flex; flex-wrap: wrap; gap: var(--sp-1); padding: 0 0 var(--sp-2); }
-  .vb {
-    min-height: 28px;
-    padding: 0 var(--sp-2);
-    background: var(--sheet);
-    color: var(--dim);
-    border: 1px solid var(--grid-strong);
-    border-left-width: 3px;
-    border-left-color: transparent;
-    border-radius: var(--r-chip);
-    font-size: var(--fs-sm);
-    line-height: 1.6;
-    white-space: nowrap;
-    transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out;
-  }
-  .vb:hover { background: var(--raised); color: var(--txt); }
-  .vb:active { background: var(--gutter); }
-  .vb[aria-pressed='true'] { background: var(--raised); color: var(--txt); border-color: var(--sel); }
-  .vb.top { border-left-color: var(--lane-top); }
-  .vb.jg { border-left-color: var(--lane-jg); }
-  .vb.mid { border-left-color: var(--lane-mid); }
-  .vb.bot { border-left-color: var(--lane-bot); }
-  .vb.sup { border-left-color: var(--lane-sup); }
-  /* 실리지 않은 라인 — 라인 띠까지 격자색으로 지운다(띠가 남으면 눌러질 것처럼 보인다). 라인 규칙 뒤에 둔다 */
-  .vb:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; background: var(--sheet); }
-  @media (pointer: coarse) {
-    .vb { min-height: 44px; }
-  }
-  .sw { display: inline-block; width: 14px; height: 3px; background: var(--dim); }
+  /* 팀 · 라인 선택 — 고르기 칩 줄(app.css .chip). 실리지 않은 라인은 라인 점까지 지운다(점이 남으면 눌러질 것처럼 보인다) */
+  .units { padding: 0 0 var(--sp-2); }
+  .chip:disabled :global(.lane)::before { background: var(--grid-strong); }
+  .sw { display: inline-block; width: 14px; height: 4px; border-radius: var(--r-pill); background: var(--dim); }
   .sw.win { background: var(--win); }
   .sw.loss { background: var(--loss); }
   .sw.na { background: var(--sel); }
   .sw.nb { background: var(--dim); }
 
-  svg { display: block; border: 1px solid var(--grid); font-family: var(--font); font-variant-numeric: tabular-nums; }
+  /* 판 — 둥근 우물. svg 는 그 안에서 모서리가 잘린다 */
+  .plot { overflow: hidden; border: 1px solid var(--grid); border-radius: var(--r-md); background: var(--ink); }
+  svg { display: block; font-family: var(--font); font-variant-numeric: tabular-nums; }
   .bg { fill: var(--ink); }
   .grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
   .grid.v { stroke-dasharray: 2 4; }
@@ -207,9 +186,9 @@
   .stop.loss { stop-color: var(--loss); }
   .stop.na { stop-color: var(--sel); }
   .stop.nb { stop-color: var(--dim); }
-  .stop.deep { stop-opacity: .3; }
-  .stop.thin { stop-opacity: .05; }
-  .last { fill: var(--dim); stroke: var(--ink); stroke-width: 1; }
+  .stop.deep { stop-opacity: .35; }
+  .stop.thin { stop-opacity: .04; }
+  .last { fill: var(--dim); stroke: var(--ink); stroke-width: 1.5; }
   .last.win { fill: var(--win); }
   .last.loss { fill: var(--loss); }
   .last.na { fill: var(--sel); }

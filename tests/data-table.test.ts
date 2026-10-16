@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, within } from '@testing-library/svelte';
 import { tipOpenFor } from '../src/lib/tip';
 import { helpText } from '../src/lib/help';
-import type { Component, ComponentProps } from 'svelte';
+import { createRawSnippet, type Component, type ComponentProps } from 'svelte';
 import Generic from '../src/components/DataTable.svelte';
 import type { Col } from '../src/lib/table';
 import { app } from '../src/lib/data/store.svelte';
@@ -440,5 +440,100 @@ describe('DataTable — 2줄 장부 행(rows2)', () => {
     const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: 't', rows2: true });
     expect(container.querySelector('td.blank')).toBeNull();
     expect(container.querySelector<HTMLElement>('.sheet')!.style.getPropertyValue('--r2-cols')).toBe('');
+  });
+});
+
+describe('DataTable — 셀 스니펫(Col.cell)', () => {
+  afterEach(() => { media.phone = false; });
+  // 보이는 층: 행 이름 + 표시 순서. 읽히는 것: fmt 글자
+  const gauge = createRawSnippet((r: () => Row, i: () => number) => ({
+    render: () => `<b class="gz" data-i="${i()}">${Math.round(r().wr * 100)}</b>`,
+  }));
+  const snipCols: Col<Row>[] = [
+    { k: 'name', h: '멤버' },
+    { k: 'games', h: '판수', num: true },
+    { k: 'wr', h: '승률', num: true, cell: gauge, fmt: (v, r) => `${Math.round(Number(v) * 100)}% · ${r.games}판` },
+  ];
+  const wrCells = (el: HTMLElement) => [...el.querySelectorAll('tbody tr td:nth-child(4)')] as HTMLElement[];
+
+  it('스니펫이 셀에 그려지고 aria-hidden 으로 감싸진다 · 같은 칸에 fmt 글자가 보조기술 전용으로 있다', () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: snipCols, caption: 't' });
+    const td = wrCells(container)[0]!;
+    const cs = td.querySelector('.cs')!;
+    expect(cs.getAttribute('aria-hidden')).toBe('true');
+    expect(cs.querySelector('b.gz')?.textContent).toBe('50');
+    expect(cs.querySelector('b.gz')?.getAttribute('data-i')).toBe('0');
+    expect(td.querySelector('.sr-only')?.textContent).toBe('50% · 12판');
+    // 스니펫이 없는 열은 예전처럼 글자만
+    expect(container.querySelector('tbody tr td.c0 .cs')).toBeNull();
+  });
+  it('정렬은 행 값(k)으로 — 스니펫이 행을 따라 움직이고 i 는 표시 순서', async () => {
+    const sorted = render(DataTable, { rows: ROWS, cols: snipCols, caption: 's', sortKey: 'wr' }).container;
+    expect(firstCol(sorted)).toEqual(['Faker', '앙앙맹', '맹구']);
+    expect(wrCells(sorted).map((td) => td.querySelector('b.gz')?.getAttribute('data-i'))).toEqual(['0', '1', '2']);
+    // 머리로 다시 정렬하면 행(스니펫째)이 옮겨진다. (createRawSnippet 은 정적 HTML 이라 i 는 처음 값 그대로 — 실제 스니펫은 반응한다)
+    const { container } = render(DataTable, { rows: ROWS, cols: snipCols, caption: 't' });
+    await fireEvent.click(th(container, '승률'));
+    expect(firstCol(container)).toEqual(['Faker', '앙앙맹', '맹구']);
+    expect(wrCells(container).map((td) => td.querySelector('b.gz')?.textContent)).toEqual(['75', '50', '33']);
+    expect(wrCells(container).map((td) => td.querySelector('.sr-only')?.textContent)).toEqual(['75% · 20판', '50% · 12판', '33% · 3판']);
+  });
+  it('거르기는 fmt 글자로 본다(숫자 열은 빼는 규칙 그대로 — 글자 열의 스니펫은 fmt 로 걸린다)', async () => {
+    const tagged = createRawSnippet((r: () => Row) => ({ render: () => `<i class="tg">${r().win ? 'W' : 'L'}</i>` }));
+    const cols: Col<Row>[] = [
+      { k: 'name', h: '멤버' },
+      { k: 'win', h: '결과', cell: tagged, fmt: (v) => (v ? '승' : '패') },
+    ];
+    const rows = [...many(21).map((r) => ({ ...r, win: true })), { ...ROWS[2]! }];
+    const { container, getByLabelText } = render(DataTable, { rows, cols, caption: '결과표' });
+    await fireEvent.input(getByLabelText('결과표 검색'), { target: { value: '패' } });
+    expect(firstCol(container)).toEqual(['맹구']);
+    expect(container.querySelector('tbody td:nth-child(3) i.tg')?.textContent).toBe('L');
+  });
+  it('폰 2줄 행(rows2)에서도 스니펫이 셀에 그려지고 라벨(data-label)이 붙는다 · fmt 가 빈 글자면 .blank', () => {
+    media.phone = true;
+    const empty = createRawSnippet(() => ({ render: () => '<span class="nil"></span>' }));
+    const cols: Col<Row>[] = [
+      ...snipCols,
+      { k: 'deaths', h: '데스', num: true, cell: empty, fmt: (v) => (v == null ? '' : String(v)) },
+    ];
+    const { container } = render(DataTable, { rows: ROWS, cols, caption: 't', rows2: true });
+    expect(container.querySelector('.sheet')?.classList.contains('rows2')).toBe(true);
+    const td = wrCells(container)[0]!;
+    expect(td.getAttribute('data-label')).toBe('승률');
+    expect(td.querySelector('.cs b.gz')?.textContent).toBe('50');
+    expect(td.querySelector('.v')).toBeNull();
+    const deaths = [...container.querySelectorAll('tbody tr:nth-child(3) td:not(.rn)')][3]!;
+    expect(deaths.classList.contains('blank')).toBe(true);
+  });
+});
+
+describe('DataTable — 카드 안(captionHidden)·행 번호 칩', () => {
+  it('captionHidden: 캡션은 보조기술 전용(sr-only)으로 남고 표 이름(aria-label)은 그대로 · 힌트가 없으면 캡션 줄이 0', () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: '멤버 · 판수 순', captionHidden: true });
+    const cap = container.querySelector('.cap')!;
+    expect(cap.textContent).toBe('멤버 · 판수 순');
+    expect(cap.querySelector('span')?.classList.contains('sr-only')).toBe(true);
+    expect(cap.classList.contains('capz')).toBe(true);
+    expect(container.querySelector('table')?.getAttribute('aria-label')).toBe('멤버 · 판수 순');
+    const plain = render(DataTable, { rows: ROWS, cols: COLS, caption: '보이는 캡션' }).container.querySelector('.cap')!;
+    expect(plain.querySelector('span')?.classList.contains('sr-only')).toBe(false);
+    expect(plain.classList.contains('capx')).toBe(false);
+  });
+  it('captionHidden 이어도 잘림 힌트는 보인다', () => {
+    const restore = fakeSheetLayout();
+    try {
+      const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: '리더보드', captionHidden: true });
+      const cap = container.querySelector('.cap')!;
+      expect(container.querySelector('.cut')?.textContent).toBe('열 3개 더 →');
+      expect(cap.classList.contains('capx')).toBe(true);
+      expect(cap.classList.contains('capz')).toBe(false);
+    } finally {
+      restore();
+    }
+  });
+  it('행 번호는 칩(.rnc) 안 — 홈통 칸 글자는 그대로 1..n', () => {
+    const { container } = render(DataTable, { rows: ROWS, cols: COLS, caption: 't', sortKey: 'games' });
+    expect([...container.querySelectorAll('tbody td.rn .rnc')].map((s) => s.textContent)).toEqual(['1', '2', '3']);
   });
 });

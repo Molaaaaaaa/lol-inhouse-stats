@@ -153,7 +153,9 @@ describe('metricGroupsAvail · metricGroupOf · metricKeyOf · metricSearch', ()
 // ── 화면 ─────────────────────────────────────────────────────────────
 const table = () => screen.getByRole('table', { name: /순위/ });
 const bodyRows = () => [...table().querySelectorAll('tbody tr')] as HTMLTableRowElement[];
-const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
+/** 셀 글 — 스니펫 칸(.cs, 순위 칩)은 보조기술 글(fmt), 그 밖은 보이는 글 */
+const cellText = (td: Element) => (td.querySelector(':scope > .cs') ? td.querySelector(':scope > .sr-only') : td)?.textContent?.trim();
+const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map(cellText);
 const heads = () => [...table().querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
 const pressedIn = (group: string) =>
   [...screen.getByRole('group', { name: group }).querySelectorAll('button[aria-pressed="true"]')].map((b) => b.textContent?.replace(/\s+/g, ' ').trim());
@@ -202,8 +204,11 @@ describe('Rank — 지표 순위 화면', () => {
     expect(rows.map(cellTexts)).toEqual([
       ['앙앙맹', '1', '6', '1,295.97'], ['Faker', '2', '20', '900'], ['맹구', '2', '12', '900'], ['앙리~2', '4', '5', '300'],
     ]);
-    expect(rows[0]!.querySelector('td.medal.m1')).toBeTruthy();
-    expect(rows[2]!.querySelector('td.medal.m2')).toBeTruthy();
+    // 1~3위 순위는 숫자 칩(1위만 선택색 테두리 — p1), 4위부터는 숫자 그대로. 금·은·동 띠(td.medal)는 없다
+    expect(rows[0]!.querySelector('.pod.p1')?.textContent).toBe('1');
+    expect(rows[2]!.querySelector('.pod.p2')?.textContent).toBe('2');
+    expect(rows[3]!.querySelector('.pod')).toBeNull();
+    expect(table().querySelector('td.medal')).toBeNull();
     expect(rows[0]!.querySelector('td.bar')).toBeTruthy();
     // 라인 버튼은 통합 지표에 없다 · 기록 없는 지표 안내 · 문턱 안내
     expect(screen.queryByRole('group', { name: '라인 선택' })).toBeNull();
@@ -236,7 +241,7 @@ describe('Rank — 지표 순위 화면', () => {
     expect(heads()).toEqual(['멤버', '순위', '라인', '판', '골드차@10']);
     const rows = bodyRows();
     expect(rows.map(cellTexts)).toEqual([['앙앙맹', '1', '탑', '6', '150'], ['Faker', '2', '탑', '4', '0'], ['Faker', '3', '미드', '20', '-30']]);
-    expect(rows[0]!.querySelector('td.lane-top')).toBeTruthy();
+    expect(rows[0]!.querySelector('td .lane.top')).toBeTruthy();
     expect(rows[0]!.querySelector('td.win')).toBeTruthy();
     expect(rows[2]!.querySelector('td.loss')).toBeTruthy();
     expect(rows[1]!.querySelector('td.win, td.loss')).toBeNull();

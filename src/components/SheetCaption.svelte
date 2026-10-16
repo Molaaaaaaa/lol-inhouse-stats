@@ -4,10 +4,12 @@
    * 부모 `.sheet`(가로 스크롤 래퍼) 안, 표 바로 앞에 둔다. 표가 래퍼보다 넓으면 캡션 줄 오른쪽에 '열 n개 더 →',
    * 보이는 폭의 오른쪽 가장자리에 2px 선. 스크롤이 끝에 닿으면 둘 다 사라진다. 잼은 $lib/sheet-fit.
    * DataTable 과 달리 overflow 를 풀지 않는다(.fit 없음) — 이 표들의 머리는 문서 스크롤에 붙지 않는다.
+   * captionHidden: 감싼 카드(Panel) 제목이 같은 말일 때 캡션 글자를 그리지 않는다 — 잘림 힌트는 보인다
+   * (DataTable 의 captionHidden 과 같은 약속. 이 표들은 table 의 aria-label 이 이름이라 글자를 보조기술에 따로 남기지 않는다).
    */
   import { measureSheet } from '$lib/sheet-fit';
 
-  let { caption }: { caption: string } = $props();
+  let { caption, captionHidden = false }: { caption: string; captionHidden?: boolean } = $props();
 
   let capEl = $state<HTMLDivElement | undefined>();
   let cut = $state(0);
@@ -28,7 +30,7 @@
   });
 </script>
 
-<div class="cap" bind:this={capEl}><span>{caption}</span>{#if cut > 0}<span class="cut" aria-hidden="true">열 {cut}개 더 →</span>{/if}</div>
+<div class={['cap', captionHidden && 'capx', captionHidden && cut === 0 && 'capz']} bind:this={capEl}>{#if !captionHidden}<span>{caption}</span>{/if}{#if cut > 0}<span class="cut" aria-hidden="true">열 {cut}개 더 →</span>{/if}</div>
 {#if cut > 0}<div class="edge" aria-hidden="true" style:--tbl-h="{tableH}px"></div>{/if}
 
 <style>
@@ -44,6 +46,8 @@
     padding: var(--sp-2) 0 var(--sp-1);
     white-space: nowrap;
   }
+  .cap.capx { justify-content: flex-end; }
+  .cap.capz { padding: 0; }
   .cut { flex: none; font-weight: 400; color: var(--dim); font-variant-numeric: tabular-nums; }
   .edge {
     --tbl-h: 0px;   /* 표 높이 — 인라인 style:--tbl-h 가 덮어쓴다 */

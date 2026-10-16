@@ -1,5 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { mainLaneOf, rosterRows, type RosterSource } from '../src/lib/roster';
+import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, render } from '@testing-library/svelte';
+import { mainLaneOf, rosterRows, streakText, type RosterForm, type RosterSource } from '../src/lib/roster';
+import StreakPill from '../src/components/StreakPill.svelte';
 import type { LaneId, PlayerPub } from '../src/lib/data/types';
 
 function lane(l: LaneId, games: number) {
@@ -64,5 +66,48 @@ describe('rosterRows — 멤버 시트 행', () => {
     expect(rosterRows(null)).toEqual([]);
     expect(rosterRows(undefined)).toEqual([]);
     expect(rosterRows({} as RosterSource)).toEqual([]);
+  });
+});
+
+describe('rosterRows — 최근 흐름', () => {
+  it('form 은 players[*].form 그대로 · 없으면 null', () => {
+    const f = { form: '4-1', dir: 'W', winrate: 0.8, streak: 3 };
+    const [r] = rosterRows(src({ p: player('가', 9, [lane('TOP', 9)]) }));
+    expect(r!.form).toBeNull();
+    const [w] = rosterRows(src({ p: { ...player('가', 9, [lane('TOP', 9)]), form: f } as PlayerPub }));
+    expect(w!.form).toEqual(f);
+  });
+});
+
+describe('streakText — 최근 셀 글자', () => {
+  afterEach(() => cleanup());
+  const f = (dir: string, streak: number, form: string): RosterForm => ({ dir, streak, form });
+
+  it('n연승·n연패 · 연속이 없거나 방향이 이상하면 빈 문자열', () => {
+    expect(streakText(f('W', 2, '3-2'), 40)).toBe('2연승');
+    expect(streakText(f('L', 3, '1-4'), 40)).toBe('3연패');
+    expect(streakText(f('W', 0, '2-3'), 40)).toBe('');
+    expect(streakText(f('X', 2, '3-2'), 40)).toBe('');
+    expect(streakText(null, 40)).toBe('');
+  });
+  it('연속이 최근 창(form 합)을 다 채웠고 그보다 많이 뛰었으면 이상 — 창과 같은 판수면 붙이지 않는다', () => {
+    expect(streakText(f('W', 5, '5-0'), 40)).toBe('5연승 이상');
+    expect(streakText(f('L', 5, '0-5'), 12)).toBe('5연패 이상');
+    expect(streakText(f('W', 5, '5-0'), 5)).toBe('5연승');
+    expect(streakText(f('W', 3, '3-0'), 3)).toBe('3연승');
+  });
+  it('알약(StreakPill)이 보이는 것·읽히는 것과 같은 규칙이다 — 같은 입력으로 대조', () => {
+    const cases: [RosterForm, number][] = [
+      [f('W', 1, '3-2'), 9], [f('W', 3, '4-1'), 9], [f('L', 2, '2-3'), 9],
+      [f('W', 5, '5-0'), 40], [f('L', 5, '0-5'), 6], [f('W', 5, '5-0'), 5], [f('W', 0, '2-3'), 9],
+    ];
+    for (const [form, games] of cases) {
+      const { container } = render(StreakPill, { form, games });
+      const pill = container.querySelector('.sp');
+      // 알약이 읽히는 글자 — 보이는 '+'(aria-hidden)를 빼고 보조기술 글자(' 이상')를 남긴 것
+      const read = pill ? pill.textContent!.replace('+', '').replace(/\s+/g, ' ').trim() : '';
+      expect(read).toBe(streakText(form, games));
+      cleanup();
+    }
   });
 });

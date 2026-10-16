@@ -1,13 +1,15 @@
 <script lang="ts">
   /**
-   * 지표 순위 — 위에서부터: 분류 칩(개수 병기) → 지표 검색 셀 → 지표 칩 목록 → 선택 지표의 설명 한 줄(코드 판·
-   * '낮을수록 좋음') → 라인 버튼(라인별 지표만) → 격자 표(멤버 · [라인] · 순위 · 판 · 값) → 기록 없는 지표 · 문턱 안내.
+   * 지표 순위 — 위에서부터: 분류 칩(개수 병기) → 지표 검색 칸 → 지표 칩 목록 → 선택 지표의 설명 한 줄(코드 판·
+   * '낮을수록 좋음') → 라인 칩(라인별 지표만, 라인 점) → 카드(Panel) 안의 표(멤버 · [라인] · 순위 · 판 · 값) →
+   * 기록 없는 지표 · 문턱 안내.
    *
    * 지표·라인 선택은 URL(`#/rank/metric/:key/:lane?`)이 상태다. 값이 없는 키가 오면 기본 'dpm'(그도 없으면 첫 지표)으로
    * 주소를 바로잡는다. 분류는 선택 지표에서 따라오고(분류를 누르면 그 분류의 첫 지표로 간다), 검색만 화면 로컬이다.
    * 검색은 분류를 무시하고 전체를 훑는다 — 라벨·키·설명(대회식 코드 GD10·CSM 이 설명에 있다)에 초성 포함.
    *
-   * 순위·메달은 기본 순서(값, 낮을수록 좋은 지표는 오름차순) 기준으로 $lib/rank 가 미리 박는다.
+   * 순위·메달은 기본 순서(값, 낮을수록 좋은 지표는 오름차순) 기준으로 $lib/rank 가 미리 박는다. 지표 하나로 줄 세운
+   * 표라 1~3위 순위는 숫자 칩(1위만 선택색 테두리)으로 그린다 — 금·은·동 색은 쓰지 않는다.
    * 행 선택은 수식 줄에 `=분당 딜(6판) → 1,296`, 같은 행을 다시 선택하면 멤버 화면.
    */
   import { app } from '$lib/data/store.svelte';
@@ -19,7 +21,6 @@
   import { minGamesNote } from '$lib/tier';
   import { lowerBetter, mDesc, mLabel } from '$lib/metrics';
   import { metricCode } from '$lib/metric-code';
-  import { laneCls } from '$lib/member';
   import {
     metricByLane, metricGroupOf, metricGroupsAvail, metricKeyOf, metricRows, metricSearch, type MetricRankRow,
   } from '$lib/rank';
@@ -28,6 +29,8 @@
   import DataTable from '$components/DataTable.svelte';
   import CodePlate from '$components/CodePlate.svelte';
   import EmptyState from '$components/EmptyState.svelte';
+  import LaneChip from '$components/LaneChip.svelte';
+  import Panel from '$components/Panel.svelte';
   import QMark from '$components/Tooltip.svelte';
   import Skeleton from '$components/Skeleton.svelte';
 
@@ -97,9 +100,9 @@
   const cols = $derived.by((): Col<MetricRankRow>[] => {
     const out: Col<MetricRankRow>[] = [
       { k: 'name', h: '멤버' },
-      { k: 'rank', h: '순위', num: true, nullLast: true, fmt: numOrDash, cls: (r) => r.medal?.cls ?? '' },
+      { k: 'rank', h: '순위', num: true, nullLast: true, cell: rankCell, fmt: numOrDash },
     ];
-    if (byLane && !lane) out.push({ k: 'laneOrd', h: '라인', fmt: (_v, r) => laneKo(r.lane), cls: (r) => laneCls(r.lane) });
+    if (byLane && !lane) out.push({ k: 'laneOrd', h: '라인', cell: laneCell, fmt: (_v, r) => laneKo(r.lane) });
     out.push(
       { k: 'games', h: '판', num: true },
       {
@@ -115,8 +118,6 @@
   const lowerKeys = $derived(lower ? ['rank', 'laneOrd', 'value'] : ['rank', 'laneOrd']);
   const caption = $derived(`${label} 순위${lane ? ` · ${laneKo(lane)}` : byLane ? ' · 멤버 × 라인' : ''}`);
 
-  const BAND: Readonly<Record<LaneId, string>> = { TOP: 'lane-top', JUNGLE: 'lane-jg', MIDDLE: 'lane-mid', BOTTOM: 'lane-bot', UTILITY: 'lane-sup' };
-
   /** 수식 줄 — 그 행의 값과 판수. 라인별 행은 라인도 같이 */
   function fxFor(r: MetricRankRow): string {
     const l = r.lane ? `${laneKo(r.lane)} ` : '';
@@ -129,13 +130,17 @@
   }
 </script>
 
+<!-- 순위 칸 — 1~3위는 숫자 칩, 그 밖은 숫자 그대로 -->
+{#snippet rankCell(r: MetricRankRow)}{#if r.medal}<span class="pod p{r.medal.rank}">{r.rank}</span>{:else}{numOrDash(r.rank)}{/if}{/snippet}
+{#snippet laneCell(r: { lane?: string | null })}<LaneChip lane={r.lane} />{/snippet}
+
 {#if !data}
   <Skeleton rows={8} />
 {:else if !key}
   <EmptyState text="아직 표시할 지표가 없습니다." />
 {:else}
   <div class="mr">
-    <div class="groups" role="group" aria-label="지표 분류">
+    <div class="chips" role="group" aria-label="지표 분류">
       {#each groups as g (g.group)}
         <button type="button" class="chip" aria-pressed={g.group === group} onclick={() => pickGroup(g)}>
           {g.group} <span class="n">{g.metrics.length}</span>
@@ -164,73 +169,47 @@
     </p>
 
     {#if byLane}
-      <div class="lanes" role="group" aria-label="라인 선택">
-        <button type="button" class="vb" aria-pressed={lane === ''} onclick={() => pickLane('')}>전체</button>
+      <div class="chips" role="group" aria-label="라인 선택">
+        <button type="button" class="chip" aria-pressed={lane === ''} onclick={() => pickLane('')}>전체</button>
         {#each LANE_SEQ as l (l)}
-          <button type="button" class="vb {BAND[l]}" aria-pressed={lane === l} onclick={() => pickLane(l)}>{laneKo(l)}</button>
+          <button type="button" class="chip" aria-pressed={lane === l} onclick={() => pickLane(l)}><LaneChip lane={l} /></button>
         {/each}
         <span class="hint">{lane ? `${laneKo(lane)} 출전 판만 · ${laneKo(lane)}끼리 순위` : '라인별 지표 · 라인을 선택하면 그 라인 안에서 순위를 매깁니다'}</span>
       </div>
     {/if}
 
-    <div class="sheet">
-      {#key `${key}|${lane}`}
-        <DataTable {rows} {cols} {caption} sortKey="rank" sortDir={1} lowerBetterKeys={lowerKeys}
-                   rowKey={(r) => r.key} selectedKey={selected ?? undefined} {onselect} />
-      {/key}
-    </div>
-
-    {#if pending.length}
+    <Panel title={caption} level={3}>
+      <div class="sheet">
+        {#key `${key}|${lane}`}
+          <DataTable {rows} {cols} {caption} captionHidden sortKey="rank" sortDir={1} lowerBetterKeys={lowerKeys}
+                     rowKey={(r) => r.key} selectedKey={selected ?? undefined} {onselect} />
+        {/key}
+      </div>
+      {#if pending.length}
+        <p class="note">
+          기록 없는 지표 {pending.length}개 —
+          {#each pending as x (x.key)}
+            <span class="pend">{x.label || mLabel(meta, x.key)}<QMark text={x.reason} label="{x.label || mLabel(meta, x.key)} 사유" /></span>
+          {/each}
+        </p>
+      {/if}
       <p class="note">
-        기록 없는 지표 {pending.length}개 —
-        {#each pending as x (x.key)}
-          <span class="pend">{x.label || mLabel(meta, x.key)}<QMark text={x.reason} label="{x.label || mLabel(meta, x.key)} 사유" /></span>
-        {/each}
+        {lower ? '낮을수록 좋은 지표라 오름차순이 1위이고 막대를 그리지 않습니다. ' : ''}같은 행을 다시 선택하면 멤버 화면으로 이동합니다.
       </p>
-    {/if}
-    <p class="note">
-      {lower ? '낮을수록 좋은 지표라 오름차순이 1위이고 막대를 그리지 않습니다. ' : ''}같은 행을 다시 선택하면 멤버 화면으로 이동합니다.
-    </p>
-    {#if note}
-      <p class="note">{note.text} <QMark text={note.tip} label={note.tipLabel} /></p>
-    {/if}
+      {#if note}
+        <p class="note">{note.text} <QMark text={note.tip} label={note.tipLabel} /></p>
+      {/if}
+    </Panel>
   </div>
 {/if}
 
 <style>
   .mr { display: flex; flex-direction: column; gap: var(--sp-3); }
 
-  /* 칩 — 순위 표의 보기 버튼과 같은 어휘(작은 셀 모양, 눌린 것은 선택색 테두리 + 떠 있는 바탕). 색만으로 구분하지 않는다 */
-  .groups, .chips, .lanes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1); }
-  .chip, .vb {
-    min-height: 28px;
-    padding: 0 var(--sp-2);
-    background: var(--sheet);
-    color: var(--dim);
-    border: 1px solid var(--grid-strong);
-    border-radius: var(--r-chip);
-    font-size: var(--fs-sm);
-    line-height: 1.6;
-    white-space: nowrap;
-    transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out;
-  }
-  .chip:hover, .vb:hover { background: var(--raised); color: var(--txt); }
-  .chip:active, .vb:active { background: var(--gutter); }
-  .chip:disabled, .vb:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
-  .chip[aria-pressed='true'], .vb[aria-pressed='true'] { background: var(--raised); color: var(--txt); border-color: var(--sel); }
-  .chip .n { color: var(--dim2); font-variant-numeric: tabular-nums; }
-  .chip[aria-pressed='true'] .n { color: var(--dim); }
-  /* 라인 버튼은 왼쪽 3px 라인 띠 */
-  .vb { border-left-width: 3px; border-left-color: transparent; }
-  .vb.lane-top { border-left-color: var(--lane-top); }
-  .vb.lane-jg { border-left-color: var(--lane-jg); }
-  .vb.lane-mid { border-left-color: var(--lane-mid); }
-  .vb.lane-bot { border-left-color: var(--lane-bot); }
-  .vb.lane-sup { border-left-color: var(--lane-sup); }
   .hint, .none, .count { font-size: var(--fs-sm); color: var(--dim); }
   .none { padding: var(--sp-1) 0; }
 
-  /* 검색 셀 — 표 위의 거르기 칸과 같은 모양(우물 바탕 · 1px 강한 격자선 · 모서리 없음) */
+  /* 검색 칸 — 표 위의 거르기 칸과 같은 모양(우물 바탕 · 1px 컨트롤 테두리 · 반경 8px) */
   .find { display: flex; align-items: center; gap: var(--sp-2); }
   .q {
     appearance: none;
@@ -238,12 +217,12 @@
     width: 100%;
     max-width: 32ch;
     height: var(--row-h);
-    padding: 0 var(--sp-2);
+    padding: 0 var(--sp-3);
     background: var(--ink);
     color: var(--txt);
-    border: 1px solid var(--grid-strong);
-    border-radius: 0;
-    transition: border-color .12s;
+    border: 1px solid var(--ctl-edge);
+    border-radius: var(--r-chip);
+    transition: border-color var(--dur-1);
   }
   .q:hover { border-color: var(--dim2); }
   .q:focus-visible { outline-offset: 0; }
@@ -256,33 +235,45 @@
   .dir {
     display: inline-block;
     margin-left: var(--sp-1);
-    padding: 0 var(--sp-1);
-    border: 1px solid var(--grid);
-    border-radius: var(--r-chip);
+    padding: 0 var(--sp-2);
+    border: 1px solid var(--grid-strong);
+    border-radius: var(--r-pill);
     background: var(--gutter);
     font-size: var(--fs-sm);
-    line-height: 1.4;
+    line-height: 1.5;
     vertical-align: middle;
     white-space: nowrap;
   }
 
-  /* 메달 — 순위 셀 왼쪽 띠 */
-  .sheet :global(td.medal) { font-weight: 700; color: var(--txt); }
-  .sheet :global(td.m1) { border-left: 3px solid var(--medal-1); }
-  .sheet :global(td.m2) { border-left: 3px solid var(--dim2); }
-  .sheet :global(td.m3) { border-left: 3px solid var(--medal-3); }
+  /* 1~3위 숫자 칩 — 한 단 밝은 판 + 글자, 1위만 선택색 테두리(금·은·동 색은 쓰지 않는다) */
+  .pod {
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border: 1px solid var(--grid-strong);
+    border-radius: var(--r-chip);
+    background: var(--raised);
+    color: var(--txt);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .pod.p1 { border-color: var(--sel); }
 
-  .note { max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
+  .note { max-width: 75ch; padding-top: var(--sp-2); color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
   .pend { display: inline-flex; align-items: center; margin-right: var(--sp-2); white-space: nowrap; }
 
-  @media (pointer: coarse) {
-    .chip, .vb { min-height: 44px; }
-  }
   /* 폰: 표 머리의 코드 판은 접는다 — 바로 위 설명 줄에 같은 코드가 있고, 그 폭(실측 48px)만큼 값 열이 잘렸다 */
   @media (max-width: 640px) {
     .sheet :global(thead .plate) { display: none; }
   }
+  @media (forced-colors: active) {
+    .pod.p1 { border-width: 2px; }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .chip, .vb, .q { transition: none; }
+    .q { transition: none; }
   }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 수식 줄 — 스프레드시트의 fx 줄. 화면 위 한 줄에 "선택된 것의 계산 근거" 를 보인다.
+   * 수식 줄 — 스프레드시트의 fx 줄을 빌린 근거 줄. 검색 칸 아래 한 줄에 "선택된 것의 계산 근거" 를 보인다.
    * 내용은 $lib/fx.svelte 의 전역 상태에서 온다(화면이 setFx 로 쓰고, App 이 화면 전환 때 비운다).
    * role="status" + aria-live 라 선택이 바뀌면 보조기술도 근거를 듣는다.
    *
@@ -61,29 +61,32 @@
 </div>
 
 <style>
-  /* 격자 한 줄: 홈통 바탕, 위아래 1px 격자선. 글자는 본문 서체 14px — mono 스택에는 한글이 없어 한 줄에
+  /* 검색 칸 아래 한 줄 — 본문 폭(--wrap) 안. 글자는 본문 서체 14px — mono 스택에는 한글이 없어 한 줄에
      GulimChe+Cascadia(폰: Noto+Droid Sans Mono)가 섞이고 '→'·' · ' 가 등폭 칸에 눌렸다(실측). 숫자 정렬은
-     body 의 tabular-nums 로 유지된다. 수식 줄임은 'fx' 글리프(mono italic)가 말한다 */
+     body 의 tabular-nums 로 유지된다. 수식 줄임은 'fx' 칩(mono italic)이 말한다 */
   .fxbar {
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     gap: var(--sp-3);
-    min-height: var(--row-h);
-    padding: 0 var(--sp-4);
-    background: var(--gutter);
-    border-bottom: 1px solid var(--grid);
+    max-width: var(--wrap);
+    min-height: 36px;
+    margin: 0 auto;
+    padding: var(--sp-1) var(--sp-4) var(--sp-2);
     font-size: var(--fs-md);
   }
   .glyph {
     flex: none;
-    display: flex;
-    align-items: center;
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 22px;
+    margin-top: 3px;
+    border-radius: var(--r-chip);
+    background: var(--raised);
     color: var(--dim);
     font-family: var(--mono);
+    font-size: var(--fs-sm);
     font-style: italic;
-    /* 글리프 뒤 세로 격자선 — 행 번호 홈통과 같은 문법. 두 줄이 되면 같이 늘어난다 */
-    padding-right: var(--sp-3);
-    border-right: 1px solid var(--grid);
   }
   .bodywrap {
     flex: 1 1 auto;
@@ -125,14 +128,18 @@
     margin: 0 calc(-1 * var(--sp-1));
     padding: 0 var(--sp-1);
     width: calc(100% + 2 * var(--sp-1));
+    border-radius: var(--r-xs);
     cursor: pointer;
-    transition: background-color .12s;
+    transition: background-color var(--dur-1);
   }
   button.body:hover { background: var(--raised); }
   button.body:active { background: var(--grid-strong); }
   button.body:focus-visible { outline-offset: 0; }
   .hint { color: var(--dim); }
 
+  @media (max-width: 640px) {
+    .fxbar { padding: var(--sp-1) var(--sp-3) var(--sp-2); }
+  }
   @media (prefers-reduced-motion: reduce) {
     button.body { transition: none; }
   }

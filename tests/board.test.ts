@@ -8,7 +8,9 @@ import { clearFx, fx } from '../src/lib/fx.svelte';
 
 const table = () => screen.getByRole('table', { name: /^판수 순위 · 승률/ });
 const bodyRows = () => [...table().querySelectorAll('tbody tr')] as HTMLTableRowElement[];
-const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
+/** 셀 글 — 스니펫 칸(.cs, 승률 게이지)은 보조기술 글(fmt), 그 밖은 보이는 글 */
+const cellText = (td: Element) => (td.querySelector(':scope > .cs') ? td.querySelector(':scope > .sr-only') : td)?.textContent?.trim();
+const cellTexts = (tr: HTMLTableRowElement) => [...tr.querySelectorAll('td:not(.rn)')].map(cellText);
 const heads = () => [...table().querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
 const pressed = () => screen.getByRole('group', { name: '리더보드 보기' }).querySelector('button[aria-pressed="true"]')?.textContent?.replace(/\s+/g, ' ').trim();
 
@@ -41,7 +43,7 @@ describe('Rank — 판수 순위 · 승률 표', () => {
     expect(rows.map(cellTexts)).toEqual([
       ['Faker', '1', '미드', '20', '14', '6', '70%', '48%', '3', '50%', '900', '220', '25'],
       ['맹구', '2', '정글', '12', '6', '6', '50%', '25%', '3', '50%', '640', '150', '25'],
-      ['앙앙맹', '3', '탑', '6', '6', '0', '100%', '61%', '3', '50%', '1,296', '247', '33'],
+      ['앙앙맹', '3', '탑', '6', '6', '0', '100%, 60% 이상으로 높음', '61%', '3', '50%', '1,296', '247', '33'],
       ['앙리~2', '4', '서폿', '5', '3', '2', '60%', '23%', '3', '50%', '300', '40', '60'],
       ['Faker', '5', '탑', '4', '3', '1', '75%', '30%', '3', '50%', '650', '180', '25'],
       ['앙앙맹', '6', '미드', '3', '1', '2', '33%', '6%', '3', '50%', '800', '180', '25'],
@@ -52,12 +54,17 @@ describe('Rank — 판수 순위 · 승률 표', () => {
     // 기본 순서는 판수 내림차순이다 — 신뢰성(승률 계열)으로 줄을 세우지 않는다
     const games = rows.map((r) => Number(cellTexts(r)[3]));
     expect(games).toEqual([...games].sort((a, b) => b - a));
-    expect(rows[2]!.querySelector('td.lane-top')).toBeTruthy();
-    expect(rows[1]!.querySelector('td.lane-jg')).toBeTruthy();
-    // 승률 채움: 높음 win · 낮음 loss · 중간 없음. 라인별 문턱(3판) 이상이라 색을 단정한다
-    expect(rows[2]!.querySelector('td.win')?.textContent?.trim()).toBe('100%');
-    expect(rows[5]!.querySelector('td.loss')?.textContent?.trim()).toBe('33%');
-    expect(rows[1]!.querySelector('td.win, td.loss')).toBeNull();
+    expect(rows[2]!.querySelector('td .lane.top')).toBeTruthy();
+    expect(rows[1]!.querySelector('td .lane.jg')).toBeTruthy();
+    // 승률 칸은 게이지 — 단계는 Wilson 구간: 6판 100%(하한 61%)만 ▲▲, 3판 33% 는 상한이 50% 를 넘어 중립.
+    // 채움 색(td.win·td.loss)은 쓰지 않는다 · 게이지 이름이 숫자를 다 읽는다
+    const gauge = (i: number) => rows[i]!.querySelector('.wg[role="img"]')!;
+    expect(gauge(2).querySelector('.pc')?.classList.contains('st-up2')).toBe(true);
+    expect(gauge(2).querySelector('.pc')?.textContent).toBe('100%▲▲');
+    expect(gauge(2).getAttribute('aria-label')).toBe('승률 100%, 60% 이상으로 높음, 6승 0패, 6판');
+    expect(gauge(5).querySelector('.pc')?.classList.contains('st-even')).toBe(true);
+    expect(gauge(5).querySelector('.wl')?.textContent).toBe('1승 2패');
+    expect(table().querySelector('td.win, td.loss')).toBeNull();
     // 분당 딜 열은 막대, 신뢰성 열 머리에 물음표
     expect(rows[0]!.querySelectorAll('td.bar')).toHaveLength(1);
     expect(screen.getByRole('button', { name: '신뢰성 설명' })).toBeTruthy();
@@ -66,7 +73,7 @@ describe('Rank — 판수 순위 · 승률 표', () => {
     expect(nums).toEqual(['탑 2', '정글 1', '미드 2', '원딜 0', '서폿 1']);
     const notes = [...document.querySelectorAll('p.note')].map((p) => p.textContent?.replace(/\s+/g, ' ').trim());
     expect(notes[0]).toBe('멤버 × 라인 6줄 · 라인 3판 이상. 순위는 판수 기준입니다.');
-    expect(notes[1]).toBe('신뢰성(승률의 Wilson 하한)은 열 머리를 선택하면 그 값으로 정렬합니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.');
+    expect(notes[1]).toBe("신뢰성(승률의 Wilson 하한)은 열 머리를 선택하면 그 값으로 정렬합니다. 같은 행을 다시 선택하면 멤버 화면으로 이동합니다. 승률의 색과 ▲▼는 판수를 감안해도 50%와 차이가 날 때만 붙고, 문턱 미만은 '표본 적음'으로 적습니다.");
     expect(notes[2]).toContain('5판 이상 참여한 멤버만 집계합니다 (라인별 지표는 3판) · 1명은 판수 미달로 제외.');
   });
 
@@ -81,7 +88,7 @@ describe('Rank — 판수 순위 · 승률 표', () => {
     expect(bodyRows().map(cellTexts)).toEqual([
       ['Faker', '1', '20', '14', '6', '70%', '48%', '5.1', '60%', '900'],
       ['맹구', '2', '12', '6', '6', '50%', '25%', '2.2', '55%', '640'],
-      ['앙앙맹', '3', '6', '6', '0', '100%', '61%', '4.67', '48%', '1,296'],
+      ['앙앙맹', '3', '6', '6', '0', '100%, 60% 이상으로 높음', '61%', '4.67', '48%', '1,296'],
       ['앙리~2', '4', '5', '3', '2', '60%', '23%', '1.8', '70%', '300'],
     ]);
     const notes = [...document.querySelectorAll('p.note')].map((p) => p.textContent?.replace(/\s+/g, ' ').trim());

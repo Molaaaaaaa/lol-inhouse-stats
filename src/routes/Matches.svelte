@@ -116,19 +116,20 @@
   .crumb { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); color: var(--dim); }
   .crumb a { color: var(--txt); text-underline-offset: .2em; }
   .sep { color: var(--dim2); }
+  /* 컨트롤 — 헤더의 .ctl 과 같은 어휘(반경 8px · 1px --ctl-edge) */
   .ctl {
     justify-self: start;
-    min-height: 32px;
+    min-height: 34px;
     padding: 0 var(--sp-3);
     background: var(--sheet);
     color: var(--txt);
-    border: 1px solid var(--grid-strong);
+    border: 1px solid var(--ctl-edge);
     border-radius: var(--r-chip);
-    transition: background-color .15s ease-out, border-color .15s ease-out;
+    white-space: nowrap;
+    transition: background-color var(--dur-1) ease-out, border-color var(--dur-1) ease-out;
   }
-  .ctl:hover:not(:disabled) { background: var(--raised); }
-  .ctl:active:not(:disabled) { background: var(--ink); }
-  .ctl:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; }
+  .ctl:hover { background: var(--raised); }
+  .ctl:active { background: var(--track); }
   @media (pointer: coarse) {
     .ctl { min-height: 44px; }
   }

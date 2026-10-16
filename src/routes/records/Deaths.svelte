@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 기록 · 역전과 데스 — 역전·리드 실패 표, 첫 데스·헌납 표, 그 아래 데스 위치 차트.
+   * 기록 · 역전과 데스 — 카드 셋: 역전·리드 실패 표, 첫 데스·헌납 표, 데스 위치 차트(차트 카드는 DeathHeatmap 이 그린다).
    * 비율의 분모가 0 이면 셀을 비운다('역전 0%' 는 못 한 게 아니라 기회가 없던 것이다).
    *
    * 행 선택 → 수식 줄에 근거(`=역전승률 3/7 = 43% · 리드 실패율 1/5 = 20%`), 같은 행 다시 → 멤버 화면.
@@ -14,6 +14,7 @@
   import { memberHref, router } from '$lib/router.svelte';
   import type { Col } from '$lib/table';
   import DataTable from '$components/DataTable.svelte';
+  import Panel from '$components/Panel.svelte';
   import DeathHeatmap from '$components/charts/DeathHeatmap.svelte';
 
   let { data, entered = true }: { data: GuildPayload; entered?: boolean } = $props();
@@ -61,31 +62,36 @@
 </script>
 
 <div class="deaths">
-  <!-- rows2: 390px 에서 417px · 409px(실측) — 폰은 2줄 장부 행 -->
-  <DataTable rows={comeback} cols={cbCols} caption="역전 · 리드 실패" sortKey="throw_rate" rows2
-             rowKey={(r) => `cb:${r.name}`} selectedKey={sel ?? undefined}
-             onselect={(r, k) => pick(k, cbFx(r), memberHref(r.name))} />
-  <p class="note">15분 골드 차 2,500 이상만 열세·우세로 봅니다. 행을 선택하면 계산 근거가 수식 줄에 보이고, 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.</p>
+  <Panel title="역전 · 리드 실패" level={3}>
+    <!-- rows2: 390px 에서 417px · 409px(실측) — 폰은 2줄 장부 행 -->
+    <DataTable rows={comeback} cols={cbCols} caption="역전 · 리드 실패" captionHidden sortKey="throw_rate" rows2
+               rowKey={(r) => `cb:${r.name}`} selectedKey={sel ?? undefined}
+               onselect={(r, k) => pick(k, cbFx(r), memberHref(r.name))} />
+    <p class="note">15분 골드 차 2,500 이상만 열세·우세로 봅니다. 행을 선택하면 계산 근거가 수식 줄에 보이고, 같은 행을 다시 선택하면 멤버 화면으로 이동합니다.</p>
+  </Panel>
 
-  <!-- 데스 표와 데스 위치를 나란히 — 표가 남는 폭을 갖고 차트는 제 폭(최대 320px)만 -->
+  <!-- 데스 표와 데스 위치를 나란히 — 표가 남는 폭을 갖고 차트는 제 폭(최대 320px + 카드 여백)만 -->
   <div class="pair">
-    <DataTable rows={deaths} cols={dCols} caption="첫 데스 · 헌납" sortKey="bounty_given" rows2
-               rowKey={(r) => `d:${r.name}`} selectedKey={sel ?? undefined}
-               onselect={(r, k) => pick(k, dFx(r), memberHref(r.name))} />
+    <Panel title="첫 데스 · 헌납" level={3}>
+      <DataTable rows={deaths} cols={dCols} caption="첫 데스 · 헌납" captionHidden sortKey="bounty_given" rows2
+                 rowKey={(r) => `d:${r.name}`} selectedKey={sel ?? undefined}
+                 onselect={(r, k) => pick(k, dFx(r), memberHref(r.name))} />
+    </Panel>
     <DeathHeatmap {load} {entered} />
   </div>
 </div>
 
 <style>
-  .deaths { display: grid; gap: var(--sp-3); min-width: 0; }
+  .deaths { display: grid; gap: var(--sp-4); min-width: 0; }
   .pair {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 354px);
     gap: var(--sp-4);
     align-items: start;
   }
-  .note { max-width: 75ch; font-size: var(--fs-sm); color: var(--dim); text-wrap: pretty; }
+  .note { max-width: 75ch; padding-top: var(--sp-2); font-size: var(--fs-sm); color: var(--dim); text-wrap: pretty; }
   @media (max-width: 640px) {
     .pair { grid-template-columns: 1fr; gap: var(--sp-3); }
+    .deaths { gap: var(--sp-3); }
   }
 </style>

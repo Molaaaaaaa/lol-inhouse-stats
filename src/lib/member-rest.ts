@@ -1,5 +1,5 @@
 /**
- * 멤버 화면의 나머지 패널 — 상대별 전적·최근 경기·시간대·세부 지표 — 가 쓰는 순수 함수.
+ * 멤버 화면의 나머지 패널 — 상대별 전적·자주 만난 상대·최근 경기·시간대·세부 지표 — 가 쓰는 순수 함수.
  * 전역 DATA 를 읽지 않는다. 컴포넌트가 payload 조각을 넘기고, 테스트는 작은 객체를 넘긴다.
  *
  * ── '나 기준' 상대별 전적 (옛 renderPlayerVs) ──
@@ -103,6 +103,21 @@ export function vsRows(data: VsSource, me: string): VsRow[] {
   out.sort((a, b) =>
     b.withGames - a.withGames || b.vsGames - a.vsGames || a.opp.localeCompare(b.opp, 'ko'));
   return out;
+}
+
+/** '자주 만난 상대' 목록의 최대 행 수 */
+const FREQUENT_TOP = 5;
+
+/**
+ * 자주 만난 상대 — 맞대결 판수가 문턱(min_games) 이상인 상대 중 많이 만난 순 최대 5명(같으면 이름 ↑).
+ * 줄 세우는 기준은 만난 횟수(활동량)다 — 승패로 줄 세우면 '라이벌 순위'로 읽힌다. 문턱 미만은 넣지 않는다
+ * (2판 2승을 목록에 올리면 우연이 사실처럼 보인다). 행 수는 문턱 이상인 상대 수만큼 — 비어 있으면 빈 목록.
+ */
+export function frequentOpponents(rows: readonly VsRow[], minGames: number): VsRow[] {
+  return rows
+    .filter((r) => r.vsGames > 0 && r.vsGames >= minGames)
+    .sort((a, b) => b.vsGames - a.vsGames || a.opp.localeCompare(b.opp, 'ko'))
+    .slice(0, FREQUENT_TOP);
 }
 
 // ── 시간대 ───────────────────────────────────────────────────────────

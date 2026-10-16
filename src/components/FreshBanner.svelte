@@ -13,28 +13,36 @@
 </div>
 
 <style>
+  /* 맨 위 알림 띠 — 액센트 10% 틴트 판 + 아래 선. 버튼은 액센트 채움(선택·활성과 같은 '지금 할 일' 색) */
   .fresh {
     display: flex;
     align-items: center;
     gap: var(--sp-3);
     min-height: var(--row-h);
     padding: var(--sp-1) var(--sp-4);
-    background: var(--gutter);
-    border-bottom: 1px solid var(--grid-strong);
+    background: color-mix(in srgb, var(--sel) 10%, var(--sheet));
+    border-bottom: 1px solid color-mix(in srgb, var(--sel) 40%, var(--grid));
     color: var(--dim);
   }
   .msg { flex: 1 1 auto; min-width: 0; color: var(--txt); }
   .act {
     flex: none;
-    min-height: 32px;
+    min-height: 34px;
     padding: 0 var(--sp-3);
-    background: var(--sel);
+    background: var(--grad-sel);
     color: var(--on-sel);
-    border: 1px solid var(--sel);
+    border: 0;
     border-radius: var(--r-chip);
     font-weight: 700;
-    transition: background-color .15s ease-out;
+    box-shadow: var(--edge-hi);
   }
-  .act:hover { background: color-mix(in srgb, var(--sel) 88%, var(--txt)); }
-  .act:active { background: color-mix(in srgb, var(--sel) 80%, var(--ink)); }
+  .act:hover { background: var(--sel-hi); }
+  .act:active { background: var(--sel); }
+  /* 굵은 포인터 44px — scoped 34px 가 app.css 의 전역 button 규칙을 이기므로 여기서 다시 준다 */
+  @media (pointer: coarse) {
+    .act { min-height: 44px; }
+  }
+  @media (forced-colors: active) {
+    .act { border: 1px solid ButtonText; }
+  }
 </style>

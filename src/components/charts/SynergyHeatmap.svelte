@@ -1,10 +1,11 @@
 <script lang="ts">
   /**
-   * 시너지 히트맵 — 멤버 × 멤버 격자. 표와 같은 격자 단위(칸 = 행 높이 정사각형), 칸 채움은
-   * 시너지 부호(--win/--loss)와 세기(실값 범위 peak 로 눈금, 8%~45% 섞음 — 45% 까지는 --txt 글자가
-   * 4.5:1 을 지킨다(실측 win 4.77 · loss 5.54)). 글자는 늘 값(+0.07)이라 색만으로 읽히지 않는다.
+   * 시너지 히트맵 — 멤버 × 멤버 격자. 카드(Panel) 안에 놓이고 제목은 카드가 보인다(격자 이름은 caption → aria-label).
+   * 칸 = 행 높이 정사각형 안의 둥근 타일(2px 틈, 격자선 없음). 타일 채움은 시너지 부호(--win/--loss)와
+   * 세기(실값 범위 peak 로 눈금, 8%~45% 섞음 — 45% 에서도 --txt 글자가 4.5:1 을 넘는다(실측 sheet 위
+   * win 5.95 · loss 6.98, gutter 위 5.59 · 6.61)). 글자는 늘 값(+0.07)이라 색만으로 읽히지 않는다.
    *
-   * - 판수 문턱 미만은 빈 칸(툴팁이 왜 비었는지 말한다). 같은 사람 칸은 홈통 바탕.
+   * - 판수 문턱 미만은 빈 칸(툴팁이 왜 비었는지 말한다). 같은 사람 칸은 홈통 타일.
    * - 첫 열(이름)은 sticky left. 머리행 이름은 세로쓰기(스프레드시트의 '텍스트 회전') —
    *   34명이면 가로 1,300px 이라 이름을 가로로 두면 격자가 표가 아니라 목록이 된다.
    * - 래퍼가 가로 스크롤(문서는 넘치지 않는다). 머리행 sticky top 은 스크롤 컨테이너 안에서
@@ -101,7 +102,6 @@
 </script>
 
 <div class="heat">
-  <div class="cap">{caption}</div>
   {#if n < 2}
     <EmptyState text="아직 함께 {minGames}판 이상 출전한 조합이 없습니다." />
   {:else}
@@ -166,16 +166,8 @@
 <style>
   /* min-width 0: 격자 항목(그리드 안)의 기본 min-width:auto 는 내용(격자 950px)만큼 늘어나 문서를 넘치게 한다 */
   .heat { width: 100%; min-width: 0; }
-  .cap {
-    font-size: var(--fs-sm); font-weight: 700;
-    color: var(--dim);
-    padding: var(--sp-2) 0 var(--sp-1);
-    white-space: nowrap;
-  }
-  .scroll {
-    overflow-x: auto;
-    background: var(--sheet);
-  }
+  /* 래퍼는 투명 — 감싼 카드(Panel)의 면이 보인다. 붙어 있는 칸(머리행·첫 열)만 불투명하게 칠한다 */
+  .scroll { overflow-x: auto; }
   table {
     border-collapse: separate;   /* collapse 면 sticky 첫 열의 선이 스크롤에 떨어져 나간다 */
     border-spacing: 0;
@@ -183,24 +175,24 @@
   }
   th, td {
     padding: 0;
-    border-right: 1px solid var(--grid);
-    border-bottom: 1px solid var(--grid);
     background: transparent;
     white-space: nowrap;
     vertical-align: middle;
   }
-  th:first-child, td:first-child { border-left: 1px solid var(--grid); }
-  thead th { border-top: 1px solid var(--grid-strong); border-bottom: 1px solid var(--grid-strong); }
 
-  /* 머리행 — 홈통 바탕, 이름은 세로쓰기(한글은 바로 서고 로마자는 눕는다). 아래쪽(격자 쪽)에 붙인다 */
+  /* 머리행 — 홈통 띠(위 모서리 12px, 카드형 표와 같은 말), 이름은 세로쓰기(한글은 바로 서고 로마자는 눕는다).
+     아래쪽(격자 쪽)에 붙인다 */
   thead th {
     background: var(--gutter);
     color: var(--dim);
     font-size: var(--fs-sm);
     font-weight: 700;
     vertical-align: bottom;
-    transition: background-color .12s, color .12s;
+    border-bottom: 1px solid var(--grid-strong);
+    transition: background-color var(--dur-1), color var(--dur-1);
   }
+  thead th:first-child { border-top-left-radius: var(--r-md); }
+  thead th:last-child { border-top-right-radius: var(--r-md); }
   th.col {
     width: var(--row-h);
     min-width: var(--row-h);
@@ -230,10 +222,10 @@
     position: sticky;
     left: 0;
     z-index: 3;
-    border-right: 1px solid var(--grid-strong);
+    border-right: 1px solid var(--grid);
   }
 
-  /* 첫 열(이름) — sticky left, 시트 바탕 */
+  /* 첫 열(이름) — sticky left, 카드 면 바탕. 오른쪽 1px 선 밑으로 스크롤되는 타일이 지나간다 */
   th.row {
     position: sticky;
     left: 0;
@@ -245,8 +237,9 @@
     font-weight: 700;
     color: var(--txt);
     background: var(--sheet);
-    border-right: 1px solid var(--grid-strong);
-    transition: background-color .12s;
+    border-right: 1px solid var(--grid);
+    border-radius: var(--r-chip) 0 0 var(--r-chip);
+    transition: background-color var(--dur-1);
   }
   th.row .nm {
     display: block;
@@ -256,7 +249,8 @@
   }
   th.on { background: var(--raised); color: var(--txt); }
 
-  /* 칸 — 행 높이 정사각형. 색은 부호(pos/neg)·세기(--t)로만, 글자는 무채색 */
+  /* 칸 — 행 높이 정사각형 안의 둥근 타일. 투명 테두리 2px 가 틈이 되고 채움은 그 안쪽(padding-box)에만.
+     색은 부호(pos/neg)·세기(--t)로만, 글자는 무채색 */
   .hc {
     --t: 0;
     width: var(--row-h);
@@ -266,12 +260,15 @@
     text-align: center;
     font-size: var(--fs-sm);
     color: var(--txt);
-    transition: box-shadow .12s;
+    border: 2px solid transparent;
+    border-radius: var(--r-chip);
+    background-clip: padding-box;
+    transition: box-shadow var(--dur-1);
   }
-  .hc.pos { background: color-mix(in srgb, var(--win) calc(8% + 37% * var(--t)), transparent); }
-  .hc.neg { background: color-mix(in srgb, var(--loss) calc(8% + 37% * var(--t)), transparent); }
-  .hc.zero { color: var(--dim); }
-  .hc.self { background: var(--gutter); }
+  .hc.pos { background-color: color-mix(in srgb, var(--win) calc(8% + 37% * var(--t)), transparent); }
+  .hc.neg { background-color: color-mix(in srgb, var(--loss) calc(8% + 37% * var(--t)), transparent); }
+  .hc.zero { color: var(--dim); background-color: color-mix(in srgb, var(--raised) 60%, transparent); }
+  .hc.self { background-color: var(--gutter); }
   .hc.blank { color: var(--dim2); }
   .hc[tabindex] { cursor: pointer; }
   .hc[tabindex]:hover { box-shadow: inset 0 0 0 1px var(--dim); }
@@ -279,7 +276,7 @@
   .hc.sel, .hc.sel:hover { box-shadow: inset 0 0 0 2px var(--sel); }
   .hc:focus-visible { outline: 2px solid var(--sel); outline-offset: -2px; box-shadow: none; }
 
-  /* 범례 — 안내 문장 한 줄. 견본은 칸과 같은 채움(가장 진한 끝) */
+  /* 범례 — 안내 문장 한 줄. 견본은 칸과 같은 채움(가장 진한 끝)·같은 둥근 타일 */
   .legend {
     margin: 0;
     padding-top: var(--sp-2);
@@ -293,7 +290,7 @@
     height: 1em;
     margin-right: var(--sp-1);
     vertical-align: -0.15em;
-    border: 1px solid var(--grid-strong);
+    border-radius: var(--r-xs);
   }
   .sw.pos { background: color-mix(in srgb, var(--win) 45%, transparent); }
   .sw.neg { background: color-mix(in srgb, var(--loss) 45%, transparent); }
@@ -311,6 +308,11 @@
   .abbr .pair { white-space: nowrap; }
   .abbr .s { color: var(--txt); }
 
+  /* 강제 색상: 타일 채움이 지워진다 — 값 글자와 부호가 남고, 타일 경계는 시스템 선으로 */
+  @media (forced-colors: active) {
+    .hc.pos, .hc.neg, .hc.zero, .hc.self { border-color: CanvasText; }
+    .sw { border: 1px solid CanvasText; }
+  }
   @media (prefers-reduced-motion: reduce) {
     th, .hc { transition: none; }
   }

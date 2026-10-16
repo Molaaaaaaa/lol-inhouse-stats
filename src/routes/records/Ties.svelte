@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 기록 · 관계 — 두 멤버 사이의 사실: 동반 사망 · 어시스트 흐름 · 연속킬과 저지. 시너지 화면에서 옮겨 왔다
+   * 기록 · 관계 — 두 멤버 사이의 사실(카드 넷): 동반 사망 · 어시스트 흐름 · 연속킬과 저지. 시너지 화면에서 옮겨 왔다
    * (옛 renderFun 의 관계 지표). 표 이름은 사실 그대로 — 농담 이름은 쓰지 않는다(옛 결정).
    *
    * 행 선택 → 수식 줄에 근거(`=판당 동반 사망 7/2판 = 3.5`), 같은 행 다시 → 두 사람이면 비교 화면(`#/m/a/vs/b`),
@@ -12,6 +12,7 @@
   import { compareHref, memberHref, router } from '$lib/router.svelte';
   import type { Col } from '$lib/table';
   import DataTable from '$components/DataTable.svelte';
+  import Panel from '$components/Panel.svelte';
 
   let { data }: { data: GuildPayload } = $props();
 
@@ -70,27 +71,35 @@
 
 <div class="ties">
   <div class="pair">
-    <!-- rows2: 390px 에서 377px(실측) — 폰은 2줄 장부 행. 어시스트 흐름은 366px 에 든다 -->
-    <DataTable rows={co} cols={coCols} caption="동반 사망" sortKey="per_game" rows2
-               rowKey={(r) => `co:${r.a}|${r.b}`} selectedKey={sel ?? undefined}
-               onselect={(r, k) => pick(k, coFx(r), compareHref(r.a, r.b))} />
-    <DataTable rows={flow} cols={flowCols} caption="어시스트 흐름" sortKey="assists"
-               rowKey={(r) => `flow:${r.giver}|${r.taker}`} selectedKey={sel ?? undefined}
-               onselect={(r, k) => pick(k, flowFx(r), compareHref(r.giver, r.taker))} />
+    <Panel title="동반 사망" level={3}>
+      <!-- rows2: 390px 에서 377px(실측) — 폰은 2줄 장부 행. 어시스트 흐름도 같다(카드 안 352px 에 368px — 실측) -->
+      <DataTable rows={co} cols={coCols} caption="동반 사망" captionHidden sortKey="per_game" rows2
+                 rowKey={(r) => `co:${r.a}|${r.b}`} selectedKey={sel ?? undefined}
+                 onselect={(r, k) => pick(k, coFx(r), compareHref(r.a, r.b))} />
+    </Panel>
+    <Panel title="어시스트 흐름" level={3}>
+      <DataTable rows={flow} cols={flowCols} caption="어시스트 흐름" captionHidden sortKey="assists" rows2
+                 rowKey={(r) => `flow:${r.giver}|${r.taker}`} selectedKey={sel ?? undefined}
+                 onselect={(r, k) => pick(k, flowFx(r), compareHref(r.giver, r.taker))} />
+    </Panel>
   </div>
   <p class="note">행을 선택하면 계산 근거가 수식 줄에 보이고, 같은 행을 다시 선택하면 두 멤버 비교 화면으로 이동합니다.</p>
   <div class="pair">
-    <DataTable rows={sprees} cols={spreeCols} caption="연속킬" sortKey="streak"
-               rowKey={(r) => `spree:${r.name}:${r.champ}:${r.streak}:${r.minute}`} selectedKey={sel ?? undefined}
-               onselect={(r, k) => pick(k, spreeFx(r), memberHref(r.name))} />
-    <DataTable rows={stops} cols={stopCols} caption="연속킬 저지" sortKey="streak"
-               rowKey={(r) => `stop:${r.stopper}|${r.runner}:${r.streak}`} selectedKey={sel ?? undefined}
-               onselect={(r, k) => pick(k, stopFx(r), compareHref(r.stopper, r.runner))} />
+    <Panel title="연속킬" level={3}>
+      <DataTable rows={sprees} cols={spreeCols} caption="연속킬" captionHidden sortKey="streak"
+                 rowKey={(r) => `spree:${r.name}:${r.champ}:${r.streak}:${r.minute}`} selectedKey={sel ?? undefined}
+                 onselect={(r, k) => pick(k, spreeFx(r), memberHref(r.name))} />
+    </Panel>
+    <Panel title="연속킬 저지" level={3}>
+      <DataTable rows={stops} cols={stopCols} caption="연속킬 저지" captionHidden sortKey="streak"
+                 rowKey={(r) => `stop:${r.stopper}|${r.runner}:${r.streak}`} selectedKey={sel ?? undefined}
+                 onselect={(r, k) => pick(k, stopFx(r), compareHref(r.stopper, r.runner))} />
+    </Panel>
   </div>
 </div>
 
 <style>
-  .ties { display: grid; gap: var(--sp-3); min-width: 0; }
+  .ties { display: grid; gap: var(--sp-4); min-width: 0; }
   .pair {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -100,5 +109,6 @@
   .note { max-width: 75ch; font-size: var(--fs-sm); color: var(--dim); text-wrap: pretty; }
   @media (max-width: 640px) {
     .pair { grid-template-columns: 1fr; gap: var(--sp-3); }
+    .ties { gap: var(--sp-3); }
   }
 </style>

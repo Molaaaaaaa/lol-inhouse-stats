@@ -11,7 +11,7 @@ import { router } from '../src/lib/router.svelte';
 import { clearFx, fx } from '../src/lib/fx.svelte';
 import {
   RECORD_DEFS, comebackRows, deathRows, dragonKo, hallFx, hallRows, heatCaption, heatDot, heatPoints,
-  mvpNote, pentaRows, serverRows,
+  mvpNote, pentaRows, serverCard, serverRows,
 } from '../src/lib/records';
 import type { GuildPayload, RecordEntry, RecordsMap } from '../src/lib/data/types';
 
@@ -71,7 +71,15 @@ const ko = (id: string) => (PAYLOAD.champ_ko as Record<string, string>)[id] ?? i
 const tableOf = (el: ParentNode, caption: string) => el.querySelector(`table[aria-label="${caption}"]`)!;
 const heads = (t: Element) => [...t.querySelectorAll('thead th[scope="col"] .h')].map((h) => h.textContent);
 const bodyRows = (t: Element) => [...t.querySelectorAll('tbody tr')] as HTMLTableRowElement[];
-const cells = (tr: Element) => [...tr.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim());
+/** 셀 글 — 스니펫 칸(.cs, 보이는 층은 보조기술에서 숨는다)은 보조기술 글(fmt), 그 밖은 보이는 글 */
+const cellText = (td: Element) => (td.querySelector(':scope > .cs') ? td.querySelector(':scope > .sr-only') : td)?.textContent?.trim();
+const cells = (tr: Element) => [...tr.querySelectorAll('td:not(.rn)')].map(cellText);
+/** 기록 카드 묶음 — 카드(Panel) 제목으로 찾는다 */
+const cardsOf = (el: ParentNode, title: string) => {
+  const sec = [...el.querySelectorAll('section.panel')].find((s) => s.querySelector('.pt')?.textContent === title)!;
+  return [...sec.querySelectorAll('.rc')] as HTMLElement[];
+};
+const cardText = (c: Element, sel: string) => c.querySelector(sel)?.textContent?.replace(/\s+/g, ' ').trim();
 
 beforeEach(() => {
   cleanup();
@@ -121,6 +129,14 @@ describe('records — 순수 함수', () => {
     ]);
     expect(serverRows({ avg_kills: 0 } as never, 57)).toEqual([]);
     expect(serverRows(null, 57)).toEqual([]);
+  });
+  it('serverCard: 길이 기록은 길이가, 킬 기록은 킬 수가 큰 값 · 아래 줄은 빈 조각 없이', () => {
+    const rows = serverRows(PAYLOAD.server_records, 57);
+    expect(rows.map(serverCard)).toEqual([
+      { value: '15:14', unit: '', sub: '22킬 · 9. 3.' }, { value: '41:36', unit: '', sub: '55킬 · 9. 3.' },
+      { value: '82', unit: '킬', sub: '38:44 · 9. 3.' }, { value: '48.4', unit: '킬', sub: '전체 57경기' },
+    ]);
+    expect(serverCard({ ...rows[3]!, when: '' }).sub).toBe('');
   });
   it('mvpNote: 표 합계 + 제외분 = 총 경기 · 제외 없으면 빈 문자열', () => {
     expect(mvpNote(PAYLOAD.mvp, { awards: 4, players: 3 }, 5)).toBe('판수 미달 3명 제외(4회) · 표 합계 16회 + 4회 = 총 20경기 · 문턱 5판');
@@ -176,7 +192,7 @@ describe('Records — 하위 화면', () => {
     expect(tabs).toEqual(['명예의 전당', '역전 · 데스', '로밍 · 한타 · 오브젝트', '관계']);
     expect(screen.getByRole('tab', { selected: true }).textContent).toBe('명예의 전당');
     expect(screen.getByRole('tabpanel').id).toBe('rec-panel-hall');
-    expect(tableOf(document.body, '개인 기록')).toBeTruthy();
+    expect(cardsOf(document.body, '개인 기록').length).toBeGreaterThan(0);
     cleanup();
     render(Records, { sub: 'mvp', params: {} });
     expect(screen.getByRole('tab', { selected: true }).textContent).toBe('명예의 전당');
@@ -207,25 +223,28 @@ describe('Hall — 명예의 전당', () => {
   beforeEach(() => { router.start(); });
   afterEach(() => { router.stop(); });
 
-  it('경기 기록 네 행 · 개인 기록(초상·KDA·승패 채움·시각) · MVP 안내 · 펜타', () => {
+  it('경기 기록 카드 넷 · 개인 기록 카드(초상·KDA·승패 태그·시각) · MVP 안내 · 펜타', () => {
     const { container } = render(Hall, { data: PAYLOAD });
-    const sv = tableOf(container, '경기 기록');
-    expect(heads(sv)).toEqual(['기록', '시간', '킬', '시각']);
-    expect(bodyRows(sv).map(cells)).toEqual([
-      ['최단 경기', '15:14', '22', '9. 3.'], ['최장 경기', '41:36', '55', '9. 3.'],
-      ['최다 킬 경기', '38:44', '82', '9. 3.'], ['경기당 평균 킬', '', '48.4', '전체 57경기'],
+    // 경기 기록 — 큰 값은 그 기록을 세운 것(길이·킬), 나머지는 아래 줄. 갈 곳이 없어 누를 수 없다
+    const sv = cardsOf(container, '경기 기록');
+    expect(sv.map((c) => [cardText(c, '.k'), cardText(c, '.v'), cardText(c, '.m') ?? ''])).toEqual([
+      ['최단 경기', '15:14', '22킬 · 9. 3.'], ['최장 경기', '41:36', '55킬 · 9. 3.'],
+      ['최다 킬 경기', '82킬', '38:44 · 9. 3.'], ['경기당 평균 킬', '48.4킬', '전체 57경기'],
     ]);
-    expect(sv.querySelector('tbody tr[tabindex]')).toBeNull();   // 갈 곳이 없어 선택 없음
+    expect(sv.every((c) => c.tagName === 'LI')).toBe(true);
+    expect(container.querySelector('table[aria-label="경기 기록"]')).toBeNull();
 
-    const h = tableOf(container, '개인 기록');
-    expect(heads(h)).toEqual(['기록', '멤버', '값', '챔피언', 'KDA', '결과', '시간', '시각']);
-    const rows = bodyRows(h);
-    expect(cells(rows[0]!)).toEqual(['최고 KDA', '외 걸', '28', '아리', '14/1/14', '승', '30:04', '9. 3.']);
-    expect(rows[0]!.querySelectorAll('td:not(.rn)')[3]!.querySelector('img.champ')?.getAttribute('src')).toContain('/16.18.1/img/champion/Ahri.png');
-    expect(rows[0]!.querySelectorAll('td:not(.rn)')[5]!.classList.contains('win')).toBe(true);
-    expect(rows[1]!.querySelectorAll('td:not(.rn)')[5]!.classList.contains('loss')).toBe(true);
-    expect(cells(rows[4]!)).toEqual(['최장 연승', 'Choi Eun Ho', '6연승', '', '', '', '', '']);
-    expect(rows[4]!.querySelector('img')).toBeNull();
+    // 개인 기록 — 카드 하나가 버튼 하나(이름 · 값 · 멤버 · 챔피언 KDA · 승패 · 길이 · 날짜)
+    const h = cardsOf(container, '개인 기록');
+    expect(h.every((c) => c.tagName === 'BUTTON' && c.getAttribute('aria-pressed') === 'false')).toBe(true);
+    expect([cardText(h[0]!, '.k'), cardText(h[0]!, '.v'), cardText(h[0]!, '.nm')]).toEqual(['최고 KDA', '28', '외 걸']);
+    expect([...h[0]!.querySelectorAll('.m > span')].map((x) => x.textContent)).toEqual(['아리 14/1/14', '승', '30:04', '9. 3.']);
+    expect(h[0]!.querySelector('img.champ')?.getAttribute('src')).toContain('/16.18.1/img/champion/Ahri.png');
+    expect(h[0]!.querySelector('.tag.win')?.textContent).toBe('승');
+    expect(h[1]!.querySelector('.tag.loss')?.textContent).toBe('패');
+    expect([cardText(h[4]!, '.k'), cardText(h[4]!, '.v'), cardText(h[4]!, '.nm')]).toEqual(['최장 연승', '6연승', 'Choi Eun Ho']);
+    expect(h[4]!.querySelector('img')).toBeNull();
+    expect(h[4]!.querySelectorAll('.m > span')).toHaveLength(0);
 
     const mvp = tableOf(container, 'MVP');
     expect(heads(mvp)).toEqual(['멤버', 'MVP', '판']);
@@ -243,19 +262,24 @@ describe('Hall — 명예의 전당', () => {
     expect(container.querySelector('table[aria-label="펜타킬"]')).toBeNull();
     expect(container.querySelector('.empty')?.textContent).toBe('아직 펜타킬이 없습니다.');
   });
-  it('행 선택 → 수식 줄, 같은 행 다시 → 멤버 화면 · 다른 표를 선택하면 앞 선택은 풀린다', async () => {
+  it('카드 선택 → 수식 줄·글로우, 같은 카드 다시 → 멤버 화면 · 다른 표를 선택하면 앞 선택은 풀린다', async () => {
     const { container } = render(Hall, { data: PAYLOAD });
-    const row = bodyRows(tableOf(container, '개인 기록'))[0]!;
-    await fireEvent.click(row);
+    const card = cardsOf(container, '개인 기록')[0]!;
+    await fireEvent.click(card);
     expect(fx.text).toBe('=최고 KDA 28 · 외 걸 · 아리 14/1/14 · 승 · 30:04 · 9. 3.');
-    expect(row.getAttribute('aria-selected')).toBe('true');
+    expect(card.getAttribute('aria-pressed')).toBe('true');
+    expect(card.classList.contains('glow')).toBe(true);
     const mvpRow = bodyRows(tableOf(container, 'MVP'))[0]!;
     await fireEvent.keyDown(mvpRow, { key: 'Enter' });
     expect(fx.text).toBe('=MVP 9회 ÷ 43판 = 21%');
-    expect(row.getAttribute('aria-selected')).toBe('false');
+    expect(card.getAttribute('aria-pressed')).toBe('false');
+    expect(card.classList.contains('glow')).toBe(false);
     expect(mvpRow.getAttribute('aria-selected')).toBe('true');
     await fireEvent.click(mvpRow);
     expect(location.hash).toBe(`#/m/${encodeURIComponent('조 C')}`);
+    await fireEvent.click(card);
+    await fireEvent.click(card);
+    expect(location.hash).toBe(`#/m/${encodeURIComponent('외 걸')}`);
   });
 });
 
@@ -297,12 +321,12 @@ describe('Play — 로밍 · 한타 · 오브젝트', () => {
   beforeEach(() => { router.start(); });
   afterEach(() => { router.stop(); });
 
-  it('로밍(라인 띠·막대) · 한타 · 용(한국어 이름·채움은 획득 문턱)', async () => {
+  it('로밍(라인 띠·막대) · 한타 · 용(한국어 이름·승률 단계는 획득 문턱 · Wilson 구간)', async () => {
     const { container } = render(Play, { data: PAYLOAD });
     const roam = tableOf(container, '로밍');
     expect(heads(roam)).toEqual(['멤버', '라인', '프레임', '로밍 비율']);
     expect(bodyRows(roam).map(cells)).toEqual([['쟈부쟈부', '서폿', '29', '86%'], ['외 걸', '미드', '110', '31%']]);
-    expect(bodyRows(roam)[0]!.querySelector('td.lane-sup')).toBeTruthy();
+    expect(bodyRows(roam)[0]!.querySelector('td .lane.sup')).toBeTruthy();
     expect(bodyRows(roam)[0]!.querySelector('td.bar')).toBeTruthy();
     expect(screen.getByRole('button', { name: '로밍 비율 설명' })).toBeTruthy();
 
@@ -311,10 +335,13 @@ describe('Play — 로밍 · 한타 · 오브젝트', () => {
 
     const dr = tableOf(container, '용');
     expect(heads(dr)).toEqual(['용', '획득', '승률']);
-    expect(bodyRows(dr).map(cells)).toEqual([['화학공학', '40', '63%'], ['장로', '1', '100%']]);
+    // 40회 63% 는 구간(하한 47%)이 50% 를 못 넘어 중립 · 1회는 표본 적음(색·기호 없음)
+    expect(bodyRows(dr).map(cells)).toEqual([['화학공학', '40', '63%'], ['장로', '1', '100%, 표본 적음']]);
     const wrCells = bodyRows(dr).map((r) => r.querySelectorAll('td:not(.rn)')[2]!);
-    expect(wrCells[0]!.classList.contains('win')).toBe(true);
-    expect(wrCells[1]!.classList.contains('win')).toBe(false);   // 1회는 채우지 않는다
+    expect(wrCells[0]!.querySelector('.wr')?.classList.contains('st-even')).toBe(true);
+    expect(wrCells[1]!.querySelector('.wr')?.classList.contains('st-few')).toBe(true);
+    expect(wrCells[1]!.querySelector('.few')?.textContent).toBe('표본 적음');
+    expect(wrCells.some((td) => td.classList.contains('win') || td.classList.contains('loss'))).toBe(false);
     expect(dr.querySelector('tbody tr[tabindex]')).toBeNull();
 
     await fireEvent.click(bodyRows(f)[0]!);

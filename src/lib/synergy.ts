@@ -1,5 +1,5 @@
 /**
- * 시너지 화면의 파생값 — 듀오·트리오 표 행, 히트맵 격자, 수식 줄 문구. 전부 순수 함수다.
+ * 시너지 화면의 파생값 — 듀오·트리오 표 행, 듀오 카드 띠, 히트맵 격자, 수식 줄 문구. 전부 순수 함수다.
  *
  * payload 의 `synergy`(듀오)·`trios`(트리오)를 그대로 받고 전역 store 를 읽지 않는다.
  * 옛 renderSyn·renderSynHeat(legacy/index.html)의 규칙을 옮겼다:
@@ -33,6 +33,22 @@ export function duoKey(a: string, b: string): string {
 /** 듀오 표 행 — 발행 순서 그대로(표가 시너지 순으로 정렬한다). */
 export function duoRows(synergy: readonly SynergyRow[] | null | undefined): DuoRow[] {
   return (synergy ?? []).map((r) => ({ ...r, key: duoKey(r.na, r.nb), pair: r.na + JOIN + r.nb }));
+}
+
+/** 듀오 카드 띠의 카드 수 */
+const SPOT_N = 5;
+
+/**
+ * 듀오 카드 띠(표 위)의 행 — 함께 minGames 판 이상인 쌍 중 **함께 판수가 많은 순** 상위 5. 같으면 글자순(ko).
+ * 시너지 순이 아니다: 듀오 시너지 값은 실데이터에서 우연 수준이라(z 표준편차 1.04~1.13) 화면에서 가장 큰
+ * 위계(카드)를 주지 않는다 — 함께 뛴 판수는 사실이다. 시너지 값은 카드 안 숫자로만 보인다.
+ * 표 행과 같은 DuoRow 를 받아 돌려준다 — 카드와 표가 같은 키로 선택을 나눈다.
+ */
+export function spotlightRows(rows: readonly DuoRow[], minGames: number): DuoRow[] {
+  return rows
+    .filter((r) => r.games >= minGames)
+    .sort((a, b) => b.games - a.games || a.pair.localeCompare(b.pair, 'ko'))
+    .slice(0, SPOT_N);
 }
 
 /** 시너지 셀 채움 — 양수 'win' · 음수 'loss' · 0 은 없음(옛 pos/neg). */

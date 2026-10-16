@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  hourRows, metricLanes, metricRows, vsRows, type VsSource,
+  frequentOpponents, hourRows, metricLanes, metricRows, vsRows, type VsRow, type VsSource,
 } from '../src/lib/member-rest';
 import type { H2HEntry, LaneId, MetricCell, MetricGroup, MetricMeta, PlayerPub } from '../src/lib/data/types';
 
@@ -167,5 +167,24 @@ describe('metricLanes', () => {
     expect(metricLanes(P)).toEqual(['JUNGLE', 'BOTTOM']);
     expect(metricLanes({ metrics_lane: { UTILITY: {}, TOP: {}, WEIRD: {} } })).toEqual(['TOP', 'UTILITY']);
     expect(metricLanes({})).toEqual([]);
+  });
+});
+
+describe('frequentOpponents — 자주 만난 상대', () => {
+  const row = (opp: string, vsGames: number, myWins = 0): VsRow => ({
+    key: opp, opp, withGames: 0, withWins: 0, withWr: null,
+    vsGames, myWins, oppWins: vsGames - myWins, vsWr: vsGames ? myWins / vsGames : null, kills: null, deaths: null,
+  });
+
+  it('맞대결 문턱 이상만 · 많이 만난 순(같으면 이름 순) · 최대 5명 — 승패로 줄 세우지 않는다', () => {
+    const rows = [row('가', 6, 6), row('나', 12, 1), row('다', 4, 4), row('라', 6, 0), row('마', 9), row('바', 7), row('사', 5), row('아', 8)];
+    expect(frequentOpponents(rows, 5).map((r) => r.opp)).toEqual(['나', '마', '아', '바', '가']);
+  });
+  it('문턱 이상이 없으면 빈 목록 · 맞대결 0판은 문턱이 0 이어도 빠진다', () => {
+    expect(frequentOpponents([row('가', 4), row('나', 2)], 5)).toEqual([]);
+    expect(frequentOpponents([row('가', 0)], 0)).toEqual([]);
+  });
+  it('실데이터 모양(vsRows 결과)을 그대로 받는다', () => {
+    expect(frequentOpponents(vsRows(VS, 'p1'), 2).map((r) => [r.opp, r.vsGames])).toEqual([['상대A', 4], ['상대B', 2]]);
   });
 });

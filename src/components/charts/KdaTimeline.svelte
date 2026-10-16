@@ -1,7 +1,7 @@
 <script lang="ts">
   /**
    * 킬 · 데스 · 어시 타임라인 — 경기 시간 위에 사건을 점으로. 세 줄(킬 --win · 어시 --dim · 데스 --loss),
-   * 5분 격자 --grid, 바닥 --ink. 점마다 <title>(분 · 종류 · 상대 챔피언). 같은 구간에 몰린 점은 살짝 흔들어 놓는다
+   * 5분 격자 --grid, 바닥 --ink(둥근 우물). 점마다 <title>(분 · 종류 · 상대 챔피언). 같은 구간에 몰린 점은 살짝 흔들어 놓는다
    * (한타에서 어시가 몰린다). 폭은 래퍼 폭을 재고 글자 크기는 토큰 그대로.
    * 누적 그래프보다 이게 낫다: "몇 분에 누구를 잡았나" 가 바로 읽히고, 점이 몰린 구간이 한타였다는 것도 보인다.
    */
@@ -23,7 +23,7 @@
   const counts = $derived(kdaCounts(marks));
 
   let wrapW = $state(0);
-  const W = $derived(Math.max(240, Math.floor(wrapW)));
+  const W = $derived(Math.max(240, Math.floor(wrapW) - 2));   // 판 테두리 2px
   const L = 10, R = 10, H = 66;
   const ROW: Record<'K' | 'A' | 'D', number> = { K: 14, A: 30, D: 46 };
   const X = (t: number) => L + (W - L - R) * t;
@@ -48,6 +48,7 @@
       <span class="key"><i class="sw d"></i>{KDA_KO.D} {counts.D}</span>
       <span class="key"><i class="sw a"></i>{KDA_KO.A} {counts.A}</span>
     </div>
+    <div class="plot">
     <svg width={W} height={H} viewBox="0 0 {W} {H}" role="img" aria-label="{caption}: {summary}">
       <rect class="bg" x="0" y="0" width={W} height={H} />
       {#each ticks as t (t.label)}
@@ -63,6 +64,7 @@
         </circle>
       {/each}
     </svg>
+    </div>
   {/if}
 </div>
 
@@ -82,12 +84,13 @@
     padding: 0 0 var(--sp-1);
     font-size: var(--fs-sm);
   }
-  .key { display: inline-flex; align-items: center; gap: var(--sp-1); }
+  .key { display: inline-flex; align-items: center; gap: 6px; }
   .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
   .sw.k { background: var(--win); }
   .sw.d { background: var(--loss); }
   .sw.a { background: var(--dim); }
-  svg { display: block; border: 1px solid var(--grid); font-family: var(--font); font-variant-numeric: tabular-nums; }
+  .plot { overflow: hidden; border: 1px solid var(--grid); border-radius: var(--r-md); background: var(--ink); }
+  svg { display: block; font-family: var(--font); font-variant-numeric: tabular-nums; }
   .bg { fill: var(--ink); }
   .grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
   .row { stroke: var(--grid); stroke-width: 1; stroke-dasharray: 1 3; }

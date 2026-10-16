@@ -8,23 +8,24 @@
  * - 거르기는 화면에 보이는 글자(fmt 결과) 기준, 숫자 열은 빼고 본다 — '5' 를 치면 5가 든 숫자
  *   셀이 전부 걸리는 것을 막는다. 자음만 치면 초성으로 견준다(소환사명 검색과 같은 규칙).
  */
+import type { Snippet } from 'svelte';
 import { cho, norm } from './search';
 
 export type SortDir = 1 | -1;
 
-/** 열 스펙. `k` 는 행 객체의 키, `h` 는 머리 라벨(지표는 mLabel 로 만든 것만). */
-export interface Col<T> {
+/** 열 스펙의 공통부 — Col 은 이것에 셀 스니펫 규칙(스니펫을 주면 fmt 도 준다)을 더한 것 */
+interface ColBase<T> {
   k: string;
   h: string;
   /** 폰 2줄 장부 행(rows2)의 셀 라벨 — 머리 h 가 길어 값과 한 줄에 안 들 때('함께 승률'→'승률'). 없으면 h */
   hs?: string;
   /** 숫자 열 — 오른쪽 정렬·tabular-nums. 거르기 대상에서 뺀다 */
   num?: boolean;
-  /** 데이터 막대 — 셀 바탕 그라디언트, 열 최대값 기준. 낮을수록 좋은 열은 무시 */
+  /** 데이터 막대 — 셀 아래쪽 3px 띠, 열 최대값 기준. 낮을수록 좋은 열은 무시 */
   bar?: boolean;
   /** 챔피언 id → 셀 앞 초상. 영숫자가 아니면 그리지 않는다 */
   img?: (r: T) => string | null | undefined;
-  /** 셀 글자. i 는 표시 순서(정렬·거르기 뒤) */
+  /** 셀 글자. i 는 표시 순서(정렬·거르기 뒤). cell 스니펫이 있어도 거르기·폰 2줄 행의 빈 칸 판정·보조기술은 이 글자를 쓴다 */
   fmt?: (v: unknown, r: T, i: number) => string;
   /** 셀 클래스 — 'win'·'loss'·'lane-top'… 조건부 서식은 DataTable 이 그린다 */
   cls?: (r: T) => string;
@@ -44,6 +45,19 @@ export interface Col<T> {
    */
   pick?: ColPick;
 }
+
+/**
+ * 열 스펙. `k` 는 행 객체의 키, `h` 는 머리 라벨(지표는 mLabel 로 만든 것만).
+ *
+ * `cell` 스니펫 — 글자 대신 그릴 보이는 층(승률 게이지·연승 알약·배지). 인자는 (행, 표시 순서 i).
+ * DataTable 이 aria-hidden 으로 감싸고 같은 칸에 fmt 글자를 보조기술 전용으로 둔다. 그래서 스니펫을 주면 fmt 도
+ * 반드시 준다(타입이 강제한다) — fmt 는 그 셀의 뜻을 글로 적은 것('54% · 46승 40패')이고 거르기·폰 2줄 행의
+ * 빈 칸 판정도 이 글자를 쓴다. 스니펫 안에 초점 받는 것(링크·버튼)을 두지 않는다. 정렬은 여전히 행 값(k)으로 한다.
+ */
+export type Col<T> = ColBase<T> & (
+  | { cell?: undefined }
+  | { cell: Snippet<[T, number]>; fmt: (v: unknown, r: T, i: number) => string }
+);
 
 /** 머리 드롭다운 스펙. `value` 가 options 의 `v` 와 같은 것이 지금 고른 값(''=전체가 관례). */
 export interface ColPick {
@@ -146,8 +160,8 @@ export function colMax<T>(rows: readonly T[], k: string): number {
 }
 
 /**
- * 막대 너비(0~100, 소수 첫째 자리). 셀은 `--bar: N%` 하나만 인라인으로 받고, 그라디언트
- * 자체는 DataTable 의 스타일시트에 한 번만 적는다(색은 토큰 --sel 22%) — 인라인에 색이 없다.
+ * 막대 너비(0~100, 소수 첫째 자리). 셀은 `--bar: N%` 하나만 인라인으로 받고, 띠의 그라디언트
+ * 자체는 DataTable 의 스타일시트에 한 번만 적는다(토큰 --grad-win) — 인라인에 색이 없다.
  */
 export function barPct(v: unknown, max: number): number {
   const p = ((Number(v) || 0) / max) * 100;

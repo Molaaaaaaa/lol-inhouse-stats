@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/sv
 import {
   axisTop, buildRows, csDiffText, extraRows, fxKda, gapText, goldLanes, goldSeries, goldStep, goldSummary, goldTick, itemImgUrl,
   kdaCounts, kdaMarks, killDots, matchRows, MATCH_PAGE, niceStep, rateRows, scoreboardRows, teamLabel, teamTotals, trendRows,
-  wrCellCls, wrWithGames,
+  versusRows, wrCell, wrWithGames,
 } from '../src/lib/matches';
 import { app } from '../src/lib/data/store.svelte';
 import { router } from '../src/lib/router.svelte';
@@ -16,6 +16,9 @@ import Trend from '../src/routes/matches/Trend.svelte';
 import Matches from '../src/routes/Matches.svelte';
 import { CHAMP_KO, DETAIL, FUN, PAYLOAD, RECENT } from './fixtures/match-payload';
 import { fakeSheetLayout } from './fake-layout';
+
+/** 셀 글 — DataTable 스니펫 칸(.cs, 보이는 층은 보조기술에서 숨는다)은 보조기술 글(fmt), 그 밖은 보이는 글 */
+const cellText = (td: Element) => (td.querySelector(':scope > .cs') ? td.querySelector(':scope > .sr-only') : td)?.textContent?.trim();
 
 // ── 순수 함수 ──────────────────────────────────────────────────────────
 
@@ -49,7 +52,7 @@ describe('scoreboardRows · teamTotals', () => {
     const rows = scoreboardRows(DETAIL.teams[0], CHAMP_KO);
     expect(rows.map((r) => r.name)).toEqual(['나', '가']);   // 탑 → 미드
     const ahri = rows[1]!;
-    expect(ahri).toMatchObject({ key: '100-2', champKo: '아리', laneKo: '미드', laneCls: 'lane-mid', kdaText: '9/4/14', kda: 5.75 });
+    expect(ahri).toMatchObject({ key: '100-2', champKo: '아리', lane: 'MIDDLE', laneCls: 'lane-mid', kdaText: '9/4/14', kda: 5.75 });
     expect(ahri.items).toEqual([3748, 3111, 3078, 6333, 2055, 3340]);
     expect(ahri.trinket).toBe(3364);
     expect(ahri.spells).toBe('점멸 · 순간이동');
@@ -68,6 +71,16 @@ describe('scoreboardRows · teamTotals', () => {
     expect(off[0]!.bans).toEqual([]);
     expect(teamLabel({ team_id: 200 }, 0)).toBe('레드팀');
     expect(teamLabel({ team_id: 0 }, 1)).toBe('레드팀');
+  });
+  it('대결 막대 — 킬·골드(+오브젝트가 실리면 타워·드래곤), 큰 쪽이 100, 오브젝트가 없으면 그 줄이 없다', () => {
+    const on = versusRows(teamTotals(DETAIL.teams, true, true));
+    expect(on.map((v) => [v.label, v.aText, v.bText, v.aPct, v.bPct])).toEqual([
+      ['킬', '45', '20', 100, 44.4], ['골드', '62.3K', '48.1K', 100, 77.2], ['타워', '10', '3', 100, 30], ['드래곤', '1', '2', 50, 100],
+    ]);
+    expect(versusRows(teamTotals(DETAIL.teams, false, false)).map((v) => v.key)).toEqual(['kills', 'gold']);
+    const zero = teamTotals(DETAIL.teams.map((t) => ({ ...t, kills: 0 })), false, false);
+    expect(versusRows(zero)[0]).toMatchObject({ a: 0, b: 0, aPct: 0, bPct: 0 });   // 0 나누기 없음
+    expect(versusRows(teamTotals(DETAIL.teams.slice(0, 1), true, true))).toEqual([]);
   });
   it('세부 기록 — 0 은 빼고, K·m:ss 서식, 레지스트리 이름 우선', () => {
     const rows = extraRows(DETAIL.teams[0]!.players[0]!.extra, PAYLOAD.metric_meta);
@@ -234,14 +247,16 @@ describe('trendRows — 경향', () => {
     const t = trendRows(null);
     expect(t).toEqual({ sides: [], players: [], hours: [], duration: [] });
   });
-  it('셀 서식 — 승률(판), 문턱 미만은 wr-dim, 판 0 은 빈 문자열, 차이 %p', () => {
+  it('셀 서식 — 승률(판), 단계는 Wilson 구간(점추정 아님), 문턱 미만은 표본 적음, 판 0 은 없음, 차이 %p', () => {
     expect(wrWithGames(0.75, 8)).toBe('75% (8)');
     expect(wrWithGames(null, 0)).toBe('-');
-    expect(wrCellCls(0.75, 8, 5)).toBe('win wr-h');   // 채움(win) + ▲(wr-h) — DataTable 이 승률 셀에만 기호를 붙인다
-    expect(wrCellCls(0.2, 8, 5)).toBe('loss wr-l');
-    expect(wrCellCls(0.5, 8, 5)).toBe('');
-    expect(wrCellCls(1, 1, 5)).toBe('wr-dim');
-    expect(wrCellCls(null, 0, 5)).toBe('');
+    expect(wrCell(0.75, 8, 5)).toEqual({ pct: '75%', games: 8, step: 'even', text: '75% (8)' });   // 하한 41% — 색 없음
+    expect(wrCell(1, 6, 5)).toMatchObject({ step: 'up2', text: '100% (6), 60% 이상으로 높음' });
+    expect(wrCell(0.1, 20, 5)).toMatchObject({ step: 'down2', text: '10% (20), 40% 이하로 낮음' });
+    expect(wrCell(1, 1, 5)).toMatchObject({ step: 'few', text: '100% (1), 표본 적음' });
+    expect(wrCell(0, 1, 5)?.step).toBe('few');   // 0% 도 값이다(빈 칸이 아니다)
+    expect(wrCell(null, 0, 5)).toBeNull();
+    expect(wrCell(0.5, 0, 5)).toBeNull();
     expect([gapText(0.334), gapText(-0.2), gapText(0), gapText(null)]).toEqual(['+33%p', '−20%p', '0%p', '-']);
   });
 });
@@ -273,7 +288,12 @@ describe('List — 최근 경기 목록', () => {
     expect(old.querySelector('.team.win .res')?.textContent).toBe('승');
     expect(old.querySelector('.team.loss .res')?.textContent).toBe('패');
     expect(old.querySelectorAll('img.champ')).toHaveLength(10);
+    expect(old.querySelector('.pl img.champ')?.getAttribute('width')).toBe('16');   // 멤버 칩 안 16px 초상
     expect(old.querySelector('.pl.top')).not.toBeNull();
+    // 한 경기가 카드 하나 — 접힌 카드는 호버 들림(.lift), 글로우는 없다
+    expect(old.classList.contains('card')).toBe(true);
+    expect(old.classList.contains('lift')).toBe(true);
+    expect(old.classList.contains('glow')).toBe(false);
     expect(old.querySelector('.pl')?.getAttribute('aria-describedby')).toMatch(/^tip-d/);
     const btn = old.querySelector('button[aria-expanded]')!;
     expect(btn.getAttribute('aria-expanded')).toBe('false');
@@ -295,6 +315,9 @@ describe('List — 최근 경기 목록', () => {
     const det = container.querySelector('#' + CSS.escape(btn.getAttribute('aria-controls')!))!;
     expect(det.hasAttribute('hidden')).toBe(false);
     expect(det.querySelector('table[aria-label="팀 합계"]')).not.toBeNull();
+    const card = btn.closest('li.match')!;
+    expect(card.classList.contains('glow')).toBe(true);    // 펼친 카드 = 선택된 카드
+    expect(card.classList.contains('lift')).toBe(false);
     expect(lazy).toHaveBeenCalledWith('mnew');
     await fireEvent.click(btn);
     expect(btn.getAttribute('aria-expanded')).toBe('false');
@@ -360,6 +383,27 @@ describe('Detail — 경기 상세', () => {
     }
   });
 
+  it('팀 대결 막대 — 머리(팀 · 승패 글자), 줄마다 보조기술 한 문장, 이긴 쪽 그라디언트 · 진 쪽 사선, 오브젝트 없으면 두 줄', () => {
+    const { container } = render(Detail, { detail: DETAIL, data: PAYLOAD, slug: 'mnew' });
+    const vsb = container.querySelector('.vsb')!;
+    expect([...vsb.querySelectorAll('.vh .tn')].map((t) => t.textContent)).toEqual(['블루팀승', '패레드팀']);
+    expect(vsb.querySelector('.vh .tag.win')?.textContent).toBe('승');
+    const list = vsb.querySelector('ul.vrows')!;
+    expect(container.querySelector('#' + CSS.escape(list.getAttribute('aria-labelledby')!))?.textContent).toBe('팀 대결');
+    const rows = [...list.querySelectorAll('li.vr')];
+    expect(rows.map((li) => li.querySelector('.sr-only')?.textContent)).toEqual([
+      '킬 · 블루팀 45 · 레드팀 20', '골드 · 블루팀 62.3K · 레드팀 48.1K', '타워 · 블루팀 10 · 레드팀 3', '드래곤 · 블루팀 1 · 레드팀 2',
+    ]);
+    expect([...rows[0]!.querySelectorAll('[aria-hidden="true"]')].map((e) => e.textContent)).toEqual(['45', '', '킬', '', '20']);
+    const [left, right] = [...rows[0]!.querySelectorAll('.vbar')];
+    expect(left!.classList.contains('w') && right!.classList.contains('x')).toBe(true);   // 블루 승 · 레드 패
+    expect((left!.querySelector('i') as HTMLElement).style.getPropertyValue('--w')).toBe('100%');
+    expect((right!.querySelector('i') as HTMLElement).style.getPropertyValue('--w')).toBe('44.4%');
+    cleanup();
+    const off = render(Detail, { detail: DETAIL, data: { ...PAYLOAD, objectives_available: false } as GuildPayload, slug: 'mnew' });
+    expect(off.container.querySelectorAll('.vsb li.vr')).toHaveLength(2);
+  });
+
   it('팀 합계(오브젝트·밴) · 팀별 스코어보드(라인 순, 아이템 칸, 스펠·룬 lo) · 골드 · 딜량 · 킬 지도 · 킬 기록', () => {
     const { container } = render(Detail, { detail: DETAIL, data: PAYLOAD, slug: 'mnew' });
     const totals = container.querySelector('table[aria-label="팀 합계"]')!;
@@ -380,7 +424,7 @@ describe('Detail — 경기 상세', () => {
     const sb = [...boards[0]!.querySelectorAll('tbody tr.sb')];
     expect(sb.map((tr) => tr.querySelector('td.c0')?.textContent?.trim())).toEqual(['나', '가']);
     const ahri = sb[1]!;
-    expect(ahri.querySelector('td.lane-mid')?.textContent).toBe('미드');
+    expect(ahri.querySelector('td .lane.mid')?.textContent).toBe('미드');
     expect([...ahri.querySelectorAll('td.num')].map((td) => td.textContent)).toEqual(['9/4/14', '5.75', '180', '12.0K', '39.3K', '15.0K', '20']);
     expect(ahri.querySelectorAll('td.items .slot')).toHaveLength(7);   // 6칸 + 장신구
     expect(ahri.querySelectorAll('td.items img.itemslot')).toHaveLength(7);
@@ -410,8 +454,9 @@ describe('Detail — 경기 상세', () => {
     expect(build[3]!.classList.contains('sold')).toBe(true);
     expect(build[3]!.querySelector('.x')?.textContent).toBe('✕');
     expect(build[2]!.querySelector('.x')).toBeNull();
-    expect([...pd.querySelectorAll('.cell dt')].map((d) => d.textContent)).toEqual(['킬 관여', '분당 CS', '솔로킬', '물리 피해', '죽어 있던 시간']);
-    expect([...pd.querySelectorAll('.cell dd')].slice(0, 2).map((d) => d.textContent)).toEqual(['51%', '5.7']);   // (9+14)/45 · 180/31.7분
+    // 세부 기록은 작은 숫자 타일(StatTile) — dl 안의 dt·dd 짝
+    expect([...pd.querySelectorAll('dl.cells dt')].map((d) => d.textContent)).toEqual(['킬 관여', '분당 CS', '솔로킬', '물리 피해', '죽어 있던 시간']);
+    expect([...pd.querySelectorAll('dl.cells dd')].slice(0, 2).map((d) => d.textContent)).toEqual(['51%', '5.7']);   // (9+14)/45 · 180/31.7분
     expect(pd.textContent).toContain('소환사 주문');
     expect(board.querySelector('tr.sb.sel td.c0')?.textContent?.trim()).toBe('가');
     // 행 자체를 눌러도 토글된다(접힘)
@@ -427,7 +472,7 @@ describe('Detail — 경기 상세', () => {
       const board = container.querySelector(`table[aria-label="${label}"]`)!;
       await fireEvent.click(board.querySelectorAll('button.exp')[0]!);
       const pd = board.querySelector('tr.pd')!;
-      return [...pd.querySelectorAll('.cell')].slice(0, 2).map((c) => [c.querySelector('dt')?.textContent, c.querySelector('dd')?.textContent]);
+      return [...pd.querySelectorAll('dl.cells .stat')].slice(0, 2).map((c) => [c.querySelector('dt')?.textContent, c.querySelector('dd')?.textContent]);
     };
     // 레드팀 첫 행(라인 순: 라 · 탑) — 팀 킬 0
     expect(await cells('스코어보드 · 레드팀 · 패')).toEqual([['킬 관여', '-'], ['분당 CS', '5.7']]);
@@ -516,28 +561,37 @@ describe('Trend — 경향', () => {
     const { container } = render(Trend, { data: PAYLOAD });
     const sides = container.querySelector('table[aria-label="진영별 승률"]')!;
     expect([...sides.querySelectorAll('thead th .h')].map((h) => h.textContent)).toEqual(['진영', '판', '승', '패', '승률']);
-    expect([...sides.querySelectorAll('tbody tr')].map((tr) => [...tr.querySelectorAll('td')].map((td) => td.textContent?.trim()))).toEqual([
+    expect([...sides.querySelectorAll('tbody tr')].map((tr) => [...tr.querySelectorAll('td')].map(cellText))).toEqual([
       ['블루', '57', '27', '30', '47%'], ['레드', '57', '30', '27', '53%'],
     ]);
+    // 진영 승률 칸은 승률 게이지(보조기술 이름에 숫자를 다 담는다)
+    expect(sides.querySelector('tbody tr .wg[role="img"]')?.getAttribute('aria-label')).toBe('승률 47%, 27승 30패, 57판');
     const hours = container.querySelector('svg[aria-label^="시간대별 판수"]')!;
     expect(hours.getAttribute('aria-label')).toBe('시간대별 판수: 00시 9판, 22시 17판');
     expect(container.textContent).not.toMatch(/시간대별 승률이 항상 50% 입니다\.[^]*승률 열/);
+    // 카드 제목이 같은 말이라 차트 캡션은 보조기술에만
+    expect(container.querySelector('.hourbars .cap')?.classList.contains('sr-only')).toBe(true);
 
     const players = container.querySelector('table[aria-label="멤버별 진영 성적"]')!;
     const prow = [...players.querySelectorAll('tbody tr')];
     expect(prow.map((tr) => tr.querySelector('td.c0')?.textContent?.trim())).toEqual(['차이큼', '양쪽']);
     const cells = [...prow[0]!.querySelectorAll('td:not(.rn)')];
-    expect(cells.map((td) => td.textContent?.trim())).toEqual(['차이큼', '6', '6', '100% (6)', '5', '1', '20% (5)', '+80%p']);
-    expect(cells[3]!.classList.contains('win')).toBe(true);
-    expect(cells[6]!.classList.contains('loss')).toBe(true);
+    expect(cells.map(cellText)).toEqual(['차이큼', '6', '6', '100% (6), 60% 이상으로 높음', '5', '1', '20% (5)', '+80%p']);
+    // 단계 색은 글자(st-*) + 기호 — 채움(td.win·td.loss)이 아니다. 5판 20% 는 상한이 50% 를 넘어 중립
+    expect(cells[3]!.querySelector('.st-up2')?.textContent).toBe('100%▲▲');
+    expect(cells[6]!.querySelector('.st-even')?.textContent).toBe('20%');
+    expect(players.querySelector('td.win, td.loss')).toBeNull();
 
     const dur = container.querySelector('table[aria-label="경기 길이별 승률"]')!;
     const drow = [...dur.querySelectorAll('tbody tr')];
-    expect([...drow[0]!.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim())).toEqual(['많이', '19', '75% (8)', '56% (9)', '100% (2)']);
-    expect(drow[0]!.querySelectorAll('td')[3]!.classList.contains('win')).toBe(true);
-    expect(drow[0]!.querySelectorAll('td')[5]!.classList.contains('wr-dim')).toBe(true);   // 2판 < 5
-    expect([...drow[1]!.querySelectorAll('td:not(.rn)')].map((td) => td.textContent?.trim())).toEqual(['적게', '2', '100% (1)', '0% (1)', '-']);
-    expect(drow[1]!.querySelectorAll('td')[4]!.classList.contains('loss')).toBe(false);
+    expect([...drow[0]!.querySelectorAll('td:not(.rn)')].map(cellText)).toEqual(['많이', '19', '75% (8)', '56% (9)', '100% (2), 표본 적음']);
+    expect(drow[0]!.querySelectorAll('td')[5]!.querySelector('.st-few')).not.toBeNull();   // 2판 < 5
+    expect(drow[0]!.querySelectorAll('td')[5]!.querySelector('.g')?.textContent).toBe('(2)');
+    // 문턱 미만은 옅은 색에 더해 '표본 적음'을 보이는 글로 — 문턱 이상 칸에는 없다
+    expect(drow[0]!.querySelectorAll('td')[5]!.querySelector('.fw')?.textContent).toBe('표본 적음');
+    expect(drow[0]!.querySelectorAll('td')[3]!.querySelector('.fw')).toBeNull();
+    expect([...drow[1]!.querySelectorAll('td:not(.rn)')].map(cellText)).toEqual(['적게', '2', '100% (1), 표본 적음', '0% (1), 표본 적음', '-']);
+    expect(dur.querySelector('td.win, td.loss')).toBeNull();
   });
 });
 

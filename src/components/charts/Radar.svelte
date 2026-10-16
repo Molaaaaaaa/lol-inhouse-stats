@@ -1,6 +1,7 @@
 <script lang="ts">
   /**
-   * 능력치 육각형 — 삽입된 차트. 눈금 링(--grid)·축선·방 평균선(점선)·채움 다각형(--sel 22%)·
+   * 능력치 육각형 — 삽입된 차트. 둥근 우물(--ink) 위 눈금 링(--grid)·축선·방 평균선(--dim2 점선)·'나' 채움 다각형(--txt 실선 + 12% 채움 —
+   * 액센트는 선택·초점·활성 독·MVP 에만 쓰므로 무채색. 평균선과는 실선·점선과 밝기로 갈린다)·
    * 꼭짓점 라벨(축 이름 + 점수). 색은 전부 class → CSS 토큰이다(SVG 속성에 hex 없음).
    *
    * 축은 3개 이상일 때만 그린다. 그 아래면 '판수가 부족해 능력치를 표시할 수 없습니다.'
@@ -72,19 +73,20 @@
     height: auto;
     background: var(--ink);
     border: 1px solid var(--grid);
+    border-radius: var(--r-md);
   }
   .ring { fill: none; stroke: var(--grid); stroke-width: 1; }
   .spoke { stroke: var(--grid); stroke-width: 1; }
-  .avg { fill: none; stroke: var(--grid-strong); stroke-width: 1; stroke-dasharray: 3 3; }
+  .avg { fill: none; stroke: var(--dim2); stroke-width: 1; stroke-dasharray: 3 3; }
   .area {
-    fill: color-mix(in srgb, var(--sel) 22%, transparent);
-    stroke: var(--sel);
+    fill: color-mix(in srgb, var(--txt) 12%, transparent);
+    stroke: var(--txt);
     stroke-width: 2;
     stroke-linejoin: round;
   }
-  .dot { fill: var(--sel); }
+  .dot { fill: var(--txt); }
   .lbl { font-size: var(--fs-tick); fill: var(--dim); }
   .lbl.thin { fill: var(--dim2); }
   .val { font-size: var(--fs-tick); font-weight: 700; fill: var(--txt); font-variant-numeric: tabular-nums; }
-  .empty { padding: var(--sp-3); border: 1px solid var(--grid); color: var(--dim); }
+  .empty { padding: var(--sp-3); background: var(--ink); border: 1px solid var(--grid); border-radius: var(--r-md); color: var(--dim); }
 </style>

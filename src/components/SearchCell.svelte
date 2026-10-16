@@ -1,11 +1,11 @@
 <script lang="ts">
   /**
-   * 소환사명 검색 셀 — 시트 맨 위 한 줄, 셀처럼 생긴 입력. 이름(부분일치)·초성('ㅇㅇㅁ')으로
+   * 소환사명 검색 — 헤더 아래 한 줄, 본문 폭 안의 둥근 입력. 이름(부분일치)·초성('ㅇㅇㅁ')으로
    * 후보를 띄우고, 고른 이름의 멤버 화면(#/m/이름)으로 간다. 난잡함 피드백의 유일한 찾기 수단 —
    * 표 강조·걸러 보기는 하지 않는다.
    *
    * 접근성: input role=combobox + 떠 있는 listbox, 초점은 입력에 머물고 aria-activedescendant 로
-   * 가리킨다. ↑↓ 이동 · Enter 선택 · Esc 닫기. 목록은 position:absolute 떠 있는 층(--raised·--shadow).
+   * 가리킨다. ↑↓ 이동 · Enter 선택 · Esc 닫기. 목록은 position:absolute 떠 있는 층(--raised·--shadow·반경 12px).
    * 키보드는 전부 입력칸이 받으므로 option 은 포인터 표적이다 — mousedown 은 초점을 지키고(preventDefault),
    * mouseup 이 고른다(터치 탭도 mouseup 을 낸다).
    */
@@ -116,15 +116,17 @@
 </div>
 
 <style>
-  /* 셀 한 칸: 홈통 바탕 + 1px 격자선. 초점 고리(2px --sel, 안쪽)는 app.css 의 :focus-visible 이 그린다. */
+  /* 검색 칸 — 본문 폭(--wrap) 안의 둥근 입력(우물 바탕 · 1px --ctl-edge). 초점 고리(2px --sel)는 app.css 의 :focus-visible */
   .cell {
     position: relative;
-    border-bottom: 1px solid var(--grid);
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: var(--sp-2) var(--sp-4) var(--sp-1);
   }
   .cell :global(.glyph) {
     position: absolute;
-    left: var(--sp-4);
-    top: 50%;
+    left: calc(var(--sp-4) + var(--sp-3));
+    top: calc(50% + 2px);
     transform: translateY(-50%);
     color: var(--dim);
     pointer-events: none;
@@ -132,31 +134,33 @@
   input {
     display: block;
     width: 100%;
-    height: 44px;
-    padding: 0 var(--sp-4) 0 calc(var(--sp-4) * 2 + 1em);
-    background: var(--gutter);
-    border: 0;
-    border-radius: 0;
+    height: 40px;
+    padding: 0 var(--sp-3) 0 calc(var(--sp-3) * 2 + 1em);
+    background: var(--ink);
+    border: 1px solid var(--ctl-edge);
+    border-radius: var(--r-md);
     -webkit-appearance: none;
     appearance: none;
     font-family: var(--font);
+    transition: border-color var(--dur-1), background-color var(--dur-1);
   }
-  input:hover { background: var(--raised); }
-  input:focus { background: var(--gutter); }
+  input:hover { border-color: var(--dim2); }
+  input:focus { background: var(--ink); }
+  input:focus-visible { outline-offset: 0; }
 
-  /* 떠 있는 층 — 시트 위에 뜨는 유일한 것. overflow 부모에 안 잘리게 absolute + z-index */
+  /* 떠 있는 층 — 판 위에 뜨는 목록. overflow 부모에 안 잘리게 absolute + z-index */
   .list {
     position: absolute;
-    left: 0; right: 0; top: 100%;
+    left: var(--sp-4); right: var(--sp-4); top: calc(100% + 2px);
     z-index: 30;
     margin: 0;
-    padding: 0;
+    padding: var(--sp-1);
     list-style: none;
     max-height: min(60vh, calc(var(--row-h) * 8));
     overflow-y: auto;
     background: var(--raised);
     border: 1px solid var(--grid-strong);
-    border-top: 0;
+    border-radius: var(--r-md);
     box-shadow: var(--shadow);
   }
   .list[hidden] { display: none; }
@@ -165,24 +169,31 @@
     align-items: center;
     gap: var(--sp-3);
     min-height: var(--row-h);
-    padding: 0 var(--sp-4);
-    border-bottom: 1px solid var(--grid);
+    padding: 0 var(--sp-3);
+    border-radius: var(--r-chip);
     cursor: pointer;
   }
-  .opt:last-child { border-bottom: 0; }
   .name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .n { flex: none; color: var(--dim); font-size: var(--fs-sm); }
-  .opt.cur { box-shadow: inset 0 0 0 2px var(--sel); }
+  .opt.cur { background: var(--track); box-shadow: inset 0 0 0 2px var(--sel); }
   .opt:active { background: var(--gutter); }
   .none {
     min-height: var(--row-h);
     display: flex;
     align-items: center;
-    padding: 0 var(--sp-4);
+    padding: 0 var(--sp-3);
     color: var(--dim);
   }
 
+  @media (pointer: coarse) {
+    input { height: 44px; }
+  }
   @media (max-width: 640px) {
-    .list { max-height: min(50vh, calc(44px * 6)); }
+    .cell { padding: var(--sp-2) var(--sp-3) var(--sp-1); }
+    .cell :global(.glyph) { left: calc(var(--sp-3) * 2); }
+    .list { left: var(--sp-3); right: var(--sp-3); max-height: min(50vh, calc(44px * 6)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    input { transition: none; }
   }
 </style>

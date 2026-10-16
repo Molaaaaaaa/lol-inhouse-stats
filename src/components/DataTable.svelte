@@ -1,7 +1,8 @@
 <script lang="ts" generics="T">
   /**
-   * 스프레드시트 격자 — 이 세계의 핵심 컴포넌트. 옛 renderTable + attachTableFilters + foldLongTables
-   * 를 하나로 옮겼다(innerHTML 없이). 열 스펙·정렬·거르기 규칙은 $lib/table 의 순수 함수.
+   * 카드형 표 — 옛 renderTable + attachTableFilters + foldLongTables 를 하나로 옮겼다(innerHTML 없이).
+   * 열 스펙·정렬·거르기 규칙은 $lib/table 의 순수 함수. 카드(Panel) 안에 놓는다: 세로 격자선 없이 행 구분선만,
+   * 머리행은 --gutter 에 위 모서리 12px, 행 번호는 둥근 칩, 선택 행은 왼쪽 3px 액센트 띠 + 2px 안쪽 선.
    *
    * - 머리 클릭·Enter·Space 로 정렬(같은 열 다시 → 방향 반전). 호출부가 sortKey 를 바꾸면(지표 전환)
    *   사용자가 누른 정렬은 버린다. aria-sort + announce.
@@ -9,7 +10,7 @@
    *   질의는 인스턴스가 사는 동안 남는다 — 보는 대상이 바뀌면 호출부가 {#key} 로 새로 만든다.
    * - 접기(rows > 16): CSS 로 숨기지 않고 slice + '더 보기' 버튼(스크린리더가 버튼을 읽는다).
    *   rows 배열이 바뀌면 다시 접힌다.
-   * - 행 번호 홈통 .rn(정렬 뒤에도 1..n), 첫 열 sticky left, 머리 sticky top.
+   * - 행 번호 홈통 .rn(정렬 뒤에도 1..n, 칩으로 그린다), 첫 열 sticky left, 머리 sticky top(.fit 일 때만 고정 헤더 아래 --sticky-top, 넘칠 때는 0).
    *   .sheet 이 가로 스크롤 래퍼인데, 스크롤 컨테이너 안에서는 sticky top 이 문서 스크롤을 못 따라온다.
    *   그래서 표가 래퍼 안에 다 들어가면(ResizeObserver 로 잰다) overflow 를 풀어 머리가 붙게 하고,
    *   넘칠 때만 가로 스크롤로 돌린다 — 문서는 어느 쪽이든 넘치지 않는다.
@@ -17,7 +18,10 @@
    * - 머리 드롭다운(Col.pick): 열 필터. 보이는 층은 고른 값(전체면 열 이름)+화살표, 조작은 그 위에 겹친
    *   네이티브 select. select 위의 click·keydown 은 머리(정렬)로 올라가지 않는다.
    * - 선택: rowKey 가 있으면 행이 tabindex=0·aria-selected, 클릭·Enter → onselect.
-   * - 조건부 서식은 cls 로 호출부가 클래스만 준다: win·loss(18% 채움)·lane-*(왼쪽 띠).
+   * - 조건부 서식은 cls 로 호출부가 클래스만 준다: win·loss(18% 채움). 라인 열은 셀 스니펫 LaneChip(점 + 이름).
+   * - 셀 스니펫(Col.cell): 글자 대신 그릴 보이는 층(WinGauge·StreakPill·배지). aria-hidden 으로 감싸고 fmt 글자를
+   *   보조기술 전용으로 같은 칸에 둔다 — 거르기·rows2 빈 칸 판정도 fmt 글자다(정렬은 행 값).
+   * - captionHidden: 카드(Panel) 제목이 캡션과 같은 말일 때 캡션을 보조기술에만 남긴다(잘림 힌트는 보인다).
    * - 셀 안 부품은 이웃 컴포넌트를 그대로 쓴다: 초상 ChampImg · 코드 판 CodePlate · 물음표 QMark(툴팁) ·
    *   빈 상태 EmptyState — 같은 부품이 화면마다 같은 모양이어야 한다.
    * - 2줄 장부 행(rows2): 호출부가 `rows2` 를 주고 폰(media.phone, ≤640px)일 때만 켜진다 — 390px 에서 넘치는
@@ -63,10 +67,12 @@
     lowerBetterKeys?: readonly string[];
     /** 폰에서 2줄 장부 행 — 390px 에서 넘치는 표만 켠다(실측). 활성 = rows2 && media.phone */
     rows2?: boolean;
+    /** 캡션을 보조기술 전용으로 — 감싼 카드(Panel)의 제목이 같은 말을 이미 보일 때 */
+    captionHidden?: boolean;
   }
   let {
     rows, cols, caption, sortKey, sortDir, rowKey, selectedKey, onselect, rowClass,
-    filter, fold, rowNumbers = true, compact = false, lowerBetterKeys = [], rows2 = false,
+    filter, fold, rowNumbers = true, compact = false, lowerBetterKeys = [], rows2 = false, captionHidden = false,
   }: Props = $props();
 
   const uid = $props.id();
@@ -200,7 +206,7 @@
 
 <div class={['sheet', fit && 'fit', !rowNumbers && 'norn', compact && 'compact', userSorted && 'usersort', r2 && 'rows2']}
      style:--r2-cols={r2 ? r2cols : undefined} bind:this={sheetEl} onscroll={measure}>
-  <div class="cap"><span>{caption}</span>{#if cut > 0}<span class="cut" aria-hidden="true">열 {cut}개 더 →</span>{/if}</div>
+  <div class={['cap', captionHidden && 'capx', captionHidden && cut === 0 && 'capz']}><span class:sr-only={captionHidden}>{caption}</span>{#if cut > 0}<span class="cut" aria-hidden="true">열 {cut}개 더 →</span>{/if}</div>
 
   {#if rows.length === 0}
     <EmptyState text="아직 표시할 데이터가 없습니다." />
@@ -256,13 +262,16 @@
               aria-selected={selectable ? sel : undefined}
               onclick={selectable ? () => pick(r) : undefined}
               onkeydown={selectable ? (e) => onRowKey(e, r) : undefined}>
-            {#if rowNumbers}<td class="rn" aria-hidden="true">{i + 1}</td>{/if}
+            {#if rowNumbers}<td class="rn" aria-hidden="true"><span class="rnc">{i + 1}</span></td>{/if}
             {#each cols as c, j (c.k)}
               {@const bar = barFor(c, r)}
               <td class={[c.num && 'num', hideLo(c) && 'lo', j === 0 && 'c0', bar !== undefined && 'bar', blank(c, r, i) && 'blank', c.cls?.(r)]} style:--bar={bar}
                   data-label={c.hs ?? c.h}>
                 {#if c.img}<ChampImg name={c.img(r)} patch={app.data?.patch} />{/if}
-                {#if r2}
+                {#if c.cell}
+                  <!-- 보이는 층은 스니펫, 읽히는 것은 fmt 글자(같은 칸) -->
+                  <span class="cs" aria-hidden="true">{@render c.cell(r, i)}</span><span class="sr-only">{cellText(c, r, i)}</span>
+                {:else if r2}
                   <!-- 값을 한 요소로: 라벨 옆에 안 들면 값 전체가 다음 줄로 가고 ▲▼ 도 값에 붙어 간다 -->
                   <span class="v">{cellText(c, r, i)}</span>
                 {:else}
@@ -282,14 +291,17 @@
 </div>
 
 <style>
-  /* 래퍼: 기본은 가로 스크롤(문서가 넘치지 않게). 표가 다 들어가면 .fit — overflow 를 풀어 sticky top 이 살아난다 */
+  /* 래퍼: 기본은 가로 스크롤(문서가 넘치지 않게). 표가 다 들어가면 .fit — overflow 를 풀어 sticky top 이 살아난다.
+     바탕은 투명 — 감싼 카드(Panel)의 면이 보인다. 붙어 있는 칸(홈통·첫 열·머리)만 불투명하게 칠한다 */
   .sheet {
-    --rn-w: 36px;
+    --rn-w: 40px;
     --rh: var(--row-h);
     --r2-cols: 3;   /* 2줄 장부 행의 격자 열 수 — 기본값. 인라인 style:--r2-cols 가 덮어쓴다(--bar 와 같은 방식) */
+    --stick: var(--sheet);                                            /* 붙어 있는 칸의 바탕 */
+    --hover: color-mix(in srgb, var(--raised) 70%, transparent);      /* 행 호버 */
+    --hover-stick: color-mix(in srgb, var(--raised) 70%, var(--sheet));
     position: relative;
     overflow-x: auto;
-    background: var(--sheet);
     color: var(--txt);
   }
   .sheet.fit { overflow: visible; }
@@ -306,9 +318,12 @@
     font-size: var(--fs-sm);
     font-weight: 700;
     color: var(--dim);
-    padding: var(--sp-2) 0 var(--sp-1);
+    padding: 0 0 var(--sp-2);
     white-space: nowrap;
   }
+  /* 캡션을 카드 제목에 맡겼을 때: 잘림 힌트만 오른쪽에 남는다. 힌트도 없으면 줄 자체가 0 */
+  .cap.capx { justify-content: flex-end; }
+  .cap.capz { padding: 0; }
   .cut { flex: none; font-weight: 400; color: var(--dim); font-variant-numeric: tabular-nums; }
 
   /* 잘림 힌트 선 — 보이는 폭의 오른쪽 가장자리(마지막으로 보이는 열의 경계)에 2px, 표 높이만큼.
@@ -328,17 +343,18 @@
     right: 0;
     width: 2px;
     height: var(--tbl-h);
+    border-radius: var(--r-pill);
     background: var(--grid-strong);
   }
 
-  /* 거르기 칸 — 표 위의 셀 하나 */
+  /* 거르기 칸 — 표 위 둥근 입력 하나 */
   .tf {
     position: sticky;
     left: 0;
     display: flex;
     align-items: center;
     gap: var(--sp-2);
-    padding-bottom: var(--sp-1);
+    padding-bottom: var(--sp-2);
   }
   .tfi {
     appearance: none;
@@ -346,12 +362,12 @@
     width: 100%;
     max-width: 32ch;
     height: var(--rh);
-    padding: 0 var(--sp-2);
+    padding: 0 var(--sp-3);
     background: var(--ink);
     color: var(--txt);
-    border: 1px solid var(--grid-strong);
-    border-radius: 0;
-    transition: border-color .12s;
+    border: 1px solid var(--ctl-edge);
+    border-radius: var(--r-chip);
+    transition: border-color var(--dur-1);
   }
   .tfi:hover { border-color: var(--dim2); }
   .tfi:focus-visible { outline-offset: 0; }
@@ -363,6 +379,7 @@
     border-spacing: 0;
     font-variant-numeric: tabular-nums;
   }
+  /* 셀 — 세로 격자선 없이 행 구분선 1px 만 */
   th, td {
     height: var(--rh);
     padding: 0 var(--sp-2);
@@ -370,14 +387,15 @@
     white-space: nowrap;
     vertical-align: middle;
     border-bottom: 1px solid var(--grid);
-    border-right: 1px solid var(--grid);
     background: transparent;
-    transition: background-color .12s;
+    transition: background-color var(--dur-1);
   }
-  th:first-child, td:first-child { border-left: 1px solid var(--grid); }
+  tbody tr:last-child td { border-bottom-color: transparent; }
   .num { text-align: right; }
 
-  /* 머리행 — 홈통 바탕, sticky top */
+  /* 머리행 — --gutter 판, 위 모서리 12px, sticky top.
+     고정 헤더 아래(--sticky-top)에 붙는 것은 .fit(overflow 를 푼 상태)일 때만이다. 넘쳐서 .sheet 이 가로 스크롤
+     상자가 되면 sticky 의 기준이 그 상자라 57px 가 상자 안에서 적용된다 — 머리가 57px 내려앉아 첫 행을 덮었다(실측) */
   thead th {
     position: sticky;
     top: 0;
@@ -387,38 +405,41 @@
     font-size: var(--fs-sm);
     font-weight: 700;
     letter-spacing: 0;
-    border-top: 1px solid var(--grid-strong);
     border-bottom: 1px solid var(--grid-strong);
     user-select: none;
   }
+  .sheet.fit thead th { top: var(--sticky-top); }
+  thead th:first-child { border-top-left-radius: var(--r-md); }
+  thead th:last-child { border-top-right-radius: var(--r-md); }
   th.sortable { cursor: pointer; }
   th.sortable:hover { background: var(--raised); color: var(--txt); }
-  th.sortable:active { background: var(--grid-strong); }
+  th.sortable:active { background: var(--track); }
   th.on { color: var(--txt); }
   th :global(.sortic) { margin-left: var(--sp-1); color: var(--dim); }
   th :global(.sortic.up) { transform: rotate(180deg); }
-  th.on :global(.sortic) { color: var(--txt); }
+  th.on :global(.sortic) { color: var(--sel); }
 
-  /* 머리 드롭다운 — 셀 모양 상자(홈통 바탕·1px 격자선). 보이는 층(.pkv)은 고른 값 + 화살표,
+  /* 머리 드롭다운 — 둥근 칩 상자(1px 테두리). 보이는 층(.pkv)은 고른 값 + 화살표,
      네이티브 select 는 투명하게 그 위를 덮어 탭·키보드·보조기술은 select 그대로 쓴다 */
   .pk {
     position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 28px;
-    padding: 0 3px;
-    background: var(--gutter);
-    border: 1px solid var(--grid);
+    padding: 0 6px;
+    background: var(--sheet);
+    border: 1px solid var(--grid-strong);
+    border-radius: var(--r-chip);
     color: var(--dim);
     font-weight: 700;
     vertical-align: middle;
-    transition: background-color .12s, border-color .12s, color .12s;
+    transition: background-color var(--dur-1), border-color var(--dur-1), color var(--dur-1);
   }
   th.on .pk, .pk.picked { color: var(--txt); }
-  .pk.picked { border-color: var(--grid-strong); }
+  .pk.picked { border-color: var(--ctl-edge); }
   .pk:hover { background: var(--raised); color: var(--txt); }
   .pk:has(.pks:focus-visible) { outline: 2px solid var(--sel); outline-offset: -2px; }
-  .pk:has(.pks:active) { background: var(--grid-strong); }
+  .pk:has(.pks:active) { background: var(--track); }
   .pkv { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; pointer-events: none; }
   .pk :global(.pkic) { width: 10px; height: 10px; flex: none; }
   .pks {
@@ -434,7 +455,7 @@
   }
   .pks:disabled { cursor: default; }
 
-  /* 행 번호 홈통 · 첫 열 sticky left */
+  /* 행 번호 홈통(번호는 둥근 칩) · 첫 열 sticky left */
   .rn {
     position: sticky;
     left: 0;
@@ -443,84 +464,103 @@
     min-width: var(--rn-w);
     max-width: var(--rn-w);
     padding: 0 var(--sp-1);
-    text-align: right;
-    font-size: var(--fs-sm);
-    color: var(--dim);
-    background: var(--gutter);
-    border-right: 1px solid var(--grid-strong);
+    text-align: center;
+    background: var(--stick);
   }
-  thead .rn { z-index: 3; }
+  .rnc {
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 22px;
+    padding: 0 4px;
+    border-radius: var(--r-chip);
+    background: var(--raised);
+    color: var(--dim);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1;
+  }
+  thead .rn { z-index: 3; background: var(--gutter); }
   .c0 {
     position: sticky;
     left: var(--rn-w);
     z-index: 1;
-    background: var(--sheet);
-    border-right: 1px solid var(--grid-strong);
+    background: var(--stick);
   }
   td.c0 { font-weight: 700; }
   thead .c0 { z-index: 3; background: var(--gutter); }
+  /* 가로로 넘칠 때만 고정 열 오른쪽 경계선 — 스크롤되는 칸이 그 밑으로 지나간다 */
+  .sheet:not(.fit):not(.rows2) .c0 { border-right: 1px solid var(--grid-strong); }
 
-  /* 행 hover · 선택 · 초점 — hover 는 채움, 선택은 2px 안쪽 선, 초점은 선 + 채움(셋이 서로 구분된다) */
-  tbody tr { transition: background-color .12s; }
-  tbody tr:hover, tbody tr:focus-visible { background: var(--raised); }
-  tbody tr:hover td.c0, tbody tr:focus-visible td.c0 { background: var(--raised); }
+  /* 행 hover · 선택 · 초점 — hover 는 채움, 선택은 왼쪽 3px 액센트 띠 + 2px 안쪽 선, 초점은 선 + 채움(셋이 서로 구분된다) */
+  tbody tr { transition: background-color var(--dur-1); }
+  tbody tr:hover, tbody tr:focus-visible { background: var(--hover); }
+  tbody tr:hover td.c0, tbody tr:focus-visible td.c0,
+  tbody tr:hover td.rn, tbody tr:focus-visible td.rn { background: var(--hover-stick); }
   tbody tr[tabindex] { cursor: pointer; }
   tbody tr:focus-visible { outline: none; }
-  .sheet:not(.rows2) tr.sel td:not(.rn), .sheet:not(.rows2) tbody tr:focus-visible td:not(.rn) {
+  .sheet:not(.rows2) tr.sel td, .sheet:not(.rows2) tbody tr:focus-visible td {
     box-shadow: inset 0 2px 0 var(--sel), inset 0 -2px 0 var(--sel);
   }
-  .sheet:not(.rows2) tr.sel td.c0, .sheet:not(.rows2) tbody tr:focus-visible td.c0 {
+  .sheet:not(.rows2) tbody tr:focus-visible td:first-child {
     box-shadow: inset 2px 0 0 var(--sel), inset 0 2px 0 var(--sel), inset 0 -2px 0 var(--sel);
   }
   .sheet:not(.rows2) tr.sel td:last-child, .sheet:not(.rows2) tbody tr:focus-visible td:last-child {
     box-shadow: inset -2px 0 0 var(--sel), inset 0 2px 0 var(--sel), inset 0 -2px 0 var(--sel);
   }
-
-  /* 데이터 막대 — 별도 요소 없이 셀 바탕. 너비는 셀의 --bar(인라인), 색은 여기 토큰 한 곳 */
-  td.bar {
-    --bar: 0%;   /* 기본값 — 인라인 style:--bar 가 덮어쓴다 */
-    background: linear-gradient(to right, color-mix(in srgb, var(--sel) 22%, transparent) var(--bar), transparent var(--bar));
+  /* 선택 띠 — 첫 칸(홈통 또는 첫 열, 둘 다 sticky 라 기준 상자가 된다)의 왼쪽 3px */
+  .sheet:not(.rows2) tr.sel td:first-child::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--grad-sel);
   }
 
-  /* 조건부 서식 — 호출부가 cls 로 준 클래스. 색은 채움·띠에만, 글자는 무채색 그대로 */
-  td.win { background: color-mix(in srgb, var(--win) 18%, transparent); }
-  td.loss { background: color-mix(in srgb, var(--loss) 18%, transparent); }
-  /* 승률 셀(wr-h·wr-l 은 승률 열에서만 온다): 채움에 더해 ▲▼ 기호 — 초록/주황 18% 채움은 색각 이상에서 같은 색이다
-     (실측 ΔE 3.8). 글자색은 무채색 그대로, 높은 쪽만 굵게(옛 사이트 규칙) */
-  td.wr-h { font-weight: 700; }
-  td.wr-h::after { content: ' ▲'; font-size: .72em; }
-  td.wr-l::after { content: ' ▼'; font-size: .72em; }
-  /* 라인 띠 — border-left 다(box-shadow 가 아니라): 선택 행의 안쪽 선(box-shadow)이 띠를 덮어 지우던 결함 */
-  td.lane-top { border-left: 3px solid var(--lane-top); }
-  td.lane-jg { border-left: 3px solid var(--lane-jg); }
-  td.lane-mid { border-left: 3px solid var(--lane-mid); }
-  td.lane-bot { border-left: 3px solid var(--lane-bot); }
-  td.lane-sup { border-left: 3px solid var(--lane-sup); }
+  /* 데이터 막대 — 별도 요소 없이 셀 아래쪽 3px 띠. 너비는 셀의 --bar(인라인), 색은 여기 토큰 한 곳 */
+  td.bar {
+    --bar: 0%;   /* 기본값 — 인라인 style:--bar 가 덮어쓴다 */
+    background-image: var(--grad-win);
+    background-size: var(--bar) 3px;
+    background-position: left bottom 4px;
+    background-repeat: no-repeat;
+  }
 
-  /* 초상(ChampImg)은 글자 앞에 한 칸 */
+  /* 조건부 서식 — 호출부가 cls 로 준 클래스. 색은 채움·띠에만(background-color — 막대 띠와 겹쳐 산다) */
+  td.win { background-color: color-mix(in srgb, var(--win) 18%, transparent); }
+  td.loss { background-color: color-mix(in srgb, var(--loss) 18%, transparent); }
+
+  /* 초상(ChampImg)은 글자 앞에 한 칸 · 셀 스니펫은 한 덩어리 */
   td :global(.champ) { margin-right: var(--sp-1); }
+  .cs { display: inline-flex; align-items: center; vertical-align: middle; }
 
-  /* 더 보기 · 접기 — 표 아래 한 줄, 홈통 바탕 */
+  /* 더 보기 · 접기 — 표 아래 둥근 단추 한 줄 */
   .more {
     position: sticky;
     left: 0;
     display: block;
     width: 100%;
     height: var(--rh);
-    padding: 0 var(--sp-2);
+    margin-top: var(--sp-2);
+    padding: 0 var(--sp-3);
     text-align: left;
     color: var(--dim);
     background: var(--gutter);
-    border: 0;
-    border-left: 1px solid var(--grid);
-    border-right: 1px solid var(--grid);
-    border-bottom: 1px solid var(--grid);
-    transition: background-color .12s, color .12s;
+    border: 1px solid var(--grid);
+    border-radius: var(--r-chip);
+    transition: background-color var(--dur-1), color var(--dur-1);
   }
   .more:hover { background: var(--raised); color: var(--txt); }
-  .more:active { background: var(--grid-strong); }
+  .more:active { background: var(--track); }
 
-  /* 폰: 보조 열 숨김(정렬 기준 열은 .lo 를 받지 않는다) · 셀을 촘촘하게 · 홈통 2.5ch ·
+  /* 태블릿(641~1100px): 셀 좌우 여백 8 → 6. 카드(Panel) 안쪽 여백이 표 폭을 34px 먹어, 13열 판수 순위가 820px 에서
+     넘쳤다(옛 표는 딱 맞았다 — 실측 788/788). 데스크톱 16 · 태블릿 12 · 폰 10 */
+  @media (min-width: 641px) and (max-width: 1100px) {
+    th, td { padding: 0 6px; }
+  }
+  /* 폰: 보조 열 숨김(정렬 기준 열은 .lo 를 받지 않는다) · 셀을 촘촘하게 · 홈통 28px ·
      고정 이름열은 긴 이름(실데이터 11자)이 화면을 다 먹지 않게 7em 상한, 그 안에서 두 줄로 줄바꿈
      (말줄임이 아니라 이름 전부가 보인다 — 행이 늘어도 된다).
      표 폭을 max-content 로 두는 이유: width:100% 인 채로 이름 셀만 줄바꿈을 허용하면 자동 표 배치가
@@ -530,7 +570,8 @@
     .sheet { --rn-w: 28px; }
     table { width: max-content; min-width: 100%; }
     th, td { padding: 0 var(--sp-1) 0 6px; }
-    .rn { padding: 0 var(--sp-1); }
+    .rn { padding: 0 2px; }
+    .rnc { min-width: 20px; height: 20px; padding: 0 3px; }
     th.c0 { max-width: 7em; overflow: hidden; text-overflow: ellipsis; }
     td.c0 { max-width: 7em; white-space: normal; overflow-wrap: anywhere; }
   }
@@ -538,7 +579,7 @@
      왼쪽 absolute — 격자 열로 두면 4번째 셀부터 홈통 칸에 떨어진다), 이름 셀은 한 줄 전부, 나머지는
      '라벨: 값'(라벨은 data-label 을 ::before 가 읽고 margin auto 로 값을 오른쪽에 민다 — ▲▼ ::after 도 값 옆에
      붙는다). 머리행은 보조기술에만 남긴다(display:none 이면 th scope=col 연결이 끊긴다). 선택·초점은 행의
-     ::after 한 겹(absolute 홈통 위에 그려진다). 채움(막대·승패)·점선·초상은 셀 규칙 그대로 산다. */
+     ::after 한 겹(absolute 홈통 위에 그려진다), 선택 띠는 행의 ::before. 채움(막대·승패)·초상·셀 스니펫은 셀 규칙 그대로 산다. */
   .sheet.rows2 { overflow: visible; }
   .sheet.rows2 table, .sheet.rows2 tbody { display: block; width: 100%; min-width: 0; }
   .sheet.rows2 thead {
@@ -551,8 +592,7 @@
     grid-template-columns: repeat(var(--r2-cols), minmax(0, 1fr));
     position: relative;
     padding-left: var(--rn-w);
-    border-left: 1px solid var(--grid);
-    border-bottom: 1px solid var(--grid-strong);
+    border-bottom: 1px solid var(--grid);
   }
   .sheet.rows2.norn tbody tr { padding-left: 0; }
   .sheet.rows2 td {
@@ -568,28 +608,24 @@
     white-space: normal;
     overflow-wrap: anywhere;
     position: static;
-    border-top: 0;
-    border-bottom: 1px solid var(--grid);
-    border-right: 1px solid var(--grid);
+    border: 0;
   }
-  .sheet.rows2 td:first-child { border-left: 0; }
   .sheet.rows2 td.lo, .sheet.rows2 td.blank { display: none; }
   .sheet.rows2 td.rn {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    justify-content: flex-end;
-    background: var(--gutter);
-    border-bottom: 0;
-    border-right: 1px solid var(--grid-strong);
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 6px;
+    background: transparent;
   }
   .sheet.rows2 td.c0 {
     grid-column: 1 / -1;
     justify-content: flex-start;
     font-weight: 700;
-    background: var(--sheet);
-    border-right: 0;
+    background: transparent;
   }
   .sheet.rows2 td:not(.c0):not(.rn)::before {
     content: attr(data-label);
@@ -607,18 +643,26 @@
   .sheet.rows2 td :global(.champ) { margin-right: 0; }
   .sheet.rows2 .v { min-width: 0; text-align: right; }
   .sheet.rows2 td.c0 .v { text-align: left; }
-  /* ▲▼ 는 값 요소 안에 — td 의 ::after 면 별개 flex 항목이라 혼자 다음 줄로 떨어진다 */
-  .sheet.rows2 td.wr-h::after, .sheet.rows2 td.wr-l::after { content: none; }
-  .sheet.rows2 td.wr-h .v::after { content: ' ▲'; font-size: .72em; }
-  .sheet.rows2 td.wr-l .v::after { content: ' ▼'; font-size: .72em; }
-  .sheet.rows2 tbody tr:hover td.c0, .sheet.rows2 tbody tr:focus-visible td.c0 { background: var(--raised); }
+  .sheet.rows2 tbody tr:hover td.c0, .sheet.rows2 tbody tr:focus-visible td.c0,
+  .sheet.rows2 tbody tr:hover td.rn, .sheet.rows2 tbody tr:focus-visible td.rn { background: transparent; }
   .sheet.rows2 tr.sel::after, .sheet.rows2 tbody tr:focus-visible::after {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 2;   /* 홈통 td.rn 의 z-index 1 위에 — 아니면 선택 선의 왼쪽 2px 가 홈통 아래 숨는다(실측) */
+    border-radius: var(--r-xs);
     box-shadow: inset 0 0 0 2px var(--sel);
     pointer-events: none;
+  }
+  .sheet.rows2 tr.sel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 3px;
+    background: var(--grad-sel);
   }
   /* 태블릿(641~820px): 머리 13px/700 으로 순위판 13열이 800px 에서 41px 넘쳤다 — 셀 좌우 여백 8→6px 로 흡수 */
   @media (min-width: 641px) and (max-width: 820px) {
@@ -628,6 +672,10 @@
   @media (pointer: coarse) {
     .pks { top: -9px; bottom: -9px; height: auto; }   /* 26px 안쪽 + 18 = 44 */
     /* rows2 셀은 탭 표적이 아니다(행 전체가 표적) — 32px 그대로 두어 첫 화면에 5행이 든다 */
+  }
+  /* 강제 색상: 채움·띠·안쪽 선(box-shadow)이 지워진다 — 선택 행은 아래 2px 시스템 색 선으로 남는다 */
+  @media (forced-colors: active) {
+    .sheet:not(.rows2) tr.sel td { border-bottom: 2px solid Highlight; }
   }
   @media (prefers-reduced-motion: reduce) {
     th, td, tbody tr, .more, .tfi, .pk { transition: none; }

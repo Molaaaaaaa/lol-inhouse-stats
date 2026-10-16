@@ -32,7 +32,7 @@
 <section class="champions" aria-labelledby="ch-h">
   <h2 id="ch-h" class="sr-only">챔피언</h2>
   <Subtabs tabs={TABS} {active} onchange={go} label="챔피언 하위 화면" prefix="ch" />
-  <div id="ch-panel-{active}" role="tabpanel" aria-labelledby="ch-tab-{active}" class="panel">
+  <div id="ch-panel-{active}" role="tabpanel" aria-labelledby="ch-tab-{active}" class="body">
     {#if !app.data}
       <Skeleton rows={6} />
     {:else if active === 'matchup'}
@@ -46,5 +46,6 @@
 </section>
 
 <style>
-  .panel { padding-top: var(--sp-2); min-width: 0; }
+  .champions { display: grid; gap: var(--sp-3); }
+  .body { min-width: 0; }
 </style>

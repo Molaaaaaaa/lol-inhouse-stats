@@ -1,9 +1,13 @@
 <script lang="ts">
   /**
-   * 멤버 · 요약 — 이름 있는 범위 넷: 라인 분포(한 행짜리 누적 막대) · 라인별 성적 표 · 능력치(육각형 + 축 표 + 솔랭 기준선) ·
-   * 챔피언 표. 표는 전부 DataTable, 차트는 삽입된 차트(charts/*). 문턱·눈금·컷은 payload 에서만 읽는다.
+   * 멤버 · 요약 — 카드 다섯 장: 라인 분포(한 행짜리 누적 막대) · 라인별 성적 표 · 능력치(육각형 + 축 표) ·
+   * 솔랭 기준선 표 · 챔피언 표. 표는 전부 DataTable(카드 제목이 캡션과 같은 말이라 캡션은 보조기술에만),
+   * 차트는 삽입된 차트(charts/*). 문턱·눈금·컷은 payload 에서만 읽는다.
+   * 승률 열은 게이지(WinGauge row) — 글자색·기호는 Wilson 구간 기준 단계, 문턱 미만은 '표본 적음'.
+   * 라인 열은 라인 점 + 이름(LaneChip).
    *
-   * 능력치 라인: profile_lane 의 라인이 둘 이상일 때만 선택 줄을 낸다. 기본은 주 라인(옛 curAxisLane 규칙).
+   * 능력치 라인: profile_lane 의 라인이 둘 이상일 때만 라인 고르기 칩(app.css .chip + LaneChip)을 낸다. 기본은 주 라인(옛 curAxisLane 규칙).
+   * 솔랭 기준선 카드도 고른 라인을 따른다.
    * 이 컴포넌트는 멤버가 바뀌면 호출부가 {#key} 로 새로 만든다 — 라인 선택·표 거르기가 그 사람 것이다.
    */
   import type { GuildPayload, LaneId, PlayerChampion, PlayerPub } from '$lib/data/types';
@@ -13,8 +17,11 @@
   import { mLabel } from '$lib/metrics';
   import { baselinePanel, NO_BASELINE } from '$lib/baseline';
   import { media } from '$lib/media.svelte';
-  import { axisLaneFor, axisLanes, axisRows, laneCls, laneRows, mainLaneOf, wrCls, type LaneRow } from '$lib/member';
+  import { axisLaneFor, axisLanes, axisRows, gaugeText, laneRows, mainLaneOf, type LaneRow } from '$lib/member';
   import DataTable from '$components/DataTable.svelte';
+  import Panel from '$components/Panel.svelte';
+  import WinGauge from '$components/WinGauge.svelte';
+  import LaneChip from '$components/LaneChip.svelte';
   import QMark from '$components/Tooltip.svelte';
   import LaneBar from '$components/charts/LaneBar.svelte';
   import Radar from '$components/charts/Radar.svelte';
@@ -31,9 +38,10 @@
   // ── 라인별 성적 표 ──
   const lanes = $derived(laneRows(p));
   const laneCols = $derived<Col<LaneRow>[]>([
-    { k: 'lane', h: '라인', fmt: (v) => laneKo(String(v)), cls: (r) => laneCls(r.lane) },
+    { k: 'lane', h: '라인', cell: laneCell, fmt: (v) => laneKo(String(v)) },
     { k: 'games', h: '판', num: true },
-    { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, fmt: (v) => (v == null ? '-' : pct(Number(v))), cls: (r) => wrCls(r.winrate, r.games, minGamesLane) },
+    { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, cell: laneGauge,
+      fmt: (_v, r) => (r.winrate == null ? '-' : gaugeText(r.winrate, r.games, minGamesLane)) },
     { k: 'kda', h: mLabel(meta, 'kda'), num: true, lo: true, fmt: (v) => (v == null ? '-' : String(v)) },
     { k: 'dpm', h: mLabel(meta, 'dpm'), num: true, lo: true, fmt: (v) => (v == null ? '-' : Math.round(Number(v)).toLocaleString('ko-KR')) },
     { k: 'kp', h: mLabel(meta, 'kp'), num: true, lo: true, fmt: (v) => (v == null ? '-' : pct(Number(v))) },
@@ -54,6 +62,7 @@
   // ── 솔랭 기준선 ──
   interface BRow { id: string; axis: string; metric: string; value: string; top: number | null; pos: string; cls: string; games: number | null }
   const panel = $derived(baselinePanel(data, p, mainLane, (curLane || '') as LaneId | ''));
+  const bTitle = $derived(panel ? `솔랭 기준선 · ${laneKo(panel.lane)} · ${panel.sample}` : '');
   const bRows = $derived.by((): BRow[] => {
     if (!panel) return [];
     const out: BRow[] = [];
@@ -91,93 +100,63 @@
   const champs = $derived(p.champions ?? []);
   const champCols = $derived<Col<PlayerChampion>[]>([
     { k: 'champion_name', h: '챔피언', img: (r) => r.champion_name, fmt: (v) => data.champ_ko?.[String(v)] ?? String(v) },
-    { k: 'lane', h: '라인', fmt: (v) => laneKo(String(v)), cls: (r) => laneCls(r.lane) },
+    { k: 'lane', h: '라인', cell: laneCell, fmt: (v) => laneKo(String(v)) },
     { k: 'games', h: '판', num: true },
-    { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, fmt: (v) => pct(Number(v)), cls: (r) => wrCls(r.winrate, r.games, minGames) },
+    { k: 'winrate', h: mLabel(meta, 'winrate'), num: true, cell: champGauge, fmt: (_v, r) => gaugeText(r.winrate, r.games, minGames) },
     { k: 'kda', h: mLabel(meta, 'kda'), num: true },
   ]);
 </script>
 
-<div class="summary">
-  <div class="two">
-    <div class="range">
-      <div class="cap">라인 분포</div>
-      <LaneBar dist={p.role_dist ?? []} />
-    </div>
-    <div class="range">
-      <DataTable rows={lanes} cols={laneCols} caption="라인별 성적" sortKey="games" rowKey={(r) => String(r.lane)} />
-      <p class="note">라인별 승률은 {minGamesLane}판 이상부터 색을 입힙니다.</p>
-    </div>
-  </div>
+{#snippet laneCell(r: { lane: string })}<LaneChip lane={r.lane} />{/snippet}
+{#snippet laneGauge(r: LaneRow)}{#if r.winrate != null}<WinGauge w={r.winrate} n={r.games} minGames={minGamesLane} />{:else}-{/if}{/snippet}
+{#snippet champGauge(r: PlayerChampion)}<WinGauge w={r.winrate} n={r.games} {minGames} />{/snippet}
 
-  <div class="range">
-    <div class="cap">
-      <span>능력치</span>
-      <QMark key="능력치" payload={data} label="능력치 설명" />
-      {#if axLanes.length >= 2}
-        <div class="lp" role="group" aria-label="능력치 라인 선택">
-          <button type="button" aria-pressed={curLane === ''} onclick={() => { picked = ''; }}>전체</button>
-          {#each axLanes as L (L)}
-            <button type="button" aria-pressed={curLane === L} onclick={() => { picked = L; }}>{laneKo(L)}</button>
-          {/each}
-        </div>
-      {/if}
-    </div>
+<div class="summary">
+  <Panel title="라인 분포">
+    <LaneBar dist={p.role_dist ?? []} />
+  </Panel>
+
+  <Panel title="라인별 성적">
+    <DataTable rows={lanes} cols={laneCols} caption="라인별 성적" captionHidden sortKey="games" rowKey={(r) => String(r.lane)} />
+    <p class="note">라인별 승률은 {minGamesLane}판 미만이면 '표본 적음'으로 적고, 색과 ▲▼는 판수를 감안해도 50%와 차이가 날 때만 붙습니다.</p>
+  </Panel>
+
+  <Panel title="능력치">
+    {#snippet actions()}<QMark key="능력치" payload={data} label="능력치 설명" />{/snippet}
+    {#if axLanes.length >= 2}
+      <div class="chips" role="group" aria-label="능력치 라인 선택">
+        <button type="button" class="chip" aria-pressed={curLane === ''} onclick={() => { picked = ''; }}>전체</button>
+        {#each axLanes as L (L)}
+          <button type="button" class="chip" aria-pressed={curLane === L} onclick={() => { picked = L; }}><LaneChip lane={L} /></button>
+        {/each}
+      </div>
+    {/if}
     <p class="note">{laneNote}</p>
     <div class="stat">
       <Radar {axes} {scale} {minGames} />
       <AxisBars {axes} {scale} {minGames} {meta} caption="능력치 축" />
     </div>
-    {#if panel}
-      <!-- rows2: 390px 에서 452px(실측) — 폰은 2줄 장부 행 -->
-      <DataTable rows={bRows} cols={bCols} caption="솔랭 기준선 · {laneKo(panel.lane)} · {panel.sample}" rows2
-                 rowKey={(r) => r.id} lowerBetterKeys={['top']} fold={false} filter={false} />
-    {/if}
-  </div>
+  </Panel>
 
-  <DataTable rows={champs} cols={champCols} caption="챔피언" sortKey="games" rowKey={(r) => `${r.champion_name}|${r.lane}`} />
+  {#if panel}
+    <Panel title={bTitle}>
+      <!-- rows2: 390px 에서 452px(실측) — 폰은 2줄 장부 행 -->
+      <DataTable rows={bRows} cols={bCols} caption={bTitle} captionHidden rows2
+                 rowKey={(r) => r.id} lowerBetterKeys={['top']} fold={false} filter={false} />
+    </Panel>
+  {/if}
+
+  <Panel title="챔피언">
+    <DataTable rows={champs} cols={champCols} caption="챔피언" captionHidden sortKey="games" rowKey={(r) => `${r.champion_name}|${r.lane}`} />
+  </Panel>
 </div>
 
 <style>
-  .summary { display: grid; gap: var(--sp-5); }
-  /* 라인 분포 막대는 격자 한 행 — 라인별 성적 표 위에 같은 폭으로 놓인다(옆에 두던 도넛 자리) */
-  .two { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
-  .range { min-width: 0; }
-  .cap {
-    display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
-    font-size: var(--fs-sm); font-weight: 700; color: var(--dim);
-    padding: var(--sp-2) 0 var(--sp-1);
-  }
-  .cap button { font-weight: 400; }   /* 캡션은 굵지만 그 안의 라인 선택 버튼은 보통 굵기 */
-  .note { font-size: var(--fs-sm); color: var(--dim); padding-bottom: var(--sp-2); }
+  .summary { display: grid; gap: var(--sp-4); }
+  .note { font-size: var(--fs-sm); color: var(--dim); padding-top: var(--sp-2); }
 
-  /* 라인 선택 — 셀 한 줄. 누른 것은 시트 바탕 + 아래 2px 선택선(시트 탭과 같은 어휘) */
-  .lp { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--grid); }
-  .lp button {
-    min-height: 28px;
-    padding: 0 var(--sp-3);
-    border: 0;
-    border-right: 1px solid var(--grid);
-    border-bottom: 2px solid transparent;
-    background: var(--gutter);
-    color: var(--dim);
-    font-size: var(--fs-sm);
-    transition: background-color .15s, color .15s, border-color .15s;
-  }
-  .lp button:last-child { border-right: 0; }
-  .lp button:hover { background: var(--raised); color: var(--txt); }
-  .lp button:active { background: var(--ink); }
-  .lp button[aria-pressed='true'] { background: var(--sheet); color: var(--txt); border-bottom-color: var(--sel); }
-  .lp button:disabled { color: var(--dim2); cursor: default; }
-
-  .stat { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
+  .stat { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); align-items: start; padding-top: var(--sp-2); }
   @media (min-width: 760px) {
     .stat { grid-template-columns: 250px minmax(0, 1fr); }
-  }
-  @media (pointer: coarse) {
-    .lp button { min-height: 44px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .lp button { transition: none; }
   }
 </style>

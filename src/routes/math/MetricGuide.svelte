@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * 지표 안내 — payload 의 지표 레지스트리(metric_groups 순서 · metric_meta)를 표 하나로.
+   * 지표 안내 — payload 의 지표 레지스트리(metric_groups 순서 · metric_meta)를 카드(Panel) 안의 표 하나로.
    * 이름은 mLabel, 설명은 mDesc, 코드 판은 설명에 실제로 든 대회식 코드(metricCode)만.
    * 라인별 지표(문턱이 라인 판수)와 낮을수록 좋은 지표는 글자로 표시한다(색만으로 구분하지 않는다).
    * 68개라 거르기 칸이 붙고, 안내 표라 접지 않는다.
@@ -10,6 +10,7 @@
   import { metricCode } from '$lib/metric-code';
   import type { Col } from '$lib/table';
   import DataTable from '$components/DataTable.svelte';
+  import Panel from '$components/Panel.svelte';
 
   type Src = Partial<Pick<GuildPayload, 'metric_groups' | 'metric_meta' | 'lower_better'>>;
   let { data }: { data: Src | null | undefined } = $props();
@@ -48,8 +49,10 @@
 
 <section class="guide" aria-labelledby="mg-h">
   <h2 id="mg-h" class="sr-only">지표 안내</h2>
-  <!-- rows2: 390px 에서 629px(실측, 설명 열) — 폰은 2줄 장부 행, 설명 셀은 한 줄 전부(아래 스타일) -->
-  <DataTable {rows} {cols} caption="지표 {rows.length}개 · 발행 순서" fold={false} rows2 />
+  <Panel title="지표 {rows.length}개 · 발행 순서" level={3}>
+    <!-- rows2: 390px 에서 629px(실측, 설명 열) — 폰은 2줄 장부 행, 설명 셀은 한 줄 전부(아래 스타일) -->
+    <DataTable {rows} {cols} caption="지표 {rows.length}개 · 발행 순서" captionHidden fold={false} rows2 />
+  </Panel>
 </section>
 
 <style>
