@@ -104,6 +104,8 @@ export const PAYLOAD = {
     dmg_taken: { label: '받은 피해', lane: false, fmt: 'k', desc: '' },
     vision: { label: '시야 점수', lane: false, fmt: '', desc: '' },
     solo_kills: { label: '솔로킬', lane: false, fmt: '', desc: '' },
+    kp: { label: '킬 관여', lane: false, fmt: 'pct', desc: '' },
+    cspm: { label: '분당 CS', lane: true, fmt: '', desc: '' },
   },
   champ_ko: CHAMP_KO,
   objectives_available: true, ban_available: true,

@@ -18,7 +18,7 @@
   import { announce } from '$lib/a11y';
   import { setFx } from '$lib/fx.svelte';
   import {
-    buildRows, extraRows, fxKda, itemImgUrl, killDots, scoreboardRows, teamLabel, teamTotals, type KillDot, type ScoreRow,
+    buildRows, extraRows, fxKda, itemImgUrl, killDots, rateRows, scoreboardRows, teamLabel, teamTotals, type KillDot, type ScoreRow,
   } from '$lib/matches';
   import type { Col } from '$lib/table';
   import ChampImg from '$components/ChampImg.svelte';
@@ -47,8 +47,9 @@
   const hasObj = $derived(!!data.objectives_available);
   const hasBan = $derived(!!data.ban_available);
   const totals = $derived(teamTotals(teams, hasObj, hasBan));
+  // kills: 그 팀 킬 — 세부 기록의 킬 관여 분모
   const boards = $derived(teams.map((t, i) => ({
-    key: String(t.team_id ?? i), label: teamLabel(t, i), win: !!t.win, rows: scoreboardRows(t, ko),
+    key: String(t.team_id ?? i), label: teamLabel(t, i), win: !!t.win, kills: Number(t.kills) || 0, rows: scoreboardRows(t, ko),
   })));
   const missing = $derived([hasObj ? null : '드래곤 · 바론 · 타워', hasBan ? null : '밴'].filter(Boolean).join(', '));
 
@@ -209,7 +210,7 @@
               </tr>
               {#if on}
                 {@const build = buildRows(r.raw.build)}
-                {@const extra = extraRows(r.raw.extra, meta)}
+                {@const extra = [...rateRows(r, b.kills, detail.duration, meta), ...extraRows(r.raw.extra, meta)]}
                 <tr class="pd" id={panelId(r)}>
                   <td class="rn" aria-hidden="true"></td>
                   <td colspan={SB_COLS}>
@@ -232,15 +233,11 @@
                         <p class="muted none">구매 기록이 없습니다.</p>
                       {/if}
                       <div class="cap">이 판의 세부 기록</div>
-                      {#if extra.length}
-                        <dl class="cells">
-                          {#each extra as x (x.key)}
-                            <div class="cell"><dt>{x.label}</dt><dd>{x.text}</dd></div>
-                          {/each}
-                        </dl>
-                      {:else}
-                        <p class="muted none">아직 세부 기록이 없습니다.</p>
-                      {/if}
+                      <dl class="cells">
+                        {#each extra as x (x.key)}
+                          <div class="cell"><dt>{x.label}</dt><dd>{x.text}</dd></div>
+                        {/each}
+                      </dl>
                     </div>
                   </td>
                 </tr>

@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { cleanup, render } from '@testing-library/svelte';
+import { cleanup, fireEvent, render } from '@testing-library/svelte';
 import GoldChart from '../src/components/charts/GoldChart.svelte';
 import KillMap from '../src/components/charts/KillMap.svelte';
 import KdaTimeline from '../src/components/charts/KdaTimeline.svelte';
 import DmgBars from '../src/components/charts/DmgBars.svelte';
 import { killDots } from '../src/lib/matches';
+import type { MatchDetail } from '../src/lib/data/types';
 import { CHAMP_KO, DETAIL } from './fixtures/match-payload';
 
 const HEX = /#[0-9a-fA-F]{3,8}\b/;
@@ -65,6 +66,76 @@ describe('GoldChart', () => {
     const { container } = render(GoldChart, { timeline: { minutes: [0] }, teams: DETAIL.teams });
     expect(container.querySelector('svg')).toBeNull();
     expect(container.textContent).toContain('아직 골드 기록이 없습니다.');
+  });
+});
+
+/** 17분 타임라인 — 탑·미드만 실렸다(정글·원딜·서폿은 양 팀 한 명씩이 아닌 판). 미드는 레드 우세 */
+const MIN = Array.from({ length: 17 }, (_, i) => i);
+const LANE_TL: MatchDetail['timeline'] = {
+  minutes: MIN,
+  a_gold: MIN.map((m) => 2500 + m * 600), b_gold: MIN.map((m) => 2500 + m * 500), gold_diff: MIN.map((m) => m * 100),
+  cs_diff: MIN.map((m) => m), xp_diff: MIN.map(() => 0),
+  lanes: {
+    TOP: { gold: MIN.map((m) => m * 50), cs: MIN.map(() => 0) },
+    MIDDLE: { gold: MIN.map((m) => -m * 100), cs: MIN.map((m) => -m) },
+  },
+};
+const unitButtons = (c: Element) => [...c.querySelectorAll<HTMLButtonElement>('.units button')];
+const foots = (c: Element) => [...c.querySelectorAll('.foot')].map((p) => p.textContent);
+
+describe('GoldChart — 팀 · 라인 선택', () => {
+  it('lanes 가 없는 발행물은 예전 그대로 — 선택 줄 없음, CS 줄 없음', () => {
+    const { container } = render(GoldChart, { timeline: DETAIL.timeline, teams: DETAIL.teams });
+    expect(container.querySelector('.units')).toBeNull();
+    expect(foots(container)).toEqual(['최종 블루 +1,500G · 최대 격차 1,500G']);
+    expect(container.querySelector('.legend')?.textContent).toContain('아래 판 · 골드 차이 = 블루 − 레드');
+  });
+
+  it('팀 + 다섯 라인, 실리지 않은 라인은 비활성. 처음은 팀(기존 팀 골드 차) + 팀 CS 차 줄', () => {
+    const { container } = render(GoldChart, { timeline: LANE_TL, teams: DETAIL.teams });
+    const bs = unitButtons(container);
+    expect(bs.map((b) => b.textContent)).toEqual(['팀', '탑', '정글', '미드', '원딜', '서폿']);
+    expect(bs.map((b) => b.disabled)).toEqual([false, false, true, false, true, true]);
+    expect(bs.map((b) => b.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false', 'false', 'false', 'false']);
+    expect(container.querySelector('.units')?.getAttribute('aria-label')).toBe('골드 차이 대상');
+    expect(container.querySelector('svg')?.getAttribute('aria-label')).toBe('골드 추이: 최종 블루 +1,600G · 최대 격차 1,600G');
+    expect(foots(container)).toEqual(['최종 블루 +1,600G · 최대 격차 1,600G', 'CS 차 · 10분 +10 · 15분 +15 · 마지막 분 +16']);
+  });
+
+  it('라인을 누르면 아래 판 · 요약 · CS 줄이 그 라인 맞상대로, 위 판(팀 골드)은 그대로. 팀으로 되돌린다', async () => {
+    const { container } = render(GoldChart, { timeline: LANE_TL, teams: DETAIL.teams });
+    const svg = () => container.querySelector('svg')!;
+    const teamA = svg().querySelector('polyline.ta')?.getAttribute('points');
+    const teamDiff = svg().querySelector('polyline.diff')?.getAttribute('points');
+    await fireEvent.click(unitButtons(container)[3]!);   // 미드
+    expect(unitButtons(container).map((b) => b.getAttribute('aria-pressed'))).toEqual(['false', 'false', 'false', 'true', 'false', 'false']);
+    expect(svg().getAttribute('aria-label')).toBe('골드 추이 · 미드 골드 차이: 최종 레드 +1,600G · 최대 격차 1,600G');
+    expect(container.querySelector('.legend')?.textContent).toContain('아래 판 · 미드 골드 차이 = 블루 − 레드');
+    expect(foots(container)).toEqual(['최종 레드 +1,600G · 최대 격차 1,600G', 'CS 차 · 10분 −10 · 15분 −15 · 마지막 분 −16']);
+    expect(svg().querySelector('polyline.ta')?.getAttribute('points')).toBe(teamA);
+    expect(svg().querySelector('polyline.diff')?.getAttribute('points')).not.toBe(teamDiff);
+    expect(svg().querySelector('circle.last')?.classList.contains('loss')).toBe(true);   // 레드(진 팀) 우세
+    expect(pts(svg().querySelector('polyline.diff'))).toHaveLength(17);   // 차트는 하나 — 선만 바뀐다
+    expect(container.querySelectorAll('svg')).toHaveLength(1);
+
+    await fireEvent.click(unitButtons(container)[0]!);   // 팀
+    expect(svg().querySelector('polyline.diff')?.getAttribute('points')).toBe(teamDiff);
+    expect(foots(container)[1]).toBe('CS 차 · 10분 +10 · 15분 +15 · 마지막 분 +16');
+  });
+
+  it('고른 라인이 실리지 않은 경기로 바뀌면 팀으로 본다', async () => {
+    const { container, rerender } = render(GoldChart, { timeline: LANE_TL, teams: DETAIL.teams });
+    await fireEvent.click(unitButtons(container)[3]!);   // 미드
+    await rerender({ timeline: { ...LANE_TL, lanes: { TOP: LANE_TL.lanes!.TOP! } }, teams: DETAIL.teams });
+    expect(unitButtons(container).map((b) => b.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false', 'false', 'false', 'false']);
+    expect(unitButtons(container)[3]!.disabled).toBe(true);
+    expect(foots(container)[1]).toBe('CS 차 · 10분 +10 · 15분 +15 · 마지막 분 +16');
+  });
+
+  it('lanes 가 빈 사전(어느 라인도 한 명씩이 아님)이면 라인 다섯 모두 비활성, 팀 CS 줄은 있다', () => {
+    const { container } = render(GoldChart, { timeline: { ...LANE_TL, lanes: {} }, teams: DETAIL.teams });
+    expect(unitButtons(container).map((b) => b.disabled)).toEqual([false, true, true, true, true, true]);
+    expect(foots(container)[1]).toBe('CS 차 · 10분 +10 · 15분 +15 · 마지막 분 +16');
   });
 });
 

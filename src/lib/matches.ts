@@ -8,12 +8,12 @@
  *    기준이 바뀌면 여러 판을 나란히 못 본다. 차트는 어느 쪽이 어느 팀인지 글자로 적는다.
  * ⚠️ 킬 지도의 `a`(잡은 멤버 pid)가 0 이면 처형(포탑·미니언)이다. 빈칸으로 두면 왜 없는지 모른다.
  */
-import type { FunStats, MatchDetail, MatchDetailPlayer, MatchDetailTeam, RecentMatch } from './data/types';
-import { dateTimeKo, kilo, mmss, pct } from './fmt';
-import { laneIdx, laneKo } from './lanes';
+import type { FunStats, LaneId, MatchDetail, MatchDetailPlayer, MatchDetailTeam, RecentMatch } from './data/types';
+import { dateTimeKo, kilo, mmss, num, pct } from './fmt';
+import { LANE_SEQ, laneIdx, laneKo } from './lanes';
 import { laneBand, laneCls } from './member';
 import { hourRows, type HourRow } from './member-rest';
-import type { MetricMetaMap } from './metrics';
+import { mLabel, type MetricMetaMap } from './metrics';
 import { wrClass } from './tier';
 
 export type ChampKo = Record<string, string> | null | undefined;
@@ -231,6 +231,21 @@ export function extraRows(extra: Record<string, number | boolean> | null | undef
   return out;
 }
 
+/**
+ * 세부 기록 앞 두 칸 — 경기 파일에서 바로 낸다(발행 값이 아니다).
+ * 킬 관여 = (킬 + 어시) / 그 팀 킬, 분당 CS = CS / (경기 시간 분). 이름은 지표 레지스트리의 label.
+ * 팀 킬이 0 이면 킬 관여는 '-' — 0% 로 그리면 '하나도 관여 못 했다' 로 읽힌다. 경기 시간이 0 이면 분당 CS 도 '-'.
+ */
+export function rateRows(
+  p: Pick<ScoreRow, 'k' | 'a' | 'cs'>, teamKills: number, duration: number, meta?: MetricMetaMap | null,
+): ExtraRow[] {
+  const tk = n0(teamKills), min = n0(duration) / 60;
+  return [
+    { key: 'kp', label: mLabel(meta, 'kp'), text: tk > 0 ? pct((p.k + p.a) / tk) : '-' },
+    { key: 'cspm', label: mLabel(meta, 'cspm'), text: min > 0 ? num(p.cs / min, 1) : '-' },
+  ];
+}
+
 // ── 골드 추이 ─────────────────────────────────────────────────────────
 
 export interface GoldSeries {
@@ -246,14 +261,23 @@ export interface GoldSeries {
   maxGold: number;
 }
 
-/** 타임라인 → 같은 길이의 세 열. 점이 2개 미만이면 null(차트를 그리지 않는다). */
-export function goldSeries(tl: Partial<MatchDetail['timeline']> | null | undefined): GoldSeries | null {
+type Timeline = Partial<MatchDetail['timeline']> | null | undefined;
+
+/**
+ * 타임라인 → 같은 길이의 세 열. 점이 2개 미만이면 null(차트를 그리지 않는다).
+ * `lane` 을 주면 차이 열만 그 라인 맞상대끼리의 골드 차(`lanes[lane].gold`)로 바꾼다 — 팀 골드 두 열은 그대로.
+ * 그 라인 키가 없으면 null(호출부는 실린 라인만 고르게 한다 — goldLanes).
+ */
+export function goldSeries(tl: Timeline, lane?: LaneId | null): GoldSeries | null {
   const minutes = (tl?.minutes ?? []).map(n0);
   const n = minutes.length;
   if (n < 2) return null;
   const fill = (xs: readonly number[] | undefined) => Array.from({ length: n }, (_, i) => n0(xs?.[i]));
   const a = fill(tl?.a_gold), b = fill(tl?.b_gold);
-  const diff = tl?.gold_diff && tl.gold_diff.length ? fill(tl.gold_diff) : a.map((v, i) => v - b[i]!);
+  const laneGold = lane ? tl?.lanes?.[lane]?.gold : undefined;
+  if (lane && !Array.isArray(laneGold)) return null;
+  const diff = laneGold ? fill(laneGold)
+    : tl?.gold_diff && tl.gold_diff.length ? fill(tl.gold_diff) : a.map((v, i) => v - b[i]!);
   return {
     minutes, a, b, diff,
     peak: Math.max(...diff.map(Math.abs)),
@@ -289,6 +313,30 @@ export function goldTick(v: number, signed = false): string {
 export function goldSummary(s: Pick<GoldSeries, 'last' | 'peak'>): string {
   const side = s.last >= 0 ? '블루' : '레드';
   return `최종 ${side} +${Math.abs(s.last).toLocaleString('ko-KR')}G · 최대 격차 ${s.peak.toLocaleString('ko-KR')}G`;
+}
+
+/**
+ * 라인 맞상대 골드 차가 실린 라인(탑 → 서폿 순). `lanes` 키 자체가 없으면 null — 그 키를 싣기 전 발행물이라
+ * 차트는 선택 줄 없이 팀만 그린다. 키가 있어도 한쪽 팀에 그 라인이 없거나 둘이면 그 라인은 빠진다(비활성).
+ */
+export function goldLanes(tl: Timeline): LaneId[] | null {
+  const lanes = tl?.lanes;
+  if (!lanes || typeof lanes !== 'object') return null;
+  return LANE_SEQ.filter((l) => Array.isArray(lanes[l]?.gold));
+}
+
+/** 부호 붙은 정수 "+12"·"−3"·"0" — 골드 축 눈금과 같은 빼기 기호 */
+const signedInt = (v: number): string => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+
+/**
+ * CS 차 한 줄 — 10분 · 15분 · 마지막 분(배열 끝 = 종료 프레임). 부호는 골드 차와 같이 블루 − 레드.
+ * `lane` 이 없으면 팀(cs_diff), 있으면 그 라인 맞상대(`lanes[lane].cs`). 그 분이 없는 경기(10분 전 종료)는 '-'.
+ */
+export function csDiffText(tl: Timeline, lane?: LaneId | null): string {
+  const minutes = (tl?.minutes ?? []).map(n0);
+  const cs = lane ? tl?.lanes?.[lane]?.cs : tl?.cs_diff;
+  const at = (i: number) => (cs && i >= 0 && i < cs.length ? signedInt(n0(cs[i])) : '-');
+  return `CS 차 · 10분 ${at(minutes.indexOf(10))} · 15분 ${at(minutes.indexOf(15))} · 마지막 분 ${at(minutes.length - 1)}`;
 }
 
 // ── 킬 지도 ───────────────────────────────────────────────────────────

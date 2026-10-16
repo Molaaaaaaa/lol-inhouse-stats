@@ -195,7 +195,12 @@ export interface MatchDetail {
   match_id: string; duration: number;
   teams: MatchDetailTeam[];
   kills: { a: number; v: number; m: number; x: number; y: number }[];
-  timeline: { minutes: number[]; a_gold: number[]; b_gold: number[]; gold_diff: number[]; cs_diff: number[]; xp_diff: number[] };
+  timeline: {
+    minutes: number[]; a_gold: number[]; b_gold: number[]; gold_diff: number[]; cs_diff: number[]; xp_diff: number[];
+    /** 라인 맞상대끼리의 분당 골드 차·CS 차 — 길이는 minutes 와 같고 부호는 gold_diff 처럼 블루 − 레드.
+     *  양 팀에 그 라인이 한 명씩일 때만 그 라인 키가 있다. 이 키를 싣기 전 발행물에는 lanes 자체가 없다 */
+    lanes?: Partial<Record<LaneId, { gold: number[]; cs: number[] }>>;
+  };
 }
 
 // ── 데스 히트맵 표본 (data/<gid>/deaths.json, 볼 때 로드) ────────────

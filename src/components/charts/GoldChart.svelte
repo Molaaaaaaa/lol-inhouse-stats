@@ -6,9 +6,15 @@
    *
    * 그라디언트 id 는 $props.id() — 경기를 둘 이상 펼치면 같은 id 가 문서에 여러 개 생기고 `url(#…)` 는
    * 처음 하나만 가리킨다(옛 파일이 난수로 피하던 문제). 폭은 래퍼 폭을 재서 글자 크기가 폰에서 안 줄어든다.
+   *
+   * 팀 · 라인 선택(`timeline.lanes` 가 있을 때만): 라인을 누르면 아래 판만 그 라인 맞상대끼리의 골드 차로
+   * 바뀌고(위 판은 팀 골드 그대로), 차트 아래 줄에 같은 대상의 CS 차를 10분 · 15분 · 마지막 분으로 적는다.
+   * 키가 없는 라인은 비활성. `lanes` 가 없는 옛 발행물은 선택 줄도 CS 줄도 없이 예전 그대로 그린다.
    */
-  import type { MatchDetail, MatchDetailTeam } from '$lib/data/types';
-  import { axisTop, goldSeries, goldSummary, goldTick, niceStep, teamLabel } from '$lib/matches';
+  import type { LaneId, MatchDetail, MatchDetailTeam } from '$lib/data/types';
+  import { LANE_SEQ, laneKo } from '$lib/lanes';
+  import { axisTop, csDiffText, goldLanes, goldSeries, goldSummary, goldTick, niceStep, teamLabel } from '$lib/matches';
+  import { laneBand } from '$lib/member';
   import EmptyState from '$components/EmptyState.svelte';
 
   interface Props {
@@ -20,7 +26,12 @@
   let { timeline, teams, caption = '골드 추이' }: Props = $props();
 
   const gid = $props.id();
-  const s = $derived(goldSeries(timeline));
+  // 고른 대상 — 'team' 또는 라인. 실리지 않은 라인이 남아 있으면(다른 경기로 바뀜) 팀으로 본다
+  let unit = $state<'team' | LaneId>('team');
+  const avail = $derived(goldLanes(timeline));
+  const lane = $derived(unit !== 'team' && avail?.includes(unit) ? unit : null);
+  const s = $derived(goldSeries(timeline, lane));
+  const csLine = $derived(avail ? csDiffText(timeline, lane) : '');
 
   // 결과 클래스 — 둘 다 같으면(데이터 오류) 블루 --sel · 레드 --dim 로 구분만 한다
   const aWin = $derived(!!teams[0]?.win);
@@ -68,6 +79,7 @@
 
   const leadCls = $derived(!s ? '' : s.last >= 0 ? clsA : clsB);
   const summary = $derived(s ? goldSummary(s) : '');
+  const diffName = $derived(lane ? `${laneKo(lane)} 골드 차이` : '골드 차이');
 </script>
 
 <div class="gold" bind:clientWidth={wrapW}>
@@ -75,12 +87,21 @@
   {#if !s || !geo}
     <EmptyState text="아직 골드 기록이 없습니다." />
   {:else}
+    {#if avail}
+      <div class="units" role="group" aria-label="골드 차이 대상">
+        <button type="button" class="vb" aria-pressed={!lane} onclick={() => { unit = 'team'; }}>팀</button>
+        {#each LANE_SEQ as l (l)}
+          <button type="button" class="vb {laneBand(l)}" aria-pressed={lane === l} disabled={!avail.includes(l)}
+                  onclick={() => { unit = l; }}>{laneKo(l)}</button>
+        {/each}
+      </div>
+    {/if}
     <div class="legend" aria-hidden="true">
       <span class="key"><i class="sw {clsA}"></i>{labelA} · {aWin ? '승' : '패'}</span>
       <span class="key"><i class="sw {clsB}"></i>{labelB} · {bWin ? '승' : '패'}</span>
-      <span class="muted">아래 판 · 골드 차이 = 블루 − 레드</span>
+      <span class="muted">아래 판 · {diffName} = 블루 − 레드</span>
     </div>
-    <svg width={W} height={H} viewBox="0 0 {W} {H}" role="img" aria-label="{caption}: {summary}">
+    <svg width={W} height={H} viewBox="0 0 {W} {H}" role="img" aria-label="{caption}{lane ? ` · ${diffName}` : ''}: {summary}">
       <rect class="bg" x="0" y="0" width={W} height={H} />
       <!-- 위 판: 팀 골드 -->
       {#each geo.ticks1 as t (t.label)}
@@ -113,6 +134,7 @@
       {/each}
     </svg>
     <p class="foot">{summary}</p>
+    {#if csLine}<p class="foot">{csLine}</p>{/if}
   {/if}
 </div>
 
@@ -132,6 +154,36 @@
     font-size: var(--fs-sm);
   }
   .key { display: inline-flex; align-items: center; gap: var(--sp-1); }
+
+  /* 팀 · 라인 선택 — 데스 위치 차트의 라인 버튼과 같은 모양(왼쪽 3px 라인 띠, 눌린 것은 선택색 테두리) */
+  .units { display: flex; flex-wrap: wrap; gap: var(--sp-1); padding: 0 0 var(--sp-2); }
+  .vb {
+    min-height: 28px;
+    padding: 0 var(--sp-2);
+    background: var(--sheet);
+    color: var(--dim);
+    border: 1px solid var(--grid-strong);
+    border-left-width: 3px;
+    border-left-color: transparent;
+    border-radius: var(--r-chip);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    white-space: nowrap;
+    transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out;
+  }
+  .vb:hover { background: var(--raised); color: var(--txt); }
+  .vb:active { background: var(--gutter); }
+  .vb[aria-pressed='true'] { background: var(--raised); color: var(--txt); border-color: var(--sel); }
+  .vb.top { border-left-color: var(--lane-top); }
+  .vb.jg { border-left-color: var(--lane-jg); }
+  .vb.mid { border-left-color: var(--lane-mid); }
+  .vb.bot { border-left-color: var(--lane-bot); }
+  .vb.sup { border-left-color: var(--lane-sup); }
+  /* 실리지 않은 라인 — 라인 띠까지 격자색으로 지운다(띠가 남으면 눌러질 것처럼 보인다). 라인 규칙 뒤에 둔다 */
+  .vb:disabled { color: var(--dim2); border-color: var(--grid); cursor: default; background: var(--sheet); }
+  @media (pointer: coarse) {
+    .vb { min-height: 44px; }
+  }
   .sw { display: inline-block; width: 14px; height: 3px; background: var(--dim); }
   .sw.win { background: var(--win); }
   .sw.loss { background: var(--loss); }

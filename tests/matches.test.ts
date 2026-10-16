@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import {
-  axisTop, buildRows, extraRows, fxKda, gapText, goldSeries, goldStep, goldSummary, goldTick, itemImgUrl, kdaCounts, kdaMarks,
-  killDots, matchRows, MATCH_PAGE, niceStep, scoreboardRows, teamLabel, teamTotals, trendRows, wrCellCls, wrWithGames,
+  axisTop, buildRows, csDiffText, extraRows, fxKda, gapText, goldLanes, goldSeries, goldStep, goldSummary, goldTick, itemImgUrl,
+  kdaCounts, kdaMarks, killDots, matchRows, MATCH_PAGE, niceStep, rateRows, scoreboardRows, teamLabel, teamTotals, trendRows,
+  wrCellCls, wrWithGames,
 } from '../src/lib/matches';
 import { app } from '../src/lib/data/store.svelte';
 import { router } from '../src/lib/router.svelte';
@@ -77,6 +78,15 @@ describe('scoreboardRows · teamTotals', () => {
     ]);
     expect(extraRows(null)).toEqual([]);
   });
+  it('킬 관여 · 분당 CS — (킬+어시)/팀 킬, CS/경기 시간 분. 팀 킬 0 · 경기 시간 0 은 대시', () => {
+    const r = { k: 9, a: 14, cs: 180 };
+    expect(rateRows(r, 45, 1903, PAYLOAD.metric_meta)).toEqual([
+      { key: 'kp', label: '킬 관여', text: '51%' },     // 23/45
+      { key: 'cspm', label: '분당 CS', text: '5.7' },   // 180 / 31.7분
+    ]);
+    expect(rateRows({ k: 0, a: 0, cs: 0 }, 10, 600, PAYLOAD.metric_meta).map((x) => x.text)).toEqual(['0%', '0.0']);
+    expect(rateRows(r, 0, 0, PAYLOAD.metric_meta).map((x) => x.text)).toEqual(['-', '-']);
+  });
   it('아이템 이미지 URL — 패치·id 가 URL 조각 모양일 때만', () => {
     expect(itemImgUrl('16.18.1', 3078)).toBe('https://ddragon.leagueoflegends.com/cdn/16.18.1/img/item/3078.png');
     expect(itemImgUrl('16.18.1', 0)).toBe('');
@@ -112,6 +122,13 @@ describe('MVP — 파생값', () => {
   });
 });
 
+/** 라인 두 개(탑·미드)만 실린 3분 타임라인 — 정글·원딜·서폿은 키가 없다 */
+const LANE_TL: MatchDetail['timeline'] = {
+  minutes: [0, 1, 2], a_gold: [2500, 3500, 5000], b_gold: [2500, 3000, 4000], gold_diff: [0, 500, 1000],
+  cs_diff: [0, 3, 0], xp_diff: [0, 0, 0],
+  lanes: { TOP: { gold: [0, 200, 400], cs: [0, 1, 2] }, MIDDLE: { gold: [0, -300, -100], cs: [0, -1, -2] } },
+};
+
 describe('goldSeries — 골드 추이', () => {
   it('세 열 같은 길이, 최대 격차·최종·팀 골드 최대', () => {
     const s = goldSeries(DETAIL.timeline)!;
@@ -120,6 +137,33 @@ describe('goldSeries — 골드 추이', () => {
     expect(s).toMatchObject({ peak: 1500, last: 1500, maxGold: 9000 });
     expect(goldSummary(s)).toBe('최종 블루 +1,500G · 최대 격차 1,500G');
     expect(goldSummary({ last: -320, peak: 900 })).toBe('최종 레드 +320G · 최대 격차 900G');
+  });
+  it('lane 을 주면 차이 열만 그 라인 맞상대 골드 차로 — 팀 골드 두 열은 그대로, 없는 라인은 null', () => {
+    const s = goldSeries(LANE_TL, 'MIDDLE')!;
+    expect(s.diff).toEqual([0, -300, -100]);
+    expect(s).toMatchObject({ peak: 300, last: -100, maxGold: 5000 });
+    expect(s.a).toEqual(goldSeries(LANE_TL)!.a);
+    expect(goldSeries(LANE_TL)!.diff).toEqual([0, 500, 1000]);
+    expect(goldSeries(LANE_TL, 'JUNGLE')).toBeNull();
+    expect(goldSeries(DETAIL.timeline, 'MIDDLE')).toBeNull();
+  });
+  it('goldLanes — 실린 라인(탑 → 서폿 순), lanes 키가 없으면 null, 빈 사전이면 []', () => {
+    expect(goldLanes(LANE_TL)).toEqual(['TOP', 'MIDDLE']);
+    expect(goldLanes(DETAIL.timeline)).toBeNull();
+    expect(goldLanes({ ...DETAIL.timeline, lanes: {} })).toEqual([]);
+    expect(goldLanes(null)).toBeNull();
+  });
+  it('csDiffText — 10분 · 15분 · 마지막 분, 팀은 cs_diff · 라인은 lanes[l].cs, 그 분이 없으면 대시', () => {
+    const minutes = Array.from({ length: 17 }, (_, i) => i);
+    const tl = {
+      minutes, cs_diff: minutes.map((m) => m * 2),
+      lanes: { MIDDLE: { gold: minutes.map(() => 0), cs: minutes.map((m) => -m) } },
+    };
+    expect(csDiffText(tl)).toBe('CS 차 · 10분 +20 · 15분 +30 · 마지막 분 +32');
+    expect(csDiffText(tl, 'MIDDLE')).toBe('CS 차 · 10분 −10 · 15분 −15 · 마지막 분 −16');
+    expect(csDiffText(LANE_TL, 'MIDDLE')).toBe('CS 차 · 10분 - · 15분 - · 마지막 분 −2');   // 10분 전에 끝난 경기
+    expect(csDiffText(LANE_TL)).toBe('CS 차 · 10분 - · 15분 - · 마지막 분 0');
+    expect(csDiffText({ minutes: [0, 1] })).toBe('CS 차 · 10분 - · 15분 - · 마지막 분 -');
   });
   it('gold_diff 가 없으면 a − b 로, 점이 2개 미만이면 null', () => {
     const s = goldSeries({ minutes: [0, 1], a_gold: [100, 400], b_gold: [100, 250] })!;
@@ -366,13 +410,29 @@ describe('Detail — 경기 상세', () => {
     expect(build[3]!.classList.contains('sold')).toBe(true);
     expect(build[3]!.querySelector('.x')?.textContent).toBe('✕');
     expect(build[2]!.querySelector('.x')).toBeNull();
-    expect([...pd.querySelectorAll('.cell dt')].map((d) => d.textContent)).toEqual(['솔로킬', '물리 피해', '죽어 있던 시간']);
+    expect([...pd.querySelectorAll('.cell dt')].map((d) => d.textContent)).toEqual(['킬 관여', '분당 CS', '솔로킬', '물리 피해', '죽어 있던 시간']);
+    expect([...pd.querySelectorAll('.cell dd')].slice(0, 2).map((d) => d.textContent)).toEqual(['51%', '5.7']);   // (9+14)/45 · 180/31.7분
     expect(pd.textContent).toContain('소환사 주문');
     expect(board.querySelector('tr.sb.sel td.c0')?.textContent?.trim()).toBe('가');
     // 행 자체를 눌러도 토글된다(접힘)
     await fireEvent.click(board.querySelectorAll('tr.sb')[1]!);
     expect(btn.getAttribute('aria-expanded')).toBe('false');
     expect(board.querySelector('tr.pd')).toBeNull();
+  });
+
+  it('세부 기록의 킬 관여는 그 멤버 팀의 킬이 분모 — 팀 킬 0 이면 0% 가 아니라 대시', async () => {
+    const teams = DETAIL.teams.map((t, i) => (i === 1 ? { ...t, kills: 0 } : t));
+    const { container } = render(Detail, { detail: { ...DETAIL, teams }, data: PAYLOAD, slug: 'mnew' });
+    const cells = async (label: string) => {
+      const board = container.querySelector(`table[aria-label="${label}"]`)!;
+      await fireEvent.click(board.querySelectorAll('button.exp')[0]!);
+      const pd = board.querySelector('tr.pd')!;
+      return [...pd.querySelectorAll('.cell')].slice(0, 2).map((c) => [c.querySelector('dt')?.textContent, c.querySelector('dd')?.textContent]);
+    };
+    // 레드팀 첫 행(라인 순: 라 · 탑) — 팀 킬 0
+    expect(await cells('스코어보드 · 레드팀 · 패')).toEqual([['킬 관여', '-'], ['분당 CS', '5.7']]);
+    // 블루팀 첫 행(나 · 탑) — (5+7)/45
+    expect(await cells('스코어보드 · 블루팀 · 승')).toEqual([['킬 관여', '27%'], ['분당 CS', '5.7']]);
   });
 
   it('오브젝트·밴이 없는 발행물은 열을 빼고 사유를 적는다', () => {
