@@ -8,6 +8,8 @@
  *   돌려주고 "다시 눌러 주세요" 가 거짓말이 된다.
  * · 길드가 바뀌면 상세·데스 캐시를 비운다.
  * · 파일명 조각은 `safeId` 를 지나야 한다.
+ * · 폴더는 `__DATA_DIR__`(빌드 상수) — 보통은 페이지 옆 `data/`, 이중 디자인 빌드(/v2/)는 사이트 루트의
+ *   공유 `/data/`(vite.config.ts).
  */
 import { sanitize, safeId } from './sanitize';
 import type { DeathsFile, GuildIndexEntry, GuildPayload, MatchDetail } from './types';
@@ -29,13 +31,13 @@ async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export async function loadIndex(): Promise<GuildIndexEntry[]> {
-  const idx = await getJson<GuildIndexEntry[]>('data/guilds.json');
+  const idx = await getJson<GuildIndexEntry[]>(`${__DATA_DIR__}guilds.json`);
   return (Array.isArray(idx) ? idx : []).filter((g) => safeId(g.id));
 }
 
 export async function loadGuild(gid: string): Promise<GuildPayload> {
   if (!safeId(gid)) throw new LoadError('잘못된 데이터 식별자입니다.');
-  return getJson<GuildPayload>(`data/${encodeURIComponent(gid)}.json`);
+  return getJson<GuildPayload>(`${__DATA_DIR__}${encodeURIComponent(gid)}.json`);
 }
 
 /** 길드 하나의 지연 파일 캐시. 길드가 바뀌면 새로 만든다. */
@@ -52,7 +54,7 @@ export class LazyFiles {
     try {
       // 파일명은 익명 슬러그이고 내용이 안 바뀌므로 기본 캐시 정책을 쓴다
       const d = await getJson<MatchDetail>(
-        `data/${encodeURIComponent(this.gid)}/m/${encodeURIComponent(slug)}.json`, { cache: 'default' });
+        `${__DATA_DIR__}${encodeURIComponent(this.gid)}/m/${encodeURIComponent(slug)}.json`, { cache: 'default' });
       this.details.set(slug, d);
       return d;
     } catch {
@@ -63,7 +65,7 @@ export class LazyFiles {
   /** 데스 좌표 표본 — 히트맵이 눈에 들어올 때만 받는다. 실패는 던진다(호출부가 재시도 UI). */
   async deathSample(signal?: AbortSignal): Promise<DeathsFile> {
     if (this.deaths) return this.deaths;
-    const d = await getJson<DeathsFile>(`data/${encodeURIComponent(this.gid)}/deaths.json`, { signal });
+    const d = await getJson<DeathsFile>(`${__DATA_DIR__}${encodeURIComponent(this.gid)}/deaths.json`, { signal });
     this.deaths = d;
     return d;
   }
