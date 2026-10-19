@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- 심층 방어(CSP): 외부 스크립트/프레임/폼 전송 차단, 이미지는 Data Dragon만 허용.
      인라인 스크립트·스타일을 쓰므로 'unsafe-inline'은 필요(단일 파일 구조). -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-TttvFcRq+dN7CqkuuLweuSUhffMSw5GbOT3imKEZJ9w='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https://ddragon.leagueoflegends.com data:; style-src 'unsafe-inline'; script-src 'sha256-JIX/f3F+1YZNWx9y/NQsq5Bij4apnh/VEqw/psdYaGI='; connect-src 'self'; base-uri 'none'; form-action 'none'" />
 <!-- ⚠️ 이 사이트는 지금 GitHub Pages 에 있고, Pages 는 `_headers` 를 무시한다
      (실측: /_headers 가 404, 응답에 보안 헤더 0개). 그래서 헤더로만 걸 수 있는
      X-Frame-Options·frame-ancestors·nosniff 는 **라이브에서 적용되지 않는다.**
@@ -882,7 +882,7 @@ function renderTable(el, rows, cols, sortKey, sortDir){
 // 지표 설명 — 물음표에 마우스를 올리면 계산 방식이 뜬다(숫자만 보고 오해하지 않게)
 const HELP={
   CP:'내전 전적만으로 낸 점수입니다. 솔랭 티어와는 무관합니다.\n한 판에 15~25 움직이고, 이기고 지는 것만 반영합니다 — 많이 뛴다고 오르지 않습니다.\n같은 팀 안에서는 내 MMR 이 팀 평균보다 낮을수록, 그 판에 더 기여했을수록 더 받습니다.\n기여가 컸으면 졌을 때도 덜 잃습니다.',
-  라인티어:'라인마다 티어를 따로 냅니다. 그 판에 실제로 선 라인의 실력으로 계산하기 때문입니다.\n서폿이 주 라인인 사람이 미드를 간다고 미드도 같은 티어인 것은 아닙니다.\n안 뛴 라인도 칸을 비우지 않고 추정치로 채우되, 점선으로 아직 표본이 모자라다는 것을 표시합니다.\n라인 편차 = 다섯 라인 중 가장 높은 칸과 가장 낮은 칸 차이의 절반입니다.',
+  라인티어:'라인마다 그 라인에서 얻고 잃은 점수만 더합니다(한 판 15~25, 전체 점수와 같은 규칙).\n그 라인 5판부터 티어가 나옵니다.',
   라인MMR:'그 라인에서의 MMR 입니다.\n통합 실력에 **그 라인 승률 보정**을 더한 값이고, 라인마다 처음부터 다시 매긴 값이 아닙니다.\n그래서 통합 MMR 과 크게 벌어지지 않습니다(실측 편차 중앙 14).\n판수가 적은 라인은 보정이 거의 안 걸려 통합값에 가까워집니다.',
   능력치:'축들은 서로 겹치지 않는 것을 재도록 골랐습니다.\n점수는 방 평균을 2.75 로 두고, 그 지표의 값이 평균에서 얼마나 떨어져 있는지로 냅니다.\n순위가 아니라 값이라 다 같이 늘면 다 같이 오릅니다.\n판수가 적으면 평균 쪽으로 당겨 둡니다 — 한두 판으로 만점이 나오지 않게.\n경기 하나에 0.13쯤 움직입니다.\n▲▼ 는 지난 내전(그날 전체) 대비 변화입니다.',
   시너지:'같이 한 팀이었을 때의 전적입니다.\n시너지 숫자는 두 사람 각자의 실력으로 기대되는 승률보다 얼마나 더 이겼는지입니다.\n+면 기대보다 잘 맞았고, −면 덜 맞았습니다. 0 근처면 그냥 각자 실력대로였다는 뜻입니다.\n같이 뛴 판이 적으면 이 값은 0 쪽으로 눌러 놓습니다.',
@@ -3034,11 +3034,9 @@ function tierCls(name){
 function tierBadge(name){
   return `<span class="tierbadge ${tierCls(name)}">${esc(name)}</span>`;
 }
-// 라인 칸 하나. 확신을 **모양**으로 드러낸다 — 실선(주 라인) / 실선(배치완료) /
-// 점선(표본 부족) / 흐린 점선(안 뛴 라인).
 // 사다리 보기 상태 — ''=통합(1인 1행) · 'ALL'=라인별 전부 · 라인키=그 라인만.
 // 다시 그려도 유지된다.
-let cpView='', cpLaneEst=false;
+let cpView='';
 function renderCpMath(){
   // ⚠️ 보기(통합/라인별)와 **무관하게** 그려야 한다. 한때 이 블록이 renderCpLanes 안에
   //    있어서 기본 화면에서는 계산식이 비어 있었다(실측 cpMath 길이 0).
@@ -3063,7 +3061,7 @@ CP    보이는 점수. 이기면 +${C.cp_min}~${C.cp_max}, 지면 −${C.cp_min
     <p class="muted">서폿 주력이 미드를 가면 미드 실력으로 계산됩니다. n/(n+${C.lane_prior_k}) 는
        라인 배치 ${C.lane_prior_k}판 — 1판짜리 라인이 실력처럼 보이면 안 되기 때문입니다.
        주 라인의 사전값이 0 인 이유: 전체 MMR 자체가 대부분 주 라인에서 만들어진 숫자라,
-       거기에도 벌점을 걸면 다섯 라인이 전부 자기 CP 아래로 내려갑니다.</p>
+       거기에도 벌점을 걸면 다섯 라인이 전부 자기 MMR 아래로 내려갑니다.</p>
 
     <h3 style="font-size:14px;margin:12px 0 4px">② 이길 확률 — 팀 대 팀, 다섯 명이 같은 값</h3>
     <div class="fml">E = 1 / (1 + 10^((상대팀 평균실력 − 우리팀 평균실력) / 400))</div>
@@ -3106,7 +3104,8 @@ gap = ((MMR − CP) / ${C.cp_gap_div}) 을 ±${C.cp_gap_cap} 로 자름
 
     <h3 style="font-size:14px;margin:12px 0 4px">⑥ 티어 — CP 에 눈금을 그은 것</h3>
     <div class="fml">티어 = CP 가 어느 ${FULLP}점 칸에 있나       티어 점수 = 그 칸 안에서 몇 점인가
-배치 ${need}판을 마치기 전에는 티어를 보여 주지 않는다 (그 구간은 K=${C.k_place} 라 크게 흔들린다)</div>
+배치 ${need}판을 마치기 전에는 티어를 보여 주지 않는다 (그 구간은 K=${C.k_place} 라 크게 흔들린다)
+라인 CP = ${base} + 그 라인 판의 ΔCP 합 → 같은 눈금으로 라인 티어 (그 라인 ${C.lane_prior_k}판부터)</div>
     <p class="muted">경계가 ${cpTiers().filter(t=>t.cp!=null).map(t=>t.cp).join(' · ')} 인 이유:
        점수 총합이 보존되어 방 평균이 ${base} 에 고정되므로, 평균인 사람이 가운데 티어의
        <b>한가운데</b>에 오게 놓았습니다 — 경계를 ${base} 에 두면 방의 절반이 영원히
@@ -3151,15 +3150,9 @@ function renderCp(){
   ).join('');
 
   const rows=ids.map(id=>{
-    const v=cp[id]||{}, L=v.lanes||{};
+    const v=cp[id]||{};
     const ml=v.main_lane;
-    return {...v, _id:id,
-      _lane: ml?laneKo(ml):'—',
-      _lanecp: ml&&L[ml]?L[ml].cp:v.cp,
-      // 안 뛴 라인 중 가장 낮은 칸 — "다른 라인 가면 어디까지 떨어지나"
-      _floor: Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null)),
-      _spread: Math.max(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))
-             - Math.min(...LANE_SEQ.map(k=>(L[k]||{}).cp).filter(x=>x!=null))};
+    return {...v, _id:id, _lane: ml?laneKo(ml):'—'};
   });
   // 배치 미완은 CP 순서에 끼워 두면 **정렬 위치가 티어를 누설한다** → 맨 아래로.
   // _ord 는 기본 정렬 전용이다(헤더를 눌러 다른 열로 정렬하는 건 그대로 된다).
@@ -3177,15 +3170,11 @@ function renderCp(){
   $('#cpLanePick').innerHTML=
     [['','통합'],['ALL','라인별']].concat(LANE_SEQ.map(l=>[l,laneKo(l)])).map(([v,t])=>
       `<button type="button" class="lnpick${cpView===v?' on':''}" data-lane="${v}"`+
-      ` aria-pressed="${cpView===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('')
-    +(cpView?`<label class="mini" style="gap:6px;margin-left:10px">`+
-      `<input type="checkbox" id="cpLaneEstT"${cpLaneEst?' checked':''}>안 뛴 라인 추정치도 보기</label>`:'');
+      ` aria-pressed="${cpView===v}">${t}${(v&&v!=='ALL')?` <span class="muted">${cnt[v]||0}</span>`:''}</button>`).join('');
   $('#cpLanePick').querySelectorAll('.lnpick').forEach(b=>b.onclick=()=>{
     cpView=b.dataset.lane; renderCp();
     announce(cpView===''?'통합 티어':(cpView==='ALL'?'라인별 티어':`${laneKo(cpView)} 티어`));
   });
-  const estT=$('#cpLaneEstT');
-  if(estT) estT.onchange=()=>{cpLaneEst=estT.checked; renderCp();};
 
   renderCpMath();                       // 보기와 무관하게 항상
   if(cpView){ renderCpLanes(rows); return; }
@@ -3208,9 +3197,6 @@ function renderCp(){
      fmt:(v,r)=>r.placed?`<span class="muted">${v}</span>`:'<span class="muted">—</span>'},
     {k:'games',h:'판수',num:1},
     {k:'_lane',h:'주 라인'},
-    {k:'_spread',h:'라인 편차',num:1,hlp:'라인티어',
-     // 라인 편차도 CP 파생값이다 — 배치 미완은 같이 가린다
-     fmt:(v,r)=>(!r.placed||!v)?'<span class="muted">—</span>':`<span class="muted">±${Math.round(v/2)}</span>`},
   ],'_ord',-1);
   const unplaced=rows.filter(r=>!r.placed).length;
   $('#cpNote').innerHTML=
@@ -3222,50 +3208,48 @@ function renderCp(){
 
 // (사람 × 뛴 라인) 행 목록 — "외걸이면 미드·정글·원딜 3행" 이 이 화면이다.
 function renderCpLanes(rows){
-  const C=cpConst(); const need=C.placement_games||3;
+  const C=cpConst(); const need=C.placement_games||3, LK=C.lane_prior_k||5;
   const laneRows=[];
   rows.forEach(r=>{
     if(!r.placed){
-      laneRows.push({_masked:1,name:r.name,games:r.games,_ord:r._ord});
+      // 전체 배치 미완 — 라인 몫을 더하면 전체 CP 가 나오므로 몫도 가린다. 맨 아래 무리.
+      laneRows.push({_masked:1,name:r.name,games:r.games,_ord:r._ord-200000});
       return;
     }
     LANE_SEQ.forEach(l=>{
-      const c=(r.lanes||{})[l]; if(!c) return;
-      const played=(c.games||0)>0;
-      if(!played&&!cpLaneEst) return;            // 안 뛴 라인은 토글 켰을 때만
+      const c=(r.lanes||{})[l]; if(!c||!(c.games>0)) return;   // 뛴 라인만
       if(cpView!=='ALL'&&l!==cpView) return;
-      laneRows.push({name:r.name,lane:l,_laneKo:laneKo(l),games:c.games||0,
-        tier:c.tier,points:c.points,cp:c.cp,mmr:c.mmr,placed:true,
-        _lanePlaced:!!c.placed,_est:!played,_main:l===r.main_lane,
-        _ord:c.cp});
+      const placed=!!c.placed;
+      // 라인 배치(LK판) 전 칸은 티어·점수·CP 가 없다(null). CP 순서에 끼우지 않고
+      // 배치 마친 칸 아래에 몫 순으로 둔다.
+      laneRows.push({name:r.name,lane:l,_laneKo:laneKo(l),games:c.games,
+        tier:placed?c.tier:null,points:placed?c.points:null,share:c.share,
+        _lanePlaced:placed,_main:l===r.main_lane,
+        _ord:placed?c.cp:((c.share||0)-100000)});
     });
   });
   const FULL2=C.tier_points||100;
+  const signed=x=>{const s=Math.round(Math.abs(x)); return (s&&x>0?'+':s&&x<0?'−':'')+s;};
   renderTable($('#cpT'),laneRows,[
     {k:'name',h:'멤버',fmt:(v,r)=>esc(v)+(r._masked
       ?` <span class="muted" style="font-size:11px">배치 중 ${r.games}/${need}</span>`
       :(r._main?' <span class="muted" style="font-size:10.5px">주 라인</span>':''))},
-    {k:'_laneKo',h:'라인',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
-      :(r._est?`<span class="muted">${v}?</span>`:v)},
-    {k:'tier',h:'티어',fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
-      :(r._est?`<span class="muted" style="font-size:11.5px">${esc(v)} (추정)</span>`:tierBadge(v))},
-    {k:'points',h:'점수',num:1,fmt:(v,r)=>{
-      if(r._masked||r._est) return '<span class="muted">—</span>';
+    {k:'_laneKo',h:'라인',fmt:(v,r)=>r._masked?'<span class="muted">—</span>':v},
+    {k:'tier',h:'티어',nullLast:1,fmt:(v,r)=>{
+      if(r._masked) return '<span class="muted">—</span>';
+      if(r._lanePlaced) return tierBadge(v);
+      return `<span class="muted" style="font-size:11.5px">배치 ${r.games}/${LK}`+
+             `${r.share==null?'':' · '+signed(r.share)}</span>`;}},
+    {k:'points',h:'점수',num:1,nullLast:1,fmt:(v,r)=>{
+      if(!r._lanePlaced) return '<span class="muted">—</span>';
       const w2=Math.max(0,Math.min(100,(v/FULL2)*100));
       return `<div class="tprog ${tierCls(r.tier)}"><span class="pt">${v}</span>`+
              `<span class="bar"><i style="width:${w2.toFixed(1)}%"></i></span></div>`;}},
-    {k:'mmr',h:'MMR',num:1,fmt:(v,r)=>r._masked?'<span class="muted">—</span>'
-      :`<span class="muted">${v}</span>`},
-    {k:'games',h:'판수',num:1,fmt:(v,r)=>{
-      if(r._masked) return '<span class="muted">—</span>';
-      if(r._est) return '<span class="muted">0</span>';
-      return r._lanePlaced?String(v)
-        :`${v} <span class="muted" style="font-size:10.5px">배치 ${v}/${C.lane_prior_k||5}</span>`;}},
+    {k:'games',h:'판수',num:1,fmt:(v,r)=>r._masked?'<span class="muted">—</span>':String(v)},
   ],'_ord',-1);
   $('#cpNote').innerHTML=
     `한 사람이 여러 라인을 뛰었으면 <b>라인마다 한 줄</b>씩 나옵니다. `+
-    `그 라인 <b>${C.lane_prior_k}판</b>부터 라인 배치가 끝난 것으로 봅니다(그 전에는 배치 n/${C.lane_prior_k}). `+
-    `'추정치 보기'를 켜면 안 뛴 라인을 주 라인보다 ${Math.abs(C.off_lane_prior||30)} CP 낮게 잡은 값이 회색으로 나옵니다.`;
+    `그 라인 <b>${LK}판</b>부터 티어가 나옵니다(그 전에는 배치 n/${LK} · 그 라인에서 얻고 잃은 점수).`;
 
   // 클릭한 행 강조 유지 — 호버는 떼면 사라져서 26명 표에서 자기 줄을 놓친다.
   // 컨테이너 위임이라 정렬로 표가 다시 그려져도 리스너는 산다(강조만 리셋된다).
