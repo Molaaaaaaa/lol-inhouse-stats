@@ -155,7 +155,7 @@ button { cursor: pointer; }
 .st-down2 { color: var(--loss); }
 .st-few { color: var(--dim2); }
 
-/* 카드 표면 — 바깥 카드는 Panel 컴포넌트, 이것은 그 밖의 작은 카드(경기 카드·기록 카드·듀오 카드).
+/* 카드 표면 — 바깥 카드는 Panel 컴포넌트, 이것은 그 밖의 작은 카드(경기 카드·기록 카드).
    .card = 판 위에 바로 놓이는 카드, .tile = 카드 안에 놓이는 안쪽 판 */
 .card {
   background: var(--grad-card);

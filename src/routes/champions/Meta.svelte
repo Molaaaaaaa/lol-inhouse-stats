@@ -3,6 +3,7 @@
    * 챔피언 · 메타 — 라인 칩 줄(전체 · 탑 … 서폿, 라우트 `#/champions/meta/라인`) 아래 카드 셋:
    * 1. 판수 상위 챔피언 — 그 범위에서 판수가 많은 챔피언 5종을 큰 초상 카드로. 초상 모서리 배지는 **판수**(사실값)다.
    *    등급·순위 글자는 두지 않는다 — 판수 보정 승률의 분위 등급은 실데이터에서 잡음이었다(신뢰도 −0.10).
+   *    폰(≤640px)에서는 숨긴다 — 바로 아래 메타 표와 내용이 겹치고 첫 화면을 밀어낸다. 데스크톱·태블릿에만 보인다.
    * 2. 챔피언 메타 표(챔피언 · [라인] · 판 · 승률 게이지 · KDA · 분당 딜, 판수 내림차순).
    * 3. 챔피언 폭 표(멤버 × 라인 · 판 · 챔피언 종류 · 챔피언 폭).
    * 라인 하나를 선택하면 셋이 함께 그 라인만 보인다.
@@ -104,18 +105,20 @@
 
   {#key L}
     {#if top.length}
-      <Panel title="판수 상위 챔피언 · {scope}" level={3}>
-        <ol class="top">
-          {#each top as r (r.key)}
-            <li class="ch tile">
-              <span class="pt"><ChampImg name={r.champ} patch={data.patch} size={44} count={r.games} /></span>
-              <span class="nm">{r.name}</span>
-              <span class="rec"><WinRate w={r.winrate} n={r.games} {minGames} /><span class="wl">{wins(r)}승 {r.games - wins(r)}패</span></span>
-              <span class="bar" aria-hidden="true"><WinGauge w={r.winrate} n={r.games} {minGames} variant="bar" /></span>
-            </li>
-          {/each}
-        </ol>
-      </Panel>
+      <div class="wide">
+        <Panel title="판수 상위 챔피언 · {scope}" level={3}>
+          <ol class="top">
+            {#each top as r (r.key)}
+              <li class="ch tile">
+                <span class="pt"><ChampImg name={r.champ} patch={data.patch} size={44} count={r.games} /></span>
+                <span class="nm">{r.name}</span>
+                <span class="rec"><WinRate w={r.winrate} n={r.games} {minGames} /><span class="wl">{wins(r)}승 {r.games - wins(r)}패</span></span>
+                <span class="bar" aria-hidden="true"><WinGauge w={r.winrate} n={r.games} {minGames} variant="bar" /></span>
+              </li>
+            {/each}
+          </ol>
+        </Panel>
+      </div>
     {/if}
 
     <Panel title="챔피언 메타 · {scope}" level={3}>
@@ -161,18 +164,9 @@
 
   .note { margin: var(--sp-3) 0 0; max-width: 75ch; color: var(--dim); font-size: var(--fs-sm); text-wrap: pretty; }
 
-  /* 폰: 초상 줄 — 다섯 칸에 초상(판수 배지)과 이름만. 승률은 바로 아래 표에 있다 */
+  .wide { min-width: 0; }
+  /* 폰: 판수 상위 챔피언을 숨긴다 — 같은 챔피언·판수·승률이 바로 아래 메타 표에 있다 */
   @media (max-width: 640px) {
-    .top { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-    .ch {
-      grid-template-columns: minmax(0, 1fr);
-      justify-items: center;
-      gap: 6px;
-      padding: 10px 4px 8px;
-      text-align: center;
-    }
-    .pt { grid-row: auto; }
-    .nm { max-width: 100%; font-size: var(--fs-sm); }
-    .rec, .bar { display: none; }
+    .wide { display: none; }
   }
 </style>

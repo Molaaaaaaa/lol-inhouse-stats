@@ -161,6 +161,8 @@ describe('Meta — 챔피언 메타 + 챔피언 폭', () => {
   it('판수 상위 챔피언: 판수순 큰 초상(44px) 카드 — 모서리 배지는 판수(등급 글자 없음) · 승률 단계 · 승패', () => {
     const { container } = render(Meta, { data: DATA, lane: '', minGames: 5 });
     const top = screen.getByRole('region', { name: '판수 상위 챔피언 · 전체' });
+    // 폰(≤640px)에서는 감싼 .wide 를 CSS 가 숨긴다 — 같은 내용이 바로 아래 메타 표에 있다
+    expect(top.parentElement?.classList.contains('wide')).toBe(true);
     const cards = [...top.querySelectorAll('ol > li')];
     expect(cards.map((c) => c.querySelector('.nm')?.textContent)).toEqual(['사일러스', '크산테', '루시안', 'Zaahen']);
     expect(cards.map((c) => c.querySelector('img.champ')?.getAttribute('width'))).toEqual(['44', '44', '44', '44']);

@@ -1,13 +1,15 @@
 <script lang="ts">
   /**
-   * 듀오 카드 띠 — 시너지 · 듀오 표 위의 카드(Panel) 하나. 함께 판수가 많은 순 상위 5쌍(`spotlightRows`, 문턱 이상).
-   * 순서는 사실(함께 뛴 판수)이고 시너지 값은 카드 안 숫자로만 둔다 — 시너지가 우연 수준이라 1위를 빛내지 않는다.
+   * 듀오 순위 목록 — 시너지 · 듀오 표 위의 카드(Panel) 하나 안에 행 5개. 함께 판수가 많은 순 상위 5쌍(`spotlightRows`, 문턱 이상).
+   * 순서는 사실(함께 뛴 판수)이고 시너지 값은 행 안 숫자로만 둔다 — 시너지가 우연 수준이라 1위를 빛내지 않는다.
+   * 같은 카드 다섯 장을 한 줄로 늘어놓지 않는다(대상 사이트의 상위 5 띠와 배치가 겹친다는 검토 지적).
    *
-   * - 카드: 두 이름(＋ 는 무채색), 승률(단계 색 + ▲▼, 구간 기준) · n승 n패 · n판, 승률 게이지 막대, 시너지 값. 순번은 오른쪽 위.
-   * - 카드는 버튼이다. 누르면 표 행을 누른 것과 같다(onselect) — 수식 줄에 근거, 같은 카드를 다시 누르면 첫 멤버 화면.
-   *   지금 선택된 쌍(표에서 골랐어도)은 aria-pressed + 글로우. 마우스 기기에서는 호버 들림(.lift).
-   * - 폰(≤640px): 카드 한 장 안의 5행 목록 — 막대는 숨기고 두 줄(이름 / 승률·판수·시너지).
-   * - 게이지는 버튼 안이라 숨긴다(aria-hidden) — 같은 숫자를 버튼 이름이 글로 읽는다.
+   * - 행: [순위 칩] 두 이름(＋ 는 무채색) · n판 · 승률(단계 색 + ▲▼, 구간 기준) · 승률 게이지 막대 · n승 n패 · 시너지 값.
+   *   열은 전부 고정 폭이거나 fr 이라 행마다 같은 자리에 선다. 행 사이는 1px 선.
+   * - 행은 버튼이다. 누르면 표 행을 누른 것과 같다(onselect) — 수식 줄에 근거, 같은 행을 다시 누르면 첫 멤버 화면.
+   *   지금 선택된 쌍(표에서 골랐어도)은 aria-pressed — 표의 선택 행과 같은 말(왼쪽 3px 액센트 + 한 단 밝은 바탕).
+   * - 폰(≤640px): 두 줄(이름 …… n판 / 승률 · 승패 · 막대 · 시너지), 순위 칩은 두 줄에 걸친다.
+   * - 순위 칩·게이지는 버튼 안이라 숨긴다(aria-hidden) — 순서는 목록이, 같은 숫자는 버튼 이름이 글로 읽는다.
    */
   import { sgn } from '$lib/fmt';
   import { JOIN, type DuoRow } from '$lib/synergy';
@@ -33,13 +35,14 @@
   <Panel title="함께 판 상위 듀오" level={3} glyph="duo">
     <ol class="spot">
       {#each rows as r, i (r.key)}
-        {@const on = r.key === selectedKey}
         <li>
-          <button type="button" class={['d', 'tile', 'lift', on && 'glow']} aria-pressed={on} onclick={() => onselect(r, r.key)}>
+          <button type="button" class="d" aria-pressed={r.key === selectedKey} onclick={() => onselect(r, r.key)}>
             <span class="no" aria-hidden="true">{i + 1}</span>
             <span class="pair">{r.na}<span class="j">{JOIN}</span>{r.nb}</span>
-            <span class="rec"><WinRate w={r.winrate} n={r.games} {minGames} /><span class="wl">{wins(r)}승 {r.games - wins(r)}패 · {r.games}판</span></span>
+            <span class="g">{r.games}판</span>
+            <span class="rt"><WinRate w={r.winrate} n={r.games} {minGames} /></span>
             <span class="bar" aria-hidden="true"><WinGauge w={r.winrate} n={r.games} {minGames} variant="bar" /></span>
+            <span class="wl">{wins(r)}승 {r.games - wins(r)}패</span>
             <span class="syn">시너지 {sgn(r.synergy)}</span>
           </button>
         </li>
@@ -49,71 +52,72 @@
 {/if}
 
 <style>
-  /* 카드 폭 170px 이상으로 채운다 — 데스크톱(1100px)은 5장 한 줄, 그보다 좁으면 3장·2장으로 감싼다 */
-  .spot {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 10px;
-  }
-  .spot li { min-width: 0; display: flex; }
+  .spot { list-style: none; margin: 0; padding: 0; }
+  .spot li { min-width: 0; border-bottom: 1px solid var(--grid); }
+  .spot li:last-child { border-bottom-width: 0; }
 
+  /* 데스크톱·태블릿: 한 줄 [칩 | 두 이름 | 판 | 승률 | 막대 | 승패 | 시너지] */
   .d {
-    flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
     display: grid;
-    align-content: start;
-    gap: 6px;
-    padding: var(--sp-3);
+    grid-template-columns: 24px minmax(0, 1.5fr) 3.5em 4em minmax(48px, 1fr) 5.5em 7em;
+    grid-template-areas: 'no pair g rt bar wl syn';
+    align-items: center;
+    gap: 0 var(--sp-3);
+    min-height: 44px;
+    padding: 6px var(--sp-2);
+    background: none;
+    border: 0;
     text-align: left;
     color: var(--txt);
     font-size: var(--fs-md);
+    font-variant-numeric: tabular-nums;
+    transition: background-color var(--dur-1);
   }
-  /* 선택 카드는 호버 중에도 액센트 테두리를 지킨다(.lift:hover 의 테두리색보다 앞선다) */
-  .d.glow { border-color: color-mix(in srgb, var(--sel) 55%, var(--grid)); }
+  .d:hover { background: color-mix(in srgb, var(--raised) 70%, transparent); }
+  .d[aria-pressed='true'] { background: var(--raised); box-shadow: inset 3px 0 0 var(--sel); }
+
+  /* 순위 칩 — 표의 행 번호 칩과 같은 모양. 선택 행(raised 바탕) 위에서는 한 단 더 밝게 */
   .no {
-    position: absolute;
-    top: 10px;
-    right: var(--sp-3);
+    grid-area: no;
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 22px;
+    padding: 0 4px;
+    border-radius: var(--r-chip);
+    background: var(--raised);
+    color: var(--dim);
     font-size: var(--fs-xs);
     font-weight: 700;
-    color: var(--dim);
-    font-variant-numeric: tabular-nums;
+    line-height: 1;
   }
-  .pair { padding-right: 1.5em; font-weight: 700; overflow-wrap: anywhere; }
+  .d[aria-pressed='true'] .no { background: var(--track); }
+  .pair { grid-area: pair; min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
   .j { color: var(--dim); font-weight: 400; }
-  .rec { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--sp-2); }
-  .wl, .syn { color: var(--dim); font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
-  .bar { display: block; padding: 2px 0; }
+  .g { grid-area: g; text-align: right; white-space: nowrap; }
+  .rt { grid-area: rt; text-align: right; }
+  .bar { grid-area: bar; display: block; min-width: 0; }
+  .wl { grid-area: wl; white-space: nowrap; }
+  .wl, .syn { color: var(--dim); font-size: var(--fs-sm); }
+  .syn { grid-area: syn; text-align: right; white-space: nowrap; }
 
-  /* 폰: 카드 한 장(Panel) 안의 목록 — 행 사이 선, 막대 없음, 두 줄(이름 / 승률·판수 …… 시너지) */
+  /* 폰: 두 줄 — 이름 …… 판 / 승률 · 승패 · 막대 · 시너지. 순위 칩은 두 줄 가운데 */
   @media (max-width: 640px) {
-    .spot { grid-template-columns: minmax(0, 1fr); gap: 0; }
     .d {
-      grid-template-columns: 1.4em minmax(0, 1fr) auto;
-      gap: 0 var(--sp-2);
-      align-items: baseline;
-      min-height: 44px;
-      padding: 4px 4px 4px 0;
+      grid-template-columns: 24px 3.6em 4.6em minmax(0, 1fr) 6.6em;
+      grid-template-areas:
+        'no pair pair pair g'
+        'no rt wl bar syn';
+      gap: 2px var(--sp-2);
+      padding: 6px 4px;
       line-height: 1.35;
-      background: none;
-      border-width: 0 0 1px;
-      border-radius: 0;
-      box-shadow: none;
     }
-    .spot li:last-child .d { border-bottom-width: 0; }
-    .no { position: static; grid-row: 1 / span 2; text-align: center; }
-    .pair { grid-column: 2 / -1; grid-row: 1; padding-right: 0; }
-    .rec { grid-column: 2; grid-row: 2; }
-    .syn { grid-column: 3; grid-row: 2; text-align: right; white-space: nowrap; }
-    .bar { display: none; }
-    /* 선택 행 — 표의 선택 행과 같은 말(왼쪽 3px 액센트 + 한 단 밝은 바탕) */
-    .d.glow { background: var(--raised); box-shadow: inset 3px 0 0 var(--sel); }
+    .rt { text-align: left; }
   }
-  /* 강제 색상: 글로우·바탕이 지워진다 — 선택은 테두리로 */
+  /* 강제 색상: 바탕·안쪽 선이 지워진다 — 선택은 외곽선으로 */
   @media (forced-colors: active) {
-    .d[aria-pressed='true'] { border: 2px solid Highlight; }
+    .d[aria-pressed='true'] { outline: 2px solid Highlight; outline-offset: -2px; }
   }
 </style>

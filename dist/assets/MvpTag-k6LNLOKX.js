@@ -1,1 +1,0 @@
-import{G as e,H as t,J as n,U as r,V as i,ht as a,ot as o,rt as s,tt as c}from"./index-BPh22F_J.js";var l=e(`<span class="mvp svelte-de2fod">MVP<!></span>`);function u(e,u){var d=l(),f=o(s(d)),p=e=>{var i=n();c(()=>t(i,` ${u.count??``}회`)),r(e,i)};i(f,e=>{u.count!=null&&e(p)}),a(d),r(e,d)}export{u as t};
